@@ -64,3 +64,9 @@ dialog .touch-instruction,dialog .slot-label,dialog .rope-track h3{font-size:var
 @keyframes bubble-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
 @media(max-width:650px){#scene .speech-bubble.in-scene{top:auto!important;bottom:2%;left:2%!important;right:2%!important;width:auto;max-height:80%;padding:14px 16px;border-radius:16px}#scene .speech-bubble.in-scene:after{display:none}#scene .speech-bubble.in-scene p{font-size:17px}}
 @media(prefers-reduced-motion:reduce){#scene .speech-bubble.in-scene{animation:none}}
+
+/* Aufgenommene Gegenstände */
+#actors .scene-patch{position:absolute;height:auto;pointer-events:none}
+.fly-item{position:fixed;z-index:50;width:64px;height:64px;pointer-events:none;filter:drop-shadow(0 4px 10px #000a);transition:transform .7s cubic-bezier(.5,-.2,.6,1),opacity .7s ease-in}
+#inventory-toggle.bag-bump{animation:bag-bump .45s ease-out}
+@keyframes bag-bump{40%{transform:scale(1.15);background:#41695c}}

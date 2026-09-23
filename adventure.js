@@ -6,9 +6,12 @@ window.Adventure = (() => {
  function scene(s,state){
   const el=document.querySelector('#scene');el.dataset.place=s.id;el.classList.toggle('illuminated',state.inventory.includes('light'));el.classList.toggle('changed',!!state.flags.galerius);
   document.querySelector('#actors').innerHTML='';
+  // Aufgenommene Gegenstände, die ins Bild gemalt sind, werden mit einem passenden Bildausschnitt überdeckt.
+  if(s.id==='house'&&(state.inventory.includes('lamp')||state.inventory.includes('light')))document.querySelector('#actors').insertAdjacentHTML('beforeend','<img class="scene-patch" src="assets/backgrounds/house-lamp-taken.png" alt="" style="left:59.766%;top:59.082%;width:5.143%">');
   document.querySelectorAll('.hotspot').forEach((b,i)=>{
    const h=s.hotspots[i];
    if(cast[h[4]]!==undefined)b.classList.add('person');
+   if(h[4]==='lamp'){b.classList.add('collectible');b.hidden=state.inventory.includes('lamp')||state.inventory.includes('light');}
    if(h[4]==='flint'){
     b.classList.add('collectible');b.querySelector('.pin').remove();
     b.insertAdjacentHTML('afterbegin','<img src="assets/inventory/flint.png" alt="" class="flint-art">');
