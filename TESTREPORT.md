@@ -15,13 +15,21 @@
 - Neustart leert Fortschritt und sperrt spätere Orte wieder.
 - Beschädigter gespeicherter JSON-Inhalt verhindert den Start nicht.
 
+## Live-Prüfung auf GitHub Pages
+
+- Pages-Deployment erfolgreich (Run 35858658180).
+- https://simfischer.github.io/im-zeichen-der-wende/ geöffnet.
+- Startdialog, Wechsel vom Tor ins Wohnviertel, Szenengrafiken und Hotspots geprüft.
+- Nach Neuladen wird Fortsetzen angeboten; aktueller Ort bleibt erhalten.
+- Lehrkraftzugang mit Umschalt + Enter und direkter Szenensprung funktionieren.
+- Dies ist eine Chrome-Stichprobe, kein vollständiger Geräte- oder Safari-Test.
+
 ## Noch nicht praktisch geprüft
 
-- Grafische Darstellung und Hotspotpositionen in einem echten Browser.
+- Vollständige grafische Prüfung aller Szenen und Hotspotpositionen; Stadttor und Wohnviertel wurden in Chrome stichprobenartig geprüft.
 - Physische Touchbedienung und iPad-Safari, Bildschirmrotation, Bildschirmtastatur.
 - Gemessene Spielzeit in einer 7. Klasse (35–45 Min. ist Planungsziel).
 - Abgleich mit zwei nicht verfügbaren Arbeitsblättern und `6. Stunde.pptx`.
-- Live-Deployment auf GitHub Pages.
 
 Die CSS-Umsetzung berücksichtigt flexible Dialogbreiten, einspaltige Rätsel auf schmalen Bildschirmen, Touch-Schaltflächen, reduzierte Bewegung, Kontrast und sichtbaren Tastaturfokus. Das ersetzt keine reale Geräteprüfung.
 
