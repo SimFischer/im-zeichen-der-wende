@@ -118,6 +118,7 @@
   state.notes.forEach(id=>{const n=G.notes[id];if(n)html+=`<article class="journal"><h3>${esc(n[0])}</h3><p>${esc(n[1])}</p></article>`;});
   ['motives','council','bridge'].forEach(id=>{const d=state.drafts[id];if(d?.reason)html+=`<article class="journal"><h3>${esc(G.puzzles[id].title)} · Deine Begründung</h3><p class="personal">${esc(d.reason)}</p><p class="muted">Eigener Text – nicht automatisch fachlich bewertet.</p></article>`;});
   if(!state.notes.length)html+='<p class="clue">Die Seiten füllen sich, wenn du die Erinnerungen erschließt.</p>';
+  const read=Object.keys(G.texts||{}).filter(k=>state.seen.includes('text:'+k));if(read.length){html+='<h3 class="journal-section">Gelesene Fachtexte</h3>';read.forEach(k=>{html+=`<details class="journal-text"><summary>📜 ${esc(G.texts[k].title)}</summary>${readingHtml(G.texts[k],false)}</details>`;});}
   open('Das Notizbuch',html,'Gesammelt unterwegs','journal');const a=actions();button('Als Text herunterladen',exportNotes,'primary',a);button('Drucken',()=>window.print(),'',a);
  }
  $('#notebook').onclick=showJournal;
@@ -129,13 +130,14 @@
  }
  $('#hint').onclick=hint;
  function locked(message){info('Hier fehlt noch etwas',message);}
+ function readingHtml(t,withButton){return `<article class="reading-panel"><h3>${esc(t.title)}</h3>${t.body.map(x=>`<p>${esc(x)}</p>`).join('')}${t.source?`<blockquote class="source-quote"><p>${esc(t.source.text)}</p><cite>${esc(t.source.ref)}</cite></blockquote>`:''}${withButton?'<button type="button" class="primary to-puzzle">Weiter zum Rätsel →</button>':''}</article>`;}
  function openPuzzle(id){
   if(id==='vision'&&!has('map312'))return locked('Die Karte am Lager muss zuerst richtig beschriftet sein.');
   if(id==='archive'&&state.evidence.length<4)return locked('Untersuche erst die Schriftrolle, die versiegelte Tür, das Kirchenmodell und die Kette.');
   if(['timeline','bridge'].includes(id)&&!state.flags.sealsPlaced)return locked('Setze zuerst die sechs Siegel in die große Mechanik.');
   if(id==='bridge'&&!has('timeline'))return locked('Ordne zuerst die Ereignisse in der Zeitmechanik.');
   activePuzzle=id;const p=G.puzzles[id];let d=state.drafts[id];if(!d||!Array.isArray(d.values))d=state.drafts[id]={values:p.rows.map(()=>null),reason:''};
-  const steps=G.steps?.[id];const stepsSeen=state.seen.includes('steps:'+id);open(p.title,`<div class="puzzle-head"><p>${esc(p.prompt)}</p><button id="puzzle-hint" aria-label="Hinweis zum Rätsel">♧ Hinweis</button></div>${steps?`<details class="puzzle-steps"${has(id)||state.seen.includes('steps:'+id)?'':' open'}><summary>So funktioniert's</summary><ol>${steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></details>`:''}<p id="hint-box" class="clue" hidden></p><div id="puzzle-work" class="${p.type}"></div><div id="feedback" role="status" aria-live="polite"></div>`,'Erinnerung · '+scene().era,'puzzle');activePuzzle=id;$('#puzzle-hint').onclick=hint;if(steps&&!stepsSeen){add('seen','steps:'+id);save();}
+  const steps=G.steps?.[id];const stepsSeen=state.seen.includes('steps:'+id);const text=G.texts?.[id];const firstRead=text&&!state.seen.includes('text:'+id)&&!has(id);open(p.title,`${text?`<div class="puzzle-tabs" role="tablist"><button type="button" role="tab" data-tab="read">📜 Fachtext lesen</button><button type="button" role="tab" data-tab="solve">🧩 Rätsel lösen</button></div>${readingHtml(text,true)}`:''}<div class="puzzle-head"><p>${esc(p.prompt)}</p><button id="puzzle-hint" aria-label="Hinweis zum Rätsel">♧ Hinweis</button></div>${steps?`<details class="puzzle-steps"${has(id)||state.seen.includes('steps:'+id)?'':' open'}><summary>So funktioniert's</summary><ol>${steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></details>`:''}<p id="hint-box" class="clue" hidden></p><div id="puzzle-work" class="${p.type}"></div><div id="feedback" role="status" aria-live="polite"></div>`,'Erinnerung · '+scene().era,'puzzle');activePuzzle=id;$('#puzzle-hint').onclick=hint;if(steps&&!stepsSeen){add('seen','steps:'+id);save();}if(text){const mc=$('#modal-content');const setTab=t=>{mc.dataset.tab=t;mc.querySelectorAll('.puzzle-tabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===t)));if(t==='read'){add('seen','text:'+id);save();}$('#modal').scrollTop=0;};mc.querySelectorAll('.puzzle-tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));mc.querySelector('.to-puzzle').onclick=()=>setTab('solve');setTab(firstRead?'read':'solve');}
   const work=$('#puzzle-work');
   if(window.Adventure.renderPuzzle(id,p,d,work,save)){
   }else if(p.type==='gears'){
