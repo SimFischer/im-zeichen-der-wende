@@ -72,7 +72,7 @@
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.querySelector('#speech'))endTalk();});
  // Gespräche erscheinen als Sprechblase direkt in der großen Szene, kein eigenes Fenster.
  function talk(id,t,h){
-  const pages=t[1].match(/[^.!?]+[.!?]+(?:[“”»«])?|[^.!?]+$/g)||[t[1]];let page=0;
+  const sentences=t[1].match(/[^.!?]+[.!?]+(?:[“”»«])?|[^.!?]+$/g)||[t[1]];const chunks=[];sentences.forEach(x=>{const last=chunks[chunks.length-1];if(last&&(last+x).length<170)chunks[chunks.length-1]=last+x;else chunks.push(x);});let page=0;
   const x=h?.[1]??50;const onRight=x>50;
   endTalk();talkReturn=document.activeElement;
   const sceneEl=$('#scene');sceneEl.classList.add('talking');
@@ -81,11 +81,11 @@
   if(onRight)bubble.style.right=Math.min(100-x+9,56)+'%';else bubble.style.left=Math.min(x+9,56)+'%';
   sceneEl.append(bubble);
   function show(){
-   bubble.innerHTML=`<button type="button" class="speech-close" aria-label="Gespräch beenden">✕</button><span class="speaker">${esc(t[0])}</span><p aria-live="polite">${esc(pages.slice(page,page+2).join(' ').trim())}</p><span class="dialogue-progress">${Math.floor(page/2)+1} / ${Math.ceil(pages.length/2)}</span><div class="actions"></div>`;
+   bubble.innerHTML=`<button type="button" class="speech-close" aria-label="Gespräch beenden">✕</button><span class="speaker">${esc(t[0])}</span><p aria-live="polite">${esc(chunks[page].trim())}</p><span class="dialogue-progress">${page+1} / ${chunks.length}</span><div class="actions"></div>`;
    bubble.querySelector('.speech-close').onclick=endTalk;
    const a=bubble.querySelector('.actions');
-   if(page>0)button('Zurück',()=>{page=Math.max(0,page-2);show();},'',a);
-   const main=page+2<pages.length?button('Weiter zuhören',()=>{page+=2;show();},'primary',a):button('Weiter erkunden',endTalk,'primary',a);
+   if(page>0)button('Zurück',()=>{page=Math.max(0,page-1);show();},'',a);
+   const main=page+1<chunks.length?button('Weiter zuhören',()=>{page+=1;show();},'primary',a):button('Weiter erkunden',endTalk,'primary',a);
    main.focus();
   }show();
  }

@@ -1,14 +1,14 @@
 /* Lesbarkeit: größere Schrift, die mit dem Bildschirm mitwächst (auch im Vollbild).
    Wird als letzte Datei geladen und überschreibt die kleineren Werte aus style/adventure/scenes.css. */
-:root{--fs-xs:clamp(13px,.55rem + .45vw,18px);--fs-s:clamp(15px,.7rem + .55vw,22px);--fs-m:clamp(17px,.8rem + .7vw,26px);--fs-l:clamp(26px,1.2rem + 1.5vw,48px)}
+:root{--u:max(14px,min(1.6vw,2.35vh));--fs-xs:calc(var(--u)*.8);--fs-s:calc(var(--u)*.97);--fs-m:calc(var(--u)*1.1);--fs-l:calc(var(--u)*1.9)}
 body{font-size:var(--fs-m)}
 /* Szene */
 #app .hotspot{font-size:var(--fs-s)}
-#app .hotspot .label{font-size:var(--fs-s);max-width:min(260px,30vw);padding:.25em .7em;line-height:1.25}
-#app .hotspot .pin{width:clamp(20px,1.6vw,30px);height:clamp(20px,1.6vw,30px);line-height:1.1;font-size:var(--fs-xs)}
-#app .hotspot .label{top:calc(50% + clamp(12px,1vw,18px))}
+#app .hotspot .label{font-size:var(--fs-s);max-width:min(calc(var(--u)*14),30vw);padding:.25em .7em;line-height:1.25}
+#app .hotspot .pin{width:calc(var(--u)*1.25);height:calc(var(--u)*1.25);line-height:1.1;font-size:var(--fs-xs)}
+#app .hotspot .label{top:calc(50% + calc(var(--u)*.8))}
 #app .location span,#era{font-size:var(--fs-xs);letter-spacing:.12em}
-#app .location h1,#scene-name{font-size:clamp(24px,1rem + 1.2vw,42px)}
+#app .location h1,#scene-name{font-size:calc(var(--u)*1.6)}
 #app .objective{font-size:var(--fs-m);line-height:1.35}
 #app .eyebrow{font-size:var(--fs-xs)}
 #app .hud-button,#app .toolbar button,#app .toolbar span,#app #fullscreen span{font-size:var(--fs-s)}
@@ -16,14 +16,14 @@ body{font-size:var(--fs-m)}
 #inventory,#inventory p,#inventory button{font-size:var(--fs-s)}
 /* Dialoge, Gespräche, Rätsel */
 dialog{font-size:var(--fs-m)}
-dialog h2{font-size:clamp(26px,1.1rem + 1.4vw,44px)}
-dialog h3{font-size:clamp(19px,.9rem + .8vw,30px)}
+dialog h2{font-size:calc(var(--u)*1.9)}
+dialog h3{font-size:calc(var(--u)*1.3)}
 .dialog-head span{font-size:var(--fs-xs)}
 dialog .muted,dialog small,.row-feedback,.placement-status,.touch-instruction,.document-card .assignment,.document-card .row-feedback{font-size:var(--fs-xs)}
 dialog button,.rack button,.socket button,.gear button,.tray-handle,.stamp,.document-card .card-face,.seal-rack .seal,.seal-socket,.teacher-scenes button{font-size:var(--fs-s)}
 .gear h3{font-size:var(--fs-m)}
 .gear small,.seal,.map-caption{font-size:var(--fs-xs)}
-.speech-bubble p{font-size:clamp(19px,.9rem + 1vw,32px)}
+.speech-bubble p{font-size:calc(var(--u)*1.3)}
 .speech-bubble button{font-size:var(--fs-s)}
 .dialogue-progress{font-size:var(--fs-xs)}
 .city-map .map-place{font-size:var(--fs-s)}
@@ -52,13 +52,13 @@ dialog button,.rack button,.socket button,.gear button,.tray-handle,.stamp,.docu
 dialog .touch-instruction,dialog .slot-label,dialog .rope-track h3{font-size:var(--fs-s)}
 
 /* Gespräch direkt in der Szene */
-#scene .speech-bubble.in-scene{position:absolute;top:7%;left:auto;right:auto;z-index:5;width:min(44%,620px);max-height:72%;overflow:auto;padding:clamp(16px,1.2rem + 1vw,36px);padding-top:clamp(14px,1rem + .6vw,26px);animation:bubble-in .25s ease-out}
+#scene .speech-bubble.in-scene{position:absolute;top:7%;left:auto;right:auto;z-index:5;width:min(44%,calc(var(--u)*34));max-height:72%;overflow:auto;padding:calc(var(--u)*1.3);padding-top:calc(var(--u)*1);animation:bubble-in .25s ease-out}
 #scene .speech-bubble.in-scene:after{top:28%}
 #scene .speech-bubble.in-scene .speaker{display:block;font:700 var(--fs-xs)/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7a5a30;margin-bottom:.4em;padding-right:2.4em}
-#scene .speech-bubble.in-scene p{font:clamp(18px,.8rem + 1vw,30px)/1.45 Georgia,serif;margin:0 0 .5em}
+#scene .speech-bubble.in-scene p{font:calc(var(--u)*1.3)/1.45 Georgia,serif;margin:0 0 .5em}
 #scene .speech-bubble.in-scene .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:.6em}
 #scene .speech-bubble.in-scene .actions button{font-size:var(--fs-s);padding:.5em 1em;min-height:44px}
-#scene .speech-close{position:absolute;top:10px;right:10px;width:40px;height:40px;min-height:0;padding:0;border-radius:50%;border:1px solid #c7a877;background:#f3e4c5;color:#3a2e1c;font-size:18px;line-height:1;box-shadow:none;cursor:pointer}
+#scene .speech-close{position:absolute;top:10px;right:10px;width:calc(var(--u)*2.1);height:calc(var(--u)*2.1);min-height:0;padding:0;border-radius:50%;border:1px solid #c7a877;background:#f3e4c5;color:#3a2e1c;font-size:var(--u);line-height:1;box-shadow:none;cursor:pointer}
 #scene.talking .hotspot:not(.speaking),#scene.talking .exit{opacity:.35}
 #scene.talking .hotspot.speaking .label{background:#8c422a;border-color:#fff0c8}
 @keyframes bubble-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
@@ -72,15 +72,15 @@ dialog .touch-instruction,dialog .slot-label,dialog .rope-track h3{font-size:var
 @keyframes bag-bump{40%{transform:scale(1.15);background:#41695c}}
 
 /* Rätsel: Karten, Fächer, Zahnräder, Statuszeilen noch größer und kontrastreicher */
-#modal[data-mode=puzzle]{width:min(1320px,calc(100vw - 24px));max-width:1320px}
-#modal .document-card .card-face{font-size:clamp(17px,.8rem + .75vw,26px);line-height:1.35;color:#221c12;padding:.6em .8em}
+#modal[data-mode=puzzle]{width:min(calc(var(--u)*72),calc(100vw - 24px));max-width:none}
+#modal .document-card .card-face{font-size:calc(var(--u)*1.12);line-height:1.35;color:#221c12;padding:.6em .8em}
 #modal .document-card .assignment,#modal .document-card .row-feedback{font-size:var(--fs-s);color:#2e2618}
 #modal .card-desk h3,#modal .sorting-tray h3{font-size:var(--fs-m);color:#fff3d6}
-#modal .tray-handle,#modal .stamp,#modal .rack button,#modal .socket button{font-size:clamp(16px,.75rem + .6vw,24px);padding:.55em .9em}
+#modal .tray-handle,#modal .stamp,#modal .rack button,#modal .socket button{font-size:calc(var(--u)*1.02);padding:.55em .9em}
 #modal .placement-status{font-size:var(--fs-s);font-weight:600;color:#1f4a40}
 #modal .touch-instruction{font-size:var(--fs-s)}
-#modal .gear h3{font-size:clamp(18px,.85rem + .8vw,28px)}
-#modal .gear button{font-size:clamp(17px,.8rem + .7vw,26px);font-weight:600}
+#modal .gear h3{font-size:calc(var(--u)*1.2)}
+#modal .gear button{font-size:calc(var(--u)*1.1);font-weight:600}
 #modal .gear small{font-size:var(--fs-s);color:#2e2618}
 #modal #feedback,#modal .clue,#modal .row-feedback{font-size:var(--fs-m);line-height:1.45}
 #modal .actions button{font-size:var(--fs-m);padding:.6em 1.2em;min-height:48px}
