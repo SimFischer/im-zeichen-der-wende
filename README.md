@@ -1,6 +1,6 @@
 # Update: Fachtexte zum Einlesen
 
-Jedes der 12 Rätsel hat einen Reiter **„📜 Fachtext lesen“** mit einem kurzen Sachtext für Klasse 7 und, wo sinnvoll, einem kurzen Quellenzitat (Tertullian, Tacitus, Trajan an Plinius, Opferbescheinigung von 250, Eusebius, Mailänder Vereinbarung). Beim ersten Öffnen eines Rätsels erscheint zuerst der Fachtext, danach geht es mit „Weiter zum Rätsel“ zum Mechanismus. Gelesene Texte stehen im Notizbuch unter „Gelesene Fachtexte“ und werden mitgedruckt. Die Texte stehen in `data/game-data.js` unter `GAME.texts`, die Anleitungen unter `GAME.steps`.
+Jedes der 12 Rätsel hat einen zuschaltbaren **„📜 Fachtext“** mit einem kurzen Sachtext für Klasse 7 und, wo sinnvoll, einem kurzen Quellenzitat (Tertullian, Tacitus, Trajan an Plinius, Opferbescheinigung von 250, Eusebius, Mailänder Vereinbarung). Der Fachtext ist eine optionale Hilfe: Im Rätsel über den Knopf „📜 Fachtext“ neben „Hinweis“ zuschaltbar, mit „Zurück zum Rätsel“ geht es weiter. Gelesene Texte stehen im Notizbuch unter „Gelesene Fachtexte“ und werden mitgedruckt. Die Texte stehen in `data/game-data.js` unter `GAME.texts`, die Anleitungen unter `GAME.steps`.
 
 **Hinweis für die Lehrkraft:** Die Fachtexte und die Quellenzitate (eigene, gekürzte Übersetzungen) wurden mit KI-Unterstützung erstellt und sind noch fachlich gegenzulesen und mit den Unterrichtsmaterialien abzugleichen.
 

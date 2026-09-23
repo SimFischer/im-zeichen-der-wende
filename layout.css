@@ -91,7 +91,7 @@
 #modal .puzzle-tabs{display:flex;gap:.5em;margin:.2em 0 1em;border-bottom:2px solid #c9a86b}
 #modal .puzzle-tabs button{flex:1;min-height:calc(var(--u)*2.6);border:2px solid #c9a86b;border-bottom:0;border-radius:12px 12px 0 0;background:#e9d6ab;color:#3a2e1c;font:700 var(--fs-m)/1.2 system-ui,sans-serif;box-shadow:none;margin-bottom:-2px}
 #modal .puzzle-tabs button[aria-selected=true]{background:#fff8e6;color:#1f4a40}
-#modal-content[data-tab=read] .puzzle-head,#modal-content[data-tab=read] #hint-box,#modal-content[data-tab=read] .puzzle-steps,#modal-content[data-tab=read] #puzzle-work,#modal-content[data-tab=read] #feedback,#modal-content[data-tab=read]>.actions,#modal-content[data-tab=read]>p,#modal-content[data-tab=read]>div:not(.puzzle-tabs){display:none!important}
+#modal-content[data-tab=read] .puzzle-head,#modal-content[data-tab=read] .puzzle-tabs,#modal-content[data-tab=read] #hint-box,#modal-content[data-tab=read] .puzzle-steps,#modal-content[data-tab=read] #puzzle-work,#modal-content[data-tab=read] #feedback,#modal-content[data-tab=read]>.actions,#modal-content[data-tab=read]>p,#modal-content[data-tab=read]>div:not(.puzzle-tabs){display:none!important}
 #modal-content[data-tab=solve] .reading-panel{display:none}
 .reading-panel{padding:calc(var(--u)*1) calc(var(--u)*1.3);border:2px solid #c9a86b;border-radius:14px;background:#fffaf0;color:#221c12}
 .reading-panel h3{margin:0 0 .5em;font:calc(var(--u)*1.45)/1.2 Georgia,serif;color:#5a3a16}
@@ -138,3 +138,8 @@
 /* Willkommensfenster und Infofenster: kompakter, normaler Zeilenfluss */
 #modal{width:min(calc(var(--u)*38),calc(100vw - 24px))}
 #modal .intro-copy{max-width:none;width:auto;font-size:calc(var(--u)*1.1)}
+
+/* Fachtext als optionale Hilfe neben dem Hinweis */
+#modal .puzzle-help-buttons{display:flex;flex-direction:column;gap:.4em;flex:none}
+#modal #puzzle-text{font-size:var(--fs-s)}
+#modal-content[data-tab=read] .reading-panel{animation:bag-fade .15s ease-out}
