@@ -100,8 +100,8 @@
    },'seal-socket',$('.seal-wheel'));socket.dataset.seal=name;socket.style.left=(50+33*Math.cos(i*Math.PI/3))+'%';socket.style.top=(50+33*Math.sin(i*Math.PI/3))+'%';socket.disabled=placed.includes(name);if(socket.disabled)socket.classList.add('fitted');
   });if(placed.length===6)button('Zur Zeitmechanik',()=>{state.flags.sealsPlaced=true;save();close();render();},'primary',actions());
  }
- function renderInventory(){const inv=$('#inventory');inv.innerHTML='<p>Wähle einen Gegenstand und danach ein Ziel in der Szene. Zum Kombinieren tippe zwei Gegenstände nacheinander an.</p><div class="items"></div>';
-  state.inventory.filter(id=>G.items[id]).forEach(id=>{const b=button(G.items[id],()=>selectItem(id),'',inv.querySelector('.items'));b.innerHTML=`<img src="assets/inventory/${id}.${id==='flint'?'png':'svg'}" alt="">${esc(G.items[id])}`;if(selected===id)b.classList.add('selected');});
+ function renderInventory(){const inv=$('#inventory');inv.innerHTML='<h2 class="inv-title">Dein Botenbeutel</h2><p class="inv-help"><strong>Benutzen:</strong> Tippe einen Gegenstand an und danach das Ziel in der Szene.<br><strong>Kombinieren:</strong> Tippe zwei Gegenstände nacheinander an.</p><div class="items"></div>';
+  state.inventory.filter(id=>G.items[id]).forEach(id=>{const b=button(G.items[id],()=>selectItem(id),'',inv.querySelector('.items'));b.innerHTML=`<img src="assets/inventory/${id}.${id==='flint'?'png':'svg'}" alt=""><span>${esc(G.items[id])}</span>`;b.classList.add('item-card');if(selected===id)b.classList.add('selected');});
   if(!state.inventory.length)inv.querySelector('.items').textContent='Dein Beutel ist noch leer.';
   $('#selected-item').textContent=selected?'Gewählt: '+G.items[selected]:'';
  }
@@ -135,7 +135,7 @@
   if(['timeline','bridge'].includes(id)&&!state.flags.sealsPlaced)return locked('Setze zuerst die sechs Siegel in die große Mechanik.');
   if(id==='bridge'&&!has('timeline'))return locked('Ordne zuerst die Ereignisse in der Zeitmechanik.');
   activePuzzle=id;const p=G.puzzles[id];let d=state.drafts[id];if(!d||!Array.isArray(d.values))d=state.drafts[id]={values:p.rows.map(()=>null),reason:''};
-  open(p.title,`<div class="puzzle-head"><p>${esc(p.prompt)}</p><button id="puzzle-hint" aria-label="Hinweis zum Rätsel">♧ Hinweis</button></div><p id="hint-box" class="clue" hidden></p><div id="puzzle-work" class="${p.type}"></div><div id="feedback" role="status" aria-live="polite"></div>`,'Erinnerung · '+scene().era,'puzzle');activePuzzle=id;$('#puzzle-hint').onclick=hint;
+  const steps=G.steps?.[id];const stepsSeen=state.seen.includes('steps:'+id);open(p.title,`<div class="puzzle-head"><p>${esc(p.prompt)}</p><button id="puzzle-hint" aria-label="Hinweis zum Rätsel">♧ Hinweis</button></div>${steps?`<details class="puzzle-steps"${has(id)||state.seen.includes('steps:'+id)?'':' open'}><summary>So funktioniert's</summary><ol>${steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></details>`:''}<p id="hint-box" class="clue" hidden></p><div id="puzzle-work" class="${p.type}"></div><div id="feedback" role="status" aria-live="polite"></div>`,'Erinnerung · '+scene().era,'puzzle');activePuzzle=id;$('#puzzle-hint').onclick=hint;if(steps&&!stepsSeen){add('seen','steps:'+id);save();}
   const work=$('#puzzle-work');
   if(window.Adventure.renderPuzzle(id,p,d,work,save)){
   }else if(p.type==='gears'){
