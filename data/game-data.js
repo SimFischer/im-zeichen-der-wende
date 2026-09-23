@@ -181,7 +181,7 @@ Object.assign(window.GAME.minigames,{
  sources:{type:'classify',skin:'echo',goal:8,title:'Das Echo der Quellen',counter:'Belege',
   prompt:'Die Chronistin ruft dir Aussagen zu. Ordne jede rechtzeitig ein.',
   intro:'Die Chronistin prüft, was auf dem Forum erzählt wird. Sie ruft dir Aussagen zu – du entscheidest schnell, wie sicher sie sind.',
-  rules:['<b>Gut belegbar:</b> Dafür gibt es Berichte.','<b>Unsicher:</b> Wird behauptet, ist aber umstritten.','<b>Nicht sicher feststellbar:</b> Das weiß niemand genau – oder es ist eine Verallgemeinerung ohne Beleg.','Schaffe <b>8 richtige Antworten</b>. Das Tempo kannst du oben wählen. Tasten 1–3 gehen auch.'],
+  rules:['<b>Gut belegbar:</b> Dafür gibt es Berichte.','<b>Unsicher:</b> Wird behauptet, ist aber umstritten.','<b>Nicht sicher feststellbar:</b> Das weiß niemand genau – oder es ist eine Verallgemeinerung ohne Beleg.','Schaffe <b>8 richtige Antworten</b>. Das Tempo kannst du oben wählen. <span class="mg-keys">Am PC gehen auch die Tasten 1–3.</span>'],
   startLabel:'Zuhören',choices:['gut belegbar','unsicher','nicht sicher feststellbar'],icons:['✔','?','∅'],time:12,
   winTitle:'Die Chronik ist geprüft!',win:'Du hast Behauptung und gesichertes Wissen auseinandergehalten – genau wie eine Historikerin.',
   items:[
@@ -199,7 +199,7 @@ Object.assign(window.GAME.minigames,{
  cases:{type:'classify',skin:'stamp',goal:8,title:'Der Stempel des Statthalters',counter:'Akten',
   prompt:'Die Akten rutschen über den Tisch. Stemple jede nach Trajans Regeln, bevor sie herunterfällt.',
   intro:'Der Schreiber schiebt dir die Akten zu. Setze den richtigen Stempel – so, wie es Kaiser Trajan dem Statthalter Plinius geschrieben hat.',
-  rules:['Lies die Akte und tippe auf den passenden <b>Stempel</b>.','Die Akte rutscht zur Tischkante – ist sie unten, fällt sie herunter und kommt später wieder.','Schaffe <b>8 richtig gestempelte Akten</b>. Tasten 1–4 gehen auch.','Wichtig: Du stellst eine historische Praxis nach. Das heißt nicht, dass sie gerecht war.'],
+  rules:['Lies die Akte und tippe auf den passenden <b>Stempel</b>.','Die Akte rutscht zur Tischkante – ist sie unten, fällt sie herunter und kommt später wieder.','Schaffe <b>8 richtig gestempelte Akten</b>. <span class="mg-keys">Am PC gehen auch die Tasten 1–4.</span>','Wichtig: Du stellst eine historische Praxis nach. Das heißt nicht, dass sie gerecht war.'],
   startLabel:'Erste Akte holen',choices:['Anzeige zurückweisen','weiter befragen','freilassen','bestrafen'],icons:['✖','?','↗','⚖'],time:14,
   winTitle:'Alle Akten sind bearbeitet',win:'Du hast nachvollzogen, wie die Behörden um 112 vorgingen: Sie reagierten auf Anzeigen, suchten aber nicht aktiv nach Christen.',
   items:[
@@ -217,7 +217,7 @@ Object.assign(window.GAME.minigames,{
  archive:{type:'darkroom',image:'assets/backgrounds/v3-archive.png',title:'Das Archiv im Dunkeln',
   prompt:'Leuchte mit der Lampe durch das Archiv. Finde die vier Spuren und ordne sie zu.',
   intro:'Das Archiv ist stockdunkel. Nur deine Lampe spendet Licht. Irgendwo hier liegen Spuren der großen Verfolgung ab 303.',
-  rules:['Bewege das <b>Licht</b> mit Maus oder Finger über das Bild.','Etwas leuchtet auf? <b>Tippe darauf</b>.','Wähle, welche Maßnahme von 303 die Spur erklärt.','Finde alle <b>4 Spuren</b>.'],
+  rules:['Bewege das <b>Licht</b> mit dem Finger (oder der Maus) über das Bild.','Etwas leuchtet auf? <b>Tippe darauf</b>.','Wähle, welche Maßnahme von 303 die Spur erklärt.','Finde alle <b>4 Spuren</b>.'],
   measures:['Schriften vernichten','Gottesdienste verbieten','Kirchen zerstören','Christen verhaften / bestrafen'],
   spots:[
    {name:'Verbrannte Schriftrolle',x:13,y:76,look:'Die Ränder sind schwarz verkohlt. Man erkennt noch Buchstaben eines Evangeliums.',answer:0,why:'303 wurde befohlen, die heiligen Schriften auszuliefern und zu verbrennen.',hint:'Was geschah mit Büchern und Schriften?'},

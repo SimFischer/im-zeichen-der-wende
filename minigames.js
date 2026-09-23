@@ -12,7 +12,7 @@ window.MiniGames=(()=>{
    <div class="racer-hud"><div class="racer-goal"><span class="racer-label">Botschaften</span><span class="racer-dots">${Array.from({length:goal},()=>'<i></i>').join('')}</span></div><div class="racer-speed" role="group" aria-label="Tempo"><button type="button" data-speed="0.75" aria-pressed="true">Ruhig</button><button type="button" data-speed="1" aria-pressed="false">Normal</button><button type="button" data-speed="1.3" aria-pressed="false">Schnell</button></div><button type="button" class="racer-pause" aria-label="Pause">❚❚</button></div>
    <div class="racer-stage"><canvas aria-label="Spielfeld: römische Straße mit drei Spuren"></canvas>
     <div class="racer-banner" aria-live="polite"></div>
-    <div class="racer-overlay"><h3>${esc(cfg.title)}</h3><p>${esc(cfg.intro)}</p><ul><li><b>Sammle</b> Schriftrollen mit <b>richtigen</b> Aussagen.</li><li><b>Weiche</b> Rollen mit falschen Aussagen aus.</li><li>Karren, Amphoren und Marschkolonnen bremsen dich nur – Leben gibt es keine.</li><li>Steuerung: ◀ ▶ unten, Pfeiltasten, A / D oder links/rechts ins Bild tippen.</li></ul><button type="button" class="primary racer-start">Losreiten</button></div>
+    <div class="racer-overlay"><h3>${esc(cfg.title)}</h3><p>${esc(cfg.intro)}</p><ul><li><b>Sammle</b> Schriftrollen mit <b>richtigen</b> Aussagen.</li><li><b>Weiche</b> Rollen mit falschen Aussagen aus.</li><li>Karren, Amphoren und Marschkolonnen bremsen dich nur – Leben gibt es keine.</li><li>Steuerung: links oder rechts ins Bild tippen, wischen oder ◀ ▶ unten<span class="mg-keys"> (am PC auch Pfeiltasten)</span>.</li></ul><button type="button" class="primary racer-start">Losreiten</button></div>
    </div>
    <div class="racer-controls"><button type="button" class="racer-left" aria-label="Nach links">◀</button><div class="racer-log" aria-live="polite"></div><button type="button" class="racer-right" aria-label="Nach rechts">▶</button></div>
   </div>`;
@@ -77,7 +77,8 @@ window.MiniGames=(()=>{
   function key(e){if(!canvas.isConnected)return;if(['ArrowLeft','a','A'].includes(e.key)){move(-1);e.preventDefault();}if(['ArrowRight','d','D'].includes(e.key)){move(1);e.preventDefault();}if(e.key===' '&&running){paused=!paused;e.preventDefault();}}
   addEventListener('keydown',key);
   work.querySelector('.racer-left').onclick=()=>move(-1);work.querySelector('.racer-right').onclick=()=>move(1);
-  canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect();move(e.clientX-r.left<r.width/2?-1:1);});
+  let sx=null;canvas.addEventListener('pointerdown',e=>{sx=e.clientX;});
+  canvas.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>30){move(dx<0?-1:1);return;}const r=canvas.getBoundingClientRect();move(e.clientX-r.left<r.width/2?-1:1);});
   work.querySelectorAll('.racer-speed button').forEach(b=>b.onclick=()=>{speedMul=+b.dataset.speed;work.querySelectorAll('.racer-speed button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));b.blur();});
   const pb=work.querySelector('.racer-pause');pb.onclick=()=>{if(!running)return;paused=!paused;pb.textContent=paused?'▶':'❚❚';pb.setAttribute('aria-label',paused?'Weiter':'Pause');say(paused?'Pause':'Weiter geht’s!','',1200);};
   work.querySelector('.racer-start').onclick=()=>{overlay.hidden=true;running=true;spawnT=.4;last=performance.now();canvas.focus?.();};
@@ -121,7 +122,7 @@ window.MiniGames=(()=>{
   addEventListener('keydown',key);
   function loop(now){if(!work.isConnected)return;const dt=Math.min(.1,(now-last)/1000||0);last=now;
    if(running&&!locked){left-=dt;const f=Math.max(0,left/total);bar.style.width=(f*100)+'%';bar.style.background=f<.3?'#b3261e':f<.6?'#d99a2b':'#2d7a67';
-    if(file){const r=file.parentElement.clientWidth,w=file.offsetWidth;const x=(r/2-w/2+20)*(2*f-1)-(1-f)*w*.35;file.style.transform=`translateX(${x}px) rotate(${(1-f)*-3}deg)`;}if(left<=0)resolve(null);}
+    if(file){const r=file.parentElement.clientWidth,w=file.offsetWidth;const x=(r/2-w/2-6)*(2*f-1)-(1-f)*w*.35;file.style.transform=`translateX(${x}px) rotate(${(1-f)*-3}deg)`;}if(left<=0)resolve(null);}
    requestAnimationFrame(loop);}
   const ov=startScreen(stage,cfg,cfg.rules,cfg.startLabel||'Los geht’s',()=>{running=true;next();last=performance.now();});
   requestAnimationFrame(loop);return true;

@@ -273,3 +273,12 @@
 #modal[data-mode=minigame] .puzzle-head{margin:0 0 .2em}
 #modal[data-mode=minigame] h2{margin:.1em 0}
 #modal .dark-spot,#modal .dark-spot:active,#modal .dark-spot:hover{transform:translate(-50%,-50%)}
+
+/* iPad/Touch: kein Doppeltipp-Zoom, kein Scrollen beim Wischen im Spielfeld, keine „klebenden“ Hover-Effekte */
+#modal button,.racer-stage,.mg-choices,.racer-controls,.slider-board{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.dark-stage,.racer-stage canvas{touch-action:none}
+.racer,.racer *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+@media(hover:none){#modal .tile:hover,#app #inventory .item-card:hover,#app .game-button:hover{transform:none;filter:none}}
+/* Beim Minispiel die Szenen-Tipps (Tasten) auf Touch-Geräten ausblenden */
+@media(hover:none){.mg-keys{display:none}}
+@media(orientation:portrait){.racer-stage:not(.dark-stage){height:clamp(300px,calc(100dvh - 24rem),calc(var(--u)*46))}.skin-stamp .file{width:84%}}
