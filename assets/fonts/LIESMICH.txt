@@ -1,0 +1,14 @@
+Schrift EB Garamond (frei, SIL Open Font License)
+
+So kommt die Schrift auf alle Geräte, auch auf iPads:
+1. https://fonts.google.com/specimen/EB+Garamond öffnen und oben rechts auf „Get font“ und dann auf „Download all“ klicken.
+2. ZIP entpacken. Im Unterordner „static“ liegen die Dateien.
+3. Diese drei Dateien in DIESEN Ordner (assets/fonts) kopieren:
+   EBGaramond-Regular.ttf
+   EBGaramond-Italic.ttf
+   EBGaramond-SemiBold.ttf
+4. In GitHub Desktop committen und pushen.
+
+Die Schrift wird dann vom eigenen Server geladen, nicht von Google (datenschutzfreundlich).
+Solange die Dateien fehlen, nutzt das Spiel eine installierte Garamond (Windows mit Office),
+auf iPad/Mac „Hoefler Text“, sonst Georgia.
