@@ -1,7 +1,7 @@
 /* Layout für iPad (Querformat) und größere Bildschirme:
    eine schlanke Leiste oben mit allen Spielknöpfen, darunter die Szene so groß wie möglich.
    Freie Ränder zeigen eine unscharfe Version der aktuellen Szene statt einfarbigem Grün. */
-:root{--u:max(15px,min(1.85vw,2.7vh));--bar:max(58px,calc(var(--u)*3.4))}
+:root{--u:max(14px,min(1.5vw,2.2vh));--bar:max(58px,calc(var(--u)*3.4))}
 #app{min-height:0!important;background:#15201c}
 #app:before{content:'';position:absolute;inset:-60px;background:var(--scene-img,none) center/cover no-repeat;filter:blur(30px) brightness(.42) saturate(1.15);z-index:0;transition:background-image .3s}
 #app .scene-viewport{position:absolute;inset:var(--bar) 0 0 0!important;padding:6px;z-index:1;display:flex;align-items:center;justify-content:center;container-type:size}
@@ -35,7 +35,6 @@
 #app .objective:empty{display:none!important}
 
 /* Beutel und Meldungen unter der Leiste */
-#app #inventory{top:calc(var(--bar) + 10px);bottom:auto;left:12px;right:auto;width:min(calc(var(--u)*34),calc(100% - 24px));z-index:8}
 #app #toast{top:calc(var(--bar) + 12px);right:14px;left:auto;max-width:min(calc(var(--u)*23),calc(100% - 28px));z-index:9}
 #app .toolbar{display:none}
 
@@ -75,14 +74,6 @@
 #inventory img{width:calc(var(--u)*1.5);height:calc(var(--u)*1.5)}
 #inventory button{min-height:calc(var(--u)*2.6)}
 
-/* Botenbeutel: groß, mit Gegenstandskarten */
-#app #inventory{width:min(calc(var(--u)*40),calc(100% - 24px));padding:calc(var(--u)*1.1) calc(var(--u)*1.3);border-width:3px;border-radius:16px;background:#2b271cf7}
-#inventory .inv-title{margin:0 0 .3em;font:calc(var(--u)*1.35)/1.2 Georgia,serif;color:#f6d99a}
-#inventory .inv-help{margin:0 0 .9em;font-size:var(--fs-m)!important;line-height:1.45;color:#f9e9c5}
-#inventory .items{display:flex;flex-wrap:wrap;gap:calc(var(--u)*.7);font-size:var(--fs-m)}
-#inventory .item-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;width:calc(var(--u)*8.5);min-height:calc(var(--u)*7.5);padding:.6em .4em;border:2px solid #c9a86b;border-radius:14px;background:linear-gradient(#f8ebcb,#e8cf9c);color:#2b2416;font:600 var(--fs-m)/1.2 system-ui,sans-serif;text-align:center;box-shadow:0 3px 0 #7a5a2c;cursor:pointer}
-#inventory .item-card img{width:calc(var(--u)*3.2)!important;height:calc(var(--u)*3.2)!important;margin:0!important}
-#inventory .item-card.selected{outline:4px solid #8fe0d4;outline-offset:2px;background:linear-gradient(#e3f4ec,#b9dccd)}
 /* Rätsel-Anleitung */
 #modal .puzzle-steps{margin:.2em 0 1em;padding:.6em 1em .8em;border:2px solid #c9a86b;border-radius:12px;background:#fff8e6}
 #modal .puzzle-steps summary{cursor:pointer;font:700 var(--fs-m)/1.3 system-ui,sans-serif;color:#1f4a40;list-style:none}
@@ -114,3 +105,36 @@
 #modal .journal-text summary{cursor:pointer;font:700 var(--fs-m)/1.3 system-ui,sans-serif;color:#1f4a40}
 #modal .journal-text .reading-panel{border:0;padding:.6em 0 0;background:none}
 @media print{.journal-text[open],.journal-text{display:block}}
+
+/* ---------- Kompaktere Leiste mit Liniensymbolen ---------- */
+#app .game-button{height:calc(var(--u)*2.4);min-height:44px;padding:0 .9em 0 .7em;font-size:calc(var(--u)*.85);border-radius:10px;border-width:1.5px;box-shadow:0 2px 0 #7a5a2c,0 4px 10px #0006}
+#app .game-button svg.ico{width:1.45em;height:1.45em;flex:none}
+#app .icon-only{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4);min-width:44px;min-height:44px}
+#app .icon-only svg.ico{width:55%;height:55%}
+#app #selected-item:not(:empty){display:inline-flex;align-items:center;gap:.4em;padding:.25em .35em .25em .6em;font-size:var(--fs-xs);max-width:none}
+#app #selected-item img{width:1.6em;height:1.6em}
+#app #selected-item button{display:grid;place-items:center;width:1.7em;height:1.7em;min-height:0;padding:0;border:0;border-radius:50%;background:#ffffff26;color:#fff;font-size:.9em;box-shadow:none}
+
+/* ---------- Botenbeutel als Tasche in der Bildmitte ---------- */
+#app #inventory{position:fixed;inset:0;left:0;right:0;top:0;bottom:0;width:auto;z-index:20;padding:16px;border:0;border-radius:0;background:#0b1512b3;box-shadow:none;color:#fff3d6;backdrop-filter:blur(2px)}
+#app #inventory:not([hidden]){display:grid;place-items:center;animation:bag-fade .18s ease-out}
+#app #inventory .bag{position:relative;width:min(calc(var(--u)*24),92vw);padding:calc(var(--u)*1.6) calc(var(--u)*1.1) calc(var(--u)*1);border:4px solid #4a2a17;border-radius:30px;background:radial-gradient(120% 80% at 30% 0%,#a8704a,#7c4a2c 70%);box-shadow:inset 0 2px 0 #c58e63,0 20px 60px #000a;animation:bag-pop .22s cubic-bezier(.3,1.4,.6,1)}
+#app #inventory .bag-handle{position:absolute;left:50%;top:calc(var(--u)*-1.5);width:38%;height:calc(var(--u)*2.4);transform:translateX(-50%);border:4px solid #4a2a17;border-bottom:0;border-radius:18px 18px 0 0;background:#8c5634;z-index:-1}
+#app #inventory .bag-flap{position:absolute;left:50%;top:-4px;transform:translateX(-50%);padding:.25em 1.2em .35em;border:4px solid #4a2a17;border-top:0;border-radius:0 0 14px 14px;background:#6a3d22;color:#f6d99a;font:700 var(--fs-xs)/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+#app #inventory .bag-inner{padding:calc(var(--u)*.7);border:2px dashed #e9c79c;border-radius:20px;background:#9a6340}
+#app #inventory .items{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*.45)}
+#app #inventory .item-card,#app #inventory .slot-empty{aspect-ratio:1;border-radius:12px;background:#f8e3c7;box-shadow:inset 0 2px 5px #7a4a2a55}
+#app #inventory .slot-empty{opacity:.85}
+#app #inventory .item-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2em;width:auto;min-height:0;padding:.35em;border:0;color:#3a2412;font:600 calc(var(--u)*.72)/1.15 system-ui,sans-serif;text-align:center;cursor:pointer;transition:transform .12s,background .12s}
+#app #inventory .item-card img{width:62%!important;height:auto!important;aspect-ratio:1;margin:0!important;filter:drop-shadow(0 3px 3px #5a2e1766)}
+#app #inventory .item-card:hover{transform:scale(1.04);background:#fff1dc}
+#app #inventory .item-card.selected{background:#cdeee2;outline:3px solid #2d8f7b;outline-offset:-3px}
+#app #inventory .inv-help{margin:.8em .2em 0;font:var(--fs-xs)/1.4 system-ui,sans-serif!important;color:#fbe7c3;text-align:center}
+#app #inventory .bag-close{position:absolute;top:calc(var(--u)*.5);right:calc(var(--u)*.5);width:calc(var(--u)*1.9);height:calc(var(--u)*1.9);min-height:0;padding:0;border:2px solid #4a2a17;border-radius:50%;background:#f8e3c7;color:#3a2412;font-size:calc(var(--u)*.9);box-shadow:none;cursor:pointer}
+@keyframes bag-fade{from{opacity:0}}
+@keyframes bag-pop{from{transform:scale(.85) translateY(20px);opacity:0}}
+@media(prefers-reduced-motion:reduce){#app #inventory .bag,#app #inventory:not([hidden]){animation:none}}
+
+/* Willkommensfenster und Infofenster: kompakter, normaler Zeilenfluss */
+#modal{width:min(calc(var(--u)*38),calc(100vw - 24px))}
+#modal .intro-copy{max-width:none;width:auto;font-size:calc(var(--u)*1.1)}
