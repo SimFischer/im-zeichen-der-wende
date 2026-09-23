@@ -2,9 +2,10 @@
 
 Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Jedes Spiel hat „Ohne Spiel lösen“ als barrierearme Alternative.
 
+- **Kontrollstelle – Die beiden Seilzüge:** Holzklötze aus der Kiste an die Haken zweier Seile hängen, am Hebel ziehen, danach Vergleichsfrage; die Truhe mit dem Archivschlüssel öffnet sich.
 - **Wohnviertel – Das Türschloss:** Drei Drehwalzen (Tippen, Wischen oder Pfeile) bilden einen Satz; am Griff ziehen prüft, Riegel gleitet zurück und die Tür schwingt auf.
 - **Forum – Das Echo der Quellen:** Die Chronistin ruft Aussagen zu. Einordnen gegen die Zeit (belegt / unsicher / nicht feststellbar), 8 richtige Antworten.
-- **Amtsstube – Der Stempel des Statthalters:** Akten rutschen über den Tisch und werden nach Trajans Regeln gestempelt, 8 Akten.
+- **Amtsstube – Der Stempel des Statthalters:** Akten fahren über den Tisch. Römischen Stempel in die Hand nehmen und auf die Akte drücken; richtige Stempel hinterlassen einen Abdruck, 8 Akten.
 - **Archiv – Das Archiv im Dunkeln:** Mit dem Lichtkegel der Lampe vier Spuren finden und den Maßnahmen von 303 zuordnen.
 - **Lager 312 – Das Zeichen auf dem Schild:** 3×3-Puzzle (Tauschen oder Schieben) mit dem Christusmonogramm, danach Ereignis und Erzählung trennen.
 - **Stadt 313 – Die Kurierfahrt:** Spurwechsel-Rennen. Richtige Aussagen über 311/313 einsammeln, falschen ausweichen, 6 Botschaften.

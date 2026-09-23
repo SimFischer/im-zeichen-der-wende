@@ -100,7 +100,7 @@ window.MiniGames=(()=>{
  function classify(id,cfg,work){
   const goal=cfg.goal,skin=cfg.skin;
   work.innerHTML=`<div class="racer mg-classify skin-${skin}"><div class="racer-hud">${dotsHtml(goal,cfg.counter||'Punkte')}${speedHtml([['Ruhig',1],['Normal',.75],['Schnell',.55]])}</div>
-   <div class="racer-stage mg-stage"><div class="mg-scene">${skin==='echo'?`<div class="echo-speaker" aria-hidden="true">🗣</div><div class="echo-bubble"><p class="mg-text"></p><div class="mg-timer"><i></i></div></div>`:`<div class="desk"><div class="desk-edge">Tischkante</div><article class="file"><span class="file-tab">Akte</span><p class="mg-text"></p><span class="file-stamp"></span></article></div><div class="mg-timer"><i></i></div>`}</div><div class="racer-banner" aria-live="polite"></div></div>
+   <div class="racer-stage mg-stage"${cfg.bg?` style="background-image:url('${cfg.bg}')"`:''}><div class="mg-scene">${skin==='echo'?`<img class="echo-portrait" src="${cfg.portrait||''}" alt=""><div class="echo-bubble"><p class="mg-text"></p><div class="mg-timer"><i></i></div></div>`:`<div class="desk"><div class="desk-edge">Tischkante</div><article class="file"><span class="file-tab">Akte</span><p class="mg-text"></p><span class="file-stamp"></span></article></div><div class="mg-timer"><i></i></div>`}</div><div class="racer-banner" aria-live="polite"></div></div>
    <div class="mg-choices">${cfg.choices.map((c,i)=>`<button type="button" data-i="${i}" class="mg-choice c${i}">${cfg.icons?`<span class="mg-ico">${cfg.icons[i]}</span>`:''}${esc(c)}</button>`).join('')}</div></div>`;
   const stage=work.querySelector('.mg-stage'),text=work.querySelector('.mg-text'),bar=work.querySelector('.mg-timer i'),banner=work.querySelector('.racer-banner'),dots=[...work.querySelectorAll('.racer-dots i')],file=work.querySelector('.file'),stampEl=work.querySelector('.file-stamp');
   let mul=1,score=0,queue=shuffle(cfg.items),cur=null,left=0,total=0,running=false,locked=false,last=0,bt=null,done=[];
@@ -208,5 +208,74 @@ window.MiniGames=(()=>{
    setTimeout(()=>{const o=document.createElement('div');o.className='racer-overlay door-win';stage.append(o);winScreen(o,id,cfg.winTitle,cfg.win);},3000);};
   draw();return true;
  }
- return {racer,classify,darkroom,slider,lock};
+
+ /* ---------- Stempel des Statthalters: Akte fährt über den Tisch, Stempel in die Hand nehmen, abstempeln ---------- */
+ function stamp(id,cfg,work){
+  const goal=cfg.goal;
+  const seal=(c,i)=>`<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.5"/><path id="arc${id}${i}" d="M18 50a32 32 0 0 1 64 0" fill="none"/><text font-size="11" font-weight="700" letter-spacing="2" fill="currentColor"><textPath href="#arc${id}${i}" startOffset="50%" text-anchor="middle">${esc(c.latin)}</textPath></text><text x="50" y="62" text-anchor="middle" font-size="22" fill="currentColor">${esc(c.sym)}</text><text x="50" y="80" text-anchor="middle" font-size="7.5" font-weight="700" fill="currentColor">SPQR</text></svg>`;
+  work.innerHTML=`<div class="racer mg-stamp"><div class="racer-hud">${dotsHtml(goal,'Akten')}${speedHtml([['Ruhig',1],['Normal',.75],['Schnell',.55]])}</div>
+   <div class="racer-stage stamp-stage"><div class="stamp-desk"><div class="stamp-pile" aria-hidden="true"></div><div class="stamp-edge" aria-hidden="true">▼ Tischkante</div><article class="stamp-file" tabindex="0" aria-label="Akte abstempeln"><span class="file-tab">Akte</span><p class="mg-text"></p><div class="stamp-marks"></div></article></div><div class="stamp-hand" aria-hidden="true"></div><div class="racer-banner" aria-live="polite"></div></div>
+   <div class="stamp-rack" role="group" aria-label="Stempel">${cfg.choices.map((c,i)=>`<button type="button" class="stamp-tool" data-i="${i}" aria-pressed="false"><span class="stamp-knob"></span><span class="stamp-face">${seal(c,i)}</span><span class="stamp-name">${esc(c.label)}</span></button>`).join('')}</div>
+   <p class="stamp-status" aria-live="polite">Nimm einen Stempel in die Hand.</p></div>`;
+  const stage=work.querySelector('.stamp-stage'),desk=work.querySelector('.stamp-desk'),file=work.querySelector('.stamp-file'),text=file.querySelector('.mg-text'),marks=file.querySelector('.stamp-marks'),hand=work.querySelector('.stamp-hand'),banner=stage.querySelector('.racer-banner'),dots=[...work.querySelectorAll('.racer-dots i')],status=work.querySelector('.stamp-status'),pile=work.querySelector('.stamp-pile');
+  let mul=1,held=null,queue=shuffle(cfg.items),cur=null,x=0,speed=0,running=false,state='idle',last=0,bt=null,score=0,done=[];
+  bindSpeed(work,v=>mul=v);
+  const say=(h,k,ms=4200)=>{banner.innerHTML=h;banner.className='racer-banner show '+(k||'');clearTimeout(bt);bt=setTimeout(()=>banner.className='racer-banner',ms);};
+  function next(){if(!queue.length)queue=shuffle(cfg.items.filter(v=>!done.includes(v)));cur=queue.shift();text.textContent=cur.text;marks.innerHTML='';file.className='stamp-file';x=desk.clientWidth+10;speed=(desk.clientWidth+file.offsetWidth)/(cfg.time/mul);state='move';place();}
+  function place(){file.style.transform=`translateX(${x}px) rotate(${state==='move'?-2:0}deg)`;const f=Math.max(0,Math.min(1,(x+file.offsetWidth)/(desk.clientWidth+file.offsetWidth)));desk.style.setProperty('--danger',f<.3?1:0);}
+  function pick(i){held=held===i?null:i;work.querySelectorAll('.stamp-tool').forEach((b,k)=>{b.classList.toggle('held',k===held);b.setAttribute('aria-pressed',String(k===held));});
+   hand.innerHTML=held===null?'':`<span class="stamp-face big">${seal(cfg.choices[held],'h'+held)}</span>`;hand.classList.toggle('on',held!==null);stage.classList.toggle('holding',held!==null);
+   status.innerHTML=held===null?'Nimm einen Stempel in die Hand.':`In der Hand: <b>${esc(cfg.choices[held].label)}</b> – tippe jetzt auf die Akte.`;}
+  work.querySelectorAll('.stamp-tool').forEach(b=>b.onclick=()=>pick(+b.dataset.i));
+  stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();hand.style.left=(e.clientX-r.left)+'px';hand.style.top=(e.clientY-r.top)+'px';});
+  stage.addEventListener('pointerleave',()=>hand.classList.add('away'));stage.addEventListener('pointerenter',()=>hand.classList.remove('away'));
+  function hit(e){if(!running||state!=='move')return;if(held===null){say('Nimm zuerst unten einen Stempel in die Hand.','',2200);return;}
+   const r=file.getBoundingClientRect(),sr=stage.getBoundingClientRect();const px=e?e.clientX-r.left:r.width*.7,py=e?e.clientY-r.top:r.height*.55;
+   hand.style.left=(r.left-sr.left+px)+'px';hand.style.top=(r.top-sr.top+py)+'px';hand.classList.remove('press');void hand.offsetWidth;hand.classList.add('press');
+   const good=cur.ok.includes(held);
+   setTimeout(()=>{if(good){const m=document.createElement('span');m.className='stamp-print';m.style.left=Math.max(10,Math.min(r.width-80,px-40))+'px';m.style.top=Math.max(4,Math.min(r.height-80,py-40))+'px';m.style.transform=`rotate(${Math.random()*24-12}deg)`;m.innerHTML=seal(cfg.choices[held],'p'+Math.random().toString(36).slice(2));marks.append(m);
+     state='done';score++;done.push(cur);dots.forEach((d,i)=>d.classList.toggle('on',i<score));say(`<b>Richtig gestempelt!</b> ${esc(cur.why)}`,'good',2600);
+     setTimeout(()=>{file.classList.add('filed');const c=document.createElement('i');pile.append(c);},900);
+     if(score>=goal){running=false;setTimeout(()=>winScreen(ov,id,cfg.winTitle,cfg.win,done.map(v=>v.text)),1800);}else setTimeout(next,1700);}
+    else{file.classList.remove('shake');void file.offsetWidth;file.classList.add('shake');say(`<b>Der Schreiber hält deine Hand fest:</b> „${esc(cfg.choices[held].label)}“ passt hier nicht. ${esc(cur.hint||cfg.hint||'')}`,'bad',4200);}},180);}
+  file.addEventListener('click',e=>hit(e));file.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){hit();e.preventDefault();}});
+  function key(e){if(!work.isConnected){removeEventListener('keydown',key);return;}const n=+e.key;if(n>=1&&n<=cfg.choices.length&&running){pick(n-1);}}
+  addEventListener('keydown',key);
+  function loop(now){if(!work.isConnected)return;const dt=Math.min(.1,(now-last)/1000||0);last=now;
+   if(running&&state==='move'){x-=speed*dt;place();if(x<-file.offsetWidth*.55){state='fall';file.classList.add('fall');queue.push(cur);say(`<b>Die Akte ist vom Tisch gefallen!</b> Richtig wäre: ${esc(cur.ok.map(i=>cfg.choices[i].label).join(' / '))}. ${esc(cur.why)}`,'bad',5200);setTimeout(()=>{if(running)next();},2600);}}
+   else if(state==='done'&&!file.classList.contains('filed')){}
+   requestAnimationFrame(loop);}
+  const ov=startScreen(stage,cfg,cfg.rules,'Erste Akte holen',()=>{running=true;next();last=performance.now();});
+  requestAnimationFrame(loop);return true;
+ }
+
+ /* ---------- Die beiden Seilzüge: Holzklötze an Haken hängen, am Hebel ziehen ---------- */
+ function ropes(id,cfg,work){
+  const val={};cfg.lines.forEach((l,li)=>l.slots.forEach((_,si)=>val[li+'-'+si]=null));
+  work.innerHTML=`<div class="racer mg-ropes"><div class="racer-stage rope-stage"><div class="rope-beam" aria-hidden="true"></div>
+   ${cfg.lines.map((l,li)=>`<section class="rope-line" data-l="${li}"><h4>${esc(l.title)}</h4><div class="rope-row"><span class="pulley" aria-hidden="true"></span><div class="rope" aria-hidden="true"></div><div class="hooks">${l.slots.map((sl,si)=>`<button type="button" class="hook" data-k="${li}-${si}" aria-label="${esc(l.title)}, ${esc(sl)}: Haken"><span class="hook-label">${si+1}. ${esc(sl)}</span><span class="hook-iron" aria-hidden="true"></span><span class="block-slot"></span></button>`).join('')}</div><span class="pulley" aria-hidden="true"></span></div></section>`).join('')}
+   <div class="rope-chest" aria-hidden="true"><span class="chest-lid"></span><span class="chest-key">🗝</span></div>
+   <div class="racer-banner" aria-live="polite"></div></div>
+   <div class="rope-bottom"><div class="crate" role="group" aria-label="Holzklötze in der Kiste"><span class="crate-label">Kiste mit Holzklötzen</span><div class="crate-blocks">${cfg.blocks.map((b,i)=>`<button type="button" class="wood" data-b="${i}" aria-pressed="false">${esc(b)}</button>`).join('')}</div></div>
+   <button type="button" class="lever" aria-label="Am Hebel ziehen"><span class="lever-arm" aria-hidden="true"></span><span>Am Hebel ziehen</span></button></div>
+   <p class="stamp-status rope-status" aria-live="polite">Nimm einen Holzklotz aus der Kiste und häng ihn an einen Haken.</p></div>`;
+  const stage=work.querySelector('.rope-stage'),banner=stage.querySelector('.racer-banner'),status=work.querySelector('.rope-status');let held=null,bt=null,phase='ropes';
+  const say=(h,k,ms=4500)=>{banner.innerHTML=h;banner.className='racer-banner show '+(k||'');clearTimeout(bt);bt=setTimeout(()=>banner.className='racer-banner',ms);};
+  function setHeld(i){held=held===i?null:i;work.querySelectorAll('.wood[data-b]').forEach(b=>{const on=+b.dataset.b===held;b.classList.toggle('held',on);b.setAttribute('aria-pressed',String(on));});status.innerHTML=held===null?'Nimm einen Holzklotz aus der Kiste und häng ihn an einen Haken.':`In der Hand: <b>${esc(cfg.blocks[held])}</b> – tippe auf einen Haken.`;}
+  work.querySelectorAll('.wood[data-b]').forEach(b=>b.onclick=()=>setHeld(+b.dataset.b));
+  work.querySelectorAll('.hook').forEach(h=>h.onclick=()=>{if(phase!=='ropes')return;const k=h.dataset.k,slot=h.querySelector('.block-slot');
+   if(held===null){if(val[k]!==null){val[k]=null;slot.innerHTML='';h.classList.remove('filled','ok','bad');status.textContent='Klotz zurück in die Kiste gelegt.';}else say('Nimm zuerst einen Holzklotz aus der Kiste.','',2000);return;}
+   val[k]=held;slot.innerHTML=`<span class="wood hanging">${esc(cfg.blocks[held])}</span>`;h.classList.add('filled');h.classList.remove('ok','bad');setHeld(held);});
+  work.querySelector('.lever').onclick=()=>{
+   if(phase==='compare')return;
+   const empty=Object.values(val).filter(v=>v===null).length;if(empty){say(`Es hängen noch nicht alle Klötze. <b>${empty}</b> Haken sind leer.`,'bad',2600);return;}
+   const lever=work.querySelector('.lever');lever.classList.remove('pulled');void lever.offsetWidth;lever.classList.add('pulled');
+   let wrong=null;cfg.lines.forEach((l,li)=>{let lineOk=true;l.slots.forEach((_,si)=>{const k=li+'-'+si,h=work.querySelector(`.hook[data-k="${k}"]`);const ok=cfg.blocks[val[k]]===l.answer[si];h.classList.remove('ok','bad');void h.offsetWidth;h.classList.add(ok?'ok':'bad');if(!ok){lineOk=false;if(!wrong)wrong={l,si};}});work.querySelector(`.rope-line[data-l="${li}"]`).classList.toggle('pulling',lineOk);});
+   if(wrong){stage.classList.remove('jam');void stage.offsetWidth;stage.classList.add('jam');say(`<b>Das Seil verklemmt sich.</b> Bei „${esc(wrong.l.title)}“ hängt am Haken „${esc(wrong.l.slots[wrong.si])}“ der falsche Klotz. ${esc(cfg.hint)}`,'bad',5200);return;}
+   phase='compare';say('<b>Beide Seile laufen!</b> Die Rollen drehen sich …','good',2400);
+   setTimeout(()=>{const q=cfg.compare;const o=document.createElement('div');o.className='racer-overlay rope-compare';o.innerHTML=`<h3>${esc(q.title)}</h3><p>${esc(q.q)}</p><div class="dark-opts one-col">${q.options.map((t,k)=>`<button type="button" class="wood sign" data-k="${k}">${esc(t)}</button>`).join('')}</div><p class="quiz-fb" aria-live="polite"></p>`;stage.append(o);
+    o.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(+b.dataset.k===q.answer){o.remove();stage.classList.add('chest-open');say('<b>Die Truhe öffnet sich!</b> Darin liegt der Archivschlüssel.','good',3000);setTimeout(()=>{const w=document.createElement('div');w.className='racer-overlay';stage.append(w);winScreen(w,id,cfg.winTitle,cfg.win);},2400);}else{b.disabled=true;b.classList.add('wrong');const fb=o.querySelector('.quiz-fb');fb.className='quiz-fb bad';fb.textContent=q.why;}});},2200);};
+  return true;
+ }
+ return {racer,classify,darkroom,slider,lock,stamp,ropes};
 })();
