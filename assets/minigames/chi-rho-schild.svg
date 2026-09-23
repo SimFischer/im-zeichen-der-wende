@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+ <defs>
+  <radialGradient id="bg" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#3f6f63"/><stop offset="1" stop-color="#16302a"/></radialGradient>
+  <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c33a2b"/><stop offset="1" stop-color="#7c1d14"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe3a0"/><stop offset=".5" stop-color="#d9a64a"/><stop offset="1" stop-color="#9a6a1c"/></linearGradient>
+ </defs>
+ <rect width="600" height="600" fill="url(#bg)"/>
+ <g fill="#ffffff0d"><circle cx="80" cy="90" r="60"/><circle cx="530" cy="520" r="80"/><circle cx="520" cy="80" r="40"/></g>
+ <path d="M300 38c95 0 170 22 196 40 10 78 12 300-12 390-18 64-120 100-184 108-64-8-166-44-184-108-24-90-22-312-12-390 26-18 101-40 196-40z" fill="url(#gold)"/>
+ <path d="M300 58c86 0 150 19 176 34 8 72 10 286-12 368-16 56-104 88-164 96-60-8-148-40-164-96-22-82-20-296-12-368 26-15 90-34 176-34z" fill="url(#shield)"/>
+ <path d="M300 58v496M124 300h352" stroke="#5e150e" stroke-width="3" opacity=".35"/>
+ <circle cx="300" cy="300" r="150" fill="none" stroke="url(#gold)" stroke-width="14"/>
+ <g stroke="#6e4512" stroke-width="3" fill="url(#gold)" stroke-linejoin="round">
+  <path d="M288 150h24v300h-24z"/>
+  <path d="M312 150h32c46 0 72 26 72 62s-26 62-72 62h-32v-26h30c30 0 44-14 44-36s-14-36-44-36h-30z"/>
+  <path d="M197 211l18-18 188 188-18 18z"/>
+  <path d="M385 193l18 18-188 188-18-18z"/>
+ </g>
+ <g fill="url(#gold)" stroke="#6e4512" stroke-width="2">
+  <path d="M150 470c20 40 70 70 130 76-56-18-98-48-118-84z"/><path d="M450 470c-20 40-70 70-130 76 56-18 98-48 118-84z"/>
+  <ellipse cx="170" cy="480" rx="14" ry="7" transform="rotate(40 170 480)"/><ellipse cx="200" cy="508" rx="14" ry="7" transform="rotate(30 200 508)"/><ellipse cx="236" cy="528" rx="14" ry="7" transform="rotate(20 236 528)"/>
+  <ellipse cx="430" cy="480" rx="14" ry="7" transform="rotate(-40 430 480)"/><ellipse cx="400" cy="508" rx="14" ry="7" transform="rotate(-30 400 508)"/><ellipse cx="364" cy="528" rx="14" ry="7" transform="rotate(-20 364 528)"/>
+ </g>
+ <g fill="#fbe3a0" stroke="#6e4512" stroke-width="2"><circle cx="300" cy="96" r="12"/><circle cx="170" cy="120" r="9"/><circle cx="430" cy="120" r="9"/><circle cx="148" cy="300" r="9"/><circle cx="452" cy="300" r="9"/></g>
+</svg>

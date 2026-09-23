@@ -1,3 +1,15 @@
+# Update: Minispiele
+
+Fünf Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Jedes Spiel hat „Ohne Spiel lösen“ als barrierearme Alternative.
+
+- **Forum – Das Echo der Quellen:** Die Chronistin ruft Aussagen zu. Einordnen gegen die Zeit (belegt / unsicher / nicht feststellbar), 8 richtige Antworten.
+- **Amtsstube – Der Stempel des Statthalters:** Akten rutschen über den Tisch und werden nach Trajans Regeln gestempelt, 8 Akten.
+- **Archiv – Das Archiv im Dunkeln:** Mit dem Lichtkegel der Lampe vier Spuren finden und den Maßnahmen von 303 zuordnen.
+- **Lager 312 – Das Zeichen auf dem Schild:** 3×3-Puzzle (Tauschen oder Schieben) mit dem Christusmonogramm, danach Ereignis und Erzählung trennen.
+- **Stadt 313 – Die Kurierfahrt:** Spurwechsel-Rennen. Richtige Aussagen über 311/313 einsammeln, falschen ausweichen, 6 Botschaften.
+
+Wählbares Tempo, keine Leben, falsche Antworten werden erklärt. Der Fachtext-Knopf erscheint nur nach Fehlern in den klassischen Rätseln.
+
 # Update: Fachtexte zum Einlesen
 
 Jedes der 12 Rätsel hat einen zuschaltbaren **„📜 Fachtext“** mit einem kurzen Sachtext für Klasse 7 und, wo sinnvoll, einem kurzen Quellenzitat (Tertullian, Tacitus, Trajan an Plinius, Opferbescheinigung von 250, Eusebius, Mailänder Vereinbarung). Der Fachtext ist eine Hilfe bei Fehlern: Der Knopf „📜 Fachtext“ erscheint erst, nachdem ein Rätsel einmal falsch geprüft wurde. Die Informationen sollen zuerst aus den Gesprächen kommen. Minispiel: „Die Kurierfahrt von 313“ (Spurwechsel-Rennen, `minigames.js`) ersetzt die Besitztruhe; „Ohne Spiel“ führt zur Sortieraufgabe. Gelesene Texte stehen im Notizbuch unter „Gelesene Fachtexte“ und werden mitgedruckt. Die Texte stehen in `data/game-data.js` unter `GAME.texts`, die Anleitungen unter `GAME.steps`.

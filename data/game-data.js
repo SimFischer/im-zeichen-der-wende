@@ -176,3 +176,67 @@ window.GAME.minigames={
    {ok:false,text:'Die Verfolgung beginnt erst im Jahr 313.',why:'Umgekehrt: 311 und 313 endete die staatliche Verfolgung.'}
   ]}
 };
+
+Object.assign(window.GAME.minigames,{
+ sources:{type:'classify',skin:'echo',goal:8,title:'Das Echo der Quellen',counter:'Belege',
+  prompt:'Die Chronistin ruft dir Aussagen zu. Ordne jede rechtzeitig ein.',
+  intro:'Die Chronistin prüft, was auf dem Forum erzählt wird. Sie ruft dir Aussagen zu – du entscheidest schnell, wie sicher sie sind.',
+  rules:['<b>Gut belegbar:</b> Dafür gibt es Berichte.','<b>Unsicher:</b> Wird behauptet, ist aber umstritten.','<b>Nicht sicher feststellbar:</b> Das weiß niemand genau – oder es ist eine Verallgemeinerung ohne Beleg.','Schaffe <b>8 richtige Antworten</b>. Das Tempo kannst du oben wählen. Tasten 1–3 gehen auch.'],
+  startLabel:'Zuhören',choices:['gut belegbar','unsicher','nicht sicher feststellbar'],icons:['✔','?','∅'],time:12,
+  winTitle:'Die Chronik ist geprüft!',win:'Du hast Behauptung und gesichertes Wissen auseinandergehalten – genau wie eine Historikerin.',
+  items:[
+   {text:'Nach dem Brand von Rom wurden Christen verfolgt.',ok:[0],why:'Tacitus berichtet davon.'},
+   {text:'Nero ließ Rom absichtlich anzünden.',ok:[1,2],why:'Das Gerücht gab es schon damals – bewiesen ist es nicht.'},
+   {text:'Wir kennen die genaue Zahl aller Opfer.',ok:[2],why:'Keine Quelle nennt eine sichere Zahl.'},
+   {text:'Christliche Quellen berichten über die Verfolgung.',ok:[0],why:'Solche Berichte sind erhalten.'},
+   {text:'Alle Christen im ganzen Reich wurden gleichzeitig verfolgt.',ok:[2],why:'Die Verfolgung unter Nero betraf vor allem Rom.'},
+   {text:'Im Jahr 64 brannte ein großer Teil Roms.',ok:[0],why:'Der Brand ist gut überliefert.'},
+   {text:'Nero lenkte den Verdacht auf die Christen.',ok:[0],why:'So berichtet es der Geschichtsschreiber Tacitus.'},
+   {text:'Nero spielte während des Brandes auf der Leier.',ok:[1],why:'Eine berühmte Erzählung – aber schon antike Autoren widersprechen sich.'},
+   {text:'Jeder Christ in Rom wurde damals hingerichtet.',ok:[2],why:'Tacitus spricht von einer großen Menge, nicht von allen.'},
+   {text:'Die Christen hatten den Brand gelegt.',ok:[2],why:'Dafür gibt es keinen Beleg – es war eine Beschuldigung.'}
+  ]},
+ cases:{type:'classify',skin:'stamp',goal:8,title:'Der Stempel des Statthalters',counter:'Akten',
+  prompt:'Die Akten rutschen über den Tisch. Stemple jede nach Trajans Regeln, bevor sie herunterfällt.',
+  intro:'Der Schreiber schiebt dir die Akten zu. Setze den richtigen Stempel – so, wie es Kaiser Trajan dem Statthalter Plinius geschrieben hat.',
+  rules:['Lies die Akte und tippe auf den passenden <b>Stempel</b>.','Die Akte rutscht zur Tischkante – ist sie unten, fällt sie herunter und kommt später wieder.','Schaffe <b>8 richtig gestempelte Akten</b>. Tasten 1–4 gehen auch.','Wichtig: Du stellst eine historische Praxis nach. Das heißt nicht, dass sie gerecht war.'],
+  startLabel:'Erste Akte holen',choices:['Anzeige zurückweisen','weiter befragen','freilassen','bestrafen'],icons:['✖','?','↗','⚖'],time:14,
+  winTitle:'Alle Akten sind bearbeitet',win:'Du hast nachvollzogen, wie die Behörden um 112 vorgingen: Sie reagierten auf Anzeigen, suchten aber nicht aktiv nach Christen.',
+  items:[
+   {text:'Eine Anzeige ohne Namen des Absenders geht ein.',ok:[0],why:'Trajan: Anzeigen ohne Namen werden nicht beachtet.'},
+   {text:'Eine Frau sagt vor dem Statthalter: „Ich bin Christin.“ Zum ersten Mal.',ok:[1],why:'Sie wird ein zweites und drittes Mal gefragt.'},
+   {text:'Ein Mann war früher Christ. Er opfert vor dem Bild des Kaisers.',ok:[2],why:'Wer opfert, wird freigelassen.'},
+   {text:'Auf dem Markt geht ein Gerücht um. Niemand wird genannt.',ok:[0],why:'Aufspüren soll man die Christen nicht – ohne Anzeige kein Verfahren.'},
+   {text:'Nach drei Befragungen bleibt ein Mann dabei: Er ist Christ und opfert nicht.',ok:[3],why:'Wer dabei bleibt, wird bestraft.'},
+   {text:'Eine Angezeigte sagt: „Ich war nie Christin“ und opfert.',ok:[2],why:'Wer bestreitet und opfert, kommt frei.'},
+   {text:'Ein Nachbar zeigt mit seinem Namen einen Christen an. Die Befragung beginnt.',ok:[1],why:'Zuerst wird gefragt, ob er Christ ist.'},
+   {text:'Eine Liste mit vielen Namen, aber ohne Absender, liegt am Tor.',ok:[0],why:'So etwas passt laut Trajan nicht in unsere Zeit – unbeachtet lassen.'},
+   {text:'Eine Christin verweigert auch beim dritten Mal das Opfer.',ok:[3],why:'Nach Plinius’ Vorgehen folgt die Strafe.'},
+   {text:'Ein Angeklagter verflucht Christus und opfert Wein und Weihrauch.',ok:[2],why:'Plinius ließ solche Personen frei.'}
+  ]},
+ archive:{type:'darkroom',image:'assets/backgrounds/v3-archive.png',title:'Das Archiv im Dunkeln',
+  prompt:'Leuchte mit der Lampe durch das Archiv. Finde die vier Spuren und ordne sie zu.',
+  intro:'Das Archiv ist stockdunkel. Nur deine Lampe spendet Licht. Irgendwo hier liegen Spuren der großen Verfolgung ab 303.',
+  rules:['Bewege das <b>Licht</b> mit Maus oder Finger über das Bild.','Etwas leuchtet auf? <b>Tippe darauf</b>.','Wähle, welche Maßnahme von 303 die Spur erklärt.','Finde alle <b>4 Spuren</b>.'],
+  measures:['Schriften vernichten','Gottesdienste verbieten','Kirchen zerstören','Christen verhaften / bestrafen'],
+  spots:[
+   {name:'Verbrannte Schriftrolle',x:13,y:76,look:'Die Ränder sind schwarz verkohlt. Man erkennt noch Buchstaben eines Evangeliums.',answer:0,why:'303 wurde befohlen, die heiligen Schriften auszuliefern und zu verbrennen.',hint:'Was geschah mit Büchern und Schriften?'},
+   {name:'Versiegelte Tür',x:18,y:36,look:'Ein Amtssiegel verschließt die Tür des Versammlungsraums.',answer:1,why:'Christliche Versammlungen und Gottesdienste wurden verboten.',hint:'Wozu diente der Raum hinter der Tür?'},
+   {name:'Beschädigtes Kirchenmodell',x:49,y:67,look:'Das Dach des kleinen Modells ist eingeschlagen.',answer:2,why:'Die Kirchen sollten „dem Erdboden gleichgemacht“ werden.',hint:'Was zeigt das Modell?'},
+   {name:'Kette',x:81,y:52,look:'Eine schwere Eisenkette mit Fußfesseln.',answer:3,why:'Geistliche und später viele Christen wurden verhaftet und bestraft.',hint:'Wofür benutzte man Ketten?'}
+  ],
+  final:{q:'Was verbindet diese vier Maßnahmen?',options:['Gezielte staatliche und systematische Verfolgung.','Nur ein einzelner privater Streit.','Bereits allgemeine Religionsfreiheit.'],answer:0,why:'Die Befehle kamen vom Kaiser und galten im ganzen Reich – das ist mehr als ein Streit unter Nachbarn.'},
+  winTitle:'Das Archiv ist erhellt',win:'Du hast gezeigt: Ab 303 ging der Staat gezielt und planmäßig gegen die Christen vor.'},
+ vision:{type:'slider',image:'assets/minigames/chi-rho-schild.svg',title:'Das Zeichen auf dem Schild',
+  prompt:'Setze das zerbrochene Schildzeichen wieder zusammen. Danach prüfst du, was man darüber sicher weiß.',
+  intro:'In Konstantins Zelt liegt ein Schild. Sein Zeichen ist in neun Teile zerbrochen. Laktanz berichtet, Konstantin habe ein Zeichen Christi auf die Schilde malen lassen.',
+  rules:['<b>Tauschen:</b> Tippe zwei Teile nacheinander an, sie tauschen den Platz.','<b>Schieben:</b> Schiebe Teile in die Lücke – für Profis.','Mit „Vorlage zeigen“ siehst du das fertige Bild.','Danach ordnest du vier Aussagen ein.'],
+  quiz:{title:'Was wissen wir sicher?',intro:'Das Zeichen besteht aus den griechischen Buchstaben Chi (X) und Rho (P) – den Anfangsbuchstaben von „Christus“. Aber was ist über 312 wirklich bekannt?',choices:['gut feststellbar','später berichtet','nicht sicher feststellbar'],
+   items:[
+    {text:'Konstantin kämpfte 312 gegen Maxentius.',ok:[0],why:'Gegner und Jahr sind gut belegt.',hint:'Wie gut ist die Schlacht selbst überliefert?'},
+    {text:'Konstantin gewann die Schlacht.',ok:[0],why:'Der Sieg ist sicher.',hint:'Wer herrschte danach in Rom?'},
+    {text:'Christliche Autoren erzählen von einem Traum oder einer Vision.',ok:[1],why:'Laktanz und Eusebius schrieben das Jahre später auf.',hint:'Wann entstanden diese Berichte?'},
+    {text:'Wir wissen genau, was Konstantin gesehen hat.',ok:[2],why:'Die Berichte widersprechen sich – genau wissen wir es nicht.',hint:'Stimmen die Berichte überein?'}
+   ]},
+  winTitle:'Ereignis und Erzählung getrennt',win:'Die Schlacht von 312 ist gut belegt. Die Vision kennen wir nur aus späteren Erzählungen – und die unterscheiden sich.'}
+});

@@ -86,5 +86,99 @@ window.MiniGames=(()=>{
   requestAnimationFrame(t0=>{last=t0;resize();requestAnimationFrame(loop);});
   return true;
  }
- return {racer};
+
+ const win=id=>document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));
+ const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+ const dotsHtml=(n,label)=>`<div class="racer-goal"><span class="racer-label">${esc(label)}</span><span class="racer-dots">${Array.from({length:n},()=>'<i></i>').join('')}</span></div>`;
+ const speedHtml=(opts)=>`<div class="racer-speed" role="group" aria-label="Tempo">${opts.map((o,i)=>`<button type="button" data-speed="${o[1]}" aria-pressed="${i===0}">${esc(o[0])}</button>`).join('')}</div>`;
+ function bindSpeed(root,fn){root.querySelectorAll('.racer-speed button').forEach(b=>b.onclick=()=>{root.querySelectorAll('.racer-speed button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));fn(+b.dataset.speed);b.blur();});}
+ function startScreen(stage,cfg,rules,btn,onStart){const o=document.createElement('div');o.className='racer-overlay';o.innerHTML=`<h3>${esc(cfg.title)}</h3><p>${esc(cfg.intro)}</p><ul>${rules.map(r=>`<li>${r}</li>`).join('')}</ul><button type="button" class="primary racer-start">${esc(btn)}</button>`;stage.append(o);o.querySelector('.racer-start').onclick=()=>{o.hidden=true;onStart();};return o;}
+ function winScreen(o,id,title,text,list){o.hidden=false;o.innerHTML=`<h3>${esc(title)}</h3><p>${esc(text)}</p>${list?`<ul class="racer-summary">${list.map(x=>`<li>✓ ${esc(x)}</li>`).join('')}</ul>`:''}<button type="button" class="primary racer-done">Weiter</button>`;o.querySelector('.racer-done').onclick=()=>win(id);o.querySelector('.racer-done').focus();}
+
+ /* ---------- Zuordnen gegen die Zeit: „echo“ (Sprechblase + Zeitleiste) oder „stamp“ (Akten rutschen über den Tisch) ---------- */
+ function classify(id,cfg,work){
+  const goal=cfg.goal,skin=cfg.skin;
+  work.innerHTML=`<div class="racer mg-classify skin-${skin}"><div class="racer-hud">${dotsHtml(goal,cfg.counter||'Punkte')}${speedHtml([['Ruhig',1],['Normal',.75],['Schnell',.55]])}</div>
+   <div class="racer-stage mg-stage"><div class="mg-scene">${skin==='echo'?`<div class="echo-speaker" aria-hidden="true">🗣</div><div class="echo-bubble"><p class="mg-text"></p><div class="mg-timer"><i></i></div></div>`:`<div class="desk"><div class="desk-edge">Tischkante</div><article class="file"><span class="file-tab">Akte</span><p class="mg-text"></p><span class="file-stamp"></span></article></div><div class="mg-timer"><i></i></div>`}</div><div class="racer-banner" aria-live="polite"></div></div>
+   <div class="mg-choices">${cfg.choices.map((c,i)=>`<button type="button" data-i="${i}" class="mg-choice c${i}">${cfg.icons?`<span class="mg-ico">${cfg.icons[i]}</span>`:''}${esc(c)}</button>`).join('')}</div></div>`;
+  const stage=work.querySelector('.mg-stage'),text=work.querySelector('.mg-text'),bar=work.querySelector('.mg-timer i'),banner=work.querySelector('.racer-banner'),dots=[...work.querySelectorAll('.racer-dots i')],file=work.querySelector('.file'),stampEl=work.querySelector('.file-stamp');
+  let mul=1,score=0,queue=shuffle(cfg.items),cur=null,left=0,total=0,running=false,locked=false,last=0,bt=null,done=[];
+  bindSpeed(work,v=>mul=v);
+  const say=(h,k,ms=3800)=>{banner.innerHTML=h;banner.className='racer-banner show '+(k||'');clearTimeout(bt);bt=setTimeout(()=>banner.className='racer-banner',ms);};
+  function next(){if(!queue.length)queue=shuffle(cfg.items.filter(x=>!done.includes(x)));cur=queue.shift();total=left=cfg.time*mul;text.textContent=cur.text;locked=false;
+   if(file){file.classList.remove('stamped','fall','ok','bad');stampEl.textContent='';file.style.transition='none';file.style.transform='translateX(60vw)';void file.offsetWidth;file.style.transition='';}
+   stage.classList.remove('flash-good','flash-bad');}
+  function resolve(choice){if(locked||!running)return;locked=true;const good=choice!==null&&cur.ok.includes(choice);
+   if(file){stampEl.textContent=choice===null?'':cfg.choices[choice];file.classList.add('stamped',good?'ok':'bad');}
+   stage.classList.add(good?'flash-good':'flash-bad');
+   if(good){score++;done.push(cur);dots.forEach((d,i)=>d.classList.toggle('on',i<score));say(`<b>Richtig!</b> ${esc(cur.why||'')}`,'good',2600);}
+   else if(choice===null){queue.push(cur);say(`<b>${skin==='stamp'?'Die Akte ist vom Tisch gefallen!':'Zu langsam!'}</b> Richtig wäre: ${esc(cur.ok.map(i=>cfg.choices[i]).join(' / '))}. ${esc(cur.why||'')}`,'bad',5200);if(file)file.classList.add('fall');}
+   else{queue.push(cur);say(`<b>Nicht ganz.</b> Richtig: ${esc(cur.ok.map(i=>cfg.choices[i]).join(' / '))}. ${esc(cur.why||'')}`,'bad',5200);}
+   if(score>=goal){running=false;setTimeout(()=>winScreen(ov,id,cfg.winTitle,cfg.win,done.map(x=>x.text)),1200);return;}
+   setTimeout(next,good?1300:3000);}
+  work.querySelectorAll('.mg-choice').forEach(b=>b.onclick=()=>resolve(+b.dataset.i));
+  function key(e){if(!work.isConnected){removeEventListener('keydown',key);return;}const n=+e.key;if(n>=1&&n<=cfg.choices.length&&running)resolve(n-1);}
+  addEventListener('keydown',key);
+  function loop(now){if(!work.isConnected)return;const dt=Math.min(.1,(now-last)/1000||0);last=now;
+   if(running&&!locked){left-=dt;const f=Math.max(0,left/total);bar.style.width=(f*100)+'%';bar.style.background=f<.3?'#b3261e':f<.6?'#d99a2b':'#2d7a67';
+    if(file){const r=file.parentElement.clientWidth,w=file.offsetWidth;const x=(r/2-w/2+20)*(2*f-1)-(1-f)*w*.35;file.style.transform=`translateX(${x}px) rotate(${(1-f)*-3}deg)`;}if(left<=0)resolve(null);}
+   requestAnimationFrame(loop);}
+  const ov=startScreen(stage,cfg,cfg.rules,cfg.startLabel||'Los geht’s',()=>{running=true;next();last=performance.now();});
+  requestAnimationFrame(loop);return true;
+ }
+
+ /* ---------- Archiv im Dunkeln: mit dem Lichtkegel Spuren finden und zuordnen ---------- */
+ function darkroom(id,cfg,work){
+  const spots=cfg.spots,goal=spots.length;
+  work.innerHTML=`<div class="racer mg-dark"><div class="racer-hud">${dotsHtml(goal,'Spuren')}<span class="mg-tip">Bewege das Licht mit Maus oder Finger. Tippe auf etwas, das im Licht auffällt.</span></div>
+   <div class="racer-stage dark-stage"><img src="${cfg.image}" alt="" draggable="false"><canvas></canvas><div class="dark-spots"></div><div class="racer-banner" aria-live="polite"></div><div class="dark-dialog" hidden></div></div></div>`;
+  const stage=work.querySelector('.dark-stage'),canvas=stage.querySelector('canvas'),ctx=canvas.getContext('2d'),dots=[...work.querySelectorAll('.racer-dots i')],dlg=stage.querySelector('.dark-dialog'),banner=stage.querySelector('.racer-banner'),layer=stage.querySelector('.dark-spots');
+  let W=0,H=0,lx=.5,ly=.5,found=new Set(),bt=null,running=false;
+  const say=(h,k,ms=3800)=>{banner.innerHTML=h;banner.className='racer-banner show '+(k||'');clearTimeout(bt);bt=setTimeout(()=>banner.className='racer-banner',ms);};
+  spots.forEach((sp,i)=>{const b=document.createElement('button');b.type='button';b.className='dark-spot';b.style.left=sp.x+'%';b.style.top=sp.y+'%';b.setAttribute('aria-label',sp.name);b.onclick=e=>{e.stopPropagation();pick(i);};layer.append(b);});
+  function paint(){const r=stage.getBoundingClientRect();if(!r.width)return;const d=Math.min(2,devicePixelRatio||1);if(W!==r.width||H!==r.height){W=r.width;H=r.height;canvas.width=W*d;canvas.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+   ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(8,6,4,.94)';ctx.fillRect(0,0,W,H);ctx.globalCompositeOperation='destination-out';const R=Math.min(W,H)*.2,x=lx*W,y=ly*H;const g=ctx.createRadialGradient(x,y,R*.2,x,y,R);g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.7,'rgba(0,0,0,.85)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.fill();
+   ctx.globalCompositeOperation='source-over';ctx.fillStyle='rgba(255,190,90,.10)';ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.fill();
+   layer.querySelectorAll('.dark-spot').forEach((b,i)=>{const sp=spots[i];const dist=Math.hypot((sp.x/100-lx)*W,(sp.y/100-ly)*H);b.classList.toggle('lit',dist<R*.75);b.classList.toggle('found',found.has(i));});}
+  const ro=new ResizeObserver(paint);ro.observe(stage);
+  function move(e){const r=stage.getBoundingClientRect();lx=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));ly=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));paint();}
+  stage.addEventListener('pointermove',move);stage.addEventListener('pointerdown',e=>{move(e);if(running&&e.target===canvas)say('Hier ist nichts Besonderes. Leuchte weiter herum.','',1800);});
+  function pick(i){if(!running||!dlg.hidden)return;const sp=spots[i];if(found.has(i)){say(`Diese Spur hast du schon: ${esc(sp.name)}.`,'',1600);return;}
+   const b=layer.children[i];if(!b.classList.contains('lit')){say('Zu dunkel – leuchte erst mit der Lampe dorthin.','',1800);return;}
+   dlg.hidden=false;dlg.innerHTML=`<h4>${esc(sp.name)}</h4><p>${esc(sp.look)}</p><p class="dark-q">Welche Maßnahme von 303 erklärt diese Spur?</p><div class="dark-opts">${cfg.measures.map((m,k)=>`<button type="button" data-k="${k}">${esc(m)}</button>`).join('')}</div>`;
+   dlg.querySelectorAll('button').forEach(x=>x.onclick=()=>{const k=+x.dataset.k;if(k===sp.answer){found.add(i);dots.forEach((d,j)=>d.classList.toggle('on',j<found.size));dlg.hidden=true;say(`<b>Richtig!</b> ${esc(sp.why)}`,'good',3500);paint();if(found.size>=goal)setTimeout(final,1200);}else{x.disabled=true;x.classList.add('wrong');say(`<b>Passt nicht.</b> ${esc(sp.hint)}`,'bad',3500);}});}
+  function final(){dlg.hidden=false;const f=cfg.final;dlg.innerHTML=`<h4>Alle vier Spuren gesichert</h4><p class="dark-q">${esc(f.q)}</p><div class="dark-opts">${f.options.map((m,k)=>`<button type="button" data-k="${k}">${esc(m)}</button>`).join('')}</div>`;
+   dlg.querySelectorAll('button').forEach(x=>x.onclick=()=>{if(+x.dataset.k===f.answer){dlg.hidden=true;running=false;winScreen(ov,id,cfg.winTitle,cfg.win,spots.map(s=>s.name+': '+cfg.measures[s.answer]));}else{x.disabled=true;x.classList.add('wrong');say(esc(f.why),'bad',4200);}});}
+  const ov=startScreen(stage,cfg,cfg.rules,'Lampe hochhalten',()=>{running=true;paint();});
+  requestAnimationFrame(paint);return true;
+ }
+
+ /* ---------- Schiebepuzzle mit anschließender Einordnung ---------- */
+ function slider(id,cfg,work){
+  const N=3,img=cfg.image;
+  work.innerHTML=`<div class="racer mg-slider"><div class="racer-hud"><div class="racer-goal"><span class="racer-label">Züge: <b class="mg-moves">0</b></span></div><div class="racer-speed" role="group" aria-label="Schwierigkeit"><button type="button" data-mode="swap" aria-pressed="true">Tauschen (leicht)</button><button type="button" data-mode="slide" aria-pressed="false">Schieben (knifflig)</button></div><button type="button" class="racer-pause mg-peek">Vorlage zeigen</button></div>
+   <div class="racer-stage slider-stage"><div class="slider-wrap"><div class="slider-board"></div><img class="slider-peek" src="${img}" alt="Vorlage" hidden></div><div class="racer-banner" aria-live="polite"></div></div></div>`;
+  const stage=work.querySelector('.slider-stage'),board=work.querySelector('.slider-board'),movesEl=work.querySelector('.mg-moves'),banner=stage.querySelector('.racer-banner'),peek=work.querySelector('.slider-peek');
+  let mode='swap',tiles=[],sel=null,moves=0,solved=false,bt=null;
+  const say=(h,k,ms=3000)=>{banner.innerHTML=h;banner.className='racer-banner show '+(k||'');clearTimeout(bt);bt=setTimeout(()=>banner.className='racer-banner',ms);};
+  function setup(){moves=0;movesEl.textContent=0;sel=null;tiles=[...Array(N*N).keys()];
+   if(mode==='swap'){do{tiles=shuffle(tiles);}while(tiles.every((t,i)=>t===i));}
+   else{let blank=N*N-1,prev=-1;for(let k=0;k<80;k++){const nb=neighbors(blank).filter(x=>x!==prev);const nx=nb[Math.floor(Math.random()*nb.length)];[tiles[blank],tiles[nx]]=[tiles[nx],tiles[blank]];prev=blank;blank=nx;}}
+   draw();}
+  const neighbors=i=>{const r=Math.floor(i/N),c=i%N,o=[];if(r)o.push(i-N);if(r<N-1)o.push(i+N);if(c)o.push(i-1);if(c<N-1)o.push(i+1);return o;};
+  function draw(){board.innerHTML='';tiles.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.className='tile'+(mode==='slide'&&t===N*N-1&&!solved?' blank':'')+(sel===i?' sel':'');if(!(mode==='slide'&&t===N*N-1&&!solved)){b.style.backgroundImage=`url("${img}")`;b.style.backgroundPosition=`${(t%N)*50}% ${Math.floor(t/N)*50}%`;}b.setAttribute('aria-label','Teil '+(t+1));b.onclick=()=>tap(i);board.append(b);});}
+  function tap(i){if(solved)return;
+   if(mode==='swap'){if(sel===null){sel=i;draw();return;}if(sel!==i){[tiles[sel],tiles[i]]=[tiles[i],tiles[sel]];moves++;}sel=null;}
+   else{const blank=tiles.indexOf(N*N-1);if(!neighbors(blank).includes(i)){say('Nur Teile neben der Lücke lassen sich schieben.','',1500);return;}[tiles[blank],tiles[i]]=[tiles[i],tiles[blank]];moves++;}
+   movesEl.textContent=moves;draw();if(tiles.every((t,k)=>t===k)){solved=true;draw();board.classList.add('done');say('<b>Das Zeichen ist wieder vollständig!</b>','good',2500);setTimeout(quiz,1600);}}
+  work.querySelectorAll('.racer-speed button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;work.querySelectorAll('.racer-speed button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));solved=false;board.classList.remove('done');setup();});
+  work.querySelector('.mg-peek').onclick=()=>{peek.hidden=!peek.hidden;};
+  function quiz(){const q=cfg.quiz;let i=0,ok=0;const box=document.createElement('div');box.className='racer-overlay slider-quiz';stage.append(box);
+   function show(){const it=q.items[i];box.innerHTML=`<h3>${esc(q.title)}</h3><p>${esc(q.intro)}</p><p class="quiz-count">Aussage ${i+1} von ${q.items.length}</p><blockquote class="quiz-item">${esc(it.text)}</blockquote><div class="dark-opts">${q.choices.map((c,k)=>`<button type="button" data-k="${k}">${esc(c)}</button>`).join('')}</div><p class="quiz-fb" aria-live="polite"></p>`;
+    box.querySelectorAll('.dark-opts button').forEach(x=>x.onclick=()=>{const k=+x.dataset.k,fb=box.querySelector('.quiz-fb');if(it.ok.includes(k)){fb.className='quiz-fb good';fb.textContent='Richtig. '+it.why;box.querySelectorAll('.dark-opts button').forEach(y=>y.disabled=true);x.classList.add('right');setTimeout(()=>{i++;if(i<q.items.length)show();else{box.remove();winScreen(ov,id,cfg.winTitle,cfg.win);}},1900);}else{x.disabled=true;x.classList.add('wrong');fb.className='quiz-fb bad';fb.textContent='Noch nicht. '+it.hint;}});}
+   show();}
+  const ov=startScreen(stage,cfg,cfg.rules,'Puzzle beginnen',()=>{});
+  setup();return true;
+ }
+ return {racer,classify,darkroom,slider};
 })();
