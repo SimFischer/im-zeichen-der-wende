@@ -259,3 +259,11 @@ window.GAME.minigames.sacrifice={type:'ropes',title:'Die beiden Seilzüge',
  hint:'Denk an den Kontrolleur: Wer steht am Anfang, was verlangt der Staat, und was passiert danach?',
  compare:{title:'Noch ein letzter Riegel',q:'Was hat sich im Vergleich zum 1. Jahrhundert verändert?',options:['Überall unverändert.','Stärker staatlich organisierte Kontrolle.','Der Staat spielt keine Rolle mehr.'],answer:1,why:'Denk an die Bescheinigungen: Früher ging es oft um Anzeigen von Nachbarn. Jetzt verlangt der Staat selbst von allen das Opfer.'},
  winTitle:'Der Archivschlüssel ist frei',win:'Du hast beide Wege der Opferkontrolle rekonstruiert. Im 3. Jahrhundert verlangte der Staat selbst von allen das Opfer und kontrollierte es mit Bescheinigungen.'};
+
+/* Positionen der Orte auf der Stadtkarte (x %, y %), in Spielreihenfolge entlang des Weges */
+window.GAME.mapLayout={gate:[10,70],house:[22,44],forum:[33,15],office:[51,13],temple:[44,43],archive:[64,23],camp:[89,20],city:[67,51],motives:[87,68],council:[53,72],basilica:[31,74]};
+
+window.GAME.minigames.map312={type:'battlemap',title:'Das Kartenbrett',
+ prompt:'Stecke die sechs Beschriftungen an die richtigen Stellen der Karte. Dann prüfe die Karte.',
+ pins:[['Stadt',74,62],['Fluss',40,14],['Übergang',44,36],['Späterer Sieger',16,40],['Gegner',64,24],['Jahr',11,86]],
+ winTitle:'Die Karte ist vollständig',win:'Im Jahr 312 besiegte Konstantin seinen Gegner Maxentius an der Milvischen Brücke über den Tiber, kurz vor Rom.'};

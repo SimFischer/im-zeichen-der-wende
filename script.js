@@ -117,8 +117,33 @@
   selected=id;renderInventory();toggleBag(false);toast(G.items[id]+' ist gewählt. Tippe jetzt das Ziel in der Szene an. Zum Kombinieren öffne den Beutel und tippe einen zweiten Gegenstand an.');
  }
  $('#inventory-toggle').onclick=()=>toggleBag();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#inventory').hidden)toggleBag(false);});
- function showMap(){activePuzzle=null;open('Wege durch die Erinnerungen','<p>Jeder Ort zeigt eine andere Zeit. Du kannst zu geöffneten Orten zurückkehren.</p><div class="map-grid city-map"><svg class="city-paths" viewBox="0 0 1000 680" aria-hidden="true"><path d="M40 520Q300 540 260 300T450 70M260 300Q570 460 780 250T940 420M450 70L720 80L780 250M450 70L540 240L530 460L760 570L950 580" fill="none" stroke="#d6bc83" stroke-width="25"/><path d="M0 590Q300 370 640 580T1000 600" fill="none" stroke="#789f94" stroke-width="34"/></svg></div>','Stadtkarte','map');
-  G.scenes.forEach((s,index)=>{const accessible=state.unlocked.includes(s.id),b=button(s.name,()=>travel(s.id,'map'),'map-place',$('.map-grid'));const positions=[[13,77],[26,45],[45,16],[54,40],[72,16],[79,43],[93,65],[53,72],[76,88],[25,16],[93,90]];b.style.left=positions[index][0]+'%';b.style.top=positions[index][1]+'%';b.disabled=!accessible;b.innerHTML=`<strong>${esc(s.name)}</strong><small>${accessible?(s.id===state.scene?'Du bist hier':esc(s.era)):'Noch nicht zugänglich · weitere Spuren finden'}</small>`;});
+ function showMap(){activePuzzle=null;
+  const P=G.mapLayout||{};const order=G.scenes.map(s=>s.id);const pt=id=>P[id]||[50,50];
+  const road=order.map(id=>pt(id)).map(([x,y])=>`${x*16},${y*9}`).join(' ');
+  const opened=order.filter(id=>state.unlocked.includes(id));
+  const roadOpen=order.slice(0,Math.max(1,order.findLastIndex?order.findLastIndex(id=>state.unlocked.includes(id))+1:opened.length)).map(id=>pt(id)).map(([x,y])=>`${x*16},${y*9}`).join(' ');
+  const trees=[[5,40],[7,46],[12,90],[16,93],[40,92],[44,95],[60,93],[95,45],[97,52],[92,90],[26,8],[58,6],[74,90],[38,32],[56,34]];
+  open('Wege durch die Erinnerungen',`<p class="map-lead">Jeder Ort zeigt eine andere Zeit. Tippe auf einen geöffneten Ort, um dorthin zu reisen.</p><div class="parchment-map"><svg class="pm-art" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+   <defs><radialGradient id="pm-bg" cx=".5" cy=".45" r=".75"><stop offset="0" stop-color="#f6e7c4"/><stop offset=".7" stop-color="#e8d19f"/><stop offset="1" stop-color="#c9a468"/></radialGradient>
+   <pattern id="pm-grain" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" fill="#8a6a3a" opacity=".12"/><circle cx="4.5" cy="5" r=".6" fill="#8a6a3a" opacity=".1"/></pattern></defs>
+   <rect width="1600" height="900" fill="url(#pm-bg)"/><rect width="1600" height="900" fill="url(#pm-grain)"/>
+   <g fill="#b89b6a" opacity=".35"><path d="M0 250q120-90 260-30t180 10v-230H0z"/><path d="M1600 820q-140 30-260-20t-160 100h420z"/></g>
+   <path d="M1290 -20C1230 170 1370 300 1300 450S1180 700 1330 920" fill="none" stroke="#7fa7a0" stroke-width="70" stroke-linecap="round"/>
+   <path d="M1290 -20C1230 170 1370 300 1300 450S1180 700 1330 920" fill="none" stroke="#a9c9c0" stroke-width="18" stroke-dasharray="40 30" opacity=".7"/>
+   <path d="M1180 385h210" stroke="#7a5230" stroke-width="30"/><path d="M1180 385h210" stroke="#caa878" stroke-width="18"/>
+   <path d="M130 820C90 520 150 180 520 110S1120 70 1180 300 1150 760 820 840 230 900 130 820z" fill="#d8bd87" fill-opacity=".45" stroke="#8a6a3a" stroke-width="10" stroke-dasharray="26 8"/>
+   <polyline points="${road}" fill="none" stroke="#b08c58" stroke-width="16" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="2 22" opacity=".9"/>
+   <polyline points="${roadOpen}" fill="none" stroke="#7a5230" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="18 12"/>
+   ${trees.map(([x,y])=>`<g transform="translate(${x*16} ${y*9})"><ellipse cx="0" cy="12" rx="16" ry="5" fill="#6b5a32" opacity=".3"/><path d="M0-26C16-26 22-6 12 6H-12C-22-6-16-26 0-26z" fill="#6f8a4a" stroke="#4a5e2e" stroke-width="3"/><path d="M0 6v10" stroke="#5a3a1c" stroke-width="4"/></g>`).join('')}
+   <g transform="translate(95 105)" stroke="#6b4a1c" fill="#6b4a1c"><circle r="52" fill="none" stroke-width="3"/><circle r="40" fill="none" stroke-width="1.5"/><path d="M0-62L10 0 0 62-10 0z" fill="#8a5a2e"/><path d="M-62 0L0-10 62 0 0 10z" fill="#b8955a"/><text y="-68" text-anchor="middle" font-size="26" stroke="none" font-family="Georgia">N</text></g>
+   <text x="1325" y="160" transform="rotate(-78 1325 160)" font-size="30" font-style="italic" fill="#3f6b62" font-family="Georgia" letter-spacing="6">Fluss</text>
+   <rect x="8" y="8" width="1584" height="884" fill="none" stroke="#6b4a1c" stroke-width="6"/><rect x="20" y="20" width="1560" height="860" fill="none" stroke="#6b4a1c" stroke-width="2"/>
+  </svg><div class="pm-places"></div></div>`,'Stadtkarte','map');
+  const layer=$('.pm-places');
+  G.scenes.forEach((s,index)=>{const accessible=state.unlocked.includes(s.id),here=s.id===state.scene,[x,y]=pt(s.id);const b=document.createElement('button');b.type='button';b.className='pm-place'+(accessible?'':' locked')+(here?' here':'');b.style.left=x+'%';b.style.top=y+'%';b.disabled=!accessible;
+   b.setAttribute('aria-label',`${index+1}. ${s.name} – ${accessible?(here?'du bist hier':s.era):'noch verschlossen'}`);
+   b.innerHTML=`<span class="pm-medal" style="background-image:url('assets/backgrounds/v3-${s.id}.png')"><span class="pm-num">${accessible?index+1:'🔒'}</span></span><span class="pm-label"><b>${esc(s.name)}</b><small>${here?'Du bist hier':accessible?esc(s.era):'Noch verschlossen'}</small></span>${here?'<span class="pm-here" aria-hidden="true">▼</span>':''}`;
+   b.onclick=()=>travel(s.id,'map');layer.append(b);});
  }
  $('#map').onclick=showMap;
  function showJournal(){activePuzzle=null;let html='<p>Deine gesicherten Erkenntnisse und eigenen Gedanken. Alles bleibt auf diesem Gerät.</p>';
