@@ -37,7 +37,7 @@
   if(p)return `Erkunde den Ort. Untersuche: ${p[0]}.`;
   return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
- function render(){unlock();const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
+ function render(){endTalk();unlock();const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
   const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.id}.png')`;art.style.backgroundSize='contain';art.style.backgroundPosition='center';
   art.style.filter=s.id==='archive'&&!own('light')?'brightness(.28) saturate(.65)':'';
   $('#world-change').className=state.flags.galerius?'open':'';
@@ -53,24 +53,35 @@
  }
  function renderExits(s){(G.exits?.[s.id]||[]).forEach(([target,x,y,label])=>{const dest=G.scenes.find(z=>z.id===target);if(!dest)return;const open=state.unlocked.includes(target);const b=document.createElement('button');b.type='button';b.className='exit'+(open?'':' locked')+(x<18?' edge-left':x>82?' edge-right':'');b.style.left=(x<18?1.5:x>82?98.5:x)+'%';b.style.top=y+'%';b.dataset.exit=target;b.setAttribute('aria-label',(open?'Gehe zu: ':'Noch versperrt: ')+dest.name);b.innerHTML=`<span class="exit-arrow" aria-hidden="true">${open?'➜':'🔒'}</span><span class="label">${esc(label)}${label.includes(dest.name.split(' ').pop())?'':`<small>${esc(dest.name)}</small>`}</span>`;b.onclick=()=>travel(target,'walk');$('#hotspots').append(b);});}
  function enter(id){if(!state.unlocked.includes(id))return;close();state.scene=id;selected=null;$('#inventory').hidden=true;$('#inventory-toggle').setAttribute('aria-expanded','false');render();if(!state.seen.includes('intro:'+id)){add('seen','intro:'+id);save();info(scene().name,scene().intro);}}
- function interact(h,i){add('seen',state.scene+':'+i);save();const [label,x,y,type,id]=h;
+ function interact(h,i){endTalk();add('seen',state.scene+':'+i);save();const [label,x,y,type,id]=h;
   if(state.scene==='archive'&&!own('light')){info('Zu dunkel','Du erkennst nur Umrisse. Öffne den Botenbeutel. Wähle die Öllampe und dann den Feuerstein, um sie zu entzünden. Beide findest du im Wohnviertel beziehungsweise am Stadttor.');return;}
-  if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t);else info(t[0],t[1]);return;}
+  if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t,h);else info(t[0],t[1]);return;}
   if(type==='take'){if(own(id)||['lamp','flint'].includes(id)&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
   if(type==='gate'){info('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
   if(type==='evidence'){add('evidence',id);save();info(G.evidence[id][0],`Im Licht wird die Spur sichtbar. Überlege, welche Maßnahme sie erklärt: ${G.evidence[id][1]}. Die Spur ist jetzt für die Schubladen festgehalten.`);render();return;}
   if(type==='finalgate'){sealLock();return;}
   if(type==='puzzle')openPuzzle(id);
  }
- function talk(id,t){
+ function endTalk(){const b=document.querySelector('#speech');if(!b)return;b.remove();document.querySelector('#scene').classList.remove('talking');document.querySelectorAll('.hotspot.speaking').forEach(h=>h.classList.remove('speaking'));if(talkReturn?.isConnected)talkReturn.focus();talkReturn=null;}
+ let talkReturn=null;
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.querySelector('#speech'))endTalk();});
+ // Gespräche erscheinen als Sprechblase direkt in der großen Szene, kein eigenes Fenster.
+ function talk(id,t,h){
   const pages=t[1].match(/[^.!?]+[.!?]+(?:[“”»«])?|[^.!?]+$/g)||[t[1]];let page=0;
-  const background=id==='guard'?'guard-close':state.scene;
-  const side=['merchant','chronicler','advisor'].includes(id)?'right':'left';
+  const x=h?.[1]??50;const onRight=x>50;
+  endTalk();talkReturn=document.activeElement;
+  const sceneEl=$('#scene');sceneEl.classList.add('talking');
+  document.querySelector(`.hotspot[data-hotspot="${id}"]`)?.classList.add('speaking');
+  const bubble=document.createElement('section');bubble.id='speech';bubble.className='speech-bubble in-scene '+(onRight?'left':'right');bubble.setAttribute('role','dialog');bubble.setAttribute('aria-label','Gespräch mit '+t[0]);
+  if(onRight)bubble.style.right=Math.min(100-x+9,56)+'%';else bubble.style.left=Math.min(x+9,56)+'%';
+  sceneEl.append(bubble);
   function show(){
-   open(t[0],`<div class="dialogue-stage"><img class="dialogue-art" src="assets/backgrounds/v3-${background}.png" alt="${esc(scene().name)} – im Gespräch mit ${esc(t[0])}"><section class="speech-bubble ${side}" aria-live="polite"><span class="speaker">${esc(t[0])}</span><p>${esc(pages.slice(page,page+2).join(' ').trim())}</p><span class="dialogue-progress">${Math.floor(page/2)+1} / ${Math.ceil(pages.length/2)}</span><div class="actions"></div></section></div>`,'Im Gespräch','conversation');
-   const a=$('.speech-bubble .actions');
+   bubble.innerHTML=`<button type="button" class="speech-close" aria-label="Gespräch beenden">✕</button><span class="speaker">${esc(t[0])}</span><p aria-live="polite">${esc(pages.slice(page,page+2).join(' ').trim())}</p><span class="dialogue-progress">${Math.floor(page/2)+1} / ${Math.ceil(pages.length/2)}</span><div class="actions"></div>`;
+   bubble.querySelector('.speech-close').onclick=endTalk;
+   const a=bubble.querySelector('.actions');
    if(page>0)button('Zurück',()=>{page=Math.max(0,page-2);show();},'',a);
-   if(page+2<pages.length)button('Weiter zuhören',()=>{page+=2;show();},'primary',a);else button('Weiter erkunden',close,'primary',a);
+   const main=page+2<pages.length?button('Weiter zuhören',()=>{page+=2;show();},'primary',a):button('Weiter erkunden',endTalk,'primary',a);
+   main.focus();
   }show();
  }
  function sealLock(){

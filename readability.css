@@ -50,3 +50,17 @@ dialog button,.rack button,.socket button,.gear button,.tray-handle,.stamp,.docu
 #app .exit.edge-right{transform:translate(-100%,-50%)}
 /* Rätsel-Beschriftungen */
 dialog .touch-instruction,dialog .slot-label,dialog .rope-track h3{font-size:var(--fs-s)}
+
+/* Gespräch direkt in der Szene */
+#scene .speech-bubble.in-scene{position:absolute;top:7%;left:auto;right:auto;z-index:5;width:min(44%,620px);max-height:72%;overflow:auto;padding:clamp(16px,1.2rem + 1vw,36px);padding-top:clamp(14px,1rem + .6vw,26px);animation:bubble-in .25s ease-out}
+#scene .speech-bubble.in-scene:after{top:28%}
+#scene .speech-bubble.in-scene .speaker{display:block;font:700 var(--fs-xs)/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7a5a30;margin-bottom:.4em;padding-right:2.4em}
+#scene .speech-bubble.in-scene p{font:clamp(18px,.8rem + 1vw,30px)/1.45 Georgia,serif;margin:0 0 .5em}
+#scene .speech-bubble.in-scene .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:.6em}
+#scene .speech-bubble.in-scene .actions button{font-size:var(--fs-s);padding:.5em 1em;min-height:44px}
+#scene .speech-close{position:absolute;top:10px;right:10px;width:40px;height:40px;min-height:0;padding:0;border-radius:50%;border:1px solid #c7a877;background:#f3e4c5;color:#3a2e1c;font-size:18px;line-height:1;box-shadow:none;cursor:pointer}
+#scene.talking .hotspot:not(.speaking),#scene.talking .exit{opacity:.35}
+#scene.talking .hotspot.speaking .label{background:#8c422a;border-color:#fff0c8}
+@keyframes bubble-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+@media(max-width:650px){#scene .speech-bubble.in-scene{top:auto!important;bottom:2%;left:2%!important;right:2%!important;width:auto;max-height:80%;padding:14px 16px;border-radius:16px}#scene .speech-bubble.in-scene:after{display:none}#scene .speech-bubble.in-scene p{font-size:17px}}
+@media(prefers-reduced-motion:reduce){#scene .speech-bubble.in-scene{animation:none}}
