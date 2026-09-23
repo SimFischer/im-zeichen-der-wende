@@ -1,7 +1,8 @@
 # Update: Minispiele
 
-Fünf Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Jedes Spiel hat „Ohne Spiel lösen“ als barrierearme Alternative.
+Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Jedes Spiel hat „Ohne Spiel lösen“ als barrierearme Alternative.
 
+- **Wohnviertel – Das Türschloss:** Drei Drehwalzen (Tippen, Wischen oder Pfeile) bilden einen Satz; am Griff ziehen prüft, Riegel gleitet zurück und die Tür schwingt auf.
 - **Forum – Das Echo der Quellen:** Die Chronistin ruft Aussagen zu. Einordnen gegen die Zeit (belegt / unsicher / nicht feststellbar), 8 richtige Antworten.
 - **Amtsstube – Der Stempel des Statthalters:** Akten rutschen über den Tisch und werden nach Trajans Regeln gestempelt, 8 Akten.
 - **Archiv – Das Archiv im Dunkeln:** Mit dem Lichtkegel der Lampe vier Spuren finden und den Maßnahmen von 303 zuordnen.

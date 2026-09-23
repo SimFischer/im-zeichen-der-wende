@@ -181,5 +181,32 @@ window.MiniGames=(()=>{
   const ov=startScreen(stage,cfg,cfg.rules,'Puzzle beginnen',()=>{});
   setup();return true;
  }
- return {racer,classify,darkroom,slider};
+
+ /* ---------- Türschloss mit drei Drehwalzen ---------- */
+ function lock(id,cfg,work){
+  const rings=cfg.rings;const pos=rings.map(r=>Math.floor(Math.random()*r.options.length));
+  rings.forEach((r,i)=>{if(pos[i]===r.answer)pos[i]=(pos[i]+1)%r.options.length;});
+  work.innerHTML=`<div class="racer mg-lock"><div class="lock-stage racer-stage"><div class="door-frame"><div class="door-light" aria-hidden="true"></div><div class="door"><div class="door-planks" aria-hidden="true"></div><div class="door-plate">
+    <div class="lock-rings">${rings.map((r,i)=>`<div class="lock-col"><span class="lock-q">${esc(r.question)}</span><button type="button" class="ring-btn up" data-i="${i}" data-d="-1" aria-label="${esc(r.question)}: nach oben drehen">▲</button><div class="ring" data-i="${i}" role="spinbutton" tabindex="0" aria-label="${esc(r.question)}"><div class="ring-track"></div><span class="ring-pin" aria-hidden="true"></span></div><button type="button" class="ring-btn down" data-i="${i}" data-d="1" aria-label="${esc(r.question)}: nach unten drehen">▼</button></div>`).join('<span class="lock-arrow" aria-hidden="true">➜</span>')}</div>
+    <div class="lock-bolt" aria-hidden="true"><i></i></div></div>
+    <button type="button" class="door-handle" aria-label="Am Türgriff ziehen">Am Griff ziehen</button></div></div>
+   <div class="racer-banner" aria-live="polite"></div></div>
+   <p class="lock-sentence" aria-live="polite"></p></div>`;
+  const stage=work.querySelector('.lock-stage'),banner=stage.querySelector('.racer-banner'),sentence=work.querySelector('.lock-sentence');let bt=null,opened=false;
+  const say=(h,k,ms=4200)=>{banner.innerHTML=h;banner.className='racer-banner show '+(k||'');clearTimeout(bt);bt=setTimeout(()=>banner.className='racer-banner',ms);};
+  const ringEls=[...work.querySelectorAll('.ring')];
+  function draw(){ringEls.forEach((el,i)=>{const r=rings[i],n=r.options.length,tr=el.querySelector('.ring-track');tr.innerHTML=[-1,0,1].map(o=>{const k=(pos[i]+o+n)%n;return `<span class="ring-word${o===0?' current':''}">${esc(r.options[k])}</span>`;}).join('');el.setAttribute('aria-valuetext',r.options[pos[i]]);});
+   sentence.innerHTML=cfg.sentence.map((part,i)=>part+(i<rings.length?` <b>${esc(rings[i].options[pos[i]])}</b>`:'')).join(' ');}
+  function turn(i,d){if(opened)return;const n=rings[i].options.length;pos[i]=(pos[i]+d+n)%n;const el=ringEls[i];el.classList.remove('ok','bad','spin-up','spin-down');void el.offsetWidth;el.classList.add(d>0?'spin-down':'spin-up');draw();}
+  work.querySelectorAll('.ring-btn').forEach(b=>b.onclick=()=>turn(+b.dataset.i,+b.dataset.d));
+  ringEls.forEach((el,i)=>{let sy=null;el.addEventListener('pointerdown',e=>{sy=e.clientY;el.setPointerCapture?.(e.pointerId);});el.addEventListener('pointerup',e=>{if(sy===null)return;const dy=e.clientY-sy;sy=null;if(Math.abs(dy)>18)turn(i,dy<0?1:-1);else turn(i,1);});el.addEventListener('keydown',e=>{if(e.key==='ArrowUp'){turn(i,-1);e.preventDefault();}if(e.key==='ArrowDown'){turn(i,1);e.preventDefault();}});});
+  work.querySelector('.door-handle').onclick=()=>{if(opened)return;const wrong=[];ringEls.forEach((el,i)=>{const ok=pos[i]===rings[i].answer;el.classList.remove('ok','bad');void el.offsetWidth;el.classList.add(ok?'ok':'bad');if(!ok)wrong.push(rings[i]);});
+   stage.classList.remove('rattle');void stage.offsetWidth;
+   if(wrong.length){stage.classList.add('rattle');say(`<b>Die Tür klemmt.</b> ${wrong.length===1?'Eine Walze sitzt':'Noch '+wrong.length+' Walzen sitzen'} nicht richtig.<br>${esc(wrong[0].hint)}`,'bad',5200);return;}
+   opened=true;stage.classList.add('unlocked');say('<b>Klick – klick – klick!</b> Der Riegel gleitet zurück …','good',2200);
+   setTimeout(()=>stage.classList.add('open'),900);
+   setTimeout(()=>{const o=document.createElement('div');o.className='racer-overlay door-win';stage.append(o);winScreen(o,id,cfg.winTitle,cfg.win);},3000);};
+  draw();return true;
+ }
+ return {racer,classify,darkroom,slider,lock};
 })();

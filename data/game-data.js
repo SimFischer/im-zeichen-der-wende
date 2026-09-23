@@ -240,3 +240,13 @@ Object.assign(window.GAME.minigames,{
    ]},
   winTitle:'Ereignis und Erzählung getrennt',win:'Die Schlacht von 312 ist gut belegt. Die Vision kennen wir nur aus späteren Erzählungen – und die unterscheiden sich.'}
 });
+
+window.GAME.minigames.conflict={type:'lock',title:'Das Türschloss',
+ prompt:'Drehe die drei Walzen, bis ein richtiger Satz entsteht. Dann zieh am Griff.',
+ sentence:['Christen','→ manche Nachbarn sehen darin','→ daraus kann werden:'],
+ rings:[
+  {question:'Was tun die Christen?',options:['bringen Opfer dar','verweigern das Opfer','suchen überall Streit','verlassen die Stadt'],answer:1,hint:'Erste Walze: Was hat dir die Bewohnerin über die Opfer für die Götter erzählt?'},
+  {question:'Wie sehen es manche Nachbarn?',options:['sichere Schuld','Verdacht','Bewunderung','Gleichgültigkeit'],answer:1,hint:'Zweite Walze: Der Marktverkäufer sagt, er findet das „verdächtig“ – bewiesen ist aber nichts.'},
+  {question:'Was kann daraus folgen?',options:['sofort Verfolgung überall','eine Anzeige oder Streit','das Ende aller Religionen','ein Fest für alle'],answer:1,hint:'Dritte Walze: Der Schuster will die Christen anzeigen – ist das schon eine Verfolgung im ganzen Reich?'}
+ ],
+ winTitle:'Die Tür ist offen!',win:'Du hast die Kette erkannt: Christen verweigerten das Opfer, manche Nachbarn wurden misstrauisch, und daraus konnten Anzeigen oder Streit entstehen – nicht überall und nicht immer.'};
