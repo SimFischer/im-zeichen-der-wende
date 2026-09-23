@@ -57,7 +57,7 @@
  function flyToBag(id){const from=document.querySelector(`.hotspot[data-hotspot="${id}"]`)?.getBoundingClientRect(),to=$('#inventory-toggle')?.getBoundingClientRect();if(!from||!to||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const img=document.createElement('img');img.src=`assets/inventory/${id}.svg`;img.alt='';img.className='fly-item';img.style.left=(from.left+from.width/2-32)+'px';img.style.top=(from.top+from.height/2-32)+'px';document.body.append(img);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{img.style.transform=`translate(${to.left+to.width/2-from.left-from.width/2}px,${to.top+to.height/2-from.top-from.height/2}px) scale(.45)`;img.style.opacity='.2';}));
-  setTimeout(()=>{img.remove();$('#inventory-toggle')?.classList.add('bag-bump');setTimeout(()=>$('#inventory-toggle')?.classList.remove('bag-bump'),450);},750);}
+  setTimeout(()=>{img.remove();$('#inventory-toggle')?.classList.add('bag-bump','has-new');setTimeout(()=>$('#inventory-toggle')?.classList.remove('bag-bump'),450);},750);}
  function interact(h,i){endTalk();add('seen',state.scene+':'+i);save();const [label,x,y,type,id]=h;
   if(state.scene==='archive'&&!own('light')){info('Zu dunkel','Du erkennst nur Umrisse. Öffne den Botenbeutel. Wähle die Öllampe und dann den Feuerstein, um sie zu entzünden. Beide findest du im Wohnviertel beziehungsweise am Stadttor.');return;}
   if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t,h);else info(t[0],t[1]);return;}
@@ -168,7 +168,7 @@
   }
   complete(id);
  }
- function complete(id){const p=G.puzzles[id];const already=has(id);add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward)add('inventory',p.reward);if(G.notes[id])add('notes',id);unlock();save();render();activePuzzle=null;
+ function complete(id){const p=G.puzzles[id];const already=has(id);add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward&&!own(p.reward)){add('inventory',p.reward);$('#inventory-toggle').classList.add('has-new');}if(G.notes[id])add('notes',id);unlock();save();render();activePuzzle=null;
   if(id==='archive'&&!state.flags.galerius){state.flags.galerius=true;add('notes','galerius');save();render();open('Eine Nachricht verändert die Stadt',`<p class="eyebrow">Zeitsprung · 311</p><p class="intro-copy">Ein Bote verkündet: „Galerius beendet die staatliche Verfolgung weitgehend.“ Die Hauskirche kann wieder geöffnet werden. Der Wandel beginnt schon vor Konstantins Sieg.</p><p>Auf der Stadtkarte ist jetzt das Militärlager erreichbar.</p>`,'Das Tor zum neuen Jahrhundert');button('Die Nachricht weitertragen',close,'primary',actions());return;}
   if(id==='bridge'){state.flags.finished=true;save();open('Die Chronik ist wieder offen',`<div class="ending"><span>✧</span><h3>Im Zeichen der Wende</h3><p>Du hast die Erinnerungen zusammengefügt: von unterschiedlichen Verfolgungen über rechtliche Absicherung bis zur gezielten Förderung des Christentums.</p></div><p style="margin-top:20px">Die Entwicklung geschah in mehreren Schritten. Sie machte 313 nicht alle anderen Religionen illegal.</p><p><strong>Besprecht zum Abschluss:</strong> Welche Veränderung rechtfertigt den Begriff „Wende“ am stärksten? Belegt eure Antwort mit zwei Ereignissen.</p>`,'Die Stadtchronik · vollständig');const a=actions();button('Mein Notizbuch öffnen',showJournal,'primary',a);button('Stadt weiter erkunden',close,'',a);return;}
   open(already?'Erinnerung erneut erschlossen':'Der Mechanismus öffnet sich',`<p class="intro-copy">${esc(G.notes[id]?.[1]|| (id==='map312'?'Die Karte ist vollständig. Konstantins Zelt ist jetzt zugänglich.':'Die Zeitfolge stimmt. Die Argumentationsbrücke ist jetzt zugänglich.'))}</p>${p.seal?`<div class="seals"><span class="seal found">${esc(p.seal)}</span></div><p>Erkenntnis-Siegel „${esc(p.seal)}“ gesichert.</p>`:''}${p.reward?`<p>In deinem Botenbeutel: <strong>${esc(G.items[p.reward])}</strong>.</p>`:''}`,'Eine neue Spur');const a=actions();button('Weiter erkunden',close,'primary',a);button('Stadtkarte ansehen',showMap,'',a);
@@ -188,3 +188,5 @@
  document.addEventListener('fullscreenchange',fullState);document.addEventListener('webkitfullscreenchange',fullState);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('focus-mode')){document.body.classList.remove('focus-mode');fullState();}});
  render();menu();
 })();
+
+document.querySelector('#inventory-toggle')?.addEventListener('click',e=>e.currentTarget.classList.remove('has-new'));
