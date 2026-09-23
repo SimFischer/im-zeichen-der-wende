@@ -8,11 +8,11 @@ Spielbare erste Version eines historischen Point-and-Click-Adventures für Klass
 
 ## GitHub Pages
 
-Ein neues Repository anlegen und den **Inhalt dieses Ordners** hochladen: `index.html` muss auf der obersten Ebene liegen. Alle Dateien und Asset-Unterordner mitnehmen.
+Online: https://simfischer.github.io/im-zeichen-der-wende/
 
-Die enthaltene `.github/workflows/pages.yml` veröffentlicht den unveränderten statischen Ordner bei einem Push auf `main`. In den Repository-Einstellungen unter Pages als Quelle **GitHub Actions** wählen und den Workflow starten. Der Workflow liefert den tatsächlichen Seitenlink. Alternativ ohne Workflow die Bereitstellung aus dem Branch `main` und `/ (root)` wählen. Es ist kein npm-Build notwendig. Relative Assetpfade funktionieren auch unter einem Repository-Unterpfad.
+Repository: https://github.com/SimFischer/im-zeichen-der-wende
 
-Das Projekt ist vorbereitet; ein Repository und eine laufende Pages-Veröffentlichung sind nicht Bestandteil dieses lokalen Pakets und müssen noch eingerichtet werden. Keine Zugangsdaten im Projekt hinterlegen.
+Die Veröffentlichung erfolgt aus `main` und `/ (root)` über GitHubs integrierten Pages-Workflow. Änderungen auf `main` werden automatisch veröffentlicht. Es ist kein npm-Build erforderlich. Alle Assetpfade sind relativ.
 
 ## Spiel
 
@@ -60,4 +60,4 @@ Texte, Rätsel, Dialoge, Hilfen, akzeptierte Antworten und fachliches Feedback: 
 
 `tests/playthrough.cjs` testet den vollständigen natürlichen Weg in einer DOM-Testumgebung einschließlich Sperren, falscher/unvollständiger Antworten, Fortsetzen, Inventarkombination, Ereignis 311, Finale, Lehrkraftfunktionen und Neustart. Zur Wiederholung nur für Entwicklung `npm install --no-save linkedom`, dann `node tests/playthrough.cjs`. Linkedom gehört nicht zum Spiel und wird zum Hosten nicht benötigt.
 
-Siehe `TESTREPORT.md` für die ausgeführten Prüfungen und Grenzen. Die reale Bedienung in iPad-Safari und eine visuelle Browserprüfung sind noch offen; der verfügbare Browser durfte den lokalen Testserver beziehungsweise lokale Dateien nicht öffnen.
+Siehe `TESTREPORT.md` für die ausgeführten Prüfungen und Grenzen. Die veröffentlichte Seite wurde in Chrome stichprobenartig geprüft (Start, Szenenwechsel, Fortsetzen und Lehrkraftzugang). Die reale Bedienung in iPad-Safari bleibt offen.
