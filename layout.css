@@ -168,3 +168,42 @@
 #modal .next-line{margin:.4em 0 .2em;color:#1f4a40;font-style:italic}
 @media(max-width:650px){.seal-award{flex-direction:column;text-align:center}.seal-row{justify-content:center}}
 @media(prefers-reduced-motion:reduce){.seal-award.fresh .seal-medal{animation:none}}
+#modal #puzzle-text.pulse{animation:text-pulse 1.2s ease-in-out 3;background:#fff1c4;border-color:#b8862e}
+@keyframes text-pulse{50%{box-shadow:0 0 0 6px #e7bc7466}}
+#modal .text-offer{margin:0 0 .6em;font-weight:600;color:#5a3a16}
+#modal .feedback{white-space:pre-line}
+
+/* ---------- Minispiel: Kurierfahrt ---------- */
+#modal[data-mode=minigame]{width:min(calc(var(--u)*56),calc(100vw - 24px))}
+.racer{display:flex;flex-direction:column;gap:.6em}
+.racer-hud{display:flex;align-items:center;gap:.8em;flex-wrap:wrap}
+.racer-goal{display:flex;align-items:center;gap:.6em;flex:1}
+.racer-label{font-weight:700;color:#3a2610}
+.racer-dots{display:flex;gap:.35em}
+.racer-dots i{width:calc(var(--u)*1.3);height:calc(var(--u)*1.3);border-radius:50%;border:2px dashed #a88a55;background:#f7ecd2;transition:.2s}
+.racer-dots i.on{border:2px solid #6e4a14;background:radial-gradient(circle at 35% 30%,#f7dc93,#c08a36);transform:scale(1.1)}
+.racer-speed{display:flex;border:2px solid #c9a86b;border-radius:10px;overflow:hidden}
+#modal .racer-speed button{border:0;border-radius:0;box-shadow:none;padding:.35em .8em;background:#f7ecd2;font-size:var(--fs-xs);min-height:0}
+#modal .racer-speed button[aria-pressed=true]{background:#2d5a4b;color:#fff}
+#modal .racer-pause{min-height:0;padding:.35em .8em;font-size:var(--fs-xs)}
+.racer-stage{position:relative;height:min(58vh,calc(var(--u)*30));border-radius:14px;overflow:hidden;border:3px solid #6e4a14;background:#8aa35a;touch-action:manipulation}
+.racer-stage canvas{display:block;cursor:pointer}
+.racer-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:calc(var(--u)*1.2) calc(var(--u)*2);background:#fbf1dbf2;overflow:auto}
+.racer-overlay[hidden]{display:none}
+#modal .racer-overlay h3{margin:0 0 .4em;font-size:calc(var(--u)*1.5);color:#5a3a16}
+#modal .racer-overlay li{font-size:var(--fs-s);margin:.25em 0}
+#modal .racer-overlay .primary{align-self:flex-start;margin-top:.6em;font-size:var(--fs-m);padding:.5em 1.4em}
+.racer-summary{list-style:none;padding:0}
+.racer-banner{position:absolute;left:50%;top:12px;transform:translate(-50%,-20px);max-width:88%;padding:.5em 1em;border-radius:12px;background:#fff8e6;border:2px solid #c9a86b;font-size:var(--fs-s);line-height:1.35;text-align:center;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 6px 18px #0005}
+.racer-banner.show{opacity:1;transform:translate(-50%,0)}
+.racer-banner.good{border-color:#2d7a67;background:#e2f0e8}
+.racer-banner.bad{border-color:#9b3b24;background:#f8e2dc}
+.racer-controls{display:flex;align-items:center;gap:.8em}
+#modal .racer-controls>button{flex:none;width:calc(var(--u)*4.2);height:calc(var(--u)*3);font-size:calc(var(--u)*1.4);border-radius:14px;background:linear-gradient(#f0cf8c,#d9a95c);border:2px solid #7a5a2c}
+.racer-log{flex:1;min-height:2.6em;display:flex;align-items:center;justify-content:center;text-align:center;font-size:var(--fs-s);color:#3a2610}
+.racer-log .ok{color:#2d7a67;font-weight:700}.racer-log .bad{color:#9b3b24;font-weight:700}
+.racer-stage{height:clamp(260px,calc(100dvh - 21rem - var(--u)*6),calc(var(--u)*30))}
+#modal[data-mode=minigame] .racer{gap:.4em}
+#modal[data-mode=minigame] .actions{margin-top:.5em}
+#modal[data-mode=minigame] .puzzle-head{margin-bottom:.3em}
+.racer-overlay{justify-content:safe center}

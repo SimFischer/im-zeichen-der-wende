@@ -154,3 +154,25 @@ window.GAME.summaries={
  timeline:{learned:['303: Beginn der großen Verfolgung unter Diokletian. 311: Galerius beendet die Verfolgung weitgehend.','312: Sieg an der Milvischen Brücke. 313: Mailänder Vereinbarung.','325: Konzil von Nicäa. 337: Taufe Konstantins kurz vor seinem Tod.'],merke:'Die Wende geschah nicht an einem Tag, sondern in mehreren Schritten.',next:'Jetzt ist die Argumentationsbrücke zugänglich.'}
 };
 window.GAME.sealInfo={Konflikt:{sym:'⚡',color:'#9b3b24'},Quelle:{sym:'📜',color:'#6b4b1f'},Anzeige:{sym:'✉',color:'#2f5a4f'},Staat:{sym:'🏛',color:'#5a3a6b'},'312':{sym:'✠',color:'#8a6a12'},Wende:{sym:'☧',color:'#1f4a6b'}};
+
+/* Minispiele: ersetzen den Standard-Mechanismus eines Rätsels (Alternative „Ohne Spiel“ bleibt verfügbar). */
+window.GAME.minigames={
+ change:{type:'racer',goal:6,title:'Die Kurierfahrt von 313',prompt:'Bringe die Nachricht aus Mailand in die Stadt. Sammle sechs richtige Aussagen.',
+  intro:'Die Kaiser haben sich in Mailand geeinigt. Reite mit der Nachricht in die Stadt! Unterwegs liegen Schriftrollen auf der Straße – aber nicht alle sagen die Wahrheit.',
+  win:'Du hast sechs richtige Aussagen über die Wende gesammelt. Die Stadt erfährt, was sich wirklich geändert hat.',
+  statements:[
+   {ok:true,text:'313: Alle dürfen ihre Religion frei ausüben.'},
+   {ok:true,text:'Christen bekommen beschlagnahmten Besitz zurück.'},
+   {ok:true,text:'Christen dürfen sich wieder öffentlich versammeln.'},
+   {ok:true,text:'311: Galerius beendet die Verfolgung weitgehend.'},
+   {ok:true,text:'Konstantin lässt große Kirchen bauen.'},
+   {ok:true,text:'Geistliche erhalten Vorrechte.'},
+   {ok:true,text:'Römische Kulte bleiben weiter erlaubt.'},
+   {ok:true,text:'Die Vereinbarung schließen Konstantin und Licinius.'},
+   {ok:false,text:'313 wird das Christentum die einzige Religion.',why:'Andere Religionen blieben erlaubt. Staatsreligion wurde das Christentum erst gegen Ende des 4. Jahrhunderts.'},
+   {ok:false,text:'Ab 313 müssen alle Menschen Christen werden.',why:'Die Vereinbarung erlaubte gerade die freie Wahl der Religion.'},
+   {ok:false,text:'313 werden alle Tempel geschlossen.',why:'Die römischen Tempel und Kulte bestanden weiter.'},
+   {ok:false,text:'Christen müssen auch nach 313 opfern.',why:'Die Opferpflicht galt nicht mehr – Christen durften ihren Glauben frei leben.'},
+   {ok:false,text:'Die Verfolgung beginnt erst im Jahr 313.',why:'Umgekehrt: 311 und 313 endete die staatliche Verfolgung.'}
+  ]}
+};
