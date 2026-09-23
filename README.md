@@ -1,3 +1,7 @@
+# Update: Lesbarkeit und Wege
+
+Größere Schrift, die mit dem Bildschirm mitwächst (`readability.css`). In jeder Szene führen Wege (➜) per Klick oder Tipp direkt zum Nachbarort; noch gesperrte Wege zeigen ein Schloss und einen Hinweis. Die Wege stehen in `data/game-data.js` unter `GAME.exits`.
+
 # Visuelle Überarbeitung 3
 
 Elf neu illustrierte Szenen mit integrierten Figuren, proportionaler Bilddarstellung und neu positionierten Klickflächen. Torwächtergespräch mit eigener Nahansicht und Sprechblase. Sichtbarer Feuerstein mit passendem Namen und Inventarbild. Interne Briefinghinweise aus der Schülerhilfe entfernt. Vollbild und bisheriger Spielstand bleiben erhalten.

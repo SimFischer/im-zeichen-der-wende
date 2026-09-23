@@ -35,7 +35,7 @@
   if(id==='basilica'&&!state.flags.sealsPlaced)return 'Setze deine sechs Erkenntnis-Siegel in die große Mechanik.';
   const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));
   if(p)return `Erkunde den Ort. Untersuche: ${p[0]}.`;
-  return 'Diese Erinnerung ist erschlossen. Die Stadtkarte zeigt dir neue Wege.';
+  return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
  function render(){unlock();const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
   const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.id}.png')`;art.style.backgroundSize='contain';art.style.backgroundPosition='center';
@@ -43,8 +43,15 @@
   $('#world-change').className=state.flags.galerius?'open':'';
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
   $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot';b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':'·'}</span><span class="label">${esc(h[0])}</span>`;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
-  window.Adventure.scene(s,state);$('#objective').textContent=objective();renderInventory();save();
+  window.Adventure.scene(s,state);renderExits(s);$('#objective').textContent=objective();renderInventory();save();
  }
+ function travel(id,via){
+  if(!state.unlocked.includes(id)){toast(G.exitHints?.[id]||'Dieser Weg ist noch versperrt. Finde zuerst weitere Spuren.');return;}
+  if(id==='archive'&&!state.flags.archiveUnlocked){if(!own('key')){toast('Der Archivschlüssel fehlt. Untersuche den Seilzug im Tempelbezirk.');return;}if(selected!=='key'){toast(via==='map'?'Wähle zuerst den Archivschlüssel im Botenbeutel und tippe dann das Archiv auf der Karte an.':'Die Archivtür ist verschlossen. Wähle den Archivschlüssel im Botenbeutel und tippe dann erneut auf den Weg.');close();$('#inventory').hidden=false;$('#inventory-toggle').setAttribute('aria-expanded','true');return;}state.flags.archiveUnlocked=true;selected=null;}
+  if(id==='office'&&!state.flags.passShown){if(!own('pass')){toast('Der Botenpass fehlt.');return;}state.flags.passShown=true;toast('Du zeigst den Botenpass. Der Schreiber lässt dich ein.');}
+  enter(id);
+ }
+ function renderExits(s){(G.exits?.[s.id]||[]).forEach(([target,x,y,label])=>{const dest=G.scenes.find(z=>z.id===target);if(!dest)return;const open=state.unlocked.includes(target);const b=document.createElement('button');b.type='button';b.className='exit'+(open?'':' locked')+(x<18?' edge-left':x>82?' edge-right':'');b.style.left=(x<18?1.5:x>82?98.5:x)+'%';b.style.top=y+'%';b.dataset.exit=target;b.setAttribute('aria-label',(open?'Gehe zu: ':'Noch versperrt: ')+dest.name);b.innerHTML=`<span class="exit-arrow" aria-hidden="true">${open?'➜':'🔒'}</span><span class="label">${esc(label)}${label.includes(dest.name.split(' ').pop())?'':`<small>${esc(dest.name)}</small>`}</span>`;b.onclick=()=>travel(target,'walk');$('#hotspots').append(b);});}
  function enter(id){if(!state.unlocked.includes(id))return;close();state.scene=id;selected=null;$('#inventory').hidden=true;$('#inventory-toggle').setAttribute('aria-expanded','false');render();if(!state.seen.includes('intro:'+id)){add('seen','intro:'+id);save();info(scene().name,scene().intro);}}
  function interact(h,i){add('seen',state.scene+':'+i);save();const [label,x,y,type,id]=h;
   if(state.scene==='archive'&&!own('light')){info('Zu dunkel','Du erkennst nur Umrisse. Öffne den Botenbeutel. Wähle die Öllampe und dann den Feuerstein, um sie zu entzünden. Beide findest du im Wohnviertel beziehungsweise am Stadttor.');return;}
@@ -88,11 +95,7 @@
  }
  $('#inventory-toggle').onclick=()=>{const el=$('#inventory');el.hidden=!el.hidden;$('#inventory-toggle').setAttribute('aria-expanded',String(!el.hidden));};
  function showMap(){activePuzzle=null;open('Wege durch die Erinnerungen','<p>Jeder Ort zeigt eine andere Zeit. Du kannst zu geöffneten Orten zurückkehren.</p><div class="map-grid city-map"><svg class="city-paths" viewBox="0 0 1000 680" aria-hidden="true"><path d="M40 520Q300 540 260 300T450 70M260 300Q570 460 780 250T940 420M450 70L720 80L780 250M450 70L540 240L530 460L760 570L950 580" fill="none" stroke="#d6bc83" stroke-width="25"/><path d="M0 590Q300 370 640 580T1000 600" fill="none" stroke="#789f94" stroke-width="34"/></svg></div>','Stadtkarte','map');
-  G.scenes.forEach((s,index)=>{const accessible=state.unlocked.includes(s.id),b=button(s.name,()=>{
-   if(s.id==='archive'&&!state.flags.archiveUnlocked){if(!own('key')){toast('Der Archivschlüssel fehlt. Untersuche den Seilzug im Tempelbezirk.');return;}if(selected!=='key'){toast('Wähle zuerst den Archivschlüssel im Botenbeutel und tippe dann das Archiv auf der Karte an.');close();$('#inventory').hidden=false;$('#inventory-toggle').setAttribute('aria-expanded','true');return;}state.flags.archiveUnlocked=true;selected=null;}
-   if(s.id==='office'&&!state.flags.passShown){if(!own('pass')){toast('Der Botenpass fehlt.');return;}state.flags.passShown=true;toast('Du zeigst den Botenpass. Der Schreiber lässt dich ein.');}
-   enter(s.id);
-  },'map-place',$('.map-grid'));const positions=[[13,77],[26,45],[45,16],[54,40],[72,16],[79,43],[93,65],[53,72],[76,88],[25,16],[93,90]];b.style.left=positions[index][0]+'%';b.style.top=positions[index][1]+'%';b.disabled=!accessible;b.innerHTML=`<strong>${esc(s.name)}</strong><small>${accessible?(s.id===state.scene?'Du bist hier':esc(s.era)):'Noch nicht zugänglich · weitere Spuren finden'}</small>`;});
+  G.scenes.forEach((s,index)=>{const accessible=state.unlocked.includes(s.id),b=button(s.name,()=>travel(s.id,'map'),'map-place',$('.map-grid'));const positions=[[13,77],[26,45],[45,16],[54,40],[72,16],[79,43],[93,65],[53,72],[76,88],[25,16],[93,90]];b.style.left=positions[index][0]+'%';b.style.top=positions[index][1]+'%';b.disabled=!accessible;b.innerHTML=`<strong>${esc(s.name)}</strong><small>${accessible?(s.id===state.scene?'Du bist hier':esc(s.era)):'Noch nicht zugänglich · weitere Spuren finden'}</small>`;});
  }
  $('#map').onclick=showMap;
  function showJournal(){activePuzzle=null;let html='<p>Deine gesicherten Erkenntnisse und eigenen Gedanken. Alles bleibt auf diesem Gerät.</p>';

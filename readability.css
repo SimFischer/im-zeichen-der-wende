@@ -1,0 +1,52 @@
+/* Lesbarkeit: größere Schrift, die mit dem Bildschirm mitwächst (auch im Vollbild).
+   Wird als letzte Datei geladen und überschreibt die kleineren Werte aus style/adventure/scenes.css. */
+:root{--fs-xs:clamp(13px,.55rem + .45vw,18px);--fs-s:clamp(15px,.7rem + .55vw,22px);--fs-m:clamp(17px,.8rem + .7vw,26px);--fs-l:clamp(26px,1.2rem + 1.5vw,48px)}
+body{font-size:var(--fs-m)}
+/* Szene */
+#app .hotspot{font-size:var(--fs-s)}
+#app .hotspot .label{font-size:var(--fs-s);max-width:min(260px,30vw);padding:.25em .7em;line-height:1.25}
+#app .hotspot .pin{width:clamp(20px,1.6vw,30px);height:clamp(20px,1.6vw,30px);line-height:1.1;font-size:var(--fs-xs)}
+#app .hotspot .label{top:calc(50% + clamp(12px,1vw,18px))}
+#app .location span,#era{font-size:var(--fs-xs);letter-spacing:.12em}
+#app .location h1,#scene-name{font-size:clamp(24px,1rem + 1.2vw,42px)}
+#app .objective{font-size:var(--fs-m);line-height:1.35}
+#app .eyebrow{font-size:var(--fs-xs)}
+#app .hud-button,#app .toolbar button,#app .toolbar span,#app #fullscreen span{font-size:var(--fs-s)}
+#toast{font-size:var(--fs-m)}
+#inventory,#inventory p,#inventory button{font-size:var(--fs-s)}
+/* Dialoge, Gespräche, Rätsel */
+dialog{font-size:var(--fs-m)}
+dialog h2{font-size:clamp(26px,1.1rem + 1.4vw,44px)}
+dialog h3{font-size:clamp(19px,.9rem + .8vw,30px)}
+.dialog-head span{font-size:var(--fs-xs)}
+dialog .muted,dialog small,.row-feedback,.placement-status,.touch-instruction,.document-card .assignment,.document-card .row-feedback{font-size:var(--fs-xs)}
+dialog button,.rack button,.socket button,.gear button,.tray-handle,.stamp,.document-card .card-face,.seal-rack .seal,.seal-socket,.teacher-scenes button{font-size:var(--fs-s)}
+.gear h3{font-size:var(--fs-m)}
+.gear small,.seal,.map-caption{font-size:var(--fs-xs)}
+.speech-bubble p{font-size:clamp(19px,.9rem + 1vw,32px)}
+.speech-bubble button{font-size:var(--fs-s)}
+.dialogue-progress{font-size:var(--fs-xs)}
+.city-map .map-place{font-size:var(--fs-s)}
+.city-map .map-place small,.city-map .map-place:disabled small:after{font-size:var(--fs-xs)}
+
+/* Wege zwischen den Szenen */
+#app .exit{position:absolute;transform:translate(-50%,-50%);z-index:2;display:flex;align-items:center;gap:.45em;min-width:48px;min-height:48px;padding:.3em .8em .3em .35em;border:2px solid #f3dca6;border-radius:999px;background:#1d3a31e6;color:#fff7de;font:600 var(--fs-s)/1.15 system-ui,-apple-system,'Segoe UI',sans-serif;text-align:left;cursor:pointer;box-shadow:0 0 0 4px #f3dca633,0 4px 14px #000a;animation:exit-pulse 2.6s ease-in-out infinite}
+#app .exit .exit-arrow{display:grid;place-items:center;width:1.9em;height:1.9em;border-radius:50%;background:#e7bc74;color:#2b2416;font-size:1em;flex:none}
+#app .exit .label{display:flex;flex-direction:column}
+#app .exit small{font-weight:400;font-size:.78em;opacity:.85}
+#app .exit:hover,#app .exit:focus-visible{background:#2d5a4b;outline:3px solid #fff0c8;outline-offset:2px}
+#app .exit.locked{background:#2a2a26d9;border-color:#9b8d74;animation:none;opacity:.85}
+#app .exit.locked .exit-arrow{background:#8b8069}
+@keyframes exit-pulse{0%,100%{box-shadow:0 0 0 4px #f3dca633,0 4px 14px #000a}50%{box-shadow:0 0 0 9px #f3dca622,0 4px 14px #000a}}
+@media(max-width:650px){#app .exit{padding:.2em .6em .2em .25em}#app .exit small{display:none}}
+@media(prefers-reduced-motion:reduce){#app .exit{animation:none}}
+@media print{#app .exit{display:none}}
+
+/* Platz für die größere Ortsüberschrift, damit sie nicht ins Bild ragt */
+@media(min-width:651px){#app .scene-viewport{inset:calc(112px + 3.2vw) 16px calc(92px + 2.6vw)}#app .location h1{margin:0}}
+/* Wege am Bildrand nach innen ausrichten, damit sie nicht abgeschnitten werden */
+#app .exit{white-space:nowrap}
+#app .exit.edge-left{transform:translate(0,-50%)}
+#app .exit.edge-right{transform:translate(-100%,-50%)}
+/* Rätsel-Beschriftungen */
+dialog .touch-instruction,dialog .slot-label,dialog .rope-track h3{font-size:var(--fs-s)}

@@ -13,7 +13,7 @@ window.GAME = {
  items:{lamp:'Öllampe',flint:'Feuerstein',light:'Brennende Lampe',key:'Archivschlüssel',pass:'Botenpass',decree:'Verfügung von 313'},
  scenes:[
  {id:'gate',name:'Das Stadttor',era:'Eine Stadt erinnert sich',bg:'gate',intro:'Du bist als Bote oder Botin unterwegs. Eine verschlossene Chronik bewahrt die Geschichte dieser Stadt. Sechs Erkenntnis-Siegel fehlen. Erkunde ihre Erinnerungen und bringe die Chronik wieder zum Sprechen.',hotspots:[['Wächter',85,89,'talk','guard'],['Siegelmechanik',22,46,'gate'],['Feuerstein',48,88,'take','flint']]},
- {id:'house',name:'Im Wohnviertel',era:'Spuren früher Konflikte',tile:1,intro:'Hinter einer unscheinbaren Tür treffen sich Christen. Zwischen Marktstand und Opferaltar entstehen Spannungen. Sprich mit den Menschen und untersuche die kleine Mechanik an der Tür.',hotspots:[['Bewohnerin',78,81,'talk','resident'],['Marktverkäufer',17,81,'talk','merchant'],['Opferaltar',92,58,'talk','altar'],['Christliches Zeichen',47,37,'talk','symbol'],['Brot',20,62,'talk','bread'],['Öllampe',61,63,'take','lamp'],['Türmechanik',45,50,'puzzle','conflict']]},
+ {id:'house',name:'Im Wohnviertel',era:'Spuren früher Konflikte',tile:1,intro:'Hinter einer unscheinbaren Tür treffen sich Christen. Zwischen Marktstand und Opferaltar entstehen Spannungen. Sprich mit den Menschen und untersuche die kleine Mechanik an der Tür.',hotspots:[['Bewohnerin',78,81,'talk','resident'],['Marktverkäufer',17,81,'talk','merchant'],['Opferaltar',92,58,'talk','altar'],['Christliches Zeichen',47,37,'talk','symbol'],['Brot',28,64,'talk','bread'],['Öllampe',61,63,'take','lamp'],['Türmechanik',45,50,'puzzle','conflict']]},
  {id:'forum',name:'Stimmen auf dem Forum',era:'1. Jahrhundert · Erinnerung an Rom',tile:2,intro:'Auf dem Forum streiten zwei Stimmen über den Brand von Rom. Die Stadtchronik braucht belastbare Aussagen, keine lautesten Gerüchte.',hotspots:[['Erzähler',72,86,'talk','rumor'],['Chronistin',22,86,'talk','chronicler'],['Quellenpult',48,57,'puzzle','sources']]},
  {id:'office',name:'Die Amtsstube',era:'2. Jahrhundert · Plinius',tile:3,intro:'Der Schreiber hat vier Fallakten durcheinandergebracht. Ordne sie nach dem geschilderten Vorgehen der Behörden. Du rekonstruierst eine historische Praxis – du entscheidest nicht darüber, was gerecht wäre.',hotspots:[['Schreiber',62,59,'talk','clerk'],['Fallakten',40,55,'puzzle','cases'],['Aktenschrank',15,48,'talk','cabinet']]},
  {id:'temple',name:'Die Kontrollstelle',era:'3. Jahrhundert · Opferpflicht',tile:4,intro:'Ein Seilzug verbindet die Kontrollstelle mit dem Archiv. Erst wenn beide Wege der Opferkontrolle richtig gelegt sind, gibt er den Schlüssel frei.',hotspots:[['Kontrolleur',83,89,'talk','control'],['Seilzug',26,54,'puzzle','sacrifice'],['Alte Chronik',12,75,'talk','old']]},
@@ -79,3 +79,29 @@ const events=['Konzil von Nicäa','Sieg über Maxentius','Taufe Konstantins kurz
 P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Sachfehler: '+year+' gehört zu „'+events[[3,5,1,4,0,2][i]]+'“.')),['Dein Notizbuch enthält die Zeitspuren.','Das Ende der Verfolgung beginnt vor Konstantins Sieg.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe.']);
 P.bridge=base('Die Argumentationsbrücke','bridge','Vervollständige die vier Brückenbögen. Formuliere danach deine eigene Begründung: Was ändert sich grundlegend, und welche Vereinfachung sollte man vermeiden?',[
 row('Vor Konstantin …',['waren Christen immer und überall verfolgt.','waren Christen zeitweise staatlicher Verfolgung ausgesetzt.','war das Christentum die einzige erlaubte Religion.'],1,'Historische Vereinfachung: Nicht dauerhaft und überall, sondern zeitweise und unterschiedlich.'),row('Ab 311/313 …',['verbesserte sich die Lage grundlegend.','begann erst jede Verfolgung.','waren alle Menschen Christen.'],0,'Sachfehler: Galerius und die Mailänder Vereinbarung markieren Schritte des Wandels.'),row('Unter Konstantin …',['wurden alle anderen Religionen sofort verboten.','spielte die Kirche keine Rolle.','wurde das Christentum rechtlich abgesichert und gezielt gefördert.'],2,'Historische Vereinfachung: Förderung bedeutet nicht sofortige Ausschließlichkeit.'),row('Deshalb spricht man von einer Wende, weil …',['nur ein Kaiser seinen Namen wechselte.','sich die Stellung des Christentums von zeitweiliger Verfolgung zu Absicherung und Förderung grundlegend veränderte.','wir alle inneren Motive Konstantins sicher kennen.'],1,'Ursache/Folge: Entscheidend ist die grundlegende Veränderung der Stellung des Christentums.')],['Lies die Seiten „313 und danach“ und „Frühes 4. Jahrhundert“.','Verbinde Ausgangslage, rechtliche Änderung und Förderung.','Zeitweilige Verfolgung → Verbesserung ab 311/313 → Absicherung und Förderung: grundlegender Wandel.']);
+
+/* Wege zwischen den Szenen: [Ziel, x %, y %, Beschriftung]. Klick/Tipp geht direkt zum Nachbarort.
+   Gesperrte Orte bleiben sichtbar, verraten aber, welche Spur noch fehlt. */
+window.GAME.exits={
+ gate:[['house',56,56,'Durch das Tor']],
+ house:[['gate',50,94,'Zurück zum Stadttor'],['forum',83,30,'Zum Forum']],
+ forum:[['house',5,42,'Zum Wohnviertel'],['office',89,52,'Zur Amtsstube']],
+ office:[['forum',33,36,'Zurück zum Forum'],['temple',93,30,'Zur Kontrollstelle']],
+ temple:[['office',40,93,'Zur Amtsstube'],['archive',60,52,'Die Stufen hinauf ins Archiv']],
+ archive:[['temple',30,93,'Zur Kontrollstelle'],['camp',66,16,'Weiter zum Tiber']],
+ camp:[['archive',12,92,'Zurück ins Archiv'],['city',94,64,'Zur geöffneten Stadt']],
+ city:[['camp',6,50,'Zum Tiber'],['motives',73,51,'Die Treppe hinauf']],
+ motives:[['city',8,93,'Zurück in die Stadt'],['council',76,32,'Zur Beratung von Nicäa']],
+ council:[['motives',31,24,'Zurück zur Waage'],['basilica',80,24,'Zur Basilika']],
+ basilica:[['council',75,28,'Zurück nach Nicäa'],['gate',50,94,'Zum Stadttor']]
+};
+window.GAME.exitHints={
+ office:'Die Amtsstube öffnet sich, wenn du die Türmechanik im Wohnviertel und das Quellenpult auf dem Forum gelöst hast.',
+ temple:'Ordne zuerst die Fallakten in der Amtsstube.',
+ archive:'Lege zuerst den Seilzug an der Kontrollstelle richtig.',
+ camp:'Ordne zuerst die Spuren in den Schubladen von Diokletians Archiv.',
+ city:'Erschließe zuerst Konstantins Zelt am Tiber.',
+ motives:'Untersuche zuerst die Besitztruhe in der geöffneten Stadt.',
+ council:'Bringe zuerst die Waage des Kaisers ins Gleichgewicht.',
+ basilica:'Löse zuerst die Beratungsrunde von Nicäa.'
+};
