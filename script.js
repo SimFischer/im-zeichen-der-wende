@@ -10,7 +10,7 @@
  const add=(key,value)=>{if(!state[key].includes(value))state[key].push(value);};
  const save=()=>{state.progress=state.solved.length;try{localStorage.setItem(KEY,JSON.stringify(state));storageOK=true;}catch(e){storageOK=false;toast('Speichern ist in diesem Browser nicht möglich. Lass diesen Tab geöffnet.');}};
  function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),5500);}
- function open(title,html,kicker='Die Stadtchronik',mode='info') {returnFocus=document.activeElement;modalMode=mode;$('#modal').dataset.mode=mode;$('#modal-title').textContent=title;$('#modal-kicker').textContent=kicker;$('#modal-content').innerHTML=html;if(!$('#modal').open)$('#modal').showModal();$('#modal').scrollTop=0;$('#close').focus();}
+ function open(title,html,kicker='Die Stadtchronik',mode='info') {if(!$('#modal').open)returnFocus=document.activeElement;modalMode=mode;$('#modal').dataset.mode=mode;$('#modal-title').textContent=title;$('#modal-kicker').textContent=kicker;$('#modal-content').innerHTML=html;if(!$('#modal').open)$('#modal').showModal();$('#modal').scrollTop=0;$('#close').focus();}
  function close(){ $('#modal').close();activePuzzle=null;modalMode='';if(returnFocus?.isConnected)returnFocus.focus(); }
  $('#close').onclick=close;$('#modal').addEventListener('cancel',e=>{e.preventDefault();close();});
  function button(text,fn,cls='primary',parent=$('#modal-content')){const b=document.createElement('button');b.textContent=text;b.className=cls;b.onclick=fn;parent.append(b);return b;}
@@ -38,10 +38,10 @@
   return 'Diese Erinnerung ist erschlossen. Die Stadtkarte zeigt dir neue Wege.';
  }
  function render(){unlock();const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
-  const art=$('#art');if(s.bg){art.style.backgroundImage=`url('assets/backgrounds/scene-${s.bg}.png')`;art.style.backgroundSize='cover';art.style.backgroundPosition='center';}else{art.style.backgroundImage="url('assets/backgrounds/scene-atlas.png')";art.style.backgroundSize='300% 300%';art.style.backgroundPosition=`${(s.tile%3)*50}% ${Math.floor(s.tile/3)*50}%`;}
+  const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.id}.png')`;art.style.backgroundSize='contain';art.style.backgroundPosition='center';
   art.style.filter=s.id==='archive'&&!own('light')?'brightness(.28) saturate(.65)':'';
   $('#world-change').className=state.flags.galerius?'open':'';
-  if(s.id==='house'&&state.flags.galerius){art.style.backgroundImage="url('assets/backgrounds/scene-city-313.png')";art.style.backgroundSize='cover';art.style.backgroundPosition='center';$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';}
+  if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
   $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot';b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':'·'}</span><span class="label">${esc(h[0])}</span>`;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
   window.Adventure.scene(s,state);$('#objective').textContent=objective();renderInventory();save();
  }
@@ -49,7 +49,7 @@
  function interact(h,i){add('seen',state.scene+':'+i);save();const [label,x,y,type,id]=h;
   if(state.scene==='archive'&&!own('light')){info('Zu dunkel','Du erkennst nur Umrisse. Öffne den Botenbeutel. Wähle die Öllampe und dann den Feuerstein, um sie zu entzünden. Beide findest du im Wohnviertel beziehungsweise am Stadttor.');return;}
   if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t);else info(t[0],t[1]);return;}
-  if(type==='take'){if(own(id)||id==='lamp'&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
+  if(type==='take'){if(own(id)||['lamp','flint'].includes(id)&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
   if(type==='gate'){info('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
   if(type==='evidence'){add('evidence',id);save();info(G.evidence[id][0],`Im Licht wird die Spur sichtbar. Überlege, welche Maßnahme sie erklärt: ${G.evidence[id][1]}. Die Spur ist jetzt für die Schubladen festgehalten.`);render();return;}
   if(type==='finalgate'){sealLock();return;}
@@ -57,7 +57,14 @@
  }
  function talk(id,t){
   const pages=t[1].match(/[^.!?]+[.!?]+(?:[“”»«])?|[^.!?]+$/g)||[t[1]];let page=0;
-  function show(){open(t[0],`<div class="conversation">${window.Adventure.portrait(id)}<div class="speech"><p class="intro-copy">${esc(pages.slice(page,page+2).join(' ').trim())}</p><span class="muted">${Math.min(page+2,pages.length)} / ${pages.length}</span></div></div>`,'Im Gespräch','conversation');const a=actions();if(page>0)button('Noch einmal',()=>{page=Math.max(0,page-2);show();},'',a);if(page+2<pages.length)button('Weiter zuhören',()=>{page+=2;show();},'primary',a);else button('Danke – weiter erkunden',close,'primary',a);button('Gespräch verlassen',close,'',a);}show();
+  const background=id==='guard'?'guard-close':state.scene;
+  const side=['merchant','chronicler','advisor'].includes(id)?'right':'left';
+  function show(){
+   open(t[0],`<div class="dialogue-stage"><img class="dialogue-art" src="assets/backgrounds/v3-${background}.png" alt="${esc(scene().name)} – im Gespräch mit ${esc(t[0])}"><section class="speech-bubble ${side}" aria-live="polite"><span class="speaker">${esc(t[0])}</span><p>${esc(pages.slice(page,page+2).join(' ').trim())}</p><span class="dialogue-progress">${Math.floor(page/2)+1} / ${Math.ceil(pages.length/2)}</span><div class="actions"></div></section></div>`,'Im Gespräch','conversation');
+   const a=$('.speech-bubble .actions');
+   if(page>0)button('Zurück',()=>{page=Math.max(0,page-2);show();},'',a);
+   if(page+2<pages.length)button('Weiter zuhören',()=>{page+=2;show();},'primary',a);else button('Weiter erkunden',close,'primary',a);
+  }show();
  }
  function sealLock(){
   if(state.seals.length<6){info('Die Mechanik wartet','Noch fehlen Erkenntnis-Siegel. Erkunde die offenen Orte auf der Stadtkarte.');return;}
@@ -71,7 +78,7 @@
   });if(placed.length===6)button('Zur Zeitmechanik',()=>{state.flags.sealsPlaced=true;save();close();render();},'primary',actions());
  }
  function renderInventory(){const inv=$('#inventory');inv.innerHTML='<p>Wähle einen Gegenstand und danach ein Ziel in der Szene. Zum Kombinieren tippe zwei Gegenstände nacheinander an.</p><div class="items"></div>';
-  state.inventory.filter(id=>G.items[id]).forEach(id=>{const b=button(G.items[id],()=>selectItem(id),'',inv.querySelector('.items'));b.innerHTML=`<img src="assets/inventory/${id}.svg" alt="">${esc(G.items[id])}`;if(selected===id)b.classList.add('selected');});
+  state.inventory.filter(id=>G.items[id]).forEach(id=>{const b=button(G.items[id],()=>selectItem(id),'',inv.querySelector('.items'));b.innerHTML=`<img src="assets/inventory/${id}.${id==='flint'?'png':'svg'}" alt="">${esc(G.items[id])}`;if(selected===id)b.classList.add('selected');});
   if(!state.inventory.length)inv.querySelector('.items').textContent='Dein Beutel ist noch leer.';
   $('#selected-item').textContent=selected?'Gewählt: '+G.items[selected]:'';
  }
@@ -148,7 +155,7 @@
   open(already?'Erinnerung erneut erschlossen':'Der Mechanismus öffnet sich',`<p class="intro-copy">${esc(G.notes[id]?.[1]|| (id==='map312'?'Die Karte ist vollständig. Konstantins Zelt ist jetzt zugänglich.':'Die Zeitfolge stimmt. Die Argumentationsbrücke ist jetzt zugänglich.'))}</p>${p.seal?`<div class="seals"><span class="seal found">${esc(p.seal)}</span></div><p>Erkenntnis-Siegel „${esc(p.seal)}“ gesichert.</p>`:''}${p.reward?`<p>In deinem Botenbeutel: <strong>${esc(G.items[p.reward])}</strong>.</p>`:''}`,'Eine neue Spur');const a=actions();button('Weiter erkunden',close,'primary',a);button('Stadtkarte ansehen',showMap,'',a);
  }
  function reset(){open('Ein neues Spiel beginnen?','<p>Der Spielstand auf diesem Gerät wird ersetzt. Lade bei Bedarf zuerst dein Notizbuch herunter.</p>','Spielmenü');const a=actions();button('Neues Spiel starten',()=>{try{localStorage.removeItem(KEY);}catch(e){}state=fresh();state.started=true;selected=null;activePuzzle=null;close();render();info(G.scenes[0].name,G.scenes[0].intro);},'danger',a);button('Abbrechen',menu,'',a);}
- function menu(){activePuzzle=null;open('Im Zeichen der Wende',`<p class="eyebrow">Ein historisches Point-and-Click-Adventure</p><p class="intro-copy">Eine verschlossene Chronik. Sechs fehlende Siegel. Und eine Stadt, deren Geschichte sich grundlegend verändert.</p><p>Du bist Bote oder Botin. Untersuche Gegenstände, sprich mit Menschen und verbinde ihre Spuren. Stadtkarte, Botenbeutel und Notizbuch begleiten dich.</p>${!storageOK?'<p class="save-warning">Speichern ist gerade nicht verfügbar. Lass diesen Tab geöffnet.</p>':''}`,'Willkommen','menu');const a=actions();button(state.started?'Spiel fortsetzen':'Die Stadt betreten',()=>{state.started=true;save();close();render();if(!state.seen.includes('intro:gate')){add('seen','intro:gate');save();info('Das Stadttor',G.scenes[0].intro);}},'primary',a);if(state.started)button('Neues Spiel',reset,'',a);button('Bedienung & Quellen',()=>info('Bedienung & Quellen','Tippe markierte Gegenstände und Personen an. Kombinieren: Gegenstand wählen, dann Ziel antippen. Bausteine setzen: erst Baustein, dann Platz. Die Öllampe gibt drei gestufte Hilfen. Inhaltliche Basis dieser Version ist das vorgegebene Briefing. Die Fachanforderungen SH 2016 wurden berücksichtigt. Der Abgleich mit den beiden genannten Arbeitsblättern und 6. Stunde.pptx steht noch aus. Alle Dialoge sind didaktische Fiktion, keine Originalzitate.'),'',a);}
+ function menu(){activePuzzle=null;open('Im Zeichen der Wende',`<p class="eyebrow">Ein historisches Point-and-Click-Adventure</p><p class="intro-copy">Eine verschlossene Chronik. Sechs fehlende Siegel. Und eine Stadt, deren Geschichte sich grundlegend verändert.</p><p>Du bist Bote oder Botin. Untersuche Gegenstände, sprich mit Menschen und verbinde ihre Spuren. Stadtkarte, Botenbeutel und Notizbuch begleiten dich.</p>${!storageOK?'<p class="save-warning">Speichern ist gerade nicht verfügbar. Lass diesen Tab geöffnet.</p>':''}`,'Willkommen','menu');const a=actions();button(state.started?'Spiel fortsetzen':'Die Stadt betreten',()=>{state.started=true;save();close();render();if(!state.seen.includes('intro:gate')){add('seen','intro:gate');save();info('Das Stadttor',G.scenes[0].intro);}},'primary',a);if(state.started)button('Neues Spiel',reset,'',a);button('So spielst du',()=>info('So spielst du','Tippe markierte Gegenstände und Personen an. Kombinieren: Gegenstand wählen, dann Ziel antippen. Bausteine setzen: erst Baustein, dann Platz. Die Öllampe gibt drei gestufte Hilfen.'),'',a);}
  const title=$('#title');title.addEventListener('pointerdown',()=>{held=false;clearTimeout(holdTimer);holdTimer=setTimeout(()=>{held=true;teacher();},5000);});for(const e of ['pointerup','pointercancel','pointerleave'])title.addEventListener(e,()=>clearTimeout(holdTimer));title.addEventListener('contextmenu',e=>e.preventDefault());title.onclick=()=>{if(!held)menu();held=false;};title.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.shiftKey){e.preventDefault();teacher();}});
  function teacher(){activePuzzle=null;open('Lehrkraftmodus','<p class="clue">Lokaler Testzugang, kein geschützter Adminbereich. Änderungen betreffen nur dieses Gerät. Zum Zurücksetzen einzelner Rätsel bleiben bereits geöffnete Orte zugänglich.</p><h3>Ort direkt öffnen</h3><div class="teacher-scenes"></div><h3>Rätsel gelöst / ungelöst</h3><div class="teacher-grid"></div><h3>Gegenstände hinzufügen</h3><div id="teacher-items" class="teacher-scenes"></div>','Spieltitel 5 Sekunden halten · alternativ Umschalt + Enter','teacher');
   G.scenes.forEach(s=>button(s.name,()=>{add('unlocked',s.id);enter(s.id);},'',$('.teacher-scenes')));

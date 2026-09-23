@@ -3,20 +3,16 @@
 window.Adventure = (() => {
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const cast={guard:0,resident:1,merchant:2,rumor:2,chronicler:3,clerk:4,control:5,messenger:6,advisor:7};
- const decor={city:[['resident',57,77]],council:[['clerk',25,79],['advisor',72,79]],basilica:[['chronicler',86,72]]};
- const icons={conflict:'⚙',sources:'▤',cases:'▣',sacrifice:'⚙',archive:'▥',map312:'⚑',vision:'◈',change:'▣',motives:'⚖',council:'◉',timeline:'◷',bridge:'⌒',scroll:'▤',door:'▥',church:'♜',chain:'∞'};
- const spriteBounds=[[0,250],[250,435],[435,710],[710,908],[908,1130],[1130,1363],[1363,1554],[1554,1774]];
- function portrait(id){const [left,right]=spriteBounds[cast[id]??3],width=right-left;return `<span class="character-art" style="--sprite-size:${1774/width*100}%;--sprite-position:${left/(1774-width)*100}%" aria-hidden="true"></span>`;}
  function scene(s,state){
   const el=document.querySelector('#scene');el.dataset.place=s.id;el.classList.toggle('illuminated',state.inventory.includes('light'));el.classList.toggle('changed',!!state.flags.galerius);
-  const layer=document.querySelector('#actors');layer.innerHTML='';
-  for(const [id,x,y] of decor[s.id]||[]){const a=document.createElement('div');a.className='world-extra';a.style.left=x+'%';a.style.top=y+'%';a.innerHTML=portrait(id);layer.append(a);}
+  document.querySelector('#actors').innerHTML='';
   document.querySelectorAll('.hotspot').forEach((b,i)=>{
-   const h=s.hotspots[i];if(cast[h[4]]!==undefined){b.classList.add('person');b.insertAdjacentHTML('afterbegin',portrait(h[4]));}
-   else if(['puzzle','evidence','gate','finalgate','take'].includes(h[3])){
-    b.classList.add('object');const prop=document.createElement('span');prop.className='world-prop prop-'+(h[4]||h[3]);prop.setAttribute('aria-hidden','true');
-    if(h[3]==='take')prop.innerHTML=`<img alt="" src="assets/inventory/${h[4]}.svg">`;
-    else prop.textContent=icons[h[4]]||'⚙';b.prepend(prop);
+   const h=s.hotspots[i];
+   if(cast[h[4]]!==undefined)b.classList.add('person');
+   if(h[4]==='flint'){
+    b.classList.add('collectible');b.querySelector('.pin').remove();
+    b.insertAdjacentHTML('afterbegin','<img src="assets/inventory/flint.png" alt="" class="flint-art">');
+    b.hidden=state.inventory.includes('flint')||state.inventory.includes('light');
    }
   });
  }
@@ -70,5 +66,5 @@ window.Adventure = (() => {
   if(id==='council'){const echo=make('div','council-link',board);echo.innerHTML='<span>Kirche</span><span aria-hidden="true">⟷</span><span>Reich</span>';}
   return true;
  }
- return {scene,portrait,cast,renderPuzzle};
+ return {scene,cast,renderPuzzle};
 })();

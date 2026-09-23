@@ -1,17 +1,9 @@
-# Neue Bildressourcen
+# Bildressourcen · Überarbeitung 3
 
-Erstellt mit der integrierten Bildgenerierung; keine übernommenen Fremdspielfiguren.
+Elf eigenständige Szenen in `assets/backgrounds/v3-*.png`, jeweils im vollständigen 3:2-Format. Menschen sind zusammen mit Umgebung, Perspektive, Beleuchtung und Bodenschatten gezeichnet; keine darübergelegten Figurensprites.
 
-- `assets/characters/townspeople.png`: acht freigestellte römische Figuren (Wächter, Bewohnerin, Händler, Chronistin, Schreiber, Kontrolleur, Bote, Beraterin), handgezeichneter 2D-Adventure-Stil.
-- `assets/backgrounds/scene-atlas.png`: vorhandene Neun-Szenen-Grafik als Referenz, Beschriftungsbanner entfernt, drei gleich große Zeilen und Spalten ohne Zwischenräume.
-- `assets/backgrounds/scene-council.png`: eigener römischer Beratungsraum mit Rundtisch, leeren Stühlen, Schriftrollen und warmem Fensterlicht.
+`v3-guard-close.png` zeigt denselben Torwächter in einer eigenen Gesprächsnahansicht. Sprechblasen und Bedienung sind echtes HTML. `assets/inventory/flint.png` ist ein freigestellter Feuerstein und wird sowohl auf dem Pflaster als auch im Inventar verwendet.
 
-Die Figuren sind ein einziges transparentes PNG; `adventure.js` enthält die Ausschnittgrenzen, `adventure.css` setzt diese im Spiel ein. Szenen sind fiktionale Illustrationen, keine historischen Rekonstruktionen oder Bildquellen.
+Erstellt mit der integrierten Bildgenerierung. Gestaltungsreferenz: bisheriges Stadttor. Ursprüngliche Ausgabedateien bleiben unverändert erhalten. Der römische Opferaltar im Wohnviertel wurde separat korrigiert. Die Bilder sind stilisierte Spielszenen, keine historischen Bildquellen oder detailgetreuen Rekonstruktionen.
 
-## Verwendete Gestaltungsbriefings
-
-Figuren: transparent character sprite sheet; eight distinct full-body ancient Roman townspeople, aligned feet, original expressive hand-inked 2D point-and-click style; warm rust brown orange and muted teal; no text, background, logos or modern items.
-
-Atlas: edit existing 3-by-3 Roman scene atlas; preserve scenes, compositions and object positions; remove caption banners, typography and gutters; continue architecture or sky seamlessly in removed regions.
-
-Nicäa: wide hand-drawn Roman council chamber, round meeting table at center, empty wooden seats, tall arches, scroll stand at lower right, foreground spaces for character sprites, ochre, terracotta and turquoise; no people, text, numbers or modern items.
+Die älteren Bilder bleiben zur Versionsgeschichte im Repository, werden als Hauptszenen und Figuren jedoch nicht mehr geladen. Klickflächen beziehen sich auf die gesamte neue Illustration; Szenen werden ohne Beschnitt proportional dargestellt.

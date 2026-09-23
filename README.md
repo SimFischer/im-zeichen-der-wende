@@ -1,3 +1,11 @@
+# Visuelle Überarbeitung 3
+
+Elf neu illustrierte Szenen mit integrierten Figuren, proportionaler Bilddarstellung und neu positionierten Klickflächen. Torwächtergespräch mit eigener Nahansicht und Sprechblase. Sichtbarer Feuerstein mit passendem Namen und Inventarbild. Interne Briefinghinweise aus der Schülerhilfe entfernt. Vollbild und bisheriger Spielstand bleiben erhalten.
+
+Lokal starten: ZIP vollständig entpacken und `index.html` im Browser öffnen. Alle Bilddateien müssen im Ordner bleiben. Alternativ über einen beliebigen statischen Webserver starten. Die Version ist noch nicht auf GitHub Pages veröffentlicht. Aktuelle Prüfergebnisse: `TESTREPORT.md`.
+
+---
+
 # Im Zeichen der Wende
 
 Spielbare erste Version eines historischen Point-and-Click-Adventures für Klasse 7, Evangelische Religion. HTML, CSS und Vanilla JavaScript, ohne Framework, Buildschritt, externe Schriftarten, CDN oder Serverdatenbank.

@@ -24,7 +24,14 @@ function solve(id){const p=env.window.GAME.puzzles[id];ok($('#modal-title').text
  else p.rows.forEach((r,i)=>{textButton(r.options[r.answer[0]],'.rack');click('#slot-'+i);});
  if($('#reason')){$('#reason').value='Glaube kann die Förderung erklären. Politische Einheit und Stabilität können zugleich eine Rolle spielen.';$('#reason').oninput();}
  textButton(p.type==='balance'?'Einordnung reflektieren':'Mechanismus prüfen');if(p.type==='balance')textButton('Ich habe meine Begründung geprüft – Siegel nehmen');ok(state().solved.includes(id),'Solved '+id);if($('#modal').open)close();}
-textButton('Die Stadt betreten');close();spot('flint');ok(state().inventory.includes('flint'),'Take flint');
+textButton('So spielst du');ok(!$('#modal-content').textContent.includes('Briefing'),'No internal briefing in student controls');close();click('#title');
+textButton('Die Stadt betreten');close();
+ok($('#art').style.backgroundImage.includes('v3-gate.png'),'Standalone gate scene');
+ok($('[data-hotspot="flint"]').textContent==='Feuerstein','Collectible label matches inventory item');
+ok(!!$('.flint-art'),'Visible flint image');ok(!$('.character-art'),'No distorted character sprites');
+spot('guard');ok($('#modal').dataset.mode==='conversation','Guard opens scene dialogue');ok($('.dialogue-art').getAttribute('src').includes('guard-close'),'Dedicated closeup');ok(!!$('.speech-bubble'),'Speech bubble present');
+textButton('Weiter zuhören');ok($('.dialogue-progress').textContent==='2 / 3','Conversation advances');textButton('Zurück');ok($('.dialogue-progress').textContent==='1 / 3','Conversation returns');close();
+spot('flint');ok($('[data-hotspot="flint"]').hidden,'Picked-up flint disappears');ok(state().inventory.includes('flint'),'Take flint');
 click('#map');ok(all('.map-place').filter(n=>!n.disabled).length===3,'Only initial three places');close();
 travel('house');spot('lamp');spot('conflict');textButton('Mechanismus prüfen');ok(!state().solved.includes('conflict'),'Incomplete puzzle blocked');click('#puzzle-hint');ok($('#hint-box').textContent.includes('1/3'),'First staged hint');click('#puzzle-hint');click('#puzzle-hint');click('#puzzle-hint');ok($('#hint-box').textContent.includes('3/3'),'Hints capped');solve('conflict');
 travel('forum');spot('sources');for(let i=0;i<5;i++){click('#slot-'+i);textButton('unsicher','.sorting-trays');}textButton('Mechanismus prüfen');ok(!state().solved.includes('sources'),'Wrong source assignments blocked');ok($('#feedback').textContent.includes('Quellenproblem'),'Explanatory feedback');close();
