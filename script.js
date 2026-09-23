@@ -29,8 +29,8 @@
  function objective(){
   const id=state.scene;
   if(id==='gate')return state.seals.length===6?'Alle Siegel gefunden. Die Chronik wartet in der Basilika.':'Erkunde die Erinnerungen. Finde sechs Erkenntnis-Siegel für die Chronik.';
-  if(id==='archive'&&!own('light'))return 'Kombiniere Öllampe und Feuerstein im Botenbeutel.';
-  if(id==='archive'&&state.evidence.length<4)return 'Untersuche die vier Spuren im Licht deiner Lampe.';
+  if(id==='archive'&&!own('light'))return 'Kombiniere Öllampe und Feuerstein im Botenbeutel.';if(id==='archive'&&!has('archive')&&G.minigames?.archive)return 'Tippe in die Dunkelheit, um mit der Lampe zu suchen.';
+  if(id==='archive'&&state.evidence.length<4&&!has('archive'))return 'Untersuche die vier Spuren im Licht deiner Lampe.';
   if(id==='camp'&&!has('map312'))return 'Beschrifte das Kartenbrett, um Konstantins Zelt zu öffnen.';
   if(id==='basilica'&&!state.flags.sealsPlaced)return 'Setze deine sechs Erkenntnis-Siegel in die große Mechanik.';
   const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));
@@ -39,7 +39,7 @@
  }
  function render(){endTalk();unlock();const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
   const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.id}.png')`;$('#app').style.setProperty('--scene-img',`url('assets/backgrounds/v3-${s.id}.png')`);art.style.backgroundSize='contain';art.style.backgroundPosition='center';
-  art.style.filter=s.id==='archive'&&!own('light')?'brightness(.28) saturate(.65)':'';
+  const archDark=s.id==='archive'&&!has('archive');art.style.filter=archDark?'brightness(.07) saturate(.4)':'';$('#scene').classList.toggle('archive-dark',archDark);
   $('#world-change').className=state.flags.galerius?'open':'';
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
   $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot';b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':'·'}</span><span class="label">${esc(h[0])}</span>`;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
@@ -52,14 +52,15 @@
   enter(id);
  }
  function renderExits(s){(G.exits?.[s.id]||[]).forEach(([target,x,y,label])=>{const dest=G.scenes.find(z=>z.id===target);if(!dest)return;const open=state.unlocked.includes(target);const b=document.createElement('button');b.type='button';b.className='exit'+(open?'':' locked')+(x<18?' edge-left':x>82?' edge-right':'');b.style.left=(x<18?1.5:x>82?98.5:x)+'%';b.style.top=y+'%';b.dataset.exit=target;b.setAttribute('aria-label',(open?'Gehe zu: ':'Noch versperrt: ')+dest.name);b.innerHTML=`<span class="exit-arrow" aria-hidden="true">${open?'➜':'🔒'}</span><span class="label">${esc(label)}${label.includes(dest.name.split(' ').pop())?'':`<small>${esc(dest.name)}</small>`}</span>`;b.onclick=()=>travel(target,'walk');$('#hotspots').append(b);});}
- function enter(id){if(!state.unlocked.includes(id))return;close();state.scene=id;selected=null;$('#inventory').hidden=true;$('#inventory-toggle').setAttribute('aria-expanded','false');render();if(!state.seen.includes('intro:'+id)){add('seen','intro:'+id);save();info(scene().name,scene().intro);}}
+ document.addEventListener('click',e=>{const sc=e.target.closest?.('#scene');if(!sc||!sc.classList.contains('archive-dark')||e.target.closest('.exit'))return;if(own('light'))openPuzzle('archive');else info('Zu dunkel','Du siehst nichts. Öffne den Botenbeutel und kombiniere die Öllampe mit dem Feuerstein. Beide findest du im Wohnviertel und am Stadttor.');});
+ function enter(id){if(!state.unlocked.includes(id))return;close();state.scene=id;selected=null;$('#inventory').hidden=true;$('#inventory-toggle').setAttribute('aria-expanded','false');render();if(id==='archive'&&own('light')&&!has('archive')&&G.minigames?.archive){add('seen','intro:archive');save();setTimeout(()=>openPuzzle('archive'),500);return;}if(!state.seen.includes('intro:'+id)){add('seen','intro:'+id);save();info(scene().name,scene().intro);}}
  // Kleine Animation: der Gegenstand fliegt aus der Szene in den Botenbeutel.
  function flyToBag(id){const from=document.querySelector(`.hotspot[data-hotspot="${id}"]`)?.getBoundingClientRect(),to=$('#inventory-toggle')?.getBoundingClientRect();if(!from||!to||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const img=document.createElement('img');img.src=`assets/inventory/${id}.svg`;img.alt='';img.className='fly-item';img.style.left=(from.left+from.width/2-32)+'px';img.style.top=(from.top+from.height/2-32)+'px';document.body.append(img);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{img.style.transform=`translate(${to.left+to.width/2-from.left-from.width/2}px,${to.top+to.height/2-from.top-from.height/2}px) scale(.45)`;img.style.opacity='.2';}));
   setTimeout(()=>{img.remove();$('#inventory-toggle')?.classList.add('bag-bump','has-new');setTimeout(()=>$('#inventory-toggle')?.classList.remove('bag-bump'),450);},750);}
  function interact(h,i){endTalk();add('seen',state.scene+':'+i);save();const [label,x,y,type,id]=h;
-  if(state.scene==='archive'&&!own('light')){info('Zu dunkel','Du erkennst nur Umrisse. Öffne den Botenbeutel. Wähle die Öllampe und dann den Feuerstein, um sie zu entzünden. Beide findest du im Wohnviertel beziehungsweise am Stadttor.');return;}
+  if(state.scene==='archive'&&own('light')&&!has('archive')&&G.minigames?.archive&&type!=='exit'){openPuzzle('archive');return;}if(state.scene==='archive'&&!own('light')){info('Zu dunkel','Du erkennst nur Umrisse. Öffne den Botenbeutel. Wähle die Öllampe und dann den Feuerstein, um sie zu entzünden. Beide findest du im Wohnviertel beziehungsweise am Stadttor.');return;}
   if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t,h);else info(t[0],t[1]);return;}
   if(type==='take'){if(own(id)||['lamp','flint'].includes(id)&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}flyToBag(id,state.scene+':'+i);add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
   if(type==='gate'){info('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
@@ -112,7 +113,7 @@
  }
  function toggleBag(show){const el=$('#inventory');if(show===undefined)show=el.hidden;el.hidden=!show;$('#inventory-toggle').setAttribute('aria-expanded',String(show));if(show)$('#inventory-toggle').classList.remove('has-new');}
  function selectItem(id){if(selected===id){selected=null;renderInventory();return;}
-  if(selected&&[selected,id].includes('lamp')&&[selected,id].includes('flint')){state.inventory=state.inventory.filter(x=>!['lamp','flint'].includes(x));add('inventory','light');selected=null;save();render();toast('Die Öllampe brennt. Jetzt kannst du im Archiv sehen.');return;}
+  if(selected&&[selected,id].includes('lamp')&&[selected,id].includes('flint')){state.inventory=state.inventory.filter(x=>!['lamp','flint'].includes(x));add('inventory','light');selected=null;save();render();toast('Die Öllampe brennt. Jetzt kannst du im Archiv sehen.');if(state.scene==='archive'&&!has('archive')&&G.minigames?.archive){toggleBag(false);setTimeout(()=>openPuzzle('archive'),900);}return;}
   selected=id;renderInventory();toggleBag(false);toast(G.items[id]+' ist gewählt. Tippe jetzt das Ziel in der Szene an. Zum Kombinieren öffne den Beutel und tippe einen zweiten Gegenstand an.');
  }
  $('#inventory-toggle').onclick=()=>toggleBag();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#inventory').hidden)toggleBag(false);});

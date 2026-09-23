@@ -476,3 +476,6 @@
 .rope-center .chest-row{display:flex}
 @media(orientation:portrait){.rope-center{padding-top:calc(var(--u)*.6);flex-wrap:wrap}.rope-center .crate{order:-1;flex-basis:100%}}
 @media(orientation:landscape){.rope-center{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"crate crate" "chest lever";align-items:end;justify-items:center;align-content:space-between}.rope-center .crate{grid-area:crate}.rope-center .rope-chest{grid-area:chest;margin-bottom:calc(var(--u)*.8)}.rope-center .lever{grid-area:lever}}
+/* Archiv: vor dem Lichtspiel fast schwarz, nur Wege sichtbar */
+#scene.archive-dark .hotspot{opacity:0;pointer-events:none}
+#scene.archive-dark .vignette{background:radial-gradient(circle at 50% 55%,#0000 0 8%,#000c 35%)}
