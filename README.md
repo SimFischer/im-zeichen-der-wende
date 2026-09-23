@@ -1,6 +1,6 @@
 # Update: Lesbarkeit und Wege
 
-Größere Schrift, die mit dem Bildschirm mitwächst (`readability.css`). In jeder Szene führen Wege (➜) per Klick oder Tipp direkt zum Nachbarort; noch gesperrte Wege zeigen ein Schloss und einen Hinweis. Gespräche erscheinen als Sprechblase direkt in der Szene statt in einem eigenen Fenster. Die Wege stehen in `data/game-data.js` unter `GAME.exits`.
+Größere Schrift, die mit dem Bildschirm mitwächst (`readability.css`). In jeder Szene führen Wege (➜) per Klick oder Tipp direkt zum Nachbarort; noch gesperrte Wege zeigen ein Schloss und einen Hinweis. Gespräche erscheinen als Sprechblase direkt in der Szene statt in einem eigenen Fenster. Neues Layout (`layout.css`): eine Leiste oben mit Stadtkarte, Botenbeutel, Notizbuch, Hinweis und Vollbild; die Szene füllt den restlichen Bildschirm (optimiert für iPad quer). Die Wege stehen in `data/game-data.js` unter `GAME.exits`.
 
 # Visuelle Überarbeitung 3
 

@@ -38,7 +38,7 @@
   return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
  function render(){endTalk();unlock();const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
-  const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.id}.png')`;art.style.backgroundSize='contain';art.style.backgroundPosition='center';
+  const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.id}.png')`;$('#app').style.setProperty('--scene-img',`url('assets/backgrounds/v3-${s.id}.png')`);art.style.backgroundSize='contain';art.style.backgroundPosition='center';
   art.style.filter=s.id==='archive'&&!own('light')?'brightness(.28) saturate(.65)':'';
   $('#world-change').className=state.flags.galerius?'open':'';
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
@@ -183,7 +183,7 @@
   const a=actions();button('Alle sechs Siegel geben',()=>{state.seals=[...G.seals];save();toast('Alle sechs Siegel vorhanden.');},'',a);button('Finale direkt testen',()=>{state.seals=[...G.seals];state.flags.sealsPlaced=true;add('unlocked','basilica');enter('basilica');},'primary',a);button('Spielstand löschen',reset,'danger',a);
  }
  const full=$('#fullscreen');
- function fullState(){const on=!!(document.fullscreenElement||document.webkitFullscreenElement||document.body.classList.contains('focus-mode'));full.setAttribute('aria-pressed',String(on));full.setAttribute('aria-label',on?'Vollbild verlassen':'Vollbild einschalten');full.innerHTML=on?'⛶ <span>Vollbild verlassen</span>':'⛶ <span>Vollbild</span>';}
+ function fullState(){const on=!!(document.fullscreenElement||document.webkitFullscreenElement||document.body.classList.contains('focus-mode'));full.setAttribute('aria-pressed',String(on));full.setAttribute('aria-label',on?'Vollbild verlassen':'Vollbild einschalten');full.innerHTML=`<span class="ico" aria-hidden="true">${on?'✕':'⛶'}</span>`;full.title=on?'Vollbild verlassen':'Vollbild';}
  full.onclick=async()=>{try{if(document.fullscreenElement||document.webkitFullscreenElement){const exit=document.exitFullscreen||document.webkitExitFullscreen;await exit.call(document);}else if(document.body.classList.contains('focus-mode')){document.body.classList.remove('focus-mode');}else{const root=document.documentElement,request=root.requestFullscreen||root.webkitRequestFullscreen;if(request)await request.call(root);else{document.body.classList.add('focus-mode');toast('Ansicht maximiert. Für Vollbild in Safari: Teilen → Zum Home-Bildschirm.');}}}catch(e){toast('Der Browser erlaubt Vollbild hier nicht. Öffne das Spiel direkt oder füge es in Safari zum Home-Bildschirm hinzu.');}fullState();};
  document.addEventListener('fullscreenchange',fullState);document.addEventListener('webkitfullscreenchange',fullState);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('focus-mode')){document.body.classList.remove('focus-mode');fullState();}});
  render();menu();
