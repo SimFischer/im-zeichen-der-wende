@@ -89,7 +89,7 @@ window.GAME.exits={
  office:[['forum',33,36,'Zurück zum Forum'],['temple',93,30,'Zur Kontrollstelle']],
  temple:[['office',40,93,'Zur Amtsstube'],['archive',60,52,'Die Stufen hinauf ins Archiv']],
  archive:[['temple',30,93,'Zur Kontrollstelle'],['camp',66,16,'Weiter zum Tiber']],
- camp:[['archive',12,92,'Zurück ins Archiv'],['city',94,64,'Zur geöffneten Stadt']],
+ camp:[['archive',12,92,'Zurück ins Archiv'],['city',94,92,'Zur geöffneten Stadt']],
  city:[['camp',6,50,'Zum Tiber'],['motives',73,51,'Die Treppe hinauf']],
  motives:[['city',8,93,'Zurück in die Stadt'],['council',76,32,'Zur Beratung von Nicäa']],
  council:[['motives',31,24,'Zurück zur Waage'],['basilica',80,24,'Zur Basilika']],
@@ -197,9 +197,9 @@ Object.assign(window.GAME.minigames,{
    {text:'Die Christen hatten den Brand gelegt.',ok:[2],why:'Dafür gibt es keinen Beleg – es war eine Beschuldigung.'}
   ]},
  cases:{type:'stamp',hint:'Denk an Trajans Regeln: ohne Namen keine Anzeige, zuerst fragen, wer opfert, kommt frei, wer dabei bleibt, wird bestraft.',goal:8,title:'Der Stempel des Statthalters',counter:'Akten',
-  prompt:'Die Akten rutschen über den Tisch. Stemple jede nach Trajans Regeln, bevor sie herunterfällt.',
+  prompt:'Der Schreiber legt dir eine Akte nach der anderen hin. Lies in Ruhe und stemple jede nach Trajans Regeln.',
   intro:'Der Schreiber schiebt dir die Akten zu. Setze den richtigen Stempel – so, wie es Kaiser Trajan dem Statthalter Plinius geschrieben hat.',
-  rules:['Die Akte rutscht über den Tisch zur Kante. Lies sie schnell.','<b>Nimm einen Stempel in die Hand</b> (antippen) und <b>tippe dann auf die Akte</b>.','Richtig gestempelt: Der Abdruck bleibt, die Akte kommt auf den Stapel. Fällt sie vom Tisch, kommt sie später wieder.','Schaffe <b>8 richtig gestempelte Akten</b>. <span class="mg-keys">Am PC gehen auch die Tasten 1–4.</span>','Wichtig: Du stellst eine historische Praxis nach. Das heißt nicht, dass sie gerecht war.'],
+  rules:['Die Akte liegt vor dir auf dem Tisch. Lies sie in Ruhe – es gibt keinen Zeitdruck.','<b>Nimm einen Stempel in die Hand</b> (antippen) und <b>tippe dann auf die Akte</b>.','Richtig gestempelt: Der Abdruck bleibt, die Akte kommt auf den Stapel. Bei einem falschen Stempel kannst du es gleich noch einmal versuchen.','Schaffe <b>8 richtig gestempelte Akten</b>. <span class="mg-keys">Am PC gehen auch die Tasten 1–4.</span>','Wichtig: Du stellst eine historische Praxis nach. Das heißt nicht, dass sie gerecht war.'],
   choices:[{label:'Anzeige zurückweisen',latin:'REIECTA',sym:'✕'},{label:'weiter befragen',latin:'INTERROGA',sym:'?'},{label:'freilassen',latin:'ABSOLVTVS',sym:'⚲'},{label:'bestrafen',latin:'DAMNATVS',sym:'⚖'}],time:18,
   winTitle:'Alle Akten sind bearbeitet',win:'Du hast nachvollzogen, wie die Behörden um 112 vorgingen: Sie reagierten auf Anzeigen, suchten aber nicht aktiv nach Christen.',
   items:[
