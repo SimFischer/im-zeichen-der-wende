@@ -217,7 +217,43 @@
  }
  function sealMedal(name,big){const inf=G.sealInfo?.[name]||{sym:'✦',color:'#6b4b1f'};return `<svg class="seal-medal${big?' big':''}" viewBox="0 0 120 120" role="img" aria-label="Siegel ${esc(name)}"><defs><radialGradient id="wax-${esc(name)}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#f7dc93"/><stop offset=".55" stop-color="#d5a24a"/><stop offset="1" stop-color="#8a5f1c"/></radialGradient></defs><path d="M60 4c7 0 9 6 15 7s11-3 16 2 2 11 5 16 10 5 12 12-4 10-4 16 6 10 4 17-9 7-12 12 0 12-5 16-11 0-16 2-8 8-15 8-9-6-15-7-11 3-16-2-2-11-5-16-10-5-12-12 4-10 4-16-6-10-4-17 9-7 12-12 0-12 5-16 11 0 16-2 8-8 15-8z" fill="url(#wax-${esc(name)})" stroke="#6e4a14" stroke-width="2"/><circle cx="60" cy="60" r="38" fill="none" stroke="#fff3c4" stroke-width="2" opacity=".7"/><circle cx="60" cy="60" r="33" fill="${inf.color}" opacity=".92"/><text x="60" y="${name.length>4?57:60}" text-anchor="middle" dominant-baseline="middle" font-size="26" fill="#fff3d0">${esc(inf.sym)}</text><text x="60" y="80" text-anchor="middle" font-size="${name.length>6?11:13}" font-weight="700" letter-spacing="1" fill="#fff3d0" font-family="Georgia,serif">${esc(name.toUpperCase())}</text></svg>`;}
  function reset(){open('Ein neues Spiel beginnen?','<p>Der Spielstand auf diesem Gerät wird ersetzt. Lade bei Bedarf zuerst dein Notizbuch herunter.</p>','Spielmenü');const a=actions();button('Neues Spiel starten',()=>{try{localStorage.removeItem(KEY);}catch(e){}state=fresh();state.started=true;selected=null;activePuzzle=null;close();render();info(G.scenes[0].name,G.scenes[0].intro);},'danger',a);button('Abbrechen',menu,'',a);}
- function menu(){activePuzzle=null;open('Im Zeichen der Wende',`<p class="eyebrow">Ein historisches Point-and-Click-Adventure</p><p class="intro-copy">Eine verschlossene Chronik. Sechs fehlende Siegel. Und eine Stadt, deren Geschichte sich grundlegend verändert.</p><p>Du bist Bote oder Botin. Untersuche Gegenstände, sprich mit Menschen und verbinde ihre Spuren. Stadtkarte, Botenbeutel und Notizbuch begleiten dich.</p>${!storageOK?'<p class="save-warning">Speichern ist gerade nicht verfügbar. Lass diesen Tab geöffnet.</p>':''}`,'Willkommen','menu');const a=actions();button(state.started?'Spiel fortsetzen':'Die Stadt betreten',()=>{state.started=true;save();close();render();if(!state.seen.includes('intro:gate')){add('seen','intro:gate');save();info('Das Stadttor',G.scenes[0].intro);}},'primary',a);if(state.started)button('Neues Spiel',reset,'',a);button('So spielst du',()=>info('So spielst du','Tippe markierte Gegenstände und Personen an. Kombinieren: Gegenstand wählen, dann Ziel antippen. Bausteine setzen: erst Baustein, dann Platz. Die Öllampe gibt drei gestufte Hilfen.'),'',a);}
+
+ function continuationMenu(){
+  activePuzzle=null;
+  open('Spielstand mitnehmen','<p>Speichere deinen aktuellen Stand online und öffne ihn mit dem Code auf einem anderen Gerät. Jeder neue Code bewahrt genau diesen Stand für 90 Tage; spätere Änderungen bleiben zunächst auf diesem Gerät.</p><p>Der Spielstand wird verschlüsselt gespeichert. Wer deinen Code kennt, kann ihn laden. Bewahre ihn privat auf.</p><div id="continuation-actions" class="actions"></div><label for="continuation-code">Fortsetzungscode</label><input id="continuation-code" type="text" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" style="display:block;width:100%;box-sizing:border-box;font:inherit;padding:12px;margin:12px 0"><p id="continuation-status" role="status" aria-live="polite"></p><div id="continuation-preview"></div>','Auf einem anderen Gerät weiterspielen','continuation');
+  const box=$('#continuation-code'),status=$('#continuation-status'),preview=$('#continuation-preview'),a=$('#continuation-actions');
+  const valid=()=>box.isConnected;
+  const saving=button('Stand speichern und Code erhalten',async()=>{
+   saving.disabled=true;loading.disabled=true;status.textContent='Spielstand wird gespeichert …';preview.replaceChildren();
+   try{
+    save();const result=await window.WendeContinuation.save(JSON.parse(JSON.stringify(state)));
+    if(!valid())return;box.value=result.code;
+    status.textContent='Gespeichert! Code notieren oder kopieren. Gültig bis '+new Date(result.expiresAt).toLocaleDateString('de-DE')+'.';
+    button('Code kopieren',async()=>{try{await navigator.clipboard.writeText(result.code);status.textContent='Code kopiert. Bewahre ihn privat auf.';}catch(e){box.focus();box.select();status.textContent='Bitte den markierten Code kopieren.';}},'',preview);
+   }catch(e){if(valid())status.textContent=e.message||'Speichern fehlgeschlagen. Dein lokaler Stand bleibt erhalten.';}
+   finally{if(valid()){saving.disabled=false;loading.disabled=false;}}
+  },'primary',a);
+  const loading=button('Code laden',async()=>{
+   loading.disabled=true;saving.disabled=true;status.textContent='Gespeicherten Stand suchen …';preview.replaceChildren();
+   try{
+    const found=await window.WendeContinuation.load(box.value);if(!valid())return;
+    status.textContent='Stand gefunden: '+G.scenes.find(s=>s.id===found.state.scene).name+' · '+found.state.solved.length+' gelöste Rätsel · gespeichert am '+new Date(found.savedAt).toLocaleString('de-DE')+'.';
+    const p=document.createElement('p');p.textContent='Beim Übernehmen wird dein aktueller Stand auf diesem Gerät ersetzt. Du kannst ihn vorher mit einem eigenen Code sichern.';preview.append(p);
+    button('Diesen Stand übernehmen',()=>{
+     try{
+      const next={...fresh(),...found.state,started:true};
+      localStorage.setItem(KEY,JSON.stringify(next));
+      state=next;selected=null;activePuzzle=null;close();render();toast('Spielstand geladen. Du kannst hier weiterspielen.');
+     }catch(e){status.textContent='Dein Browser konnte den Stand nicht speichern. Der bisherige Spielstand bleibt erhalten.';}
+    },'primary',preview);
+   }catch(e){if(valid())status.textContent=e.message||'Laden fehlgeschlagen. Dein lokaler Stand bleibt erhalten.';}
+   finally{if(valid()){loading.disabled=false;saving.disabled=false;}}
+  },'',a);
+  box.addEventListener('input',()=>{preview.replaceChildren();status.textContent='';});
+  button('Zurück zum Spielmenü',menu,'',actions());
+ }
+
+ function menu(){activePuzzle=null;open('Im Zeichen der Wende',`<p class="eyebrow">Ein historisches Point-and-Click-Adventure</p><p class="intro-copy">Eine verschlossene Chronik. Sechs fehlende Siegel. Und eine Stadt, deren Geschichte sich grundlegend verändert.</p><p>Du bist Bote oder Botin. Untersuche Gegenstände, sprich mit Menschen und verbinde ihre Spuren. Stadtkarte, Botenbeutel und Notizbuch begleiten dich.</p>${!storageOK?'<p class="save-warning">Speichern ist gerade nicht verfügbar. Lass diesen Tab geöffnet.</p>':''}`,'Willkommen','menu');const a=actions();button(state.started?'Spiel fortsetzen':'Die Stadt betreten',()=>{state.started=true;save();close();render();if(!state.seen.includes('intro:gate')){add('seen','intro:gate');save();info('Das Stadttor',G.scenes[0].intro);}},'primary',a);if(state.started)button('Neues Spiel',reset,'',a);button('Spielstand speichern / Code laden',continuationMenu,'',a);button('So spielst du',()=>info('So spielst du','Tippe markierte Gegenstände und Personen an. Kombinieren: Gegenstand wählen, dann Ziel antippen. Bausteine setzen: erst Baustein, dann Platz. Die Öllampe gibt drei gestufte Hilfen.'),'',a);}
  const title=$('#title');title.addEventListener('pointerdown',()=>{held=false;clearTimeout(holdTimer);holdTimer=setTimeout(()=>{held=true;teacher();},5000);});for(const e of ['pointerup','pointercancel','pointerleave'])title.addEventListener(e,()=>clearTimeout(holdTimer));title.addEventListener('contextmenu',e=>e.preventDefault());title.onclick=()=>{if(!held)menu();held=false;};title.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.shiftKey){e.preventDefault();teacher();}});
  function teacher(){activePuzzle=null;open('Lehrkraftmodus','<p class="clue">Lokaler Testzugang, kein geschützter Adminbereich. Änderungen betreffen nur dieses Gerät. Zum Zurücksetzen einzelner Rätsel bleiben bereits geöffnete Orte zugänglich.</p><h3>Ort direkt öffnen</h3><div class="teacher-scenes"></div><h3>Rätsel gelöst / ungelöst</h3><div class="teacher-grid"></div><h3>Gegenstände hinzufügen</h3><div id="teacher-items" class="teacher-scenes"></div>','Spieltitel 5 Sekunden halten · alternativ Umschalt + Enter','teacher');
   G.scenes.forEach(s=>button(s.name,()=>{add('unlocked',s.id);enter(s.id);},'',$('.teacher-scenes')));
