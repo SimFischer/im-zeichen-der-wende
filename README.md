@@ -1,3 +1,22 @@
+# Update: Bonusspiele
+
+Acht **freiwillige Bonusspiele** stecken in unscheinbaren Stellen der Szenen. Sie verändern den Spielstand nicht: keine Siegel, keine Punkte, keine Pflicht. Ob ein Spiel entdeckt oder geschafft wurde, steht unter einem eigenen Speicherschlüssel (`im-zeichen-der-wende:bonus-v1`). Der Fortsetzungscode nimmt diesen Bonusstand nicht mit. Entdeckte Spiele lassen sich im **Notizbuch unter „Entdeckte Spiele“** erneut starten. Noch nicht entdeckte Spiele erscheinen dort nur als „? ? ?“.
+
+| Spiel | Fundstelle | Datei |
+|---|---|---|
+| Das geheime Zeichen | Wohnviertel · Kritzeleien am Pfeiler | `bonus/zeichen.js` |
+| Rom brennt! | Forum · Glühendes Kohlebecken | `bonus/rombrennt.js` |
+| Amphoren-Chaos | Forum · Wackeliger Marktkarren | `bonus/amphoren.js` |
+| Katakombenlauf | Archiv · Alte Grabplatte (erst nach dem Archiv-Rätsel) | `bonus/katakomben.js` |
+| Schildwall | Lager · Übungsschilde | `bonus/schildwall.js` |
+| Über den Tiber! | Lager · Treibholz am Ufer | `bonus/tiber.js` |
+| Belade den Wagen! | Lager · Vorratsfässer | `bonus/wagen.js` |
+| Circus Maximus | Stadt 313 · Ankündigung (erst nach Abschluss der Chronik) | `bonus/circus.js` |
+
+Technik: `bonusgames.js` stellt das gemeinsame Spielfenster, die Fundstellen und den Notizbuch-Abschnitt bereit. Timer, Listener, ResizeObserver und Animation-Frames laufen über das Spielfenster und werden beim Schließen beendet. Die Spiele pausieren, wenn der Tab in den Hintergrund geht. `script.js` enthält dafür nur drei kleine Anknüpfungspunkte: `window.WendeUI`, die Fundstellen in `render()` und den Notizbuch-Abschnitt. Gestaltung in `bonusgames.css`. Die freigestellten Stadtbewohner stehen in `assets/minigames/leute.webp` (aus `townspeople.png`). Alle Spiele funktionieren mit Touch, alternativ mit Maus und Tastatur. Kein Game Over: Fehler kosten höchstens Zeit.
+
+Historische Einordnungen in den Spielen sind bewusst vorsichtig formuliert (Symbole, Brand von Rom, Katakomben als Begräbnisstätten, Tiber/Milvische Brücke). Sie sollten wie die übrigen Texte fachlich gegengelesen werden.
+
 # Update: Minispiele
 
 Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Jedes Spiel hat „Ohne Spiel lösen“ als barrierearme Alternative.

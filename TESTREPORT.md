@@ -52,3 +52,13 @@ Der verfügbare Cloud-Browser blockierte den lokalen HTTP-Testserver und lokale 
 Vollständiger DOM-Durchlauf nach Umbau aller Rätseloberflächen: 431 Prüfungen bestanden (425 Spielablauf und sechs Vollbildprüfungen); alle zwölf Rätsel und elf Orte erreichbar. Die sechs Siegel werden einzeln eingesetzt. Textentfernung und Vollbildschalter sind im Test berücksichtigt.
 
 Die neue Bild- und Rätseloberfläche ist noch nicht in einem echten Browser oder auf iPad-Safari grafisch geprüft. Die oben dokumentierte Live-Prüfung bezieht sich auf die vorherige Veröffentlichung. Die Bereitstellung der Erweiterung wurde durch die automatische Freigabeprüfung gestoppt und benötigt ausdrückliche Zustimmung.
+
+
+## Bonusspiele (Playwright/Chromium, automatisiert)
+
+- Für jedes der acht Spiele gilt: Fundstelle anklicken, Spiel starten, automatisch bis zum Abschluss spielen, schließen. Geprüft wurde jedes Mal, dass nach dem Schließen keine Animation-Frames mehr laufen und dass der Hauptspielstand in `localStorage` byte-gleich bleibt. Bei allen acht Spielen erfüllt.
+- Bildschirmgrößen: 1180×820 (iPad Air quer), 1024×768, 1366×1024, 1920×1080 und 820×560, mit Touch-Emulation (Pointer-Events). Wischgesten wurden über synthetische Pointer-Ereignisse getestet.
+- Öffnen → Spielen → Schließen (✕, „Zurück“, Escape, Pause-Karte) → erneut öffnen: ohne Fehler, ohne weiterlaufende Timer.
+- Circus Maximus erscheint erst nach Abschluss der Chronik, der Katakombenlauf erst nach dem Archiv-Rätsel.
+- Die Haupt-Minispiele (z. B. „Das Türschloss“) öffnen weiterhin normal.
+- Noch offen: Bedienung auf echtem iPad-Safari (Touch-Präzision, Bildrate) und Spielzeiten mit einer Klasse.
