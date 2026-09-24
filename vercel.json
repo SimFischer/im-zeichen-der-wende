@@ -1,0 +1,13 @@
+{
+  "framework": null,
+  "regions": [
+    "fra1"
+  ],
+  "functions": {
+    "api/continuation.js": {
+      "maxDuration": 30
+    }
+  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "."
+}
