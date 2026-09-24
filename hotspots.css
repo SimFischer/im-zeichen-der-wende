@@ -1,0 +1,28 @@
+/* Hotspot-Arten deutlich unterscheiden:
+   Information (Gespräch, Gegenstand) = Grün · Rätsel = Terrakotta mit Siegelstern · Mitnehmen = Gold */
+
+/* Information */
+#hotspots .hotspot.hs-talk .pin,#hotspots .hotspot.hs-evidence .pin{background:#f3e4c5;color:#244f4a;border:2px solid #244f4a;box-shadow:0 0 0 3px #f3e4c566,0 2px 8px #000a;font:italic 700 calc(var(--u)*.85)/1 Georgia,serif;display:grid;place-items:center}
+#hotspots .hotspot.hs-talk .label,#hotspots .hotspot.hs-evidence .label{background:#20352ef2;border-color:#dcc499}
+#hotspots .hotspot.person.hs-talk .label:before{content:'❝ ';color:#e5b76c}
+#hotspots .hotspot.hs-talk.seen .pin{background:#c9d9c9;opacity:.85}
+
+/* Rätsel */
+#hotspots .hotspot.hs-puzzle .pin{width:calc(var(--u)*1.7);height:calc(var(--u)*1.7);display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#d9774a,#8c422a 70%);color:#fff1d0;border:2px solid #f0cf8c;box-shadow:0 0 0 4px #8c422a55,0 3px 10px #000b;font:700 calc(var(--u)*.95)/1 Georgia,serif;animation:hs-puzzle 2.4s ease-in-out infinite}
+#hotspots .hotspot.hs-puzzle .label{background:#8c422af2;border:2px solid #f0cf8c;color:#fff4dc;font-weight:600}
+#hotspots .hotspot .hs-cap{display:block;margin-top:.1em;font-size:.72em;font-weight:500;letter-spacing:.08em;text-transform:uppercase;opacity:.92;white-space:nowrap}
+#hotspots .hotspot.hs-puzzle.locked .pin{background:#6b5a40;border-color:#b8a47a;box-shadow:0 0 0 3px #0004;animation:none;font-size:calc(var(--u)*.75)}
+#hotspots .hotspot.hs-puzzle.locked .label{background:#3a2e24e6;border:2px dashed #b8a47a;color:#f3e4c5}
+#hotspots .hotspot.hs-puzzle.done .pin{background:radial-gradient(circle at 35% 30%,#7fa88a,#2d5a4b);border-color:#f0cf8c;animation:none}
+#hotspots .hotspot.hs-puzzle.done .label{background:#5a3a26e6}
+#hotspots .hotspot.hs-puzzle.unlocked-now .pin{animation:hs-unlock 1.2s ease-out 2,hs-puzzle 2.4s ease-in-out 2.4s infinite}
+@keyframes hs-puzzle{0%,100%{box-shadow:0 0 0 4px #8c422a55,0 3px 10px #000b}50%{box-shadow:0 0 0 9px #e5b76c44,0 3px 10px #000b}}
+@keyframes hs-unlock{0%{transform:scale(1)}30%{transform:scale(1.5);box-shadow:0 0 0 14px #f0cf8c88}100%{transform:scale(1)}}
+
+/* Zum Mitnehmen */
+#hotspots .hotspot.hs-take .pin{background:radial-gradient(circle at 35% 30%,#fff1b8,#e5b76c 60%,#b8862e);color:#5a3a10;border:2px solid #fff4dc;font:700 calc(var(--u)*.95)/1 Georgia,serif;display:grid;place-items:center;animation:hs-take 1.8s ease-in-out infinite}
+#hotspots .hotspot.hs-take .label{background:#e5b76cf2;border:2px solid #fff4dc;color:#3a2610;text-shadow:none;font-weight:600}
+#hotspots .hotspot.hs-take .flint-art{filter:drop-shadow(0 0 8px #ffd98a) drop-shadow(0 0 3px #fff4dc);animation:hs-take-img 1.8s ease-in-out infinite}
+@keyframes hs-take{0%,100%{box-shadow:0 0 0 3px #fff4dc55,0 0 6px 2px #ffd98a88}50%{box-shadow:0 0 0 6px #fff4dc22,0 0 16px 6px #ffd98acc}}
+@keyframes hs-take-img{50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){#hotspots .hotspot .pin,#hotspots .hotspot .flint-art{animation:none!important}}

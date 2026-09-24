@@ -356,17 +356,17 @@ window.MiniGames=(()=>{
  /* ---------- Stempel des Statthalters: Akte fährt über den Tisch, Stempel in die Hand nehmen, abstempeln ---------- */
  function stamp(id,cfg,work){
   const goal=cfg.goal;
-  const seal=(c,i)=>`<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.5"/><path id="arc${id}${i}" d="M18 50a32 32 0 0 1 64 0" fill="none"/><text font-size="11" font-weight="700" letter-spacing="2" fill="currentColor"><textPath href="#arc${id}${i}" startOffset="50%" text-anchor="middle">${esc(c.latin)}</textPath></text><text x="50" y="62" text-anchor="middle" font-size="22" fill="currentColor">${esc(c.sym)}</text><text x="50" y="80" text-anchor="middle" font-size="7.5" font-weight="700" fill="currentColor">SPQR</text></svg>`;
-  work.innerHTML=`<div class="racer mg-stamp"><div class="racer-hud">${dotsHtml(goal,'Akten')}${speedHtml([['Ruhig',1],['Normal',.75],['Schnell',.55]])}</div>
-   <div class="racer-stage stamp-stage"><div class="stamp-desk"><div class="stamp-pile" aria-hidden="true"></div><div class="stamp-edge" aria-hidden="true">▼ Tischkante</div><article class="stamp-file" tabindex="0" aria-label="Akte abstempeln"><span class="file-tab">Akte</span><p class="mg-text"></p><div class="stamp-marks"></div></article></div><div class="stamp-hand" aria-hidden="true"></div><div class="racer-banner" aria-live="polite"></div></div>
+  const seal=(c,i)=>`<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.5"/><path id="arc${id}${i}" d="M18 50a32 32 0 0 1 64 0" fill="none"/><text font-size="11" font-weight="700" letter-spacing="2" fill="currentColor"><textPath href="#arc${id}${i}" startOffset="50%" text-anchor="middle">${esc(c.latin)}</textPath></text><text x="50" y="68" text-anchor="middle" font-size="36" font-weight="700" fill="currentColor">${esc(c.sym)}</text><text x="50" y="86" text-anchor="middle" font-size="7.5" font-weight="700" fill="currentColor">SPQR</text></svg>`;
+  work.innerHTML=`<div class="racer mg-stamp"><div class="racer-hud">${dotsHtml(goal,'Akten')}</div>
+   <div class="racer-stage stamp-stage"><div class="stamp-desk"><div class="stamp-pile" aria-hidden="true"></div><article class="stamp-file" tabindex="0" aria-label="Akte abstempeln"><span class="file-tab">Akte</span><p class="mg-text"></p><div class="stamp-marks"></div></article></div><div class="stamp-hand" aria-hidden="true"></div><div class="racer-banner" aria-live="polite"></div></div>
    <div class="stamp-rack" role="group" aria-label="Stempel">${cfg.choices.map((c,i)=>`<button type="button" class="stamp-tool" data-i="${i}" aria-pressed="false"><span class="stamp-knob"></span><span class="stamp-face">${seal(c,i)}</span><span class="stamp-name">${esc(c.label)}</span></button>`).join('')}</div>
    <p class="stamp-status" aria-live="polite">Nimm einen Stempel in die Hand.</p></div>`;
   const stage=work.querySelector('.stamp-stage'),desk=work.querySelector('.stamp-desk'),file=work.querySelector('.stamp-file'),text=file.querySelector('.mg-text'),marks=file.querySelector('.stamp-marks'),hand=work.querySelector('.stamp-hand'),banner=stage.querySelector('.racer-banner'),dots=[...work.querySelectorAll('.racer-dots i')],status=work.querySelector('.stamp-status'),pile=work.querySelector('.stamp-pile');
   let mul=1,held=null,queue=shuffle(cfg.items),cur=null,x=0,speed=0,running=false,state='idle',last=0,bt=null,score=0,done=[];
-  bindSpeed(work,v=>mul=v);
   const say=(h,k,ms=4200)=>{banner.innerHTML=h;banner.className='racer-banner show '+(k||'');clearTimeout(bt);bt=setTimeout(()=>banner.className='racer-banner',ms);};
-  function next(){if(!queue.length)queue=shuffle(cfg.items.filter(v=>!done.includes(v)));cur=queue.shift();text.textContent=cur.text;marks.innerHTML='';file.className='stamp-file';x=desk.clientWidth+10;speed=(desk.clientWidth+file.offsetWidth)/(cfg.time/mul);state='move';place();}
-  function place(){file.style.transform=`translateX(${x}px) rotate(${state==='move'?-2:0}deg)`;const f=Math.max(0,Math.min(1,(x+file.offsetWidth)/(desk.clientWidth+file.offsetWidth)));desk.style.setProperty('--danger',f<.3?1:0);}
+  function next(){if(!queue.length)queue=shuffle(cfg.items.filter(v=>!done.includes(v)));cur=queue.shift();text.textContent=cur.text;marks.innerHTML='';file.className='stamp-file';x=desk.clientWidth+10;state='move';place();}
+  const center=()=>Math.max(0,(desk.clientWidth-file.offsetWidth)/2);
+  function place(){file.style.transform=`translateX(${x}px) rotate(${Math.abs(x-center())>2?-2:0}deg)`;}
   function pick(i){held=held===i?null:i;work.querySelectorAll('.stamp-tool').forEach((b,k)=>{b.classList.toggle('held',k===held);b.setAttribute('aria-pressed',String(k===held));});
    hand.innerHTML=held===null?'':`<span class="stamp-face big">${seal(cfg.choices[held],'h'+held)}</span>`;hand.classList.toggle('on',held!==null);stage.classList.toggle('holding',held!==null);
    status.innerHTML=held===null?'Nimm einen Stempel in die Hand.':`In der Hand: <b>${esc(cfg.choices[held].label)}</b> – tippe jetzt auf die Akte.`;}
@@ -386,7 +386,8 @@ window.MiniGames=(()=>{
   function key(e){if(!work.isConnected){removeEventListener('keydown',key);return;}const n=+e.key;if(n>=1&&n<=cfg.choices.length&&running){pick(n-1);}}
   addEventListener('keydown',key);
   function loop(now){if(!work.isConnected)return;const dt=Math.min(.1,(now-last)/1000||0);last=now;
-   if(running&&state==='move'){x-=speed*dt;place();if(x<-file.offsetWidth*.55){state='fall';file.classList.add('fall');queue.push(cur);say(`<b>Die Akte ist vom Tisch gefallen!</b> Richtig wäre: ${esc(cur.ok.map(i=>cfg.choices[i].label).join(' / '))}. ${esc(cur.why)}`,'bad',5200);setTimeout(()=>{if(running)next();},2600);}}
+   // Kein Zeitdruck: Die Akte gleitet nur in die Tischmitte und bleibt dort liegen.
+   if(running&&state==='move'){const c=center();if(Math.abs(x-c)>.5){x+=(c-x)*Math.min(1,dt*7);place();}}
    else if(state==='done'&&!file.classList.contains('filed')){}
    requestAnimationFrame(loop);}
   const ov=startScreen(stage,cfg,cfg.rules,'Erste Akte holen',()=>{running=true;next();last=performance.now();});

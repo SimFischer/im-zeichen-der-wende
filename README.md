@@ -1,3 +1,10 @@
+# Update: Erst erkunden, dann prüfen
+
+- Hotspots sind nach Art unterschieden: **Information** (Gespräche, Sachgegenstände) grün mit „i“, **Rätsel** terrakottafarben mit Siegelstern, **Mitnehmen** gold mit „＋“ (`hotspots.css`).
+- Ein Rätsel ist erst dann offen, wenn alle Gespräche und Sachgegenstände des Ortes angesehen wurden. Bis dahin zeigt es ein Schloss und „erst Hinweise sammeln · 2/5“. Ausnahme: das Archiv, dort sind die Spuren Teil des Spiels.
+- Rätsel öffnen immer direkt das Minispiel. „Ohne Spiel lösen“ gibt es nicht mehr.
+- Der Stempel des Statthalters: Die Akte liegt ruhig in der Tischmitte, kein Zeitdruck. Die Symbole auf den Stempeln sind größer.
+
 # Update: Bonusspiele
 
 Acht **freiwillige Bonusspiele** stecken in unscheinbaren Stellen der Szenen. Sie verändern den Spielstand nicht: keine Siegel, keine Punkte, keine Pflicht. Ob ein Spiel entdeckt oder geschafft wurde, steht unter einem eigenen Speicherschlüssel (`im-zeichen-der-wende:bonus-v1`). Der Fortsetzungscode nimmt diesen Bonusstand mit: Beim Übernehmen auf einem anderen Gerät werden die Entdeckungen mit den dort schon vorhandenen zusammengeführt, es geht nichts verloren. Ältere Codes ohne Bonusstand bleiben gültig. Entdeckte Spiele lassen sich im **Notizbuch unter „Entdeckte Spiele“** erneut starten. Noch nicht entdeckte Spiele erscheinen dort nur als „? ? ?“.
@@ -19,12 +26,12 @@ Historische Einordnungen in den Spielen sind bewusst vorsichtig formuliert (Symb
 
 # Update: Minispiele
 
-Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Jedes Spiel hat „Ohne Spiel lösen“ als barrierearme Alternative.
+Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Die Rätsel öffnen immer direkt das Spiel.
 
 - **Kontrollstelle – Die beiden Seilzüge:** Holzklötze aus der Kiste an die Haken zweier Seile hängen, am Hebel ziehen, danach Vergleichsfrage; die Truhe mit dem Archivschlüssel öffnet sich.
 - **Wohnviertel – Das Türschloss:** Drei Drehwalzen (Tippen, Wischen oder Pfeile) bilden einen Satz; am Griff ziehen prüft, Riegel gleitet zurück und die Tür schwingt auf.
 - **Forum – Das Echo der Quellen:** Die Chronistin ruft Aussagen zu. Einordnen gegen die Zeit (belegt / unsicher / nicht feststellbar), 8 richtige Antworten.
-- **Amtsstube – Der Stempel des Statthalters:** Akten fahren über den Tisch. Römischen Stempel in die Hand nehmen und auf die Akte drücken; richtige Stempel hinterlassen einen Abdruck, 8 Akten.
+- **Amtsstube – Der Stempel des Statthalters:** Die Akte liegt in der Tischmitte, ohne Zeitdruck. Römischen Stempel in die Hand nehmen und auf die Akte drücken; richtige Stempel hinterlassen einen Abdruck, 8 Akten.
 - **Archiv – Das Archiv im Dunkeln:** Mit dem Lichtkegel der Lampe vier Spuren finden und den Maßnahmen von 303 zuordnen.
 - **Lager 312 – Das Zeichen auf dem Schild:** 3×3-Puzzle (Tauschen oder Schieben) mit dem Christusmonogramm, danach Ereignis und Erzählung trennen.
 - **Stadt 313 – Die Kurierfahrt:** Spurwechsel-Rennen. Richtige Aussagen über 311/313 einsammeln, falschen ausweichen, 6 Botschaften.
@@ -33,7 +40,7 @@ Wählbares Tempo, keine Leben, falsche Antworten werden erklärt. Der Fachtext-K
 
 # Update: Fachtexte zum Einlesen
 
-Jedes der 12 Rätsel hat einen zuschaltbaren **„📜 Fachtext“** mit einem kurzen Sachtext für Klasse 7 und, wo sinnvoll, einem kurzen Quellenzitat (Tertullian, Tacitus, Trajan an Plinius, Opferbescheinigung von 250, Eusebius, Mailänder Vereinbarung). Der Fachtext ist eine Hilfe bei Fehlern: Der Knopf „📜 Fachtext“ erscheint erst, nachdem ein Rätsel einmal falsch geprüft wurde. Die Informationen sollen zuerst aus den Gesprächen kommen. Minispiel: „Die Kurierfahrt von 313“ (Spurwechsel-Rennen, `minigames.js`) ersetzt die Besitztruhe; „Ohne Spiel“ führt zur Sortieraufgabe. Gelesene Texte stehen im Notizbuch unter „Gelesene Fachtexte“ und werden mitgedruckt. Die Texte stehen in `data/game-data.js` unter `GAME.texts`, die Anleitungen unter `GAME.steps`.
+Jedes der 12 Rätsel hat einen zuschaltbaren **„📜 Fachtext“** mit einem kurzen Sachtext für Klasse 7 und, wo sinnvoll, einem kurzen Quellenzitat (Tertullian, Tacitus, Trajan an Plinius, Opferbescheinigung von 250, Eusebius, Mailänder Vereinbarung). Der Fachtext ist eine Hilfe bei Fehlern: Der Knopf „📜 Fachtext“ erscheint erst, nachdem ein Rätsel einmal falsch geprüft wurde. Die Informationen sollen zuerst aus den Gesprächen kommen. Minispiel: „Die Kurierfahrt von 313“ (Spurwechsel-Rennen, `minigames.js`) ersetzt die Besitztruhe. Gelesene Texte stehen im Notizbuch unter „Gelesene Fachtexte“ und werden mitgedruckt. Die Texte stehen in `data/game-data.js` unter `GAME.texts`, die Anleitungen unter `GAME.steps`.
 
 **Hinweis für die Lehrkraft:** Die Fachtexte und die Quellenzitate (eigene, gekürzte Übersetzungen) wurden mit KI-Unterstützung erstellt und sind noch fachlich gegenzulesen und mit den Unterrichtsmaterialien abzugleichen.
 

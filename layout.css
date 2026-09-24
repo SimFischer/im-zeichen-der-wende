@@ -371,7 +371,7 @@
 .stamp-rack{display:grid;grid-template-columns:repeat(4,1fr);gap:.5em;padding:.5em;border-radius:14px;background:linear-gradient(#6b4220,#4a2c12);box-shadow:inset 0 3px 8px #0008}
 #modal .stamp-tool{position:relative;display:flex;flex-direction:column;align-items:center;gap:.2em;min-height:0;padding:.3em .2em .5em;border:0;background:none;box-shadow:none;color:#f6e3b8;transition:transform .15s}
 .stamp-knob{width:22px;height:30px;border-radius:10px 10px 4px 4px;background:linear-gradient(90deg,#5a3418,#9a6a38,#5a3418);box-shadow:0 2px 3px #0008}
-.stamp-tool .stamp-face{display:block;width:calc(var(--u)*3.6);height:calc(var(--u)*3.6);border-radius:50%;color:#4a2c10;background:radial-gradient(circle at 35% 30%,#f0cf8c,#b8862e 70%,#7a5418);border:3px solid #3e2610;box-shadow:0 4px 8px #0008}
+.stamp-tool .stamp-face{display:block;width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);border-radius:50%;color:#4a2c10;background:radial-gradient(circle at 35% 30%,#f0cf8c,#b8862e 70%,#7a5418);border:3px solid #3e2610;box-shadow:0 4px 8px #0008}
 .stamp-face svg{width:100%;height:100%}
 .stamp-name{font-weight:700;font-size:var(--fs-s);text-align:center;line-height:1.1}
 #modal .stamp-tool.held{transform:translateY(-10px)}
