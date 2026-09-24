@@ -1,3 +1,16 @@
+# Update: Szenen statt Textaufgaben (Branch `feature/visual-minigame-overhaul`)
+
+Vier Bereiche sind als gezeichnete Szenen neu gebaut (`scenegames.js`, `scenegames.css`, Inhalte in `data/game-data.js` unter `GAME.minigames`):
+
+- **Die geöffnete Stadt:** neues Stadtbild (`assets/minigames/open-city/open-city.png`). Fünf Veränderungen sind im Bild zu entdecken – geöffnete Tür, christliches Zeichen, zurückgegebene Truhe, Baustelle, Tempel und Altar – jeweils mit einem kurzen Satz direkt in der Szene. Danach öffnet sich an der Anschlagtafel das Rätsel „Vorher und Nachher“: Wachstafeln an die Tafeln „Vor dem Wandel“ und „Nach dem Wandel“ hängen. Die Aussage „313 wurde das Christentum zur einzigen erlaubten Religion.“ muss zum römischen Altar („Stimmt so nicht“); legt man sie auf eine Seite, antwortet das Spiel: „Nein. Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.“
+- **Ein Band zwischen Kirche und Reich:** „Beratung im Konzil“ im Beratungsraum von Nicäa mit sechs großen Figuren und sechs Gesprächsrunden. Falsche Antworten beantwortet eine Figur fachlich; am Ende steht die Synthese „Kirchliche Einheit konnte für Konstantin auch politische Stabilität bedeuten.“
+- **Die Zeitmechanik:** große Chronik im Chronistenraum mit sechs Jahresmedaillons (303, 311, 312, 313, 325, 337) und illustrierten Ereigniskarten. Nach der vollständigen Chronik erscheint das Band der Wende und die Transferfrage, zwischen welchen Ereignissen der entscheidende Wandel liegt (303 ↔ 311).
+- **Bonus Amphoren-Chaos:** Hafenlager (`amphora-dock.png`), große Händlerfigur (`amphora-merchant.png`, 34 % der Spielfeldhöhe) mit Fangkorb, große Gegenstände aus `amphora-assets.png`. Die alten Stadtbewohner-Ausschnitte werden hier nicht mehr verwendet.
+
+Bedienung: Karte antippen und Ziel antippen oder ziehen (Pointer Events), keine Hover-Abhängigkeit, Flächen mindestens 44 px, die Bühne passt sich an Quer- und Hochformat an, ohne dass das Fenster scrollt. Fehlt eine der Grafiken, zeigt `.sg-no-art` einen neutralen gezeichneten Ersatz.
+
+Tests: `npm install` (bringt `linkedom` als Entwicklungsabhängigkeit), dann `npm test`.
+
 # Update: Auftrag des Archivars
 
 Vor dem dunklen Archiv liegt jetzt die Szene „Beim Archivar“. Der Archivar übergibt Schriftrollen mit dem vorhandenen Fachtext zu 303. Alle drei Abschnitte werden vor dem Eintritt gelesen; danach bleiben sie im Botenbeutel und Notizbuch zugänglich. Brennende Öllampe und Archivschlüssel sind für den Eintritt nötig. Nach dem Rätsel ist das Archiv hell: Erst das Ablegen der Schriftrollen erfüllt den Auftrag und öffnet den Weg zur Nachricht von 311 und zum Tiber. Bereits abgeschlossene alte Spielstände bleiben zugänglich; ein noch ungelöstes Archiv führt zunächst zum Archivar. Die neue Szene verwendet die vorhandene Amtsstubenillustration.

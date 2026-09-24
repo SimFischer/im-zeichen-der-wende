@@ -148,3 +148,18 @@ Der Durchlauf war seit den Sprechblasen und Minispielen veraltet und schlug scho
 - Weiterhin geprüft: vollständiger Weg bis zum Finale, Neuladen, Hilfen, Inventar, Lehrkraftmodus, Neustart, beschädigter Spielstand, Vollbild.
 - Gegenprobe: Wird die Sperre oder „Ohne Spiel lösen“ wieder eingebaut, schlägt der Test fehl.
 - Ausführen: `npm install --no-save linkedom`, dann `node tests/playthrough.cjs` (ebenso `tests/bonus-unlocks.cjs`, beide bestanden).
+
+
+## Szenen-Überarbeitung (Branch `feature/visual-minigame-overhaul`)
+
+`npm test` führt alle Tests aus; Ergebnis beim Abschluss:
+
+- `tests/continuation.cjs`: bestanden.
+- `tests/playthrough.cjs`: 359 Prüfungen bestanden. Neu: Stadtbild und Entdeckungsszene, Rätsel erst nach dem Entdecken, Zähler, richtige Spieltypen für Stadt, Konzil und Chronik, Belohnung „Verfügung von 313“ bleibt.
+- `tests/bonus-unlocks.cjs`: bestanden.
+- `tests/scenegames.cjs` (neu): 110 Prüfungen. Stadt: alle fünf Veränderungen, sieben Tafeln, falsche 313-Aussage mit genau der vorgegebenen Rückmeldung, Abschluss erst bei vollständiger Zuordnung. Konzil: sechs Runden, falsche Antworten mit fachlicher Reaktion ohne Weiterschalten, Synthese, Sieg. Chronik: alle sechs Jahre, falsche Zuordnung mit Rückmeldung, Transferfrage erst bei vollständiger Chronik, falsche und richtige Stelle. Alle neuen Asset-Pfade im Code und im Repository, Ersatzdarstellung vorhanden.
+- `tests/amphoren.cjs` (neu): 26 Prüfungen. Keine alten Sprites, neue Grafiken werden geladen, Händlergröße, Touch-Ziehen und Tippen, Fangen über dem Korb, kein Fangen daneben, Begriffe der dritten Runde.
+
+Zusätzlich in Chromium (Playwright) geprüft: alle drei Szenen-Rätsel real durchgespielt (Spielstand gespeichert, Belohnungsfenster erscheint), Ziehen mit Pointer Events, Größen 1180×820, 1024×600 und 820×1180 ohne Scrollen des Fensters, Ersatzdarstellung bei blockierten Grafiken, Amphoren-Chaos auf 1180×820 und 1024×768 (nach dem Schließen keine Animation mehr, Spielstand unverändert). Keine JavaScript-Fehler; die einzigen 404-Meldungen betreffen die optionalen Schriftdateien in `assets/fonts/`, die schon vorher fehlten.
+
+Noch offen: echtes iPad-Safari (Touch-Genauigkeit, `:has()` wird ab iPadOS 15.4 unterstützt) und ein Unterrichtstest.
