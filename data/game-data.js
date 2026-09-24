@@ -20,7 +20,7 @@ window.GAME = {
  {id:'vestibule',name:'Beim Archivar',era:'Vor dem Archiv · ab 303',art:'office',intro:'Vor der dunklen Archivtür wartet ein Archivar. Er hat Schriftrollen, die im Archiv abgelegt werden sollen. Sprich mit ihm, bevor du hineingehst.',hotspots:[['Archivar',62,59,'talk','archivist'],['Schriftrollen lesen',39,57,'reading','scrolls']]},
  {id:'archive',name:'Diokletians Archiv',era:'Ab 303 · staatliche Verfolgung',tile:5,intro:'Stockdunkel. Du siehst nicht einmal deine eigene Hand. Irgendwo in diesem Archiv liegen Spuren der großen Verfolgung – aber ohne Licht findest du nichts. Öffne deinen Botenbeutel und entzünde die Öllampe mit dem Feuerstein.',hotspots:[['Verbrannte Schriftrolle',13,76,'evidence','scroll'],['Versiegelte Tür',18,36,'evidence','door'],['Kirchenmodell',49,67,'evidence','church'],['Kette',81,52,'evidence','chain'],['Amtssiegel',81,70,'talk','seal'],['Schubladen',46,42,'puzzle','archive'],['Schriftrollen ablegen',62,78,'deposit','shelf']]},
  {id:'camp',name:'Am Tiber',era:'312 · Konstantins Militärlager',tile:6,intro:'Nach der Nachricht von Galerius führt dein Weg in eine neue Erinnerung: das Jahr 312. Eine Karte versperrt den Zugang zu Konstantins Zelt.',hotspots:[['Kartenbrett',41,55,'puzzle','map312'],['Konstantins Zelt',64,46,'puzzle','vision'],['Bote',79,83,'talk','messenger']]},
- {id:'city',name:'Die geöffnete Stadt',era:'313 und danach',bg:'city-313',intro:'Du erkennst die Gasse wieder. Türen sind geöffnet, Besitz wird zurückgegeben. Aber bedeutet der Wandel, dass nur noch eine Religion erlaubt ist?',hotspots:[['Hauskirche',42,48,'talk','openchurch'],['Baustelle',77,38,'talk','building'],['Besitztruhe',24,78,'puzzle','change'],['Römischer Altar',87,61,'talk','cults']]},
+ {id:'city',name:'Die geöffnete Stadt',era:'313 und danach',bg:'city-313',image:'assets/minigames/open-city/open-city.png',discover:true,intro:'Du kennst diesen Ort. Aber etwas hat sich verändert. Schau genau hin: Was ist heute anders?',hotspots:[['Geöffnete Tür',19,57,'talk','openchurch'],['Christliches Zeichen',16,24,'talk','sign'],['Zurückgegebene Truhe',11,88,'talk','returned'],['Baustelle',56,18,'talk','building'],['Tempel und Altar',90,44,'talk','cults'],['Anschlagtafel',49,63,'puzzle','change']]},
  {id:'motives',name:'Die Waage des Kaisers',era:'Glaube und Herrschaft',tile:7,intro:'Die Waage lässt sich nicht mit einer einzigen Antwort ausgleichen. Ordne mögliche Motive zu und begründe, warum Glauben und Politik zusammenwirken können.',hotspots:[['Große Waage',50,48,'puzzle','motives'],['Beraterin',23,87,'talk','advisor'],['Gemeindebrief',86,69,'talk','community']]},
  {id:'council',name:'Die Beratung von Nicäa',era:'325 · Einigung und Stabilität',bg:'council',intro:'Ein weiterer Zeitsprung: In Nicäa findet 325 ein Konzil statt. Eine Einigung innerhalb der Kirche kann auch für den Kaiser Bedeutung haben.',hotspots:[['Beratungsrunde',49,58,'puzzle','council'],['Zeitrolle',89,71,'talk','baptism']]},
  {id:'basilica',name:'Die Chronik der Wende',era:'Die Erinnerungen zusammenfügen',tile:8,intro:'Sechs Siegel passen in die große Mechanik. Ordne die Zeit und baue eine tragfähige Begründung der Konstantinischen Wende.',hotspots:[['Sechs Siegelplätze',46,40,'finalgate'],['Zeitmechanik',20,61,'puzzle','timeline'],['Argumentationsbrücke',81,64,'puzzle','bridge']]}
@@ -38,9 +38,11 @@ window.GAME = {
  old:['Ältere Erinnerung','Im 1. Jahrhundert geht es in unserer Chronik vor allem um lokale Verfolgung. Im 3. Jahrhundert treten staatliche Opferpflicht und systematischere Kontrolle stärker hervor.'],
  seal:['Amtssiegel','Ab 303 unter Diokletian: Gottesdienste werden verboten, Kirchen und Schriften zerstört, Christen verhaftet und bestraft. Die Spuren gehören zu gezielten staatlichen Maßnahmen.'],
  messenger:['Bote','Neuigkeiten aus Rom! Konstantin hat gesiegt! Sein Heer hat Maxentius an der Milvischen Brücke geschlagen, direkt vor der Stadt am Tiber. Maxentius ist auf der Flucht im Fluss ertrunken. Du fragst nach dem Zeichen, von dem die Christen sprechen? Davon berichten christliche Schreiber erst später, der eine von einem Traum, der andere von einer Erscheinung am Himmel. Was Konstantin wirklich gesehen hat, kann niemand sicher sagen.'],
- openchurch:['Geöffnete Hauskirche','311 beendet Galerius die staatliche Verfolgung weitgehend. 313 erlaubt die Mailänder Vereinbarung grundsätzlich die Religionsausübung; beschlagnahmter Besitz wird zurückgegeben.'],
- building:['An der Baustelle','Unter Konstantin werden Kirchenbau und christliche Gemeinden gefördert. Schenkungen und Privilegien für Geistliche verbessern ihre Lage. Christen können gesellschaftlich aufsteigen.'],
- cults:['Ein weiterhin genutzter Altar','Andere Religionen und traditionelle römische Kulte bestehen zunächst weiter. 313 wird das Christentum nicht zur einzigen erlaubten Religion.'],
+ openchurch:['Die Tür steht offen','Früher verschlossen, heute offen: 311 endet die Verfolgung weitgehend, 313 wird die Religionsausübung erlaubt.'],
+ building:['Eine neue Kirche entsteht','Unter Konstantin werden Kirchenbauten gefördert – nicht nur erlaubt.'],
+ cults:['Der Tempel ist noch da','Opfer und Feste für die römischen Götter gehen weiter. Andere Kulte bestehen zunächst weiter.'],
+ sign:['Das Zeichen hängt öffentlich','Das Christusmonogramm ist jetzt offen zu sehen. Während der Verfolgung wäre das gefährlich gewesen.'],
+ returned:['Besitz kommt zurück','Diese Truhen wurden beschlagnahmt. 313 wird vereinbart: Christen bekommen ihren Besitz zurück.'],
  advisor:['Beraterin','Du willst wissen, warum der Kaiser die Christen fördert? Das fragen sich hier am Hof viele, glaub mir. Manche sagen, er glaube wirklich an den Gott der Christen. Andere sagen, er brauche ein geeintes Reich und eine feste Ordnung, und die Kirche helfe ihm dabei. Ich sage: Warum nicht beides? Glaube und Politik schließen sich nicht aus. Nur ins Herz schauen kann ihm keiner. Seine Beweggründe lassen sich nicht beweisen wie ein Datum in der Chronik.'],
  community:['Gemeindebrief','Die Förderung christlicher Gemeinden kann religiös motiviert sein und zugleich die Bedeutung der Kirche für die Herrschaft stärken. Mehrere Einordnungen sind mit Begründung möglich.'],
  baptism:['Letzte Zeitnotiz','337 wird Konstantin kurz vor seinem Tod getauft. Eine späte Taufe allein beweist weder, dass seine vorherige Förderung nur politisch war, noch, dass wir seinen Glauben sicher kennen.']
@@ -71,13 +73,13 @@ P.vision=base('Im Zelt: Bericht und Ereignis','sort','Trenne das Ereignis von de
 row('Konstantin kämpfte 312 gegen Maxentius.',vc,0,'Quellenproblem: Gegner und Jahr gehören zum gesicherten Kern.'),row('Konstantin gewann.',vc,0,'Quellenproblem: Der Sieg ist vom genauen Ablauf einer Vision zu unterscheiden.'),row('Christliche Autoren erzählen später von Vision oder Traum.',vc,1,'Quellenproblem: Das ist eine spätere Überlieferung; sie ist nicht mit einem gesicherten Detailablauf gleichzusetzen.'),row('Wir wissen genau, was Konstantin gesehen hat.',vc,2,'Quellenproblem: Der genaue Ablauf lässt sich historisch nicht sicher feststellen.')],['Vergleiche mit deiner Erfahrung auf dem Forum.','Eine spätere Erzählung ist nicht dasselbe wie sicheres Wissen über das Erlebte.','Kampf und Sieg: gut feststellbar. Vision/Traum: später berichtet. Genaues Sehen: nicht sicher feststellbar.'],{seal:'312'});
 const cc=['Vor dem Wandel: zeitweise Verfolgung','Ab 313: rechtliche Absicherung','Danach: Förderung unter Konstantin','Trifft nicht zu'];
 P.change=base('Die Besitztruhe','sort','Ordne die Tafeln. Unterscheide rechtliche Veränderungen von der Förderung in der folgenden Zeit.',[
-row('Gottesdienste verboten, Besitz beschlagnahmt.',cc,0,'Sachfehler: Das beschreibt Verfolgung vor dem Wandel, nicht die gesamte Zeit vor Konstantin.'),row('Religionsausübung grundsätzlich erlaubt.',cc,1,'Sachfehler: Das gehört zur Mailänder Vereinbarung von 313.'),row('Beschlagnahmter Besitz wird zurückgegeben.',cc,1,'Sachfehler: Die Rückgabe gehört zur Vereinbarung von 313.'),row('Kirchenbau, Schenkungen und Privilegien für Geistliche.',cc,2,'Historische Vereinfachung: Förderung ist von der rechtlichen Erlaubnis zu unterscheiden.'),row('313 wurde das Christentum zur einzigen erlaubten Religion.',cc,3,'Sachfehler: Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.')],['Untersuche Hauskirche, Baustelle und Altar.','Erlaubnis ist nicht dasselbe wie Förderung oder Ausschließlichkeit.','Verbot: vorher. Erlaubnis und Rückgabe: 313. Kirchenbau/Privilegien: Förderung danach. Einzige Religion: falsch.'],{reward:'decree'});
+row('Gottesdienste verboten, Besitz beschlagnahmt.',cc,0,'Sachfehler: Das beschreibt Verfolgung vor dem Wandel, nicht die gesamte Zeit vor Konstantin.'),row('Religionsausübung grundsätzlich erlaubt.',cc,1,'Sachfehler: Das gehört zur Mailänder Vereinbarung von 313.'),row('Beschlagnahmter Besitz wird zurückgegeben.',cc,1,'Sachfehler: Die Rückgabe gehört zur Vereinbarung von 313.'),row('Kirchenbau, Schenkungen und Privilegien für Geistliche.',cc,2,'Historische Vereinfachung: Förderung ist von der rechtlichen Erlaubnis zu unterscheiden.'),row('313 wurde das Christentum zur einzigen erlaubten Religion.',cc,3,'Sachfehler: Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.')],['Schau dir alle Veränderungen in der Stadt an: Tür, Zeichen, Truhe, Baustelle und Tempel.','Vorher: Verbot, Beschlagnahme, Zerstörung. Danach: Erlaubnis, Rückgabe, Förderung.','Die Tafel über die „einzige erlaubte Religion“ stimmt nicht – bring sie zum römischen Altar.'],{reward:'decree'});
 P.motives=base('Glaube, Politik – oder beides?','balance','Lege alle sieben Karten auf die Waage. Begründe anschließend eine Einordnung und wäge beide Perspektiven ab. Es gibt mehrere plausible Lösungen.',[
 ...['Christliches Zeichen vor der Schlacht (später berichtet)','Sieg gegen Maxentius','Einheit des Reiches','Wachsende Bedeutung der Kirche','Persönliche religiöse Überzeugung','Stabile Ordnung','Förderung christlicher Gemeinden'].map(label=>row(label,['Glaube','Politik','Zwischenbereich'],[0,1,2],'Überlege, ob dieser Grund eher mit persönlichem Glauben, mit Herrschaft oder mit beidem zusammenhängt.'))],['Lies beide Stimmen im Raum.','Du darfst mehrere Karten zwischen Glaube und Politik legen.','Einheit und Ordnung sprechen für Politik; religiöse Überzeugung für Glaube; Förderung kann beides verbinden. Begründe deine eigene Gewichtung.'],{seal:'Wende'});
 P.council=base('Ein Band zwischen Kirche und Reich','council','Verbinde die beiden Gedanken und erläutere mündlich oder schriftlich, warum sie zusammenhängen.',[
-row('Eine Einigung innerhalb der Kirche …',['kann zur Stabilität des Reiches beitragen.','beweist, dass nur politische Motive existierten.','bedeutet, dass Konstantin 325 getauft wurde.'],0,'Ursache/Folge: Einheit kann Stabilität fördern. Daraus folgt weder ein Beweis allein politischer Motive noch eine Taufe 325.')],['Denke an die Waage.','Welche Wirkung kann weniger Streit für die Herrschaft haben?','Einheit der Kirche kann zur Stabilität des Reiches beitragen.']);
+row('Eine Einigung innerhalb der Kirche …',['kann zur Stabilität des Reiches beitragen.','beweist, dass nur politische Motive existierten.','bedeutet, dass Konstantin 325 getauft wurde.'],0,'Ursache/Folge: Einheit kann Stabilität fördern. Daraus folgt weder ein Beweis allein politischer Motive noch eine Taufe 325.')],['Denke an die Waage: Glaube und Politik.','Welche Wirkung kann weniger Streit in der Kirche für das Reich haben?','Passende Antworten verbinden Einheit der Kirche mit Stabilität – und machen es sich nicht zu einfach.']);
 const events=['Konzil von Nicäa','Sieg über Maxentius','Taufe Konstantins kurz vor seinem Tod','Diokletianische Verfolgung','Mailänder Vereinbarung','Galerius beendet die staatliche Verfolgung weitgehend'];
-P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Sachfehler: '+year+' gehört zu „'+events[[3,5,1,4,0,2][i]]+'“.')),['Dein Notizbuch enthält die Zeitspuren.','Das Ende der Verfolgung beginnt vor Konstantins Sieg.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe.']);
+P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Sachfehler: '+year+' gehört zu „'+events[[3,5,1,4,0,2][i]]+'“.')),['Dein Notizbuch enthält die Zeitspuren.','Das Ende der Verfolgung beginnt vor Konstantins Sieg.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe. Der Wandel liegt zwischen 303 und 311.']);
 P.bridge=base('Die Argumentationsbrücke','bridge','Vervollständige die vier Brückenbögen. Formuliere danach deine eigene Begründung: Was ändert sich grundlegend, und welche Vereinfachung sollte man vermeiden?',[
 row('Vor Konstantin …',['waren Christen immer und überall verfolgt.','waren Christen zeitweise staatlicher Verfolgung ausgesetzt.','war das Christentum die einzige erlaubte Religion.'],1,'Historische Vereinfachung: Nicht dauerhaft und überall, sondern zeitweise und unterschiedlich.'),row('Ab 311/313 …',['verbesserte sich die Lage grundlegend.','begann erst jede Verfolgung.','waren alle Menschen Christen.'],0,'Sachfehler: Galerius und die Mailänder Vereinbarung markieren Schritte des Wandels.'),row('Unter Konstantin …',['wurden alle anderen Religionen sofort verboten.','spielte die Kirche keine Rolle.','wurde das Christentum rechtlich abgesichert und gezielt gefördert.'],2,'Historische Vereinfachung: Förderung bedeutet nicht sofortige Ausschließlichkeit.'),row('Deshalb spricht man von einer Wende, weil …',['nur ein Kaiser seinen Namen wechselte.','sich die Stellung des Christentums von zeitweiliger Verfolgung zu Absicherung und Förderung grundlegend veränderte.','wir alle inneren Motive Konstantins sicher kennen.'],1,'Ursache/Folge: Entscheidend ist die grundlegende Veränderung der Stellung des Christentums.')],['Lies die Seiten „313 und danach“ und „Frühes 4. Jahrhundert“.','Verbinde Ausgangslage, rechtliche Änderung und Förderung.','Zeitweilige Verfolgung → Verbesserung ab 311/313 → Absicherung und Förderung: grundlegender Wandel.']);
 
@@ -92,7 +94,7 @@ window.GAME.exits={
  vestibule:[['temple',25,92,'Zur Kontrollstelle'],['archive',84,42,'Ins dunkle Archiv']],
  archive:[['vestibule',30,93,'Zurück zum Archivar'],['camp',66,16,'Weiter zum Tiber']],
  camp:[['archive',12,92,'Zurück ins Archiv'],['city',94,92,'Zur geöffneten Stadt']],
- city:[['camp',6,50,'Zum Tiber'],['motives',73,51,'Die Treppe hinauf']],
+ city:[['camp',6,36,'Zum Tiber'],['motives',73,51,'Die Treppe hinauf']],
  motives:[['city',8,93,'Zurück in die Stadt'],['council',76,32,'Zur Beratung von Nicäa']],
  council:[['motives',31,24,'Zurück zur Waage'],['basilica',80,24,'Zur Basilika']],
  basilica:[['council',75,28,'Zurück nach Nicäa'],['gate',50,94,'Zum Stadttor']]
@@ -270,3 +272,82 @@ window.GAME.minigames.map312={type:'battlemap',title:'Das Kartenbrett',
  prompt:'Stecke die sechs Beschriftungen an die richtigen Stellen der Karte. Dann prüfe die Karte.',
  pins:[['Stadt',74,62],['Fluss',40,14],['Übergang',44,36],['Späterer Sieger',16,40],['Gegner',64,24],['Jahr',11,86]],
  winTitle:'Die Karte ist vollständig',win:'Im Jahr 312 besiegte Konstantin seinen Gegner Maxentius an der Milvischen Brücke über den Tiber, kurz vor Rom.'};
+
+/* ---------- Überarbeitete Szenen-Rätsel (scenegames.js) ---------- */
+// Die geöffnete Stadt: Veränderungen im Bild entdecken, dann „Vorher und Nachher“ ordnen.
+window.GAME.minigames.change={type:'citychange',title:'Vorher und Nachher',
+ prompt:'Häng jede Wachstafel an die passende Seite. Eine Tafel stimmt so nicht – bring sie zum römischen Altar.',
+ art:{bg:'assets/minigames/open-city/open-city.png',timeline:'assets/minigames/timeline/timeline-assets.png',amphora:'assets/minigames/amphora/amphora-assets.png'},
+ start:'Tippe eine Wachstafel an und dann die passende Tafel – oder zieh sie hinüber.',
+ cards:[
+  {text:'Gottesdienste verboten',side:'vorher',icon:'door-shut',why:'Ja: Unter Diokletian wurden christliche Gottesdienste verboten.'},
+  {text:'Besitz beschlagnahmt',side:'vorher',sheet:'amphora',rect:[990,376,205,151],why:'Ja: Kirchen und Gemeinden verloren ihren Besitz.'},
+  {text:'Schriften zerstört',side:'vorher',sheet:'timeline',rect:[25,334,252,260],why:'Ja: Heilige Schriften mussten ausgeliefert und verbrannt werden.'},
+  {text:'Religionsausübung erlaubt',side:'danach',sheet:'timeline',rect:[286,326,263,275],why:'Ja: 313 wurde vereinbart, dass alle ihre Religion ausüben dürfen.'},
+  {text:'Besitz zurückgegeben',side:'danach',sheet:'amphora',rect:[777,374,191,152],why:'Ja: Beschlagnahmter Besitz wurde zurückgegeben.'},
+  {text:'Kirchenbau gefördert',side:'danach',sheet:'timeline',rect:[838,327,268,271],why:'Ja: Konstantin förderte danach Kirchenbauten und Gemeinden.'},
+  {text:'313 wurde das Christentum zur einzigen erlaubten Religion.',side:'falsch',icon:'scroll-cross'}],
+ falseWrong:'Nein. Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.',
+ falseRight:'Richtig erkannt: Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.',
+ notFalse:'Diese Tafel stimmt. Sie gehört an eine der beiden Seiten.',
+ winTitle:'Die Stadt hat sich verändert',win:'Aus Verbot, Beschlagnahme und Zerstörung wurden Erlaubnis, Rückgabe und Förderung. Die alten Tempel stehen aber weiter.'};
+
+// Ein Band zwischen Kirche und Reich: Beratung im Konzil von Nicäa 325.
+window.GAME.minigames.council={type:'konzil',title:'Beratung im Konzil',
+ prompt:'Die Beratenden beginnen einen Gedanken. Wähle die passende Fortsetzung.',
+ art:{bg:'assets/minigames/council/council-scene.png',people:'assets/minigames/council/council-officials.png'},
+ people:[
+  {name:'Kaiserlicher Berater',rect:[883,24,216,459],x:10},
+  {name:'Hoher Beamter',rect:[1199,20,330,469],x:27},
+  {name:'Bischof',rect:[184,8,242,469],x:45},
+  {name:'Älterer Bischof',rect:[527,485,262,435],x:62},
+  {name:'Diakon',rect:[551,38,284,447],x:78},
+  {name:'Vorsitzender Bischof',rect:[1156,527,372,385],x:92,h:.86}],
+ rounds:[
+  {who:0,q:'„Wenn sich die Bischöfe ständig streiten, dann …“',options:[
+   {text:'… kann das auch Unruhe im Reich verursachen.',ok:true,reply:'Genau. Streit innerhalb einer wichtigen gesellschaftlichen Gruppe konnte auch politische Folgen haben.'},
+   {text:'… muss Konstantin sofort alle anderen Religionen verbieten.',by:2,reply:'Verbieten? Davon ist keine Rede. Andere Kulte bestehen weiter. Es geht um den Streit unter uns.'},
+   {text:'… beweist das, dass Konstantin schon 325 getauft war.',by:3,reply:'Getauft wird Konstantin erst 337, kurz vor seinem Tod. Mit unserem Streit hat das nichts zu tun.'}]},
+  {who:1,q:'„Für Konstantin ist eine Einigung in der Kirche deshalb interessant, weil …“',options:[
+   {text:'… eine geeinte Kirche auch Stabilität fördern kann.',ok:true,reply:'So ist es. Einheit in der Kirche kann Ruhe und Ordnung im Reich stützen.'},
+   {text:'… er so alle Christen zu Soldaten machen kann.',reply:'Nein. Es geht nicht um das Heer, sondern um Ruhe und Ordnung im Reich.'},
+   {text:'… ihm der Glaube der Bischöfe völlig gleichgültig ist.',by:2,reply:'So einfach ist es nicht. Der Kaiser lädt uns ein und nimmt an der Beratung teil.'}]},
+  {who:2,q:'„Dann handelt Konstantin also nur aus politischen Gründen?“',options:[
+   {text:'Nein. Politische und religiöse Motive können gleichzeitig eine Rolle spielen.',ok:true,reply:'Ein kluger Gedanke. Sein Innerstes kennen wir nicht sicher – beides kann zusammenwirken.'},
+   {text:'Ja. Das lässt sich eindeutig beweisen.',reply:'Das wäre zu einfach gedacht. Überlege noch einmal, ob Politik und Glaube wirklich getrennt voneinander wirken.'},
+   {text:'Nein. Er handelt nur aus Frömmigkeit, Politik spielt keine Rolle.',by:0,reply:'Auch das ist zu einfach. Ein Kaiser denkt immer auch an sein Reich.'}]},
+  {who:3,q:'„Das Konzil zeigt außerdem, dass …“',options:[
+   {text:'… der Kaiser inzwischen Einfluss auf kirchliche Streitfragen nimmt.',ok:true,reply:'Ja. Der Kaiser ruft die Bischöfe zusammen und begleitet die Beratung – das ist neu.'},
+   {text:'… die Kirche nichts mit dem Kaiser zu tun haben will.',reply:'Im Gegenteil: Der Kaiser selbst hat uns hier zusammengerufen.'},
+   {text:'… die Bischöfe dem Kaiser nicht mehr gehorchen dürfen.',reply:'Davon sagt das Konzil nichts. Es zeigt, wie nah sich Kaiser und Kirche gekommen sind.'}]},
+  {who:4,q:'„Was verändert sich damit gegenüber früher?“',options:[
+   {text:'Die Kirche wird nicht mehr verfolgt, sondern zu einem wichtigen Partner des Kaisers.',ok:true,reply:'Genau. Vor wenigen Jahrzehnten wurden Geistliche noch verhaftet – jetzt berät der Kaiser mit ihnen.'},
+   {text:'Nichts. Die Christen werden weiterhin verfolgt.',by:3,reply:'Denk an 311 und 313: Die staatliche Verfolgung ist vorbei.'},
+   {text:'Das Christentum ist seit 313 die einzige erlaubte Religion.',by:0,reply:'Nein. Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.'}]},
+  {who:5,q:'„Und worauf einigen wir uns am Ende dieser Beratung?“',options:[
+   {text:'Auf ein gemeinsames Glaubensbekenntnis für die ganze Kirche.',ok:true,reply:'Richtig. Das Bekenntnis von Nicäa soll die Kirche einen.'},
+   {text:'Darauf, dass jeder Bischof lehren darf, was er will.',reply:'Gerade das wollten wir vermeiden. Wir suchen eine gemeinsame Formel.'},
+   {text:'Darauf, dass der Kaiser das Bekenntnis allein schreibt.',by:2,reply:'Nein, die Bischöfe beraten und beschließen. Der Kaiser unterstützt die Einigung.'}]}],
+ synthesis:'Kirchliche Einheit konnte für Konstantin auch politische Stabilität bedeuten.',
+ winTitle:'Ein Band zwischen Kirche und Reich',win:'Kaiser und Kirche arbeiten jetzt eng zusammen. Warum Konstantin das tat, lässt sich nicht auf einen einzigen Grund zurückführen.'};
+
+// Die Zeitmechanik: große Chronik mit sechs Jahresabschnitten.
+window.GAME.minigames.timeline={type:'chronik',title:'Die Chronik der Wende',
+ prompt:'Trage jedes Ereignis in den richtigen Abschnitt der großen Chronik ein.',
+ art:{bg:'assets/minigames/timeline/chronicle-room.png',sheet:'assets/minigames/timeline/timeline-assets.png'},
+ start:'Tippe eine Chronikkarte an und dann das passende Jahresmedaillon – oder zieh die Karte auf die Seite.',
+ years:[
+  {year:303,title:'Diokletianische Verfolgung',line:'Unter Diokletian beginnt die große staatlich organisierte Verfolgung.',medal:[57,31,242,285],mini:[25,334,252,260],hint:'Denk an das dunkle Archiv.'},
+  {year:311,title:'Galerius beendet die staatliche Verfolgung weitgehend',line:'Galerius beendet die staatliche Verfolgung weitgehend.',medal:[318,29,247,289],mini:[286,326,263,275],hint:'Die Nachricht, die die Hauskirche wieder öffnet.'},
+  {year:312,title:'Sieg Konstantins über Maxentius',line:'Konstantin besiegt Maxentius.',medal:[585,30,242,287],mini:[551,329,283,274],hint:'Die Schlacht an der Milvischen Brücke.'},
+  {year:313,title:'Mailänder Vereinbarung',line:'Religionsausübung wird grundsätzlich erlaubt.',medal:[842,29,243,287],mini:[838,327,268,271],hint:'Ein Jahr nach dem Sieg.'},
+  {year:325,title:'Konzil von Nicäa',line:'Konzil von Nicäa.',medal:[1100,30,242,288],mini:[1107,329,272,275],hint:'Die große Beratung der Bischöfe.'},
+  {year:337,title:'Taufe Konstantins kurz vor seinem Tod',line:'Konstantin wird kurz vor seinem Tod getauft.',medal:[1361,28,250,291],mini:[1383,328,272,276],hint:'Ganz am Ende seines Lebens.'}],
+ bandRect:[696,735,824,199],
+ wrong:'„{title}“ passt nicht zu {year}.',
+ question:'Die Chronik ist vollständig. Zwischen welchen Ereignissen liegt der entscheidende Wandel? Tippe auf die Stelle zwischen zwei Jahren.',
+ gapAnswer:0,
+ gapRight:'Ja. Auf die große Verfolgung um 303 folgen 311 und 313 die entscheidenden Veränderungen. Das Band der Wende schließt sich.',
+ gapWrong:{1:'Fast: 311 hat der Wandel schon begonnen. Suche die Stelle davor – zwischen Verfolgung und Ende der Verfolgung.',2:'Da ist der Wandel schon im Gang. 311 endet die Verfolgung weitgehend. Schau weiter nach links.',3:'313 und 325 liegen beide schon nach dem Wandel.',4:'Die Taufe 337 kommt ganz am Ende. Der Wandel liegt viel früher.'},
+ gapWrongDefault:'Schau noch einmal: Wo endet die Verfolgung?',
+ winTitle:'Die Chronik ist wiederhergestellt',win:'Die Wende geschah nicht an einem Tag, sondern in mehreren Schritten – der entscheidende Umschwung liegt zwischen 303 und 311/313.'};
