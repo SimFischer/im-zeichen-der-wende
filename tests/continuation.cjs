@@ -17,6 +17,11 @@ const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('nod
  assert.equal(JSON.stringify((await window.WendeContinuation.load(typed)).state),JSON.stringify(s));
  // Collision on the server -> client retries with a new code
  collide=2;const c2=await window.WendeContinuation.save(s);assert.equal(JSON.stringify((await window.WendeContinuation.load(c2.code)).state),JSON.stringify(s));
+ // Bonusspiele reisen mit; alte Codes ohne Bonus bleiben gültig
+ const bon=await window.WendeContinuation.save(s,{found:['tiber','zeichen'],won:['tiber']});
+ const lb=await window.WendeContinuation.load(bon.code);assert.equal(JSON.stringify(lb.bonus),JSON.stringify({found:['tiber','zeichen'],won:['tiber']}));
+ assert.equal((await window.WendeContinuation.load(a.code)).bonus,undefined);
+ await assert.rejects(()=>window.WendeContinuation.save(s,{found:['<script>'],won:[]}));
  const before=calls;await assert.rejects(()=>window.WendeContinuation.load('123'));assert.equal(calls,before);
  await assert.rejects(()=>window.WendeContinuation.load('0000-0000-0000-0000-0000-0000'));
  await assert.rejects(()=>window.WendeContinuation.load('ZZZZ-ZZZZ'));await assert.rejects(()=>window.WendeContinuation.load('UUUU-UUUU'));
@@ -24,5 +29,5 @@ const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('nod
  await assert.rejects(()=>window.WendeContinuation.load(a.code));
  fail=true;await assert.rejects(()=>window.WendeContinuation.save(s));
  assert.equal(s.scene,'house');assert.equal(s.drafts[id].reason,'Meine private Antwort');
- console.log('PASS: 8-char codes, lookalike normalization, collision retry, encrypted roundtrip, independent codes, normalized input, invalid/missing/tampered codes, offline failure, state preservation');
+ console.log('PASS: bonus progress roundtrip, 8-char codes, lookalike normalization, collision retry, encrypted roundtrip, independent codes, normalized input, invalid/missing/tampered codes, offline failure, state preservation');
 })().catch(e=>{console.error(e);process.exitCode=1;});
