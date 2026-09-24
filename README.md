@@ -9,6 +9,9 @@ Vier Bereiche sind als gezeichnete Szenen neu gebaut (`scenegames.js`, `scenegam
 
 Bedienung: Karte antippen und Ziel antippen oder ziehen (Pointer Events), keine Hover-Abhängigkeit, Flächen mindestens 44 px, die Bühne passt sich an Quer- und Hochformat an, ohne dass das Fenster scrollt. Fehlt eine der Grafiken, zeigt `.sg-no-art` einen neutralen gezeichneten Ersatz.
 
+- **Die Kurierfahrt von 313** bleibt als neuntes Bonusspiel erhalten (`bonus/kurier.js`, Inhalte in `GAME.kurier`). Sie wird durch die Waage des Kaisers freigeschaltet und im Notizbuch gestartet.
+- **Schrift:** EB Garamond ist jetzt eingebunden (`assets/fonts/`, variable Schrift, normal und kursiv, Stärken 400–800, zusammen ca. 390 KB; Lizenz in `assets/fonts/OFL.txt`).
+
 Tests: `npm install` (bringt `linkedom` als Entwicklungsabhängigkeit), dann `npm test`.
 
 # Update: Auftrag des Archivars

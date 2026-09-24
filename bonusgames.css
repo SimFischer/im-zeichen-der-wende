@@ -134,3 +134,9 @@
 .tiber-quip .schild-face{width:52px;height:52px;background-size:auto 520%;background-position:-28px -30px}
 
 .bonus-unknown small{display:block;font-size:14px;font-weight:400;letter-spacing:normal;margin-top:6px}
+
+/* Kurierfahrt von 313 (früheres Rennen der geöffneten Stadt) */
+.bonus-shell[data-game=kurier] .bonus-pause{display:none}
+.kurier-wrap{position:absolute;inset:0;display:flex;flex-direction:column;padding:.5em .6em;background:#f3e4c5;overflow:hidden}
+.kurier-wrap .racer{flex:1;min-height:0;display:flex;flex-direction:column}
+.kurier-wrap .racer-stage{flex:1;min-height:0;height:auto!important}

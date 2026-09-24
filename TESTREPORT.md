@@ -163,3 +163,5 @@ Der Durchlauf war seit den Sprechblasen und Minispielen veraltet und schlug scho
 Zusätzlich in Chromium (Playwright) geprüft: alle drei Szenen-Rätsel real durchgespielt (Spielstand gespeichert, Belohnungsfenster erscheint), Ziehen mit Pointer Events, Größen 1180×820, 1024×600 und 820×1180 ohne Scrollen des Fensters, Ersatzdarstellung bei blockierten Grafiken, Amphoren-Chaos auf 1180×820 und 1024×768 (nach dem Schließen keine Animation mehr, Spielstand unverändert). Keine JavaScript-Fehler; die einzigen 404-Meldungen betreffen die optionalen Schriftdateien in `assets/fonts/`, die schon vorher fehlten.
 
 Noch offen: echtes iPad-Safari (Touch-Genauigkeit, `:has()` wird ab iPadOS 15.4 unterstützt) und ein Unterrichtstest.
+
+- Nachtrag: Kurierfahrt als Bonusspiel (Notizbuch-Start, Sieg, nach dem Schließen keine Animation mehr, Spielstand unverändert) und Schrift EB Garamond (normal und kursiv geladen, keine 404-Meldungen mehr) in Chromium geprüft. `npm test` bestanden (Bonus-Test jetzt mit neun Spielen).
