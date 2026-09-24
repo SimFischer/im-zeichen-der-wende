@@ -2,7 +2,7 @@
 // Separate scene art and tactile puzzle interfaces; historical content stays in game-data.js.
 window.Adventure = (() => {
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const cast={guard:0,resident:1,merchant:2,rumor:2,chronicler:3,clerk:4,control:5,messenger:6,advisor:7};
+ const cast={archivist:4,guard:0,resident:1,merchant:2,rumor:2,chronicler:3,clerk:4,control:5,messenger:6,advisor:7};
  function scene(s,state){
   const el=document.querySelector('#scene');el.dataset.place=s.id;el.classList.toggle('illuminated',state.inventory.includes('light'));el.classList.toggle('changed',!!state.flags.galerius);
   document.querySelector('#actors').innerHTML='';
@@ -13,7 +13,7 @@ window.Adventure = (() => {
    if(cast[h[4]]!==undefined)b.classList.add('person');
    if(h[4]==='lamp'){b.classList.add('collectible');b.hidden=state.inventory.includes('lamp')||state.inventory.includes('light');}
    if(h[4]==='flint'){
-    b.classList.add('collectible');b.querySelector('.pin').remove();
+    b.classList.add('collectible');b.querySelector('.pin')?.remove();
     b.insertAdjacentHTML('afterbegin','<img src="assets/inventory/flint.png" alt="" class="flint-art">');
     b.hidden=state.inventory.includes('flint')||state.inventory.includes('light');
    }

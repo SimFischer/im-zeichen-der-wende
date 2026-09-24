@@ -4,7 +4,7 @@
 /* Information */
 #hotspots .hotspot.hs-talk .pin,#hotspots .hotspot.hs-evidence .pin{background:#f3e4c5;color:#244f4a;border:2px solid #244f4a;box-shadow:0 0 0 3px #f3e4c566,0 2px 8px #000a;font:italic 700 calc(var(--u)*.85)/1 Georgia,serif;display:grid;place-items:center}
 #hotspots .hotspot.hs-talk .label,#hotspots .hotspot.hs-evidence .label{background:#20352ef2;border-color:#dcc499}
-#hotspots .hotspot.person.hs-talk .label:before{content:'❝ ';color:#e5b76c}
+#hotspots .hotspot.person.hs-talk .label{border-left:5px solid #e5b76c}
 #hotspots .hotspot.hs-talk.seen .pin{background:#c9d9c9;opacity:.85}
 
 /* Rätsel */

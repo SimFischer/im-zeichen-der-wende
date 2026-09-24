@@ -1,3 +1,12 @@
+# Ergänzung: Archivar und Hotspots (24.09.2026)
+
+- `tests/archive-flow.cjs`: 67 erfolgreiche Prüfungen zu Übergabe, vollständigem Lesen, Lampen-/Schlüsselsperre, Licht, Ablage, Ereignis 311, Neuladen, alten Spielständen, Hotspots und Szenenpfaden. Der Rätselabschluss wird über das echte `minigame-win`-Ereignis simuliert; keine Behauptung eines vollständigen Minispiel-Durchlaufs.
+- `tests/continuation.cjs`: bestanden.
+- Syntaxprüfung der JavaScript-Dateien: bestanden.
+- Chrome: neue Szene, Lesefolge, Fortsetzen nach Neuladen und Eintritt mit Schlüssel in das dunkle Minispiel manuell geprüft.
+- Der ältere Gesamttest `tests/playthrough.cjs` ist bereits auf dem unveränderten Ausgangsstand nicht grün (veraltete Sammelbeschriftung); er erwartet außerdem den inzwischen ersetzten Gesprächsdialog. Er wurde nicht als bestandener Gesamtdurchlauf gewertet.
+- Nicht geprüft: physisches iPad/Safari und kompletter Unterrichtsdurchlauf.
+
 # Überarbeitung 3 · aktueller Prüfstand
 
 452 automatisierte Prüfungen bestanden: vollständiger Spielweg über elf Orte und zwölf Rätsel, Inventarkombination, Hinweise, Speicherung, sechs Siegel, Finale sowie sechs Vollbildprüfungen. Neu geprüft: eigenständiges Torbild, korrekt benannter Feuerstein mit Bild, Entfernung nach Aufnahme, eigener Wächterdialog mit Nahansicht und Sprechblase sowie Vor-/Zurückblättern. Keine organisatorischen Hinweise in der Schülerhilfe.

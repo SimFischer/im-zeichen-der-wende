@@ -33,8 +33,11 @@
  function unlock(){
   if(has('conflict')&&has('sources'))add('unlocked','office');
   if(has('cases'))add('unlocked','temple');
-  if(has('sacrifice'))add('unlocked','archive');
-  if(has('archive'))add('unlocked','camp');
+  if(has('sacrifice')||state.unlocked.includes('archive'))add('unlocked','vestibule');
+  if(state.flags.archiveScrollsRead||has('archive'))add('unlocked','archive');
+  // Bereits abgeschlossene Archive aus älteren Spielständen bleiben abgeschlossen.
+  if(has('archive')&&!state.flags.archiveScrollsReceived)state.flags.archiveScrollsDeposited=true;
+  if(has('archive')&&state.flags.archiveScrollsDeposited)add('unlocked','camp');
   if(has('vision'))add('unlocked','city');
   if(has('change'))add('unlocked','motives');
   if(has('motives'))add('unlocked','council');
@@ -42,6 +45,8 @@
  }
  function objective(){
   const id=state.scene;
+  if(id==='vestibule')return !state.flags.archiveScrollsReceived?'Sprich mit dem Archivar. Er hat einen Auftrag für dich.':!state.flags.archiveScrollsRead?'Lies die Schriftrollen, bevor du sie ins Archiv bringst.':!own('light')?'Entzünde die Öllampe: Kombiniere sie im Botenbeutel mit dem Feuerstein.':'Wähle den Archivschlüssel im Botenbeutel und gehe ins Archiv.';
+  if(id==='archive'&&has('archive')&&!state.flags.archiveScrollsDeposited)return 'Das Licht ist wieder an. Lege die Schriftrollen auf dem freien Regalplatz ab.';
   if(id==='gate')return state.seals.length===6?'Alle Siegel gefunden. Die Chronik wartet in der Basilika.':'Erkunde die Erinnerungen. Finde sechs Erkenntnis-Siegel für die Chronik.';
   if(id==='archive'&&!own('light'))return 'Kombiniere Öllampe und Feuerstein im Botenbeutel.';if(id==='archive'&&!has('archive')&&G.minigames?.archive)return 'Tippe in die Dunkelheit, um mit der Lampe zu suchen.';
   if(id==='archive'&&state.evidence.length<4&&!has('archive'))return 'Untersuche die vier Spuren im Licht deiner Lampe.';
@@ -52,16 +57,17 @@
   if(p)return `Du weißt genug. Überprüfe dein Wissen: ${p[0]}.`;
   return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
- function render(){endTalk();unlock();const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
-  const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.id}.png')`;$('#app').style.setProperty('--scene-img',`url('assets/backgrounds/v3-${s.id}.png')`);art.style.backgroundSize='contain';art.style.backgroundPosition='center';
+ function render(){endTalk();unlock();if(state.scene==='archive'&&!has('archive')&&!state.flags.archiveScrollsRead)state.scene='vestibule';const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
+  const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.art||s.id}.png')`;$('#app').style.setProperty('--scene-img',`url('assets/backgrounds/v3-${s.art||s.id}.png')`);art.style.backgroundSize='contain';art.style.backgroundPosition='center';
   const archDark=s.id==='archive'&&!has('archive');art.style.filter=archDark?'brightness(.07) saturate(.4)':'';$('#scene').classList.toggle('archive-dark',archDark);
   $('#world-change').className=state.flags.galerius?'open':'';
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
-  $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot hs-'+h[3];b.dataset.index=i;b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');const cap=h[3]==='puzzle'?'<small class="hs-cap"></small>':h[3]==='take'?'<small class="hs-cap">zum Mitnehmen</small>':'';b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':h[3]==='take'?'＋':h[3]==='talk'?'i':'·'}</span><span class="label">${esc(h[0])}${cap}</span>`;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
+  $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot hs-'+h[3];b.dataset.index=i;b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');const cap=h[3]==='puzzle'?'<small class="hs-cap"></small>':'';b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':h[3]==='take'?'＋':h[3]==='talk'?'i':'·'}</span><span class="label">${esc(h[0])}${cap}</span>`;if(h[3]==='take'){b.querySelector('.pin').remove();b.setAttribute('aria-label',h[0]+' aufnehmen');}if(h[3]==='deposit')b.hidden=!has('archive')||!!state.flags.archiveScrollsDeposited;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
   window.Adventure.scene(s,state);refreshSpots();document.querySelectorAll('#hotspots .unlocked-now').forEach(b=>b.classList.remove('unlocked-now'));renderExits(s);window.BonusGames?.decorate(s,state,$('#hotspots'));$('#objective').textContent=objective();renderInventory();save();
  }
  function travel(id,via){
   if(!state.unlocked.includes(id)){toast(G.exitHints?.[id]||'Dieser Weg ist noch versperrt. Finde zuerst weitere Spuren.');return;}
+  if(id==='archive'&&!has('archive')){if(!state.flags.archiveScrollsRead){enter('vestibule');toast('Lies zuerst die Schriftrollen des Archivars.');return;}if(!own('light')){toast('Vor dem Eintritt brauchst du eine brennende Öllampe. Kombiniere Öllampe und Feuerstein im Botenbeutel.');return;}}
   if(id==='archive'&&!state.flags.archiveUnlocked){if(!own('key')){toast('Der Archivschlüssel fehlt. Untersuche den Seilzug im Tempelbezirk.');return;}if(selected!=='key'){toast(via==='map'?'Wähle zuerst den Archivschlüssel im Botenbeutel und tippe dann das Archiv auf der Karte an.':'Die Archivtür ist verschlossen. Wähle den Archivschlüssel im Botenbeutel und tippe dann erneut auf den Weg.');close();$('#inventory').hidden=false;$('#inventory-toggle').setAttribute('aria-expanded','true');return;}state.flags.archiveUnlocked=true;selected=null;}
   if(id==='office'&&!state.flags.passShown){if(!own('pass')){toast('Der Botenpass fehlt.');return;}state.flags.passShown=true;toast('Du zeigst den Botenpass. Der Schreiber lässt dich ein.');}
   enter(id);
@@ -77,12 +83,36 @@
  function interact(h,i){endTalk();const lockedBefore=type0=>type0==='puzzle'&&puzzleLocked(scene(),h[4]);const wasLocked=lockedBefore(h[3]);add('seen',state.scene+':'+i);save();const [label,x,y,type,id]=h;
   if(type==='puzzle'&&wasLocked){const miss=missingInfo(scene()).map(({h})=>h[0]);info('Erst Informationen sammeln',`Bevor du „${label}“ überprüfen kannst, brauchst du mehr Wissen. Sprich mit den Menschen und untersuche die Dinge hier. Noch offen: ${miss.join(', ')}.`);return;}
   if(state.scene==='archive'&&own('light')&&!has('archive')&&G.minigames?.archive&&type!=='exit'){openPuzzle('archive');return;}if(state.scene==='archive'&&!own('light')){info('Zu dunkel','Du erkennst nur Umrisse. Öffne den Botenbeutel. Wähle die Öllampe und dann den Feuerstein, um sie zu entzünden. Beide findest du im Wohnviertel beziehungsweise am Stadttor.');return;}
+  if(id==='archivist'){meetArchivist();return;}
+  if(type==='reading'){if(!state.flags.archiveScrollsReceived){meetArchivist();return;}readArchiveScrolls();return;}
+  if(type==='deposit'){depositArchiveScrolls();return;}
   if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t,h);else info(t[0],t[1]);return;}
   if(type==='take'){if(own(id)||['lamp','flint'].includes(id)&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}flyToBag(id,state.scene+':'+i);add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
   if(type==='gate'){info('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
   if(type==='evidence'){add('evidence',id);save();info(G.evidence[id][0],`Im Licht wird die Spur sichtbar. Überlege, welche Maßnahme sie erklärt: ${G.evidence[id][1]}. Die Spur ist jetzt für die Schubladen festgehalten.`);render();return;}
   if(type==='finalgate'){sealLock();return;}
   if(type==='puzzle')openPuzzle(id);
+ }
+ function meetArchivist(){
+  if(state.flags.archiveScrollsDeposited){info('Der Archivar','Danke! Die Schriftrollen liegen sicher im erhellten Archiv.');return;}
+  open('Der Archivar','<p class="intro-copy">Diese Schriftrollen sollen ins Archiv. Sie berichten von den Maßnahmen gegen Christen ab 303. Lies sie vorher sorgfältig: Ihr Inhalt hilft dir, die Spuren im dunklen Raum zu verstehen.</p><p>Mit deiner brennenden Öllampe findest du den Weg. Ordne die vier Spuren richtig zu, um das Licht wiederherzustellen. Dann kannst du die Schriftrollen auf dem freien Regalplatz ablegen.</p>','Vor der Archivtür');
+  button(state.flags.archiveScrollsReceived?'Schriftrollen lesen':'Schriftrollen übernehmen und lesen',()=>{state.flags.archiveScrollsReceived=true;add('inventory','scrolls');save();render();readArchiveScrolls();},'primary',actions());
+ }
+ function readArchiveScrolls(){
+  const t=G.texts.archive;let page=0;
+  function show(){open('Die Schriftrollen des Archivars',`<article class="reading-panel"><h3>${esc(t.title)}</h3><p>${esc(t.body[page])}</p></article><p class="muted">Schriftrolle ${page+1} von ${t.body.length}</p>`,'Auftrag für das Archiv');const a=actions();
+   if(page>0)button('Zurück',()=>{page--;show();},'',a);
+   if(page<t.body.length-1)button('Nächste Schriftrolle',()=>{page++;show();},'primary',a);
+   else button('Gelesen – zum Archiv bringen',()=>{state.flags.archiveScrollsRead=true;add('seen','text:archive');save();close();render();toast('Die Schriftrollen sind im Botenbeutel. Du kannst sie dort und im Notizbuch nachlesen.');},'primary',a);
+  }show();
+ }
+ function depositArchiveScrolls(){
+  if(!has('archive'))return locked('Stelle zuerst das Licht im Archiv wieder her.');
+  if(state.flags.archiveScrollsDeposited)return;
+  if(!own('scrolls'))return locked('Hole zuerst die Schriftrollen beim Archivar ab.');
+  state.inventory=state.inventory.filter(id=>id!=='scrolls');state.flags.archiveScrollsDeposited=true;save();render();
+  complete('archive');
+  const notice=document.createElement('p');notice.className='clue';notice.textContent='Die Schriftrollen sind sicher auf dem Regalplatz abgelegt. Der Auftrag des Archivars ist erfüllt.';$('#modal-content').prepend(notice);
  }
  function endTalk(){const b=document.querySelector('#speech');if(!b)return;b.remove();document.querySelector('#scene').classList.remove('talking');document.querySelectorAll('.hotspot.speaking').forEach(h=>h.classList.remove('speaking'));if(talkReturn?.isConnected)talkReturn.focus();talkReturn=null;refreshSpots();}
  let talkReturn=null;
@@ -128,7 +158,7 @@
   if(selected)pill.querySelector('button').onclick=()=>{selected=null;renderInventory();};
  }
  function toggleBag(show){const el=$('#inventory');if(show===undefined)show=el.hidden;el.hidden=!show;$('#inventory-toggle').setAttribute('aria-expanded',String(show));if(show)$('#inventory-toggle').classList.remove('has-new');}
- function selectItem(id){if(selected===id){selected=null;renderInventory();return;}
+ function selectItem(id){if(id==='scrolls'){toggleBag(false);readArchiveScrolls();return;}if(selected===id){selected=null;renderInventory();return;}
   if(selected&&[selected,id].includes('lamp')&&[selected,id].includes('flint')){state.inventory=state.inventory.filter(x=>!['lamp','flint'].includes(x));add('inventory','light');selected=null;save();render();toast('Die Öllampe brennt. Jetzt kannst du im Archiv sehen.');if(state.scene==='archive'&&!has('archive')&&G.minigames?.archive){toggleBag(false);setTimeout(()=>openPuzzle('archive'),900);}return;}
   selected=id;renderInventory();toggleBag(false);toast(G.items[id]+' ist gewählt. Tippe jetzt das Ziel in der Szene an. Zum Kombinieren öffne den Beutel und tippe einen zweiten Gegenstand an.');
  }
@@ -158,7 +188,7 @@
   const layer=$('.pm-places');
   G.scenes.forEach((s,index)=>{const accessible=state.unlocked.includes(s.id),here=s.id===state.scene,[x,y]=pt(s.id);const b=document.createElement('button');b.type='button';b.className='pm-place'+(accessible?'':' locked')+(here?' here':'');b.style.left=x+'%';b.style.top=y+'%';b.disabled=!accessible;
    b.setAttribute('aria-label',`${index+1}. ${s.name} – ${accessible?(here?'du bist hier':s.era):'noch verschlossen'}`);
-   b.innerHTML=`<span class="pm-medal" style="background-image:url('assets/backgrounds/v3-${s.id}.png')"><span class="pm-num">${accessible?index+1:'🔒'}</span></span><span class="pm-label"><b>${esc(s.name)}</b><small>${here?'Du bist hier':accessible?esc(s.era):'Noch verschlossen'}</small></span>${here?'<span class="pm-here" aria-hidden="true">▼</span>':''}`;
+   b.innerHTML=`<span class="pm-medal" style="background-image:url('assets/backgrounds/v3-${s.art||s.id}.png')"><span class="pm-num">${accessible?index+1:'🔒'}</span></span><span class="pm-label"><b>${esc(s.name)}</b><small>${here?'Du bist hier':accessible?esc(s.era):'Noch verschlossen'}</small></span>${here?'<span class="pm-here" aria-hidden="true">▼</span>':''}`;
    b.onclick=()=>travel(s.id,'map');layer.append(b);});
  }
  $('#map').onclick=showMap;
@@ -224,6 +254,7 @@
   complete(id);
  }
  function complete(id){const p=G.puzzles[id];const already=has(id);add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward&&!own(p.reward)){add('inventory',p.reward);$('#inventory-toggle').classList.add('has-new');}if(G.notes[id])add('notes',id);unlock();save();render();activePuzzle=null;
+  if(id==='archive'&&!state.flags.archiveScrollsDeposited){info('Das Archiv ist erhellt','Du hast alle Spuren zugeordnet und das Licht wiederhergestellt. Lege nun die Schriftrollen auf dem freien Regalplatz ab.');return;}
   if(id==='archive'&&!state.flags.galerius){state.flags.galerius=true;add('notes','galerius');save();render();open('Eine Nachricht verändert die Stadt',`<p class="eyebrow">Zeitsprung · 311</p><p class="intro-copy">Ein Bote verkündet: „Galerius beendet die staatliche Verfolgung weitgehend.“ Die Hauskirche kann wieder geöffnet werden. Der Wandel beginnt schon vor Konstantins Sieg.</p><p>Auf der Stadtkarte ist jetzt das Militärlager erreichbar.</p>`,'Das Tor zum neuen Jahrhundert');button('Die Nachricht weitertragen',close,'primary',actions());return;}
   if(id==='bridge'){state.flags.finished=true;save();open('Die Chronik ist wieder offen',`<div class="ending"><span>✧</span><h3>Im Zeichen der Wende</h3><p>Du hast die Erinnerungen zusammengefügt: von unterschiedlichen Verfolgungen über rechtliche Absicherung bis zur gezielten Förderung des Christentums.</p></div><p style="margin-top:20px">Die Entwicklung geschah in mehreren Schritten. Sie machte 313 nicht alle anderen Religionen illegal.</p><p><strong>Besprecht zum Abschluss:</strong> Welche Veränderung rechtfertigt den Begriff „Wende“ am stärksten? Belegt eure Antwort mit zwei Ereignissen.</p>`,'Die Stadtchronik · vollständig');const a=actions();button('Mein Notizbuch öffnen',showJournal,'primary',a);button('Stadt weiter erkunden',close,'',a);return;}
   const sum=G.summaries?.[id];const fallback=G.notes[id]?.[1]||(id==='map312'?'Die Karte ist vollständig. Konstantins Zelt ist jetzt zugänglich.':'Die Zeitfolge stimmt. Die Argumentationsbrücke ist jetzt zugänglich.');
@@ -275,7 +306,7 @@
  const title=$('#title');title.addEventListener('pointerdown',()=>{held=false;clearTimeout(holdTimer);holdTimer=setTimeout(()=>{held=true;teacher();},5000);});for(const e of ['pointerup','pointercancel','pointerleave'])title.addEventListener(e,()=>clearTimeout(holdTimer));title.addEventListener('contextmenu',e=>e.preventDefault());title.onclick=()=>{if(!held)menu();held=false;};title.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.shiftKey){e.preventDefault();teacher();}});
  function teacher(){activePuzzle=null;open('Lehrkraftmodus','<p class="clue">Lokaler Testzugang, kein geschützter Adminbereich. Änderungen betreffen nur dieses Gerät. Zum Zurücksetzen einzelner Rätsel bleiben bereits geöffnete Orte zugänglich.</p><h3>Ort direkt öffnen</h3><div class="teacher-scenes"></div><h3>Rätsel gelöst / ungelöst</h3><div class="teacher-grid"></div><h3>Gegenstände hinzufügen</h3><div id="teacher-items" class="teacher-scenes"></div>','Spieltitel 5 Sekunden halten · alternativ Umschalt + Enter','teacher');
   G.scenes.forEach(s=>button(s.name,()=>{add('unlocked',s.id);enter(s.id);},'',$('.teacher-scenes')));
-  Object.entries(G.puzzles).forEach(([id,p])=>{const label=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.checked=has(id);c.onchange=()=>{if(c.checked){add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward)add('inventory',p.reward);if(G.notes[id])add('notes',id);if(id==='archive'){state.flags.galerius=true;add('notes','galerius');}}else{state.solved=state.solved.filter(x=>x!==id);state.notes=state.notes.filter(x=>x!==id);if(p.seal){state.seals=state.seals.filter(x=>x!==p.seal);state.flags.sealsPlaced=false;state.flags.sealSockets=[];}if(id==='archive'){state.flags.galerius=false;state.notes=state.notes.filter(x=>x!=='galerius');}if(id==='bridge')state.flags.finished=false;}render();};label.append(c,document.createTextNode(p.title));$('.teacher-grid').append(label);});
+  Object.entries(G.puzzles).forEach(([id,p])=>{const label=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.checked=has(id);c.onchange=()=>{if(c.checked){add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward)add('inventory',p.reward);if(G.notes[id])add('notes',id);if(id==='archive'){state.flags.archiveScrollsDeposited=true;state.inventory=state.inventory.filter(x=>x!=='scrolls');state.flags.galerius=true;add('notes','galerius');}}else{state.solved=state.solved.filter(x=>x!==id);state.notes=state.notes.filter(x=>x!==id);if(p.seal){state.seals=state.seals.filter(x=>x!==p.seal);state.flags.sealsPlaced=false;state.flags.sealSockets=[];}if(id==='archive'){state.flags.galerius=false;state.notes=state.notes.filter(x=>x!=='galerius');}if(id==='bridge')state.flags.finished=false;}render();};label.append(c,document.createTextNode(p.title));$('.teacher-grid').append(label);});
   Object.entries(G.items).forEach(([id,name])=>button(name,()=>{add('inventory',id);render();toast(name+' hinzugefügt.');},'',$('#teacher-items')));
   const a=actions();button('Alle sechs Siegel geben',()=>{state.seals=[...G.seals];save();toast('Alle sechs Siegel vorhanden.');},'',a);button('Finale direkt testen',()=>{state.seals=[...G.seals];state.flags.sealsPlaced=true;add('unlocked','basilica');enter('basilica');},'primary',a);button('Spielstand löschen',reset,'danger',a);
  }

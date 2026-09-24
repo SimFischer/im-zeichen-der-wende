@@ -1,6 +1,14 @@
+# Update: Auftrag des Archivars
+
+Vor dem dunklen Archiv liegt jetzt die Szene „Beim Archivar“. Der Archivar übergibt Schriftrollen mit dem vorhandenen Fachtext zu 303. Alle drei Abschnitte werden vor dem Eintritt gelesen; danach bleiben sie im Botenbeutel und Notizbuch zugänglich. Brennende Öllampe und Archivschlüssel sind für den Eintritt nötig. Nach dem Rätsel ist das Archiv hell: Erst das Ablegen der Schriftrollen erfüllt den Auftrag und öffnet den Weg zur Nachricht von 311 und zum Tiber. Bereits abgeschlossene alte Spielstände bleiben zugänglich; ein noch ungelöstes Archiv führt zunächst zum Archivar. Die neue Szene verwendet die vorhandene Amtsstubenillustration.
+
+Die Seilzüge fragen am ersten Platz „Wer ist betroffen?“ (Antwort: Bürger). Sammelgegenstände tragen nur noch ihr beiges Namensschild, ohne Plus und ohne „zum Mitnehmen“. Figuren erhalten statt des Anführungszeichens einen goldenen Randakzent.
+
+Prüfung: `node tests/archive-flow.cjs` nach `npm install --no-save linkedom`.
+
 # Update: Erst erkunden, dann prüfen
 
-- Hotspots sind nach Art unterschieden: **Information** (Gespräche, Sachgegenstände) grün mit „i“, **Rätsel** terrakottafarben mit Siegelstern, **Mitnehmen** gold mit „＋“ (`hotspots.css`).
+- Hotspots sind nach Art unterschieden: **Information** (Gespräche, Sachgegenstände) grün mit „i“, **Rätsel** terrakottafarben mit Siegelstern, **Mitnehmen** beige ohne Symbol (`hotspots.css`).
 - Ein Rätsel ist erst dann offen, wenn alle Gespräche und Sachgegenstände des Ortes angesehen wurden. Bis dahin zeigt es ein Schloss und „erst Hinweise sammeln · 2/5“. Ausnahme: das Archiv, dort sind die Spuren Teil des Spiels.
 - Rätsel öffnen immer direkt das Minispiel. „Ohne Spiel lösen“ gibt es nicht mehr.
 - Der Stempel des Statthalters: Die Akte liegt ruhig in der Tischmitte, kein Zeitdruck. Die Symbole auf den Stempeln sind größer.
@@ -74,7 +82,7 @@ Die Veröffentlichung erfolgt aus `main` und `/ (root)` über GitHubs integriert
 
 ## Spiel
 
-- 11 Orte, 12 Rätsel/Mechanismen und ein Ereignis 311.
+- 12 Orte, 12 Rätsel/Mechanismen und ein Ereignis 311.
 - Frei wählbarer Einstieg ins Wohnviertel oder Forum; weitere Orte öffnen sich durch Erkenntnisse.
 - Sechs Siegel: Konflikt, Quelle, Anzeige, Staat, 312, Wende.
 - Inventar: Feuerstein am Tor, Lampe im Wohnviertel. Beide durch aufeinanderfolgendes Antippen kombinieren. Archivschlüssel im Beutel auswählen und das Archiv auf der Stadtkarte antippen.
