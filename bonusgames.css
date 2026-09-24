@@ -104,3 +104,13 @@
 .schild-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/minigames/leute.webp') no-repeat;background-size:auto 640%;background-position:-36px -38px}
 @media (max-width:760px){.schild-hint{display:none}.schild-pad button{min-width:70px}}
 .amph-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/minigames/leute.webp') no-repeat;background-size:auto 640%;background-position:-330px -40px}
+
+/* Circus Maximus */
+.circus-q{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:9;width:min(30em,calc(100% - 200px));padding:.5em 1em;border:2px solid #c9a86b;border-radius:12px;background:#fbf1dbf2;box-shadow:0 6px 18px #0006;text-align:center;pointer-events:none}
+.circus-q[hidden]{display:none}
+.circus-q p{margin:0 0 .3em;font-size:var(--fs-m);color:#3a2610}
+.circus-q-opts{display:flex;justify-content:space-between;gap:1em;font-size:var(--fs-s)}
+.circus-q-opts span:first-child b{color:#8c2a1a}.circus-q-opts span:last-child b{color:#2d5a4b}
+.circus-pad{position:absolute;left:0;right:0;bottom:10px;z-index:7;display:flex;justify-content:space-between;padding:0 12px;pointer-events:none}
+.circus-pad button{pointer-events:auto;width:calc(var(--u)*4.6);height:calc(var(--u)*3.4);min-width:72px;min-height:60px;font-size:calc(var(--u)*1.6);border-radius:16px;border:2px solid #7a5a2c;background:linear-gradient(#f0cf8ce6,#d9a95ce6);color:#3a2610;opacity:.85;touch-action:none}
+.circus-banner span{font-size:calc(var(--u)*2.4)!important}
