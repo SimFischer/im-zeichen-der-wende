@@ -11,7 +11,7 @@ const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('nod
  const a=await window.WendeContinuation.save(s),b=await window.WendeContinuation.save(s);
  assert.notEqual(a.code,b.code);assert.match(a.code,/^([A-F0-9]{4}-){5}[A-F0-9]{4}$/);
  const loaded=await window.WendeContinuation.load(a.code.toLowerCase().replaceAll('-',' '));
- assert.deepEqual(JSON.parse(JSON.stringify(loaded.state)),s);
+ assert.equal(JSON.stringify(loaded.state),JSON.stringify(s));
  const before=calls;await assert.rejects(()=>window.WendeContinuation.load('123'));assert.equal(calls,before);
  await assert.rejects(()=>window.WendeContinuation.load('0000-0000-0000-0000-0000-0000'));
  const first=rows.values().next().value;first.data=(first.data[0]==='A'?'B':'A')+first.data.slice(1);
