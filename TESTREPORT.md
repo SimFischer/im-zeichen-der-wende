@@ -1,3 +1,10 @@
+## Stempelspiel und Bonusfreischaltung
+
+- `node tests/bonus-unlocks.cjs`: alle acht Freischaltstufen, gesperrte Direktstarts, Start aus dem Notizbuch und Zurücksetzen beim neuen Spiel bestanden.
+- Syntaxprüfungen für `script.js`, `minigames.js` und `bonusgames.js` bestanden.
+- Chrome: neuer Spieldurchlauf zeigt acht Fragezeichen und keine Bonusfundstellen; Stempel-Anleitung, Start und korrektes Abstempeln geprüft. Bei 1024 × 768 ist der Startknopf vollständig sichtbar und 53 Pixel hoch.
+- Keine Tests zur Kompatibilität mit früheren Spielständen durchgeführt. Physisches iPad/Safari nicht geprüft.
+
 # Ergänzung: Archivar und Hotspots (24.09.2026)
 
 - `tests/archive-flow.cjs`: 67 erfolgreiche Prüfungen zu Übergabe, vollständigem Lesen, Lampen-/Schlüsselsperre, Licht, Ablage, Ereignis 311, Neuladen, alten Spielständen, Hotspots und Szenenpfaden. Der Rätselabschluss wird über das echte `minigame-win`-Ereignis simuliert; keine Behauptung eines vollständigen Minispiel-Durchlaufs.

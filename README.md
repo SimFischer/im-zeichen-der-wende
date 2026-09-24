@@ -15,20 +15,20 @@ Prüfung: `node tests/archive-flow.cjs` nach `npm install --no-save linkedom`.
 
 # Update: Bonusspiele
 
-Acht **freiwillige Bonusspiele** stecken in unscheinbaren Stellen der Szenen. Sie verändern den Spielstand nicht: keine Siegel, keine Punkte, keine Pflicht. Ob ein Spiel entdeckt oder geschafft wurde, steht unter einem eigenen Speicherschlüssel (`im-zeichen-der-wende:bonus-v1`). Der Fortsetzungscode nimmt diesen Bonusstand mit: Beim Übernehmen auf einem anderen Gerät werden die Entdeckungen mit den dort schon vorhandenen zusammengeführt, es geht nichts verloren. Ältere Codes ohne Bonusstand bleiben gültig. Entdeckte Spiele lassen sich im **Notizbuch unter „Entdeckte Spiele“** erneut starten. Noch nicht entdeckte Spiele erscheinen dort nur als „? ? ?“.
+Acht freiwillige Bonusspiele werden ausschließlich im Notizbuch angeboten. Gesperrte Spiele erscheinen als „? ? ?“. Anklickbare Fundstellen in den Szenen entfallen. Freischaltungen richten sich nach gelösten Haupträtseln:
 
-| Spiel | Fundstelle | Datei |
-|---|---|---|
-| Das geheime Zeichen | Wohnviertel · Kritzeleien am Pfeiler | `bonus/zeichen.js` |
-| Rom brennt! | Forum · Glühendes Kohlebecken | `bonus/rombrennt.js` |
-| Amphoren-Chaos | Forum · Wackeliger Marktkarren | `bonus/amphoren.js` |
-| Katakombenlauf | Archiv · Alte Grabplatte (erst nach dem Archiv-Rätsel) | `bonus/katakomben.js` |
-| Schildwall | Lager · Übungsschilde | `bonus/schildwall.js` |
-| Über den Tiber! | Lager · Treibholz am Ufer | `bonus/tiber.js` |
-| Belade den Wagen! | Lager · Vorratsfässer | `bonus/wagen.js` |
-| Circus Maximus | Stadt 313 · Ankündigung (erst nach Abschluss der Chronik) | `bonus/circus.js` |
+| Bonusspiel | Nach Abschluss von |
+|---|---|
+| Das geheime Zeichen | Türschloss im Wohnviertel |
+| Rom brennt! | Echo der Quellen |
+| Amphoren-Chaos | Stempel des Statthalters |
+| Katakombenlauf | Archiv im Dunkeln |
+| Schildwall | Kartenbrett im Lager |
+| Über den Tiber! | Zeichen auf dem Schild |
+| Belade den Wagen! | Kurierfahrt von 313 |
+| Circus Maximus | Abschluss der Chronik |
 
-Technik: `bonusgames.js` stellt das gemeinsame Spielfenster, die Fundstellen und den Notizbuch-Abschnitt bereit. Timer, Listener, ResizeObserver und Animation-Frames laufen über das Spielfenster und werden beim Schließen beendet. Die Spiele pausieren, wenn der Tab in den Hintergrund geht. `script.js` enthält dafür nur drei kleine Anknüpfungspunkte: `window.WendeUI`, die Fundstellen in `render()` und den Notizbuch-Abschnitt. Gestaltung in `bonusgames.css`. Die freigestellten Stadtbewohner stehen in `assets/minigames/leute.webp` (aus `townspeople.png`). Alle Spiele funktionieren mit Touch, alternativ mit Maus und Tastatur. Kein Game Over: Fehler kosten höchstens Zeit.
+Bonusspiele vergeben keine Siegel und sind keine Pflicht. Ein neues Spiel setzt auch den Bonusfortschritt zurück. Das Stempelspiel hat eine kompaktere Anleitung mit einem separat angeordneten, mindestens 52 Pixel hohen Startknopf sowie größere Stempel in der Hand und Abdrücke auf der Akte.
 
 Historische Einordnungen in den Spielen sind bewusst vorsichtig formuliert (Symbole, Brand von Rom, Katakomben als Begräbnisstätten, Tiber/Milvische Brücke). Sie sollten wie die übrigen Texte fachlich gegengelesen werden.
 

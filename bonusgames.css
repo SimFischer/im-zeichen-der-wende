@@ -132,3 +132,5 @@
 .tiber-quip[hidden]{display:none}
 .tiber-quip p{margin:0;font-size:var(--fs-s);color:#3a2610}
 .tiber-quip .schild-face{width:52px;height:52px;background-size:auto 520%;background-position:-28px -30px}
+
+.bonus-unknown small{display:block;font-size:14px;font-weight:400;letter-spacing:normal;margin-top:6px}

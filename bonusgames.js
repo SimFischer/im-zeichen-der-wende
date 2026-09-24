@@ -1,6 +1,6 @@
 'use strict';
 /* Bonusspiele – gemeinsames System.
-   Optionale Spiele, die über unscheinbare Stellen in den Szenen entdeckt werden.
+   Optionale Spiele im Notizbuch, freigeschaltet durch gelöste Haupträtsel.
    Sie verändern den Hauptspielstand NICHT: Entdeckt/geschafft wird unter einem eigenen
    localStorage-Schlüssel gespeichert. Keine Punkte, keine Siegel, keine Pflicht.
 
@@ -12,7 +12,13 @@ window.BonusGames=(()=>{
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const ORDER=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','wagen','circus'];
  const games={};
- let session=null;
+ const MILESTONES={zeichen:'conflict',rombrennt:'sources',amphoren:'cases',katakomben:'archive',schildwall:'map312',tiber:'vision',wagen:'change',circus:'bridge'};
+ let available=new Set(),session=null;
+ function update(state){
+  available=new Set(ORDER.filter(id=>(state.solved||[]).includes(MILESTONES[id])));
+  const p=load();p.found=[...available];p.won=p.won.filter(id=>available.has(id));store(p);
+ }
+ function reset(){stop();available.clear();store({found:[],won:[]});}
 
  /* ---------- Fortschritt (nur entdeckt / geschafft) ---------- */
  function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&Array.isArray(v.found)&&Array.isArray(v.won))return {found:v.found.filter(x=>typeof x==='string'),won:v.won.filter(x=>typeof x==='string')};}catch(e){}return {found:[],won:[]};}
@@ -21,28 +27,10 @@ window.BonusGames=(()=>{
 
  function register(def){games[def.id]=def;}
 
- /* ---------- Unscheinbare Fundstellen in den Szenen ---------- */
- function decorate(scene,state,layer){
-  if(!layer)return;const p=load();
-  Object.values(games).forEach(g=>{
-   if(g.scene!==scene.id)return;
-   if(g.when&&!g.when(state))return;
-   const [x,y,label]=g.spot;const found=p.found.includes(g.id);
-   const b=document.createElement('button');b.type='button';b.className='bonus-spot'+(found?' found':'');
-   b.style.left=x+'%';b.style.top=y+'%';b.dataset.bonus=g.id;
-   b.setAttribute('aria-label',label+(found?' – Bonusspiel: '+g.title:''));
-   b.innerHTML=`<span class="bonus-pin" aria-hidden="true">${found?'✦':'·'}</span><span class="bonus-label">${esc(label)}${found?'<small>Bonusspiel</small>':''}</span>`;
-   // Klick nicht an die Szene weiterreichen (z. B. Dunkel-Logik im Archiv).
-   b.addEventListener('click',e=>{e.stopPropagation();discover(g.id);});
-   layer.append(b);
-  });
- }
- function discover(id){const first=!load().found.includes(id);mark(id,'found');start(id,first);}
-
- /* ---------- Notizbuch: Entdeckte Spiele ---------- */
+ /* ---------- Fortschrittsabhängige Bonusspiele im Notizbuch ---------- */
  function journalHtml(){
   const ids=ORDER.filter(id=>games[id]);if(!ids.length)return '';const p=load();
-  return `<h3 class="journal-section bonus-journal-head">Entdeckte Spiele</h3><p class="muted bonus-journal-note">Die Stadt enthält mehr, als für deinen Weg nötig ist. Entdeckte Spiele kannst du hier erneut starten.</p><ul class="bonus-list">${ids.map(id=>p.found.includes(id)?`<li><button type="button" class="bonus-replay" data-bonus-start="${id}"><span class="bonus-check" aria-hidden="true">✓</span>${esc(games[id].title)}${p.won.includes(id)?'<small>geschafft</small>':''}</button></li>`:'<li class="bonus-unknown" aria-label="Noch nicht entdeckt">? ? ?</li>').join('')}</ul>`;
+  return `<h3 class="journal-section bonus-journal-head">Bonusspiele</h3><p class="muted bonus-journal-note">Löse die Rätsel deiner Reise, um nach und nach Bonusspiele freizuschalten. Sie sind freiwillig. Freigeschaltet: ${ids.filter(id=>available.has(id)).length} / ${ids.length}.</p><ul class="bonus-list">${ids.map(id=>available.has(id)?`<li><button type="button" class="bonus-replay" data-bonus-start="${id}"><span class="bonus-check" aria-hidden="true">✦</span>${esc(games[id].title)}<small>${p.won.includes(id)?'geschafft':'freigeschaltet · spielen'}</small></button></li>`:'<li class="bonus-unknown" aria-label="Noch gesperrtes Bonusspiel">? ? ?<small>Wird durch deinen Spielfortschritt freigeschaltet</small></li>').join('')}</ul>`;
  }
  function bindJournal(root){root.querySelectorAll('[data-bonus-start]').forEach(b=>b.onclick=()=>start(b.dataset.bonusStart,false));}
 
@@ -55,7 +43,7 @@ window.BonusGames=(()=>{
   document.querySelector('#modal')?.classList.remove('bonus-open');
  }
  function start(id,first){
-  const g=games[id];if(!g||!window.WendeUI)return;stop();
+  const g=games[id];if(!g||!window.WendeUI||!available.has(id))return;stop();
   const UI=window.WendeUI;
   UI.open(g.title,`<div class="bonus-shell" data-game="${id}"><div class="bonus-bar"><span class="bonus-tag">Bonusspiel</span><span class="bonus-task" aria-live="polite"></span><button type="button" class="bonus-pause" aria-label="Pause">❚❚</button><button type="button" class="bonus-leave">Zurück</button></div><div class="bonus-stage"></div></div>`,g.kicker||'Bonusspiel','bonus');
   const modal=document.querySelector('#modal');modal.classList.add('bonus-open');
@@ -103,7 +91,7 @@ window.BonusGames=(()=>{
    }
   };
   const intro=g.intro||{};
-  const ic=card('bonus-introcard',`${first?'<p class="bonus-found">Du hast ein Bonusspiel entdeckt!</p>':''}<h3>${esc(g.title)}</h3>${intro.text?`<p>${esc(intro.text)}</p>`:''}${intro.controls?`<ul class="bonus-controls">${intro.controls.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}<p class="muted bonus-note">Freiwillig. Dein Spielstand in der Stadt bleibt unverändert.</p>`);
+  const ic=card('bonus-introcard',`${first?'<p class="bonus-found">Du hast ein Bonusspiel freigeschaltet!</p>':''}<h3>${esc(g.title)}</h3>${intro.text?`<p>${esc(intro.text)}</p>`:''}${intro.controls?`<ul class="bonus-controls">${intro.controls.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}<p class="muted bonus-note">Freiwillig. Dein Spielstand in der Stadt bleibt unverändert.</p>`);
   try{s.game=g.setup(ctx)||{};}catch(e){console.error(e);}
   btn(intro.start||'Los geht’s',()=>{ic.remove();shell.classList.add('running');s.running=true;s.paused=false;s.last=0;s.game?.start?.();},'primary',ic.querySelector('.bonus-actions'));
   btn('Zurück in die Szene',()=>UI.close(),'',ic.querySelector('.bonus-actions'));
@@ -113,5 +101,5 @@ window.BonusGames=(()=>{
  // Für den Fortsetzungscode: exportieren und beim Übernehmen zusammenführen (nichts geht verloren)
  function exportProgress(){return load();}
  function mergeProgress(p){if(!p)return;const cur=load();for(const k of ['found','won'])(p[k]||[]).forEach(id=>{if(typeof id==='string'&&/^[a-z]{2,20}$/.test(id)&&!cur[k].includes(id))cur[k].push(id);});store(cur);}
- return {register,decorate,journalHtml,bindJournal,start,stop,progress:load,exportProgress,mergeProgress,games};
+ return {register,update,reset,journalHtml,bindJournal,start,stop,progress:load,exportProgress,mergeProgress,games};
 })();

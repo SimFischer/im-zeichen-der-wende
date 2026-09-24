@@ -538,3 +538,17 @@
 .pm-num{font-size:max(9px,1.1cqw)}
 .pm-here{top:-2.6cqw;font-size:max(12px,1.6cqw)}
 @media(max-width:650px){.pm-medal{width:64px}#modal .pm-place{width:auto;transform:none}}
+
+/* Stempelspiel: kompakte Anleitung mit immer erreichbarer Startfläche. */
+#modal .mg-stamp .stamp-intro{position:relative;inset:auto;max-height:65dvh;padding:16px;justify-content:flex-start;gap:12px;border:2px solid #a88a55;border-radius:10px}
+#modal .stamp-intro-copy{min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:8px}
+#modal .stamp-intro h3{font-size:clamp(20px,2vw,26px);margin:0 0 12px}
+#modal .stamp-intro p,#modal .stamp-intro li{font-size:clamp(16px,1.5vw,19px);line-height:1.45;margin-bottom:8px}
+#modal .stamp-intro ul{padding-left:22px;margin:10px 0}
+#modal .stamp-intro .primary{flex-shrink:0;min-height:52px;min-width:200px;margin:0;padding:12px 24px;font-size:18px}
+.mg-stamp.is-intro>.racer-hud,.mg-stamp.is-intro>.stamp-stage,.mg-stamp.is-intro>.stamp-rack,.mg-stamp.is-intro>.stamp-status{display:none}
+#modal .stamp-file .mg-text{font-size:clamp(16px,1.5vw,20px);line-height:1.45;margin:0}
+.stamp-hand{width:clamp(120px,11vw,156px);height:clamp(120px,11vw,156px);margin:calc(clamp(120px,11vw,156px)/-2) 0 0 calc(clamp(120px,11vw,156px)/-2)}
+#modal .stamp-tool{min-height:64px;padding:10px 6px}
+#modal .stamp-name{font-size:clamp(15px,1.4vw,19px);line-height:1.2}
+@media(max-width:600px){.stamp-rack{grid-template-columns:repeat(2,1fr)}.stamp-file{width:86%}}

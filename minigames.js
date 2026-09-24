@@ -376,12 +376,12 @@ window.MiniGames=(()=>{
   function hit(e){if(!running||state!=='move')return;if(held===null){say('Nimm zuerst unten einen Stempel in die Hand.','',2200);return;}
    const r=file.getBoundingClientRect(),sr=stage.getBoundingClientRect();const px=e?e.clientX-r.left:r.width*.7,py=e?e.clientY-r.top:r.height*.55;
    hand.style.left=(r.left-sr.left+px)+'px';hand.style.top=(r.top-sr.top+py)+'px';hand.classList.remove('press');void hand.offsetWidth;hand.classList.add('press');
-   const good=cur.ok.includes(held);
-   setTimeout(()=>{if(good){const m=document.createElement('span');m.className='stamp-print';m.style.left=Math.max(10,Math.min(r.width-80,px-40))+'px';m.style.top=Math.max(4,Math.min(r.height-80,py-40))+'px';m.style.transform=`rotate(${Math.random()*24-12}deg)`;m.innerHTML=seal(cfg.choices[held],'p'+Math.random().toString(36).slice(2));marks.append(m);
+   const chosen=held,good=cur.ok.includes(chosen);state='press';
+   setTimeout(()=>{if(good){const m=document.createElement('span');m.className='stamp-print';const size=Math.min(128,r.width-16,r.height-16);m.style.width=m.style.height=size+'px';m.style.left=Math.max(8,Math.min(r.width-size-8,px-size/2))+'px';m.style.top=Math.max(8,Math.min(r.height-size-8,py-size/2))+'px';m.style.transform=`rotate(${Math.random()*24-12}deg)`;m.innerHTML=seal(cfg.choices[chosen],'p'+Math.random().toString(36).slice(2));marks.append(m);
      state='done';score++;done.push(cur);dots.forEach((d,i)=>d.classList.toggle('on',i<score));say(`<b>Richtig gestempelt!</b> ${esc(cur.why)}`,'good',2600);
      setTimeout(()=>{file.classList.add('filed');const c=document.createElement('i');pile.append(c);},900);
-     if(score>=goal){running=false;setTimeout(()=>winScreen(ov,id,cfg.winTitle,cfg.win,done.map(v=>v.text)),1800);}else setTimeout(next,1700);}
-    else{file.classList.remove('shake');void file.offsetWidth;file.classList.add('shake');say(`<b>Der Schreiber hält deine Hand fest:</b> „${esc(cfg.choices[held].label)}“ passt hier nicht. ${esc(cur.hint||cfg.hint||'')}`,'bad',4200);}},180);}
+     if(score>=goal){running=false;setTimeout(()=>{work.querySelector('.mg-stamp').classList.add('is-intro');winScreen(ov,id,cfg.winTitle,cfg.win,done.map(v=>v.text));},1800);}else setTimeout(next,1700);}
+    else{state='move';file.classList.remove('shake');void file.offsetWidth;file.classList.add('shake');say(`<b>Der Schreiber hält deine Hand fest:</b> „${esc(cfg.choices[chosen].label)}“ passt hier nicht. ${esc(cur.hint||cfg.hint||'')}`,'bad',4200);}},180);}
   file.addEventListener('click',e=>hit(e));file.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){hit();e.preventDefault();}});
   function key(e){if(!work.isConnected){removeEventListener('keydown',key);return;}const n=+e.key;if(n>=1&&n<=cfg.choices.length&&running){pick(n-1);}}
   addEventListener('keydown',key);
@@ -390,7 +390,10 @@ window.MiniGames=(()=>{
    if(running&&state==='move'){const c=center();if(Math.abs(x-c)>.5){x+=(c-x)*Math.min(1,dt*7);place();}}
    else if(state==='done'&&!file.classList.contains('filed')){}
    requestAnimationFrame(loop);}
-  const ov=startScreen(stage,cfg,cfg.rules,'Erste Akte holen',()=>{running=true;next();last=performance.now();});
+  const wrapper=work.querySelector('.mg-stamp');wrapper.classList.add('is-intro');
+  const ov=document.createElement('section');ov.className='racer-overlay stamp-intro';
+  ov.innerHTML=`<div class="stamp-intro-copy"><h3>${esc(cfg.title)}</h3><p>${esc(cfg.intro)}</p><ul>${cfg.rules.map(r=>`<li>${r}</li>`).join('')}</ul></div><button type="button" class="primary racer-start">Erste Akte holen</button>`;
+  wrapper.append(ov);ov.querySelector('.racer-start').onclick=()=>{ov.hidden=true;wrapper.classList.remove('is-intro');running=true;next();last=performance.now();};
   requestAnimationFrame(loop);return true;
  }
 
