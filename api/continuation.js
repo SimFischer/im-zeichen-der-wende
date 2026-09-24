@@ -28,7 +28,8 @@ module.exports=async function handler(req,res){
    const p=b.p_payload;
    if(!p||p.v!==1||! /^[A-Za-z0-9+/]{16}$/.test(p.iv||'')||typeof p.data!=='string'||p.data.length<24||p.data.length>240100||! /^[A-Za-z0-9+/]+={0,2}$/.test(p.data))return res.status(400).json({error:'Invalid payload'});
    const expires_at=new Date(now+90*86400000).toISOString();
-   await put(path,JSON.stringify({expires_at,payload:{v:1,iv:p.iv,data:p.data}}),{access:'private',addRandomSuffix:false,allowOverwrite:false,contentType:'application/json',token:process.env.BLOB_READ_WRITE_TOKEN});
+   try{await put(path,JSON.stringify({expires_at,payload:{v:1,iv:p.iv,data:p.data}}),{access:'private',addRandomSuffix:false,allowOverwrite:false,contentType:'application/json',token:process.env.BLOB_READ_WRITE_TOKEN});}
+   catch(e){if(/already exists|exist/i.test(String(e&&e.message)))return res.status(409).json({error:'Code already in use'});throw e;}
    return res.status(201).json({expires_at});
   }
   const item=await get(path,{access:'private',useCache:false,token:process.env.BLOB_READ_WRITE_TOKEN});
