@@ -126,3 +126,9 @@
 .rom-chron img{flex:none;width:84px;height:106px;object-fit:cover;border-radius:10px;border:2px solid #a88a55}
 .rom-chron p{margin:0!important;font-size:var(--fs-m)!important}
 .rom-who{font-size:var(--fs-xs)!important;letter-spacing:.14em;text-transform:uppercase;color:#6b5a40}
+
+/* Über den Tiber */
+.tiber-quip{position:absolute;left:10px;top:10px;z-index:9;display:flex;align-items:center;gap:.6em;max-width:min(26em,70%);padding:.4em .8em;border:2px solid #c9a86b;border-radius:12px;background:#fbf1dbf2;box-shadow:0 6px 16px #0006;pointer-events:none}
+.tiber-quip[hidden]{display:none}
+.tiber-quip p{margin:0;font-size:var(--fs-s);color:#3a2610}
+.tiber-quip .schild-face{width:52px;height:52px;background-size:auto 520%;background-position:-28px -30px}
