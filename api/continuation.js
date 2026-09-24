@@ -4,7 +4,8 @@ const recent=new Map();
 module.exports=async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('Vary','Origin');
  const origin=req.headers.origin;
- if(origin && !allowed.has(origin))return res.status(403).json({error:'Origin not allowed'});
+ let sameOrigin=false;try{sameOrigin=!!origin&&new URL(origin).host===req.headers.host;}catch(e){}
+ if(origin && !allowed.has(origin) && !sameOrigin)return res.status(403).json({error:'Origin not allowed'});
  if(origin)res.setHeader('Access-Control-Allow-Origin',origin);
  res.setHeader('Access-Control-Allow-Methods','POST, OPTIONS');
  res.setHeader('Access-Control-Allow-Headers','Content-Type');
@@ -13,10 +14,11 @@ module.exports=async function handler(req,res){
  if(!process.env.BLOB_READ_WRITE_TOKEN)return res.status(503).json({error:'Storage not configured'});
  if(Number(req.headers['content-length']||0)>250000)return res.status(413).json({error:'Too large'});
  // Best-effort per-instance throttling; Vercel Firewall remains the outer abuse limit.
+ // Generous limit: a whole class often shares one school IP (NAT).
  const ip=String(req.headers['x-forwarded-for']||'unknown').split(',')[0],now=Date.now();
  for(const [key,v] of recent)if(v.until<now)recent.delete(key);
  const rate=recent.get(ip)||{count:0,until:now+60000};
- if(++rate.count>30)return res.status(429).json({error:'Try again later'});
+ if(++rate.count>300)return res.status(429).json({error:'Try again later'});
  recent.set(ip,rate);
  try{
   const b=typeof req.body==='string'?JSON.parse(req.body):req.body;
@@ -29,8 +31,8 @@ module.exports=async function handler(req,res){
    await put(path,JSON.stringify({expires_at,payload:{v:1,iv:p.iv,data:p.data}}),{access:'private',addRandomSuffix:false,allowOverwrite:false,contentType:'application/json',token:process.env.BLOB_READ_WRITE_TOKEN});
    return res.status(201).json({expires_at});
   }
-  const item=await get(path,{access:'private',token:process.env.BLOB_READ_WRITE_TOKEN});
-  if(!item)return res.status(200).json(null);
+  const item=await get(path,{access:'private',useCache:false,token:process.env.BLOB_READ_WRITE_TOKEN});
+  if(!item||item.statusCode!==200||!item.stream)return res.status(200).json(null);
   const value=await new Response(item.stream).json();
   if(Date.parse(value.expires_at)<=now){await del(path,{token:process.env.BLOB_READ_WRITE_TOKEN});return res.status(200).json(null);}
   return res.status(200).json(value.payload);
