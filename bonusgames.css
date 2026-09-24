@@ -103,3 +103,4 @@
 .schild-comment p{margin:0!important;font-size:var(--fs-s)!important}
 .schild-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/minigames/leute.webp') no-repeat;background-size:auto 640%;background-position:-36px -38px}
 @media (max-width:760px){.schild-hint{display:none}.schild-pad button{min-width:70px}}
+.amph-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/minigames/leute.webp') no-repeat;background-size:auto 640%;background-position:-330px -40px}
