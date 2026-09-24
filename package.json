@@ -1,0 +1,14 @@
+{
+  "name": "im-zeichen-der-wende",
+  "private": true,
+  "version": "1.1.0",
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.3.0"
+  },
+  "scripts": {
+    "build": "node --check script.js && node --check continuation.js && node --check api/continuation.js && node tests/continuation.cjs"
+  }
+}
