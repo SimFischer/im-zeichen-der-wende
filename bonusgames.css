@@ -89,3 +89,17 @@
 @keyframes zeichen-sand{from{width:100%}to{width:0}}
 .zeichen-again{position:absolute;right:10px;top:10px;z-index:6}
 .zeichen-again button{min-height:48px;padding:.3em 1em;font-size:var(--fs-s);background:#fbf1dbee}
+
+/* Schildwall */
+.schild-pad{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:8px;padding:6px 10px;border:2px solid #c9a86b;border-radius:12px;background:#fbf1dbd9;box-shadow:0 4px 14px #0006;opacity:.85}
+.schild-pad.active{opacity:1}
+.schild-hint{font-size:var(--fs-xs);color:#5a3a16;max-width:12em;line-height:1.2}
+.schild-pad button{min-height:52px;min-width:86px;padding:.2em .8em;font-size:var(--fs-m);background:linear-gradient(#f0cf8c,#d9a95c);border:2px solid #7a5a2c;border-radius:12px;color:#3a2610;touch-action:none}
+.schild-pad:not(.active) button{filter:saturate(.4);opacity:.75}
+.schild-banner{margin:.2em auto .3em;width:min(26em,100%);padding:.5em 1em;background:linear-gradient(#9c2e1c,#7a2214);border:3px solid #d9a441;border-radius:4px;box-shadow:inset 0 0 0 2px #7a2214,inset 0 0 0 4px #e6bf6a88,0 6px 16px #0006;text-align:center;clip-path:polygon(0 0,100% 0,100% 82%,92% 100%,84% 82%,76% 100%,68% 82%,60% 100%,52% 82%,44% 100%,36% 82%,28% 100%,20% 82%,12% 100%,4% 82%,0 100%)}
+.schild-banner span{display:block;padding-bottom:.25em;font:600 calc(var(--u)*1.9)/1.1 Georgia,serif!important;letter-spacing:.14em;color:#f7dc93;text-shadow:0 2px 0 #4a140c}
+.schild-sub{text-align:center;font-size:calc(var(--u)*1.35)!important;color:#5a3a16;margin:.2em 0!important}
+.schild-comment{display:flex;align-items:center;gap:.8em;margin-top:.6em;padding:.5em .8em;border:1px solid #c9a86b;border-radius:12px;background:#f3e4c5}
+.schild-comment p{margin:0!important;font-size:var(--fs-s)!important}
+.schild-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/minigames/leute.webp') no-repeat;background-size:auto 640%;background-position:-36px -38px}
+@media (max-width:760px){.schild-hint{display:none}.schild-pad button{min-width:70px}}
