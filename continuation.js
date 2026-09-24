@@ -51,12 +51,17 @@
   }
   function safe(v,depth=0){if(depth>20)throw Error('Spielstand zu komplex.');if(v&&typeof v==='object')for(const k of Object.keys(v)){if(['__proto__','constructor','prototype'].includes(k))throw Error('Ungültiger Spielstand.');safe(v[k],depth+1);}}
   safe(s);
+  // Optional: entdeckte/geschaffte Bonusspiele (ältere Codes haben das Feld nicht)
+  if(value.bonus!==undefined){const b=value.bonus;if(!b||typeof b!=='object'||Array.isArray(b))throw Error('Der Spielstand ist beschädigt.');
+   for(const k of ['found','won'])if(!Array.isArray(b[k])||b[k].length>50||b[k].some(v=>typeof v!=='string'||!/^[a-z]{2,20}$/.test(v)))throw Error('Der Spielstand ist beschädigt.');
+   for(const k of Object.keys(b))if(!['found','won'].includes(k))throw Error('Der Spielstand ist beschädigt.');}
   return value;
  }
  window.WendeContinuation={
-  async save(state){
+  async save(state,bonus){
    if(!crypto?.subtle)throw Error('Bitte öffne die App über ihre HTTPS-Adresse.');
    const payload={app:'im-zeichen-der-wende',format:1,savedAt:new Date().toISOString(),state};
+   if(bonus)payload.bonus={found:[...(bonus.found||[])],won:[...(bonus.won||[])]};
    validate(payload);
    const raw=enc.encode(JSON.stringify(payload));if(raw.length>MAX)throw Error('Der Spielstand ist zu groß für einen Fortsetzungscode.');
    for(let attempt=0;;attempt++){

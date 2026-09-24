@@ -110,5 +110,8 @@ window.BonusGames=(()=>{
   ic.querySelector('.primary').focus({preventScroll:true});
   s.raf=requestAnimationFrame(frame);
  }
- return {register,decorate,journalHtml,bindJournal,start,stop,progress:load,games};
+ // Für den Fortsetzungscode: exportieren und beim Übernehmen zusammenführen (nichts geht verloren)
+ function exportProgress(){return load();}
+ function mergeProgress(p){if(!p)return;const cur=load();for(const k of ['found','won'])(p[k]||[]).forEach(id=>{if(typeof id==='string'&&/^[a-z]{2,20}$/.test(id)&&!cur[k].includes(id))cur[k].push(id);});store(cur);}
+ return {register,decorate,journalHtml,bindJournal,start,stop,progress:load,exportProgress,mergeProgress,games};
 })();

@@ -1,6 +1,6 @@
 # Update: Bonusspiele
 
-Acht **freiwillige Bonusspiele** stecken in unscheinbaren Stellen der Szenen. Sie verändern den Spielstand nicht: keine Siegel, keine Punkte, keine Pflicht. Ob ein Spiel entdeckt oder geschafft wurde, steht unter einem eigenen Speicherschlüssel (`im-zeichen-der-wende:bonus-v1`). Der Fortsetzungscode nimmt diesen Bonusstand nicht mit. Entdeckte Spiele lassen sich im **Notizbuch unter „Entdeckte Spiele“** erneut starten. Noch nicht entdeckte Spiele erscheinen dort nur als „? ? ?“.
+Acht **freiwillige Bonusspiele** stecken in unscheinbaren Stellen der Szenen. Sie verändern den Spielstand nicht: keine Siegel, keine Punkte, keine Pflicht. Ob ein Spiel entdeckt oder geschafft wurde, steht unter einem eigenen Speicherschlüssel (`im-zeichen-der-wende:bonus-v1`). Der Fortsetzungscode nimmt diesen Bonusstand mit: Beim Übernehmen auf einem anderen Gerät werden die Entdeckungen mit den dort schon vorhandenen zusammengeführt, es geht nichts verloren. Ältere Codes ohne Bonusstand bleiben gültig. Entdeckte Spiele lassen sich im **Notizbuch unter „Entdeckte Spiele“** erneut starten. Noch nicht entdeckte Spiele erscheinen dort nur als „? ? ?“.
 
 | Spiel | Fundstelle | Datei |
 |---|---|---|

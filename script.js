@@ -229,7 +229,7 @@
   const saving=button('Stand speichern und Code erhalten',async()=>{
    saving.disabled=true;loading.disabled=true;status.textContent='Spielstand wird gespeichert …';preview.replaceChildren();
    try{
-    save();const result=await window.WendeContinuation.save(JSON.parse(JSON.stringify(state)));
+    save();const result=await window.WendeContinuation.save(JSON.parse(JSON.stringify(state)),window.BonusGames?.exportProgress());
     if(!valid())return;box.value=result.code;
     status.textContent='Gespeichert! Code notieren oder kopieren. Gültig bis '+new Date(result.expiresAt).toLocaleDateString('de-DE')+'.';
     button('Code kopieren',async()=>{try{await navigator.clipboard.writeText(result.code);status.textContent='Code kopiert. Bewahre ihn privat auf.';}catch(e){box.focus();box.select();status.textContent='Bitte den markierten Code kopieren.';}},'',preview);
@@ -240,12 +240,13 @@
    loading.disabled=true;saving.disabled=true;status.textContent='Gespeicherten Stand suchen …';preview.replaceChildren();
    try{
     const found=await window.WendeContinuation.load(box.value);if(!valid())return;
-    status.textContent='Stand gefunden: '+G.scenes.find(s=>s.id===found.state.scene).name+' · '+found.state.solved.length+' gelöste Rätsel · gespeichert am '+new Date(found.savedAt).toLocaleString('de-DE')+'.';
+    status.textContent='Stand gefunden: '+G.scenes.find(s=>s.id===found.state.scene).name+' · '+found.state.solved.length+' gelöste Rätsel'+(found.bonus?.found?.length?' · '+found.bonus.found.length+' entdeckte Bonusspiele':'')+' · gespeichert am '+new Date(found.savedAt).toLocaleString('de-DE')+'.';
     const p=document.createElement('p');p.textContent='Beim Übernehmen wird dein aktueller Stand auf diesem Gerät ersetzt. Du kannst ihn vorher mit einem eigenen Code sichern.';preview.append(p);
     button('Diesen Stand übernehmen',()=>{
      try{
       const next={...fresh(),...found.state,started:true};
       localStorage.setItem(KEY,JSON.stringify(next));
+      window.BonusGames?.mergeProgress(found.bonus);
       state=next;selected=null;activePuzzle=null;close();render();toast('Spielstand geladen. Du kannst hier weiterspielen.');
      }catch(e){status.textContent='Dein Browser konnte den Stand nicht speichern. Der bisherige Spielstand bleibt erhalten.';}
     },'primary',preview);
