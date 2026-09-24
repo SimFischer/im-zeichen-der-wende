@@ -275,6 +275,8 @@ window.GAME.minigames.map312={type:'battlemap',title:'Das Kartenbrett',
 
 /* ---------- Überarbeitete Szenen-Rätsel (scenegames.js) ---------- */
 // Die geöffnete Stadt: Veränderungen im Bild entdecken, dann „Vorher und Nachher“ ordnen.
+// Die bisherige Kurierfahrt bleibt als Bonusspiel erhalten (bonus/kurier.js).
+window.GAME.kurier=window.GAME.minigames.change;
 window.GAME.minigames.change={type:'citychange',title:'Vorher und Nachher',
  prompt:'Häng jede Wachstafel an die passende Seite. Eine Tafel stimmt so nicht – bring sie zum römischen Altar.',
  art:{bg:'assets/minigames/open-city/open-city.png',timeline:'assets/minigames/timeline/timeline-assets.png',amphora:'assets/minigames/amphora/amphora-assets.png'},
