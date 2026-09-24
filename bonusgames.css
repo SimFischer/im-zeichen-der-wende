@@ -114,3 +114,15 @@
 .circus-pad{position:absolute;left:0;right:0;bottom:10px;z-index:7;display:flex;justify-content:space-between;padding:0 12px;pointer-events:none}
 .circus-pad button{pointer-events:auto;width:calc(var(--u)*4.6);height:calc(var(--u)*3.4);min-width:72px;min-height:60px;font-size:calc(var(--u)*1.6);border-radius:16px;border:2px solid #7a5a2c;background:linear-gradient(#f0cf8ce6,#d9a95ce6);color:#3a2610;opacity:.85;touch-action:none}
 .circus-banner span{font-size:calc(var(--u)*2.4)!important}
+
+/* Rom brennt */
+.rom-pad{position:absolute;left:0;right:0;bottom:10px;z-index:7;display:flex;justify-content:space-between;align-items:flex-end;padding:0 12px;pointer-events:none}
+.rom-pad button{pointer-events:auto;min-height:0;min-width:0;border:2px solid #7a5a2c;border-radius:18px;background:linear-gradient(#f0cf8cd0,#d9a95cd0);color:#3a2610;opacity:.8;touch-action:none;box-shadow:0 3px 0 #0005}
+.rom-pad button.on{transform:translateY(2px);background:linear-gradient(#d9a95c,#b98a44)}
+.rom-dir{display:flex;gap:10px}
+.rom-dir button{width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);min-width:70px;min-height:70px;font-size:calc(var(--u)*1.7)}
+.rom-jump{width:calc(var(--u)*6.2);height:calc(var(--u)*4.4);min-width:100px;min-height:70px;font-size:var(--fs-m)!important;font-weight:700}
+.rom-chron{display:flex;gap:1em;align-items:center;margin:.4em 0;padding:.6em .8em;border:1px solid #c9a86b;border-radius:12px;background:#f3e4c5}
+.rom-chron img{flex:none;width:84px;height:106px;object-fit:cover;border-radius:10px;border:2px solid #a88a55}
+.rom-chron p{margin:0!important;font-size:var(--fs-m)!important}
+.rom-who{font-size:var(--fs-xs)!important;letter-spacing:.14em;text-transform:uppercase;color:#6b5a40}
