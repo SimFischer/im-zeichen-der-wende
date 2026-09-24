@@ -50,7 +50,7 @@
   if(id==='gate')return state.seals.length===6?'Alle Siegel gefunden. Die Chronik wartet in der Basilika.':'Erkunde die Erinnerungen. Finde sechs Erkenntnis-Siegel für die Chronik.';
   if(id==='archive'&&!own('light'))return 'Kombiniere Öllampe und Feuerstein im Botenbeutel.';if(id==='archive'&&!has('archive')&&G.minigames?.archive)return 'Tippe in die Dunkelheit, um mit der Lampe zu suchen.';
   if(id==='archive'&&state.evidence.length<4&&!has('archive'))return 'Untersuche die vier Spuren im Licht deiner Lampe.';
-  {const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));if(p&&puzzleLocked(scene(),p[4])){const all=infoSpots(scene()).length,miss=missingInfo(scene()).length;return `Sammle zuerst Informationen: Sprich mit den Menschen und untersuche die Dinge (${all-miss}/${all}). Dann öffnet sich: ${p[0]}.`;}}
+  {const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));if(p&&puzzleLocked(scene(),p[4])){const all=infoSpots(scene()).length,miss=missingInfo(scene()).length;return scene().discover?`Du kennst diesen Ort – was ist heute anders? Entdeckt: ${all-miss} von ${all} Veränderungen. Dann öffnet sich: ${p[0]}.`:`Sammle zuerst Informationen: Sprich mit den Menschen und untersuche die Dinge (${all-miss}/${all}). Dann öffnet sich: ${p[0]}.`;}}
   if(id==='camp'&&!has('map312'))return 'Beschrifte das Kartenbrett, um Konstantins Zelt zu öffnen.';
   if(id==='basilica'&&!state.flags.sealsPlaced)return 'Setze deine sechs Erkenntnis-Siegel in die große Mechanik.';
   const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));
@@ -58,7 +58,7 @@
   return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
  function render(){endTalk();unlock();if(state.scene==='archive'&&!has('archive')&&!state.flags.archiveScrollsRead)state.scene='vestibule';const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
-  const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.art||s.id}.png')`;$('#app').style.setProperty('--scene-img',`url('assets/backgrounds/v3-${s.art||s.id}.png')`);art.style.backgroundSize='contain';art.style.backgroundPosition='center';
+  const img=s.image||`assets/backgrounds/v3-${s.art||s.id}.png`;const art=$('#art');art.style.backgroundImage=`url('${img}')`;$('#app').style.setProperty('--scene-img',`url('${img}')`);art.style.backgroundSize=s.image?'cover':'contain';art.style.backgroundPosition='center';$('#scene').classList.toggle('discover',!!s.discover);
   const archDark=s.id==='archive'&&!has('archive');art.style.filter=archDark?'brightness(.07) saturate(.4)':'';$('#scene').classList.toggle('archive-dark',archDark);
   $('#world-change').className=state.flags.galerius?'open':'';
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
@@ -86,7 +86,7 @@
   if(id==='archivist'){meetArchivist();return;}
   if(type==='reading'){if(!state.flags.archiveScrollsReceived){meetArchivist();return;}readArchiveScrolls();return;}
   if(type==='deposit'){depositArchiveScrolls();return;}
-  if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t,h);else info(t[0],t[1]);return;}
+  if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined||scene().discover)talk(id,t,h);else info(t[0],t[1]);return;}
   if(type==='take'){if(own(id)||['lamp','flint'].includes(id)&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}flyToBag(id,state.scene+':'+i);add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
   if(type==='gate'){info('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
   if(type==='evidence'){add('evidence',id);save();info(G.evidence[id][0],`Im Licht wird die Spur sichtbar. Überlege, welche Maßnahme sie erklärt: ${G.evidence[id][1]}. Die Spur ist jetzt für die Schubladen festgehalten.`);render();return;}
