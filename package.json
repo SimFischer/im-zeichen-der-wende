@@ -9,6 +9,6 @@
     "@vercel/blob": "^2.3.0"
   },
   "scripts": {
-    "build": "node --check script.js && node --check continuation.js && node --check api/continuation.js && node tests/continuation.cjs"
+    "build": "node --check script.js && node --check continuation.js && node --check bonusgames.js && for f in bonus/*.js; do node --check $f || exit 1; done && node --check api/continuation.js && node tests/continuation.cjs"
   }
 }

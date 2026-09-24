@@ -15,6 +15,8 @@
  $('#close').onclick=close;$('#modal').addEventListener('cancel',e=>{e.preventDefault();close();});
  function button(text,fn,cls='primary',parent=$('#modal-content')){const b=document.createElement('button');b.textContent=text;b.className=cls;b.onclick=fn;parent.append(b);return b;}
  function actions(){const n=document.createElement('div');n.className='actions';$('#modal-content').append(n);return n;}
+ // Kleine Schnittstelle für die optionalen Bonusspiele (bonusgames.js). Kein Zugriff auf den Spielstand.
+ window.WendeUI={open,close,button,actions,toast};
  function info(title,body){activePuzzle=null;open(title,`<p class="intro-copy">${esc(body)}</p>`);button('Zurück in die Szene',close,'primary',actions());}
  function unlock(){
   if(has('conflict')&&has('sources'))add('unlocked','office');
@@ -43,7 +45,7 @@
   $('#world-change').className=state.flags.galerius?'open':'';
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
   $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot';b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':'·'}</span><span class="label">${esc(h[0])}</span>`;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
-  window.Adventure.scene(s,state);renderExits(s);$('#objective').textContent=objective();renderInventory();save();
+  window.Adventure.scene(s,state);renderExits(s);window.BonusGames?.decorate(s,state,$('#hotspots'));$('#objective').textContent=objective();renderInventory();save();
  }
  function travel(id,via){
   if(!state.unlocked.includes(id)){toast(G.exitHints?.[id]||'Dieser Weg ist noch versperrt. Finde zuerst weitere Spuren.');return;}
@@ -151,7 +153,8 @@
   ['motives','council','bridge'].forEach(id=>{const d=state.drafts[id];if(d?.reason)html+=`<article class="journal"><h3>${esc(G.puzzles[id].title)} · Deine Begründung</h3><p class="personal">${esc(d.reason)}</p><p class="muted">Eigener Text – nicht automatisch fachlich bewertet.</p></article>`;});
   if(!state.notes.length)html+='<p class="clue">Die Seiten füllen sich, wenn du die Erinnerungen erschließt.</p>';
   const read=Object.keys(G.texts||{}).filter(k=>state.seen.includes('text:'+k));if(read.length){html+='<h3 class="journal-section">Gelesene Fachtexte</h3>';read.forEach(k=>{html+=`<details class="journal-text"><summary>📜 ${esc(G.texts[k].title)}</summary>${readingHtml(G.texts[k],false)}</details>`;});}
-  open('Das Notizbuch',html,'Gesammelt unterwegs','journal');const a=actions();button('Als Text herunterladen',exportNotes,'primary',a);button('Drucken',()=>window.print(),'',a);
+  html+=window.BonusGames?.journalHtml()||'';
+  open('Das Notizbuch',html,'Gesammelt unterwegs','journal');window.BonusGames?.bindJournal($('#modal-content'));const a=actions();button('Als Text herunterladen',exportNotes,'primary',a);button('Drucken',()=>window.print(),'',a);
  }
  $('#notebook').onclick=showJournal;
  function exportNotes(){let text='IM ZEICHEN DER WENDE\n\n';state.notes.forEach(id=>{if(G.notes[id])text+=G.notes[id].join('\n')+'\n\n';});for(const id of ['motives','council','bridge'])if(state.drafts[id]?.reason)text+='Eigene Begründung – '+G.puzzles[id].title+'\n'+state.drafts[id].reason+'\n\n';const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Meine-Stadtchronik.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}

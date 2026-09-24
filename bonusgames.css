@@ -1,0 +1,73 @@
+/* Bonusspiele: große, immersive Spielansicht im Stil der Stadtchronik */
+
+/* ---------- Fundstellen in den Szenen: bewusst unscheinbarer als Pflicht-Hotspots ---------- */
+.bonus-spot{position:absolute;transform:translate(-50%,-50%);z-index:1;min-width:52px;min-height:52px;padding:6px;border:0;background:transparent;box-shadow:none;color:#fff7de;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;backdrop-filter:none}
+.bonus-spot .bonus-pin{display:block;width:calc(var(--u)*.95);height:calc(var(--u)*.95);min-width:14px;min-height:14px;margin:0 auto;border-radius:50%;border:2px solid #f3dca6aa;background:radial-gradient(circle at 35% 30%,#f2d9a0,#9c6f33);box-shadow:0 0 0 3px #21190b55,0 1px 6px #000c;font:700 10px/1 Georgia,serif;color:#3a2610;opacity:.85;animation:bonus-glint 4.8s ease-in-out infinite}
+.bonus-spot .bonus-label{position:absolute;left:50%;top:calc(50% + calc(var(--u)*.7));transform:translateX(-50%);width:max-content;max-width:min(calc(var(--u)*12),28vw);padding:.15em .6em;border:1px solid #dcc49966;border-radius:20px;background:#20352eb8;font-size:var(--fs-xs);line-height:1.25;opacity:.78;text-shadow:0 1px 3px #000;pointer-events:none}
+.bonus-spot .bonus-label small{display:block;font-size:.78em;letter-spacing:.14em;text-transform:uppercase;color:#f0d59a}
+.bonus-spot:hover .bonus-label,.bonus-spot:focus-visible .bonus-label{opacity:1;background:#20352ef2}
+.bonus-spot.found .bonus-pin{background:radial-gradient(circle at 35% 30%,#f7dc93,#c08a36);border-color:#fff0c8;opacity:1}
+@keyframes bonus-glint{0%,80%,100%{box-shadow:0 0 0 3px #21190b55,0 1px 6px #000c}88%{box-shadow:0 0 0 3px #21190b55,0 0 14px 4px #f7dc93aa}}
+#scene.talking .bonus-spot{opacity:.35}
+@media (prefers-reduced-motion:reduce){.bonus-spot .bonus-pin{animation:none}}
+
+/* ---------- Spielfenster ---------- */
+#modal[data-mode=bonus]{width:calc(100vw - 16px);max-width:none;height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);padding:calc(var(--u)*.55) calc(var(--u)*.9) calc(var(--u)*.8);overflow:hidden}
+#modal[data-mode=bonus][open]{display:flex;flex-direction:column}
+#modal[data-mode=bonus] .dialog-head{padding-bottom:.25em}
+#modal[data-mode=bonus] h2{margin:.05em 0 .2em;font-size:calc(var(--u)*1.45);line-height:1.1}
+#modal[data-mode=bonus] #modal-content{flex:1;min-height:0;display:flex;flex-direction:column}
+.bonus-shell{flex:1;min-height:0;display:flex;flex-direction:column;gap:.45em}
+.bonus-shell,.bonus-shell *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.bonus-bar{display:flex;align-items:center;gap:.6em;flex-wrap:wrap}
+.bonus-tag{padding:.15em .7em;border:1px solid #a88a55;border-radius:999px;background:#efe0bd;color:#5a3a16;font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase}
+.bonus-task{flex:1;min-width:10em;font-size:var(--fs-s);color:#3a2610;line-height:1.25}
+.bonus-bar button{min-height:48px;min-width:56px;padding:.3em .9em;font-size:var(--fs-s)}
+.bonus-stage{position:relative;flex:1;min-height:240px;border:3px solid #6e4a14;border-radius:14px;overflow:hidden;background:#2a2118;touch-action:none;-webkit-tap-highlight-color:transparent;box-shadow:inset 0 0 0 1px #f3dca633}
+.bonus-canvas{position:absolute;left:0;top:0;display:block}
+
+/* Karten (Einleitung, Pause, Abschluss) */
+.bonus-card{position:absolute;inset:0;z-index:20;display:flex;align-items:safe center;justify-content:center;padding:calc(var(--u)*1);background:#150e08a6;overflow:auto;touch-action:pan-y}
+.bonus-card-inner{width:min(36em,100%);padding:calc(var(--u)*1.1) calc(var(--u)*1.6);border:2px solid #c9a86b;border-radius:14px;background:#fbf1db;background-image:radial-gradient(at 30% 10%,#fff9e3,transparent 75%);box-shadow:0 14px 40px #000a;color:var(--ink)}
+.bonus-card h3{margin:0 0 .35em;font-size:calc(var(--u)*1.6);color:#5a3a16;line-height:1.15}
+.bonus-card p{margin:.35em 0;font-size:var(--fs-m);line-height:1.4}
+.bonus-controls{margin:.5em 0;padding-left:1.2em}
+.bonus-controls li{margin:.2em 0;font-size:var(--fs-s)}
+.bonus-note{font-size:var(--fs-xs)!important;color:#6b5a40}
+.bonus-found{display:inline-block;padding:.15em .8em;border-radius:999px;background:#2d5a4b;color:#fff6dd;font-size:var(--fs-s)!important;letter-spacing:.04em}
+.bonus-actions{display:flex;flex-wrap:wrap;gap:.6em;margin-top:.8em}
+.bonus-actions button{min-height:52px;padding:.4em 1.3em;font-size:var(--fs-m)}
+.bonus-victory{text-align:center;font-size:calc(var(--u)*2)!important;letter-spacing:.04em}
+.bonus-lines{list-style:none;margin:.4em 0;padding:0;text-align:center}
+.bonus-lines li{margin:.15em 0;font-size:var(--fs-m)}
+.bonus-history{margin-top:.7em;padding:.6em .9em;border-left:4px solid #8c422a;background:#f3e4c5;border-radius:6px}
+.bonus-history h4{margin:0 0 .2em;font-size:var(--fs-m);color:#5a3a16}
+.bonus-history p{font-size:var(--fs-s)!important;margin:0}
+
+/* Hinweisband im Spielfeld */
+.bonus-say{position:absolute;left:50%;top:10px;z-index:15;max-width:86%;padding:.4em 1em;border:2px solid #c9a86b;border-radius:12px;background:#fff8e6;color:#3a2610;font-size:var(--fs-s);line-height:1.3;text-align:center;box-shadow:0 6px 18px #0006;opacity:0;transform:translate(-50%,-14px);transition:.25s;pointer-events:none}
+.bonus-say.show{opacity:1;transform:translate(-50%,0)}
+
+/* Richtungstasten (groß, halbtransparent, Holz/Bronze) */
+.bonus-pad{position:absolute;right:calc(var(--u)*.8);bottom:calc(var(--u)*.8);z-index:8;display:grid;grid-template-columns:repeat(3,calc(var(--u)*3.4));grid-template-rows:repeat(3,calc(var(--u)*3.4));gap:4px;opacity:.82}
+.bonus-pad button{min-height:0;min-width:0;padding:0;border:2px solid #7a5a2c;border-radius:14px;background:linear-gradient(#f0cf8ce6,#d9a95ce6);color:#3a2610;font-size:calc(var(--u)*1.3);box-shadow:0 3px 0 #0005;touch-action:none}
+.bonus-pad button:active,.bonus-pad button.on{background:linear-gradient(#d9a95c,#b98a44);transform:translateY(2px);box-shadow:0 1px 0 #0005}
+.bonus-pad .up{grid-area:1/2}.bonus-pad .left{grid-area:2/1}.bonus-pad .right{grid-area:2/3}.bonus-pad .down{grid-area:3/2}
+@media (max-height:560px){.bonus-pad{grid-template-columns:repeat(3,56px);grid-template-rows:repeat(3,56px)}}
+
+/* ---------- Notizbuch: Entdeckte Spiele ---------- */
+.bonus-list{list-style:none;margin:.4em 0 1em;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(14em,1fr));gap:.5em}
+.bonus-list li{margin:0}
+.bonus-replay{width:100%;display:flex;align-items:center;gap:.5em;text-align:left;min-height:52px}
+.bonus-replay small{margin-left:auto;font-size:var(--fs-xs);color:#6b5a40;font-style:italic}
+.bonus-check{color:#2d5a4b;font-weight:700}
+.bonus-unknown{display:flex;align-items:center;min-height:52px;padding:0 1em;border:1px dashed #a88a55;border-radius:8px;color:#8a7654;letter-spacing:.3em}
+@media print{.bonus-journal-head,.bonus-journal-note,.bonus-list{display:none!important}}
+.bonus-shell:not(.running) .bonus-pause{visibility:hidden}
+
+/* Katakombenlauf: zusammengesetzte Inschrift */
+.kat-plate{display:flex;justify-content:center;gap:0;margin:.6em auto .2em;width:max-content;padding:.35em .9em;border:2px solid #6d5a3c;border-radius:4px;background:linear-gradient(135deg,#e2d7bd,#cbbd9c);box-shadow:inset 0 0 0 3px #efe6d0,0 3px 10px #0004;font:600 calc(var(--u)*1.9)/1 Georgia,serif;letter-spacing:.18em;color:#8c3a22}
+.kat-plate span{padding:0 .12em;border-right:2px dashed #6d5a3c55}
+.kat-plate span:last-child{border-right:0}
+.kat-plate span.missing{color:#b8a888}
+.kat-plate.whole span{border-right-color:transparent}
