@@ -80,8 +80,8 @@ P.council=base('Ein Band zwischen Kirche und Reich','council','Verbinde die beid
 row('Eine Einigung innerhalb der Kirche …',['kann zur Stabilität des Reiches beitragen.','beweist, dass nur politische Motive existierten.','bedeutet, dass Konstantin 325 getauft wurde.'],0,'Ursache/Folge: Einheit kann Stabilität fördern. Daraus folgt weder ein Beweis allein politischer Motive noch eine Taufe 325.')],['Denke an die Waage: Glaube und Politik.','Welche Wirkung kann weniger Streit in der Kirche für das Reich haben?','Passende Antworten verbinden Einheit der Kirche mit Stabilität – und machen es sich nicht zu einfach.']);
 const events=['Konzil von Nicäa','Sieg über Maxentius','Taufe Konstantins kurz vor seinem Tod','Diokletianische Verfolgung','Mailänder Vereinbarung','Galerius beendet die staatliche Verfolgung weitgehend'];
 P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Sachfehler: '+year+' gehört zu „'+events[[3,5,1,4,0,2][i]]+'“.')),['Dein Notizbuch enthält die Zeitspuren.','Das Ende der Verfolgung beginnt vor Konstantins Sieg.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe. Der Wandel liegt zwischen 303 und 311.']);
-P.bridge=base('Die Argumentationsbrücke','bridge','Vervollständige die vier Brückenbögen. Wähle danach eine Begründung: Was ändert sich grundlegend, und welche Vereinfachung sollte man vermeiden?',[
-row('Vor Konstantin …',['waren Christen immer und überall verfolgt.','waren Christen zeitweise staatlicher Verfolgung ausgesetzt.','war das Christentum die einzige erlaubte Religion.'],1,'Historische Vereinfachung: Nicht dauerhaft und überall, sondern zeitweise und unterschiedlich.'),row('Ab 311/313 …',['verbesserte sich die Lage grundlegend.','begann erst jede Verfolgung.','waren alle Menschen Christen.'],0,'Sachfehler: Galerius und die Mailänder Vereinbarung markieren Schritte des Wandels.'),row('Unter Konstantin …',['wurden alle anderen Religionen sofort verboten.','spielte die Kirche keine Rolle.','wurde das Christentum rechtlich abgesichert und gezielt gefördert.'],2,'Historische Vereinfachung: Förderung bedeutet nicht sofortige Ausschließlichkeit.'),row('Deshalb spricht man von einer Wende, weil …',['nur ein Kaiser seinen Namen wechselte.','sich die Stellung des Christentums von zeitweiliger Verfolgung zu Absicherung und Förderung grundlegend veränderte.','wir alle inneren Motive Konstantins sicher kennen.'],1,'Ursache/Folge: Entscheidend ist die grundlegende Veränderung der Stellung des Christentums.')],['Lies die Seiten „313 und danach“ und „Frühes 4. Jahrhundert“.','Verbinde Ausgangslage, rechtliche Änderung und Förderung.','Zeitweilige Verfolgung → Verbesserung ab 311/313 → Absicherung und Förderung: grundlegender Wandel.'],{reasons:{q:'Was ändert sich grundlegend – und welche Vereinfachung vermeidest du?',options:[{text:'Die Stellung des Christentums ändert sich von zeitweiliger Verfolgung zu Schutz und Förderung – es wird aber nicht sofort die einzige Religion.',ok:true,why:'Richtig: Du benennst den Wandel und vermeidest die Vereinfachung, 313 sei alles andere verboten worden.'},{text:'Der Wandel geschieht in Schritten: 311 Ende der Verfolgung, 313 Religionsfreiheit, danach Förderung. Andere Kulte bestehen zunächst weiter.',ok:true,why:'Richtig: Die Wende ist ein Vorgang in mehreren Schritten, kein einzelner Tag.'},{text:'313 waren plötzlich nur noch Christen erlaubt.',ok:false,why:'Das ist die typische Vereinfachung: Die Mailänder Vereinbarung erlaubte allen ihre Religion. Andere Kulte bestanden zunächst weiter.'},{text:'Die Wende zeigt, dass wir Konstantins Glauben genau kennen.',ok:false,why:'Seine inneren Motive können wir nicht sicher feststellen. Sicher ist der Wandel der rechtlichen Stellung des Christentums.'}]}});
+P.bridge=base('Die Argumentationsbrücke','bridge','Vervollständige die Brücke der Erkenntnis. Danach prüfe, welche Aussagen zu einfach sind.',[
+row('Vor Konstantin …',['waren Christen immer und überall verfolgt.','waren Christen zeitweise staatlicher Verfolgung ausgesetzt.','waren alle Menschen Christen.'],1,'Historische Vereinfachung: Nicht dauerhaft und überall, sondern zeitweise und unterschiedlich.'),row('Ab 311/313 …',['verbesserte sich die Lage grundlegend.','begann erst jede Verfolgung.','wurden alle anderen Religionen sofort verboten.'],0,'Sachfehler: Galerius und die Mailänder Vereinbarung markieren Schritte des Wandels.'),row('Unter Konstantin …',['war das Christentum sofort die einzige erlaubte Religion.','spielte die Kirche keine Rolle.','wurde das Christentum rechtlich abgesichert und gezielt gefördert.'],2,'Historische Vereinfachung: Förderung bedeutet nicht sofortige Ausschließlichkeit.'),row('Deshalb spricht man von einer Wende, weil …',['nur ein Kaiser seinen Namen wechselte.','sich die Stellung des Christentums von zeitweiliger Verfolgung zu Absicherung und Förderung grundlegend veränderte.','wir alle inneren Motive Konstantins sicher kennen.'],1,'Ursache/Folge: Entscheidend ist die grundlegende Veränderung der Stellung des Christentums.')],['Jeder Bogen braucht eine Platte, die nicht zu stark vereinfacht.','Achte auf Wörter wie „immer“, „alle“, „sofort“ und „sicher“ – sie machen Aussagen oft zu einfach.','Zeitweilige Verfolgung → Verbesserung ab 311/313 → Absicherung und Förderung: ein grundlegender Wandel.'],{reasons:{q:'Welche Inschrift gehört über die Brücke?',options:[]}});
 
 /* Wege zwischen den Szenen: [Ziel, x %, y %, Beschriftung]. Klick/Tipp geht direkt zum Nachbarort.
    Gesperrte Orte bleiben sichtbar, verraten aber, welche Spur noch fehlt. */
@@ -124,7 +124,7 @@ window.GAME.steps={
  motives:['Auf dem Tisch liegen sieben Karten mit möglichen Beweggründen Konstantins.','Tippe eine Karte an und lege sie in eine Waagschale: Glaube, Politik oder in die Mitte, wenn beides zusammenkommt.','Es gibt mehrere vertretbare Lösungen. Wichtig ist, wie du sie begründest.','Wähle danach unter der Waage eine Begründung aus. Mehrere Begründungen können passen. Tipp: Sprich mit der Beraterin.'],
  council:['Hier verbindest du zwei Gedanken: eine Einigung innerhalb der Kirche und ihre Bedeutung für das Reich.','Tippe oben den passenden Satzteil an und setze ihn in die Lücke.','Besprich anschließend mündlich mit deinem Partner, warum beides zusammenhängt.'],
  timeline:['Die Zeitmechanik hat sechs Jahresringe: 303, 311, 312, 313, 325 und 337.','Tippe oben ein Ereignis an und dann den Ring mit dem passenden Jahr.','Wenn alle sechs Ringe belegt sind, tippe auf „Mechanismus prüfen“. Tipp: Im Notizbuch stehen alle Jahreszahlen, die du gesammelt hast.'],
- bridge:['Die Brücke hat vier Bögen. Jeder Bogen ist ein Satzanfang.','Tippe oben das passende Satzende an und setze es in den Bogen. Achte auf falsche Vereinfachungen.','Wähle danach unter der Brücke eine Begründung: Was ändert sich grundlegend? Und welche Aussage wäre zu einfach? Mehrere Begründungen können passen.','Dann „Mechanismus prüfen“. Das ist das letzte Rätsel.']
+ bridge:['Tippe die Platte an, die den leuchtenden Bogen trägt. Danach markierst du zu einfache Aussagen und wählst die Inschrift.']
 };
 
 /* Fachtexte zum Einlesen vor jedem Rätsel (Klasse 7).
@@ -363,3 +363,49 @@ window.GAME.minigames.timeline={type:'chronik',title:'Die Chronik der Wende',
  gapWrong:{1:'Fast: 311 hat der Wandel schon begonnen. Suche die Stelle davor – zwischen Verfolgung und Ende der Verfolgung.',2:'Da ist der Wandel schon im Gang. 311 endet die Verfolgung weitgehend. Schau weiter nach links.',3:'313 und 325 liegen beide schon nach dem Wandel.',4:'Die Taufe 337 kommt ganz am Ende. Der Wandel liegt viel früher.'},
  gapWrongDefault:'Schau noch einmal: Wo endet die Verfolgung?',
  winTitle:'Die Chronik ist wiederhergestellt',win:'Die Wende geschah nicht an einem Tag, sondern in mehreren Schritten – der entscheidende Umschwung liegt zwischen 303 und 311/313.'};
+
+/* Die Argumentationsbrücke (argbridge.js): Abschlussrätsel in der Basilika in drei Phasen.
+   A: vier Bögen nacheinander mit Inschriftplatten schließen · B: zu einfache Aussagen markieren · C: Inschrift für die Brücke wählen.
+   Grafiken (optional) liegen in assets/minigames/argument-bridge/ und werden erst geladen, wenn sie unter art.available stehen. */
+window.GAME.minigames.bridge={type:'argbridge',title:'Die Argumentationsbrücke',
+ prompt:'Vervollständige die Brücke der Erkenntnis. Danach prüfe, welche Aussagen zu einfach sind.',
+ art:{dir:'assets/minigames/argument-bridge/',scene:'argument-bridge-scene.png',segments:'argument-bridge-segments.png',tokens:'argument-bridge-tokens.png',icons:'argument-bridge-icons.png',available:[]},
+ icons:['chains','edict','basilica','turn','crown','people','flame','temple','heart','name'],
+ start:'Tippe die Platte an, die den leuchtenden Bogen trägt.',
+ arches:[
+  {head:'Vor Konstantin …',short:'zeitweise Verfolgung',
+   right:{text:'waren Christen zeitweise staatlicher Verfolgung ausgesetzt.',icon:'chains',why:'Dieser Bogen trägt die Entwicklung vor Konstantin: Verfolgung gab es zeitweise – nicht immer und nicht überall.'},
+   wrong:[{text:'waren Christen immer und überall verfolgt.',icon:'flame',why:'Das ist zu stark vereinfacht. Christen wurden nicht zu allen Zeiten und an allen Orten gleich verfolgt.'},
+          {text:'waren alle Menschen Christen.',icon:'people',why:'Nein. Vor Konstantin waren Christen eine Minderheit im Reich.'}]},
+  {head:'Ab 311/313 …',short:'Lage grundlegend verbessert',
+   right:{text:'verbesserte sich die Lage grundlegend.',icon:'edict',why:'Der zweite Bogen sitzt: 311 endet die Verfolgung weitgehend, 313 folgt die Mailänder Vereinbarung.'},
+   wrong:[{text:'begann erst jede Verfolgung.',icon:'flame',why:'Umgekehrt: 311 endete die staatliche Verfolgung weitgehend.'},
+          {text:'wurden alle anderen Religionen sofort verboten.',icon:'temple',why:'Zu einfach. 313 durften alle ihre Religion ausüben. Andere Kulte bestanden weiter.'}]},
+  {head:'Unter Konstantin …',short:'abgesichert und gefördert',
+   right:{text:'wurde das Christentum rechtlich abgesichert und gezielt gefördert.',icon:'basilica',why:'Der dritte Bogen trägt: Kirchenbau, Schenkungen und Vorrechte für Geistliche.'},
+   wrong:[{text:'war das Christentum sofort die einzige erlaubte Religion.',icon:'crown',why:'Zu einfach. Das Christentum wurde gefördert, aber nicht sofort zur einzigen Religion.'},
+          {text:'spielte die Kirche keine Rolle.',icon:'basilica',why:'Im Gegenteil: Konstantin ließ Kirchen bauen und kümmerte sich um Streitfragen der Kirche.'}]},
+  {head:'Deshalb spricht man von einer Wende, weil …',short:'grundlegender Wandel',
+   right:{text:'sich die Stellung des Christentums von zeitweiliger Verfolgung zu Absicherung und Förderung grundlegend veränderte.',icon:'turn',why:'Der Schlussstein sitzt: Die Stellung des Christentums hat sich grundlegend verändert.'},
+   wrong:[{text:'nur ein Kaiser seinen Namen wechselte.',icon:'name',why:'Um einen Namen geht es nicht. Entscheidend ist die veränderte Stellung des Christentums.'},
+          {text:'wir alle inneren Motive Konstantins sicher kennen.',icon:'heart',why:'Konstantins innere Motive kennen wir nicht sicher. Die Wende zeigt sich an Gesetzen und Förderung.'}]}
+ ],
+ simplify:{q:'Welche Aussagen vereinfachen zu stark? Tippe sie an.',
+  found:'Richtig erkannt: Diese Aussage klingt plausibel, greift die Entwicklung aber zu simpel auf.',
+  items:[
+   {text:'Christen waren immer und überall verfolgt.',simple:true,why:'Verfolgung gab es zeitweise – je nach Ort und Kaiser verschieden.'},
+   {text:'313 war das Christentum sofort die einzige Religion.',simple:true,why:'313 wurde die Religionsausübung für alle erlaubt.'},
+   {text:'Die Verfolgung war zeitweise und regional unterschiedlich.',simple:false,why:'Diese Aussage trägt – sie vereinfacht nicht. Genau so war es.'},
+   {text:'Alle anderen Religionen wurden sofort verboten.',simple:true,why:'Traditionelle römische Kulte bestanden zunächst weiter.'},
+   {text:'Nach 313 bestanden andere Kulte zunächst weiter.',simple:false,why:'Diese Aussage trägt – sie ist historisch zutreffend.'},
+   {text:'Wir kennen Konstantins innere Motive ganz sicher.',simple:true,why:'Seine Motive können wir nur begründet deuten.'}]},
+ final:{q:'Welche Inschrift gehört über die Brücke?',
+  options:[
+   {text:'Die Stellung des Christentums veränderte sich im frühen 4. Jahrhundert grundlegend: von zeitweiliger Verfolgung hin zu rechtlicher Absicherung und gezielter Förderung.',ok:true,why:'Diese Inschrift fasst die Wende zusammen – ohne falsche Vereinfachung.'},
+   {text:'Konstantin machte das Christentum sofort zur einzigen erlaubten Religion.',ok:false,why:'Zu einfach: 313 wurde die Religionsausübung für alle erlaubt. Andere Kulte bestanden weiter.'},
+   {text:'Die Christenverfolgung endete nur zufällig, ohne größere Veränderung.',ok:false,why:'Nein: Gesetze von 311 und 313 und die gezielte Förderung veränderten die Lage grundlegend.'},
+   {text:'Das Christentum war vorher bedeutungslos und wurde erst unter Konstantin erfunden.',ok:false,why:'Das Christentum gab es schon seit dem 1. Jahrhundert. Neu war seine Stellung im Reich.'}]},
+ winTitle:'Die Brücke der Erkenntnis trägt',
+ win:'Von zeitweiliger Verfolgung über rechtliche Absicherung zu gezielter Förderung: Die Stellung des Christentums veränderte sich grundlegend.'};
+/* Die gewählte Inschrift erscheint im Notizbuch; dieselben Optionen gelten für die klassische Fassung. */
+window.GAME.puzzles.bridge.reasons={q:window.GAME.minigames.bridge.final.q,options:window.GAME.minigames.bridge.final.options};
