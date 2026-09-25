@@ -100,6 +100,7 @@
   return true;
  }
  const ICONS={
+  'decree':'<svg viewBox="0 0 64 64"><rect x="12" y="12" width="40" height="40" rx="3" fill="#efe0bd" stroke="#6b4a22" stroke-width="3"/><path d="M8 12h48M8 52h48" stroke="#6b4a22" stroke-width="5" stroke-linecap="round"/><path d="M20 22h24M20 29h24M20 36h14" stroke="#6b4a22" stroke-width="2.5"/><circle cx="42" cy="43" r="6" fill="#a8322a" stroke="#5a1a10" stroke-width="2"/></svg>',
   'door-shut':'<svg viewBox="0 0 64 64"><path d="M14 58V22a18 18 0 0 1 36 0v36z" fill="#6b4424" stroke="#3b2412" stroke-width="3"/><path d="M32 6v52M14 30h36" stroke="#3b2412" stroke-width="2.5"/><path d="M8 38h48" stroke="#2a1a0c" stroke-width="7" stroke-linecap="round"/><circle cx="40" cy="46" r="2.5" fill="#d9a441"/></svg>',
   'scroll-cross':'<svg viewBox="0 0 64 64"><rect x="12" y="14" width="40" height="36" rx="3" fill="#efe0bd" stroke="#6b4a22" stroke-width="3"/><path d="M20 24h24M20 32h24M20 40h16" stroke="#8c422a" stroke-width="2.5"/><path d="M8 8l48 48M56 8L8 56" stroke="#8c2a1a" stroke-width="5" stroke-linecap="round" opacity=".85"/></svg>'
  };
@@ -172,5 +173,47 @@
   return true;
  }
 
- Object.assign(window.MiniGames,{citychange,konzil,chronik});
+
+ /* ================= 4. Die Waage des Kaisers (Motive Konstantins) ================= */
+ function waage(id,cfg,work){
+  const A=cfg.art||{};const BINS=cfg.bins; // 0 Glaube · 1 Politik · 2 beides
+  const cards=shuffle(cfg.cards.map((c,i)=>({...c,i})));
+  work.innerHTML=`<div class="scene-game waage-game" style="--bg:url('${A.bg}')">
+   <div class="sg-stage">
+    <div class="sg-bg" aria-hidden="true"></div>
+    <div class="wg-scale" aria-hidden="true"><svg viewBox="0 0 600 300" class="wg-art"><defs><linearGradient id="wg-brass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dc96"/><stop offset=".5" stop-color="#c8924a"/><stop offset="1" stop-color="#7a4e1c"/></linearGradient></defs>
+     <path d="M300 60 V262" stroke="url(#wg-brass)" stroke-width="16" stroke-linecap="round"/><path d="M225 285 Q300 250 375 285 Z" fill="url(#wg-brass)" stroke="#4a2e0e" stroke-width="3"/><circle cx="300" cy="58" r="16" fill="url(#wg-brass)" stroke="#4a2e0e" stroke-width="3"/>
+     <g class="wg-beam"><rect x="70" y="52" width="460" height="14" rx="7" fill="url(#wg-brass)" stroke="#4a2e0e" stroke-width="3"/><circle cx="80" cy="59" r="9" fill="#e8c47a" stroke="#4a2e0e" stroke-width="2"/><circle cx="520" cy="59" r="9" fill="#e8c47a" stroke="#4a2e0e" stroke-width="2"/></g></svg></div>
+    <section class="wg-pan left" data-target="0" aria-label="Waagschale ${esc(BINS[0])}"><header>${esc(BINS[0])}</header><div class="wg-slots"></div></section>
+    <section class="wg-pan mid" data-target="2" aria-label="Mitte: ${esc(BINS[2])}"><header>${esc(BINS[2])}</header><div class="wg-slots"></div></section>
+    <section class="wg-pan right" data-target="1" aria-label="Waagschale ${esc(BINS[1])}"><header>${esc(BINS[1])}</header><div class="wg-slots"></div></section>
+    <div class="wg-rack" role="group" aria-label="Karten mit möglichen Beweggründen">${cards.map(c=>`<button type="button" class="wg-card" data-card="${c.i}" aria-pressed="false"><span class="sg-text">${esc(c.text)}</span></button>`).join('')}</div>
+    <div class="wg-reasons" hidden role="group" aria-label="Begründungen"></div>
+    <p class="sg-voice" role="status" aria-live="polite">${esc(cfg.start)}</p>
+   </div></div>`;
+  const root=work.querySelector('.scene-game'),voice=root.querySelector('.sg-voice'),beam=root.querySelector('.wg-beam');
+  probe(root,[A.bg]);
+  let placed=0,phase='place';const count=[0,0,0];
+  const say=(t,k='')=>{voice.textContent=t;voice.className='sg-voice '+k;voice.classList.remove('pop');void voice.offsetWidth;voice.classList.add('pop');};
+  const tilt=()=>{const d=Math.max(-3,Math.min(3,count[1]-count[0]));beam.style.transform=`rotate(${d*3}deg)`;root.style.setProperty('--tilt',d);};
+  placement(root,{cardSel:'.wg-card',targetSel:'.wg-pan',onDrop(card,t){
+   if(phase!=='place')return;const c=cfg.cards[+card.dataset.card],bin=+t.dataset.target;
+   if(c.ok.includes(bin)){
+    card.classList.add('placed');card.classList.remove('chosen');card.disabled=true;root.classList.remove('sg-choosing');
+    t.querySelector('.wg-slots').append(card);count[bin]++;tilt();placed++;
+    say(bin===c.best?c.why:(c.alt||c.why),bin===c.best?'good':'ask');
+    if(placed===cfg.cards.length)later(root,1600,reasons);
+   }else{card.classList.remove('shake');void card.offsetWidth;card.classList.add('shake');say(c.wrong?.[bin]||'Überlege noch einmal: Glaube, Politik – oder beides?','bad');}
+  }});
+  function reasons(){phase='reason';root.classList.add('balanced');const box=root.querySelector('.wg-reasons');root.querySelector('.wg-rack').hidden=true;box.hidden=false;
+   say(cfg.reasons.q,'ask');
+   box.innerHTML=shuffle(cfg.reasons.options.map((o,k)=>({o,k}))).map(({o,k})=>`<button type="button" class="wg-reason" data-k="${k}">${esc(o.text)}</button>`).join('');
+   box.querySelectorAll('.wg-reason').forEach(b=>b.onclick=()=>{if(phase!=='reason'||b.disabled)return;const o=cfg.reasons.options[+b.dataset.k];
+    if(o.ok){phase='done';b.classList.add('right');box.querySelectorAll('button').forEach(x=>x.disabled=true);say(o.why,'good');document.dispatchEvent(new CustomEvent('minigame-choice',{detail:{id,text:o.text}}));later(root,2200,finish);}
+    else{b.classList.add('tried');b.disabled=true;say(o.why,'bad');}});}
+  function finish(){const o=document.createElement('div');o.className='sg-finale';o.innerHTML=`<div class="sg-scroll"><h3>${esc(cfg.winTitle)}</h3><p>${esc(cfg.win)}</p><button type="button" class="primary sg-next">Weiter</button></div>`;root.querySelector('.sg-stage').append(o);o.querySelector('.sg-next').onclick=()=>win(id);}
+  root.__debug={phase:()=>phase,count:()=>count,cards:cfg.cards};
+  return true;
+ }
+ Object.assign(window.MiniGames,{citychange,konzil,chronik,waage});
 })();

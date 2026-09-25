@@ -261,3 +261,21 @@ Chromium (Playwright) bei 1024×768, 1180×820 und 768×1024:
 - In der Pause steht die Zeit still.
 - Keine JS-Fehler und keine fehlgeschlagenen Ladevorgänge.
 - Im Hochformat liegt die Straße über den Knöpfen.
+
+## Qualitätsprüfung iPad (25.09.2026, Branch `quality/ipad-review`)
+
+Siehe `QUALITAETSBERICHT.md`. `npm test` bestanden (12 Testdateien, darunter neu `tests/ipad-layout.cjs` und die Waage in `tests/scenegames.cjs`).
+
+Automatische Layout-Prüfung in Chromium:
+
+- **Größen:** 1024×768, 1180×820, 1366×1024 und 820×1180.
+- **Umfang:** Szenen, Rätsel, Dialoge und Bonusspiele.
+- **Ergebnis:**
+  - Keine JS-Fehler, keine fehlgeschlagenen Ladevorgänge.
+  - Kein Rätselfenster muss gescrollt werden; die einzige Ausnahme sind 2 px beim Seilzug bei 1180×820.
+  - Startknöpfe sind sichtbar.
+  - Waage, Kartenbrett und Archiv sind in allen Größen geprüft.
+- **Verbliebene, bewusst akzeptierte Meldungen:**
+  - Das Notizbuch scrollt (gewollt).
+  - Der unsichtbare Lehrkraft-Titel (langes Drücken) hat eine kleine Schrift.
+  - Die Zierinschrift „Anno Domini“ liegt unter dem Kartenplatz.

@@ -179,6 +179,10 @@ Texte, Rätsel, Dialoge, Hilfen, akzeptierte Antworten und fachliches Feedback: 
 
 Kein Freitext: Die gewählte Inschrift wird als Auswahl im Notizbuch gespeichert. Grafiken optional unter `assets/minigames/argument-bridge/` (siehe dortige README).
 
+## iPad-Qualitätsschicht
+
+`ipad.css` wird zuletzt geladen und setzt Untergrenzen für Schrift (mindestens 12,5–13,5 px) und Touchziele (mindestens 40–48 px), macht die Startknöpfe der Minispiele immer sichtbar und zeigt Szenen im Hochformat groß und seitlich verschiebbar. Details und offene Empfehlungen: `QUALITAETSBERICHT.md`.
+
 ## Tests
 
 `tests/playthrough.cjs` testet den vollständigen natürlichen Weg in einer DOM-Testumgebung einschließlich Sperren, falscher/unvollständiger Antworten, Fortsetzen, Inventarkombination, Ereignis 311, Finale, Lehrkraftfunktionen und Neustart. Zur Wiederholung nur für Entwicklung `npm install --no-save linkedom`, dann `node tests/playthrough.cjs`. Linkedom gehört nicht zum Spiel und wird zum Hosten nicht benötigt.

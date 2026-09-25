@@ -57,10 +57,13 @@
   if(p)return `Du weißt genug. Überprüfe dein Wissen: ${p[0]}.`;
   return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
+ let lastPanScene=null;
  function render(){endTalk();unlock();if(state.scene==='archive'&&!has('archive')&&!state.flags.archiveScrollsRead)state.scene='vestibule';const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
   const img=s.image||`assets/backgrounds/v3-${s.art||s.id}.png`;const art=$('#art');art.style.backgroundImage=`url('${img}')`;$('#app').style.setProperty('--scene-img',`url('${img}')`);art.style.backgroundSize=s.image?'cover':'contain';art.style.backgroundPosition='center';$('#scene').classList.toggle('discover',!!s.discover);
   const archDark=s.id==='archive'&&!has('archive');art.style.filter=archDark?'brightness(.07) saturate(.4)':'';$('#scene').classList.toggle('archive-dark',archDark);
   $('#world-change').className=state.flags.galerius?'open':'';
+  // Hochformat: Szene größer und seitlich verschiebbar – beim Ortswechsel in die Mitte scrollen und kurz auf das Wischen hinweisen
+  if(lastPanScene!==s.id){lastPanScene=s.id;(window.requestAnimationFrame||setTimeout)(()=>{const vp=document.querySelector('.scene-viewport');if(!vp)return;const pan=vp.scrollWidth-vp.clientWidth;vp.scrollLeft=pan>4?pan/2:0;const h=$('#pan-hint');if(h){h.hidden=pan<=4;if(pan>4){h.classList.remove('show');void h.offsetWidth;h.classList.add('show');}}});}
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
   $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot hs-'+h[3];b.dataset.index=i;b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');const cap=h[3]==='puzzle'?'<small class="hs-cap"></small>':'';b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':h[3]==='take'?'＋':h[3]==='talk'?'i':'·'}</span><span class="label">${esc(h[0])}${cap}</span>`;if(h[3]==='take'){b.querySelector('.pin').remove();b.setAttribute('aria-label',h[0]+' aufnehmen');}if(h[3]==='deposit')b.hidden=!has('archive')||!!state.flags.archiveScrollsDeposited;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
   window.Adventure.scene(s,state);refreshSpots();document.querySelectorAll('#hotspots .unlocked-now').forEach(b=>b.classList.remove('unlocked-now'));renderExits(s);window.BonusGames?.update(state);$('#objective').textContent=objective();renderInventory();save();

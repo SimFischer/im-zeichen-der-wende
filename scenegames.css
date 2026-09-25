@@ -185,3 +185,49 @@
  .chron-gaps{grid-template-columns:repeat(3,1fr);height:26%}
 }
 @media (prefers-reduced-motion:reduce){.scene-game *{animation:none!important;transition:none!important}}
+
+/* ---------- Die Waage des Kaisers ---------- */
+.waage-game .sg-bg{filter:saturate(.9) brightness(.62) blur(2px);transform:scale(1.02)}
+.wg-scale{position:absolute;left:15%;width:70%;top:9%;height:52%;pointer-events:none;z-index:1}
+.wg-art{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 10px #0008)}
+.wg-beam{transform-origin:300px 59px;transition:transform .6s cubic-bezier(.3,1.4,.5,1)}
+.wg-pan{position:absolute;z-index:2;display:flex;flex-direction:column;align-items:stretch;gap:.3em;padding:.4em .45em .55em;border-radius:0 0 50% 50%/0 0 22% 22%;
+ background:linear-gradient(180deg,#6a4424e8,#3b2412f0);border:3px solid #c8924a;border-top:5px solid #e8c47a;box-shadow:0 10px 18px #000a,inset 0 0 0 1px #f3dca655;transition:transform .6s cubic-bezier(.3,1.4,.5,1),box-shadow .2s}
+.wg-pan header{align-self:center;padding:.1em .9em;border-radius:4px;background:linear-gradient(180deg,#f6dc96,#c8924a);border:1px solid #5a3812;color:#3a2610;font-weight:700;font-size:1.05em;letter-spacing:.04em}
+.wg-pan.left{left:12%;width:24%;top:25%;min-height:30%;transform:translateY(calc(var(--tilt,0) * -1.6cqh))}
+.wg-pan.right{left:64%;width:24%;top:25%;min-height:30%;transform:translateY(calc(var(--tilt,0) * 1.6cqh))}
+.wg-pan.mid{left:38%;width:24%;top:47%;min-height:18%;border-radius:10px;background:linear-gradient(180deg,#5a3a1ee8,#2e1c0cf0)}
+.wg-pan::before{content:'';position:absolute;left:50%;bottom:100%;width:60%;height:3.2cqh;transform:translateX(-50%);border-left:2px solid #c8924a;border-right:2px solid #c8924a;pointer-events:none}
+.wg-pan.mid::before{display:none}
+.sg-choosing .wg-pan{box-shadow:0 10px 18px #000a,0 0 0 3px #ffe3a0aa}
+.wg-slots{display:flex;flex-wrap:wrap;gap:.3em;justify-content:center}
+.wg-rack{position:absolute;left:1.5%;right:1.5%;bottom:2%;height:26%;z-index:3;display:flex;gap:.45em;align-items:stretch;padding:.45em;border-radius:10px;
+ background:repeating-linear-gradient(94deg,#6d4726 0 6px,#7a5230 6px 9px,#65411f 9px 15px);border:3px solid #3a230c;box-shadow:inset 0 0 0 1px #a07644,0 8px 16px #000a}
+.wg-rack[hidden],.wg-reasons[hidden]{display:none}
+.wg-card{flex:1 1 0;min-width:0;min-height:48px;margin:0;padding:.35em .45em;border-radius:6px;border:2px solid #6b5434;color:#2e1c08;font-size:1em;line-height:1.2;text-align:center;
+ background:linear-gradient(180deg,#f3e6c6,#d6bd8c);box-shadow:inset 0 0 0 2px #efe0bb,0 3px 0 #3a230c;cursor:pointer}
+.wg-card.chosen{outline:3px solid #ffe3a0;outline-offset:2px;transform:translateY(-4px)}
+.wg-card.shake{animation:sg-shake .4s}
+.wg-card.placed{flex:0 0 auto;width:100%;min-height:0;padding:.2em .4em;font-size:.82em;box-shadow:inset 0 0 0 1px #efe0bb;cursor:default}
+.wg-reasons{position:absolute;left:1.5%;right:1.5%;bottom:2%;z-index:3;display:grid;grid-template-columns:1fr 1fr;gap:.45em;padding:.5em;border-radius:10px;
+ background:repeating-linear-gradient(94deg,#6d4726 0 6px,#7a5230 6px 9px,#65411f 9px 15px);border:3px solid #3a230c;box-shadow:inset 0 0 0 1px #a07644,0 8px 16px #000a}
+.wg-reason{min-height:52px;margin:0;padding:.45em .7em;border-radius:8px;border:1px solid #a88a55;background:radial-gradient(at 30% 20%,#fffaf0,#f1e2bf 70%);color:#3a2610;font-size:.98em;line-height:1.25;text-align:left;box-shadow:0 3px 0 #3a230c}
+.wg-reason.right{background:#e3edd2;border-color:#2d5a4b;box-shadow:0 0 0 2px #2d5a4b88}
+.wg-reason.tried{opacity:.55;text-decoration:line-through;text-decoration-color:#8c422a}
+.balanced .wg-pan{box-shadow:0 10px 18px #000a,0 0 16px #ffd98a88}
+@keyframes sg-shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (orientation:portrait){
+ .wg-scale{top:10%;height:34%}
+ .wg-pan.left,.wg-pan.right{top:22%;width:30%}.wg-pan.left{left:3%}.wg-pan.right{left:67%}
+ .wg-pan.mid{left:35%;width:30%;top:40%}
+ .wg-rack{height:auto;flex-wrap:wrap}.wg-card{flex:1 1 30%;min-height:60px}
+ .wg-reasons{grid-template-columns:1fr}
+}
+/* Waage: abgelegte Karten kompakt, damit die mittlere Schale nie unter Ablage oder Begründungen rutscht */
+.wg-card.placed{font-size:.74em;padding:.12em .35em;line-height:1.12}
+.wg-pan.mid{top:41%}
+.balanced .wg-pan{transform:none}
+.balanced .wg-pan.left,.balanced .wg-pan.right{top:20%}
+.balanced .wg-pan.mid{top:33%}
+.balanced .wg-scale{top:3%;height:44%}
+@media (orientation:portrait){.wg-pan.mid{top:38%}.balanced .wg-pan.mid{top:36%}}
