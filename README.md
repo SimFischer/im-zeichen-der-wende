@@ -124,7 +124,9 @@ Der Nero-Bericht wird nicht als sichere Kenntnis einer Brandstiftung dargestellt
 
 Die Plinius-Fallentscheidungen sind im Code als didaktische Modellierung markiert und besonders am Originalarbeitsblatt zu prüfen. Erste Befragung und spätere Bestrafung bei beharrlicher Weigerung sind getrennt. Beim bloßen Gerücht ist „Anzeige zurückweisen“ im vorgegebenen Antwortschema als „kein Verfahren eröffnen“ erläutert. Das Rekonstruieren dieser Praxis bedeutet keine Zustimmung.
 
-Die Motivwaage kennt mehrere mögliche Zuordnungen. Freie Begründungen werden gespeichert, **nicht automatisch fachlich bewertet**. Die Mindestlänge ist nur eine Eingabehilfe. Ein reflektierender Abgleich und eine ausdrückliche Bestätigung schließen die Waage ab. Im Finale ergänzt die eigene Begründung die Satzbausteine (AFB III).
+Die Motivwaage kennt mehrere mögliche Zuordnungen. Freitext ist nirgends eine Bedingung für den Fortschritt: Nach der Waage und im Finale (Argumentationsbrücke) wählen die Lernenden aus vier Begründungen. Zwei davon sind fachlich tragfähig und werden beide akzeptiert. Zwei sind typische Vereinfachungen und erhalten eine kurze fachliche Rückmeldung. Die gewählte Begründung erscheint im Notizbuch. Das mündliche Begründen bleibt als Gesprächsauftrag bestehen (zum Beispiel beim Konzil).
+
+Quellenkritik mit drei Kategorien (Schild in Konstantins Zelt): **gut feststellbar** heißt, das Ereignis selbst ist durch Quellen und Folgen gesichert. **Später berichtet** heißt, die Aussage gibt wieder, was Autoren Jahre danach erzählen. **Nicht sicher feststellbar** heißt, die Aussage behauptet, wie es wirklich war, und das lässt sich nicht prüfen. Dass es eine Quelle gibt, wird nicht mit der Wahrheit ihres Inhalts gleichgesetzt. Jede falsche Wahl erhält eine eigene Rückmeldung.
 
 ## Unterricht und Spielzeit
 

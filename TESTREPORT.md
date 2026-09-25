@@ -165,3 +165,15 @@ Zusätzlich in Chromium (Playwright) geprüft: alle drei Szenen-Rätsel real dur
 Noch offen: echtes iPad-Safari (Touch-Genauigkeit, `:has()` wird ab iPadOS 15.4 unterstützt) und ein Unterrichtstest.
 
 - Nachtrag: Kurierfahrt als Bonusspiel (Notizbuch-Start, Sieg, nach dem Schließen keine Animation mehr, Spielstand unverändert) und Schrift EB Garamond (normal und kursiv geladen, keine 404-Meldungen mehr) in Chromium geprüft. `npm test` bestanden (Bonus-Test jetzt mit neun Spielen).
+
+
+## Quellenkritik und Begründungen ohne Freitext (25.09.2026)
+
+`npm test` bestanden: continuation, playthrough (397 Prüfungen), bonus-unlocks, scenegames (110), amphoren (26) und neu `tests/sources-and-reasons.cjs` (99 Prüfungen).
+
+- Schild/Vision: Jede Aussage hat genau eine Kategorie. Jede falsche Kategorie hat eine eigene fachliche Rückmeldung. Die Berichtsaussage wird als „später berichtet“ gewertet, „tatsächlich gesehen“ als „nicht sicher feststellbar“. Minispiel und klassische Fassung stimmen überein.
+- Echo der Quellen: Mehrdeutige Behauptungen (Neros Brandstiftung, Brandlegung durch Christen) akzeptieren „unsicher“ und „nicht sicher feststellbar“. Die Existenz antiker Berichte gilt als gut belegt, nicht jedes Detail darin.
+- Kein Textfeld im Spielcode. Die einzige Texteingabe ist der Fortsetzungscode. Keine Längenbedingung für Fortschritt.
+- Waage und Brücke: Ohne Begründung kein Abschluss. Eine falsche Begründung zeigt ihre Rückmeldung und schaltet nicht frei. Eine richtige wird als Text gespeichert und schließt ab. Alle Rätsel sind ohne Tippen lösbar.
+- Alte Spielstände mit Freitext bleiben gültig. Der Fortschritt bleibt erhalten, der alte Text erscheint im Notizbuch als „frühere Notiz“.
+- Chromium (Playwright), 1024×768 und 768×1024: Waage und Brücke real durchgespielt, Schildpuzzle gelöst und Quiz mit falschen Antworten geprüft. Aussage, Antworten und Rückmeldung sind ohne Scrollen sichtbar. Keine JS-Fehler.

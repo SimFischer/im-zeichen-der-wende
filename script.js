@@ -194,14 +194,14 @@
  $('#map').onclick=showMap;
  function showJournal(){activePuzzle=null;let html='<p>Deine gesicherten Erkenntnisse und eigenen Gedanken. Alles bleibt auf diesem Gerät.</p>';
   state.notes.forEach(id=>{const n=G.notes[id];if(n)html+=`<article class="journal"><h3>${esc(n[0])}</h3><p>${esc(n[1])}</p></article>`;});
-  ['motives','council','bridge'].forEach(id=>{const d=state.drafts[id];if(d?.reason)html+=`<article class="journal"><h3>${esc(G.puzzles[id].title)} · Deine Begründung</h3><p class="personal">${esc(d.reason)}</p><p class="muted">Eigener Text – nicht automatisch fachlich bewertet.</p></article>`;});
+  ['motives','council','bridge'].forEach(id=>{const d=state.drafts[id];if(!d?.reason)return;const r=chosenReason(G.puzzles[id],d);html+=`<article class="journal"><h3>${esc(G.puzzles[id].title)} · ${r?'Deine gewählte Begründung':'Deine frühere Notiz'}</h3><p class="personal">${esc(d.reason)}</p>${r?`<p class="muted">${esc(r.why)}</p>`:''}</article>`;});
   if(!state.notes.length)html+='<p class="clue">Die Seiten füllen sich, wenn du die Erinnerungen erschließt.</p>';
   const read=Object.keys(G.texts||{}).filter(k=>state.seen.includes('text:'+k));if(read.length){html+='<h3 class="journal-section">Gelesene Fachtexte</h3>';read.forEach(k=>{html+=`<details class="journal-text"><summary>📜 ${esc(G.texts[k].title)}</summary>${readingHtml(G.texts[k],false)}</details>`;});}
   html+=window.BonusGames?.journalHtml()||'';
   open('Das Notizbuch',html,'Gesammelt unterwegs','journal');window.BonusGames?.bindJournal($('#modal-content'));const a=actions();button('Als Text herunterladen',exportNotes,'primary',a);button('Drucken',()=>window.print(),'',a);
  }
  $('#notebook').onclick=showJournal;
- function exportNotes(){let text='IM ZEICHEN DER WENDE\n\n';state.notes.forEach(id=>{if(G.notes[id])text+=G.notes[id].join('\n')+'\n\n';});for(const id of ['motives','council','bridge'])if(state.drafts[id]?.reason)text+='Eigene Begründung – '+G.puzzles[id].title+'\n'+state.drafts[id].reason+'\n\n';const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Meine-Stadtchronik.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+ function exportNotes(){let text='IM ZEICHEN DER WENDE\n\n';state.notes.forEach(id=>{if(G.notes[id])text+=G.notes[id].join('\n')+'\n\n';});for(const id of ['motives','council','bridge'])if(state.drafts[id]?.reason)text+='Begründung – '+G.puzzles[id].title+'\n'+state.drafts[id].reason+'\n\n';const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Meine-Stadtchronik.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  function hint(){const id=activePuzzle||scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]))?.[4];if(!id){info('Die Öllampe','Sprich mit den Menschen, sammle Gegenstände und öffne die Stadtkarte. Neue Wege entstehen durch deine Erkenntnisse.');return;}
   const p=G.puzzles[id];let level=state.hints[id]||0;if(level<3)level++;state.hints[id]=level;save();
   if(activePuzzle&&$('#hint-box')){$('#hint-box').hidden=false;$('#hint-box').textContent=`Hinweis ${level}/3: ${p.hints[level-1]}`;return;}
@@ -235,21 +235,28 @@
    const slots=document.createElement('div');slots.className='slots';work.append(slots);
    p.rows.forEach((r,i)=>{const slot=document.createElement('div');slot.className='slot';slot.innerHTML=`<span class="slot-label" id="row-${i}">${esc(r.label)}</span>`;const b=button(d.values[i]===null?'＋ Baustein einsetzen':r.options[d.values[i]],()=>{if(token===null){toast('Wähle zuerst einen Baustein oben aus.');return;}const index=r.options.indexOf(token);if(index<0){toast('Dieser Baustein passt zu einem anderen Teil des Mechanismus.');return;}d.values[i]=index;b.textContent=token;b.className='filled';slot.querySelector('.row-feedback')?.remove();save();},d.values[i]===null?'':'filled',slot);b.id='slot-'+i;b.setAttribute('aria-describedby','row-'+i);b.setAttribute('aria-label','Platz: '+r.label);slots.append(slot);});
   }
-  if(['balance','bridge','council'].includes(p.type)){
-   const label=document.createElement('label');label.className='reason-label';label.htmlFor='reason';label.textContent=p.type==='balance'?'Begründe eine Karte und wäge ab: Welche Rolle könnten Glaube und Politik zusammen spielen?':p.type==='bridge'?'Deine eigene Begründung der Wende (mindestens zwei Sätze):':'Deine Erklärung (optional, auch mündlich möglich):';work.append(label);const t=document.createElement('textarea');t.id='reason';t.maxLength=4000;t.value=d.reason||'';t.placeholder='Ich begründe meine Einordnung so …';t.oninput=()=>{d.reason=t.value;$('#confirm-reflection')?.remove();save();};work.append(t);
-   const note=document.createElement('p');note.className='muted';note.textContent='Dein Text wird gespeichert. Die App beurteilt offene Begründungen nicht automatisch. Besprich sie mit deiner Gruppe oder Lehrkraft.';work.append(note);
-  }
-  const a=actions();button(p.type==='balance'?'Einordnung reflektieren':'Mechanismus prüfen',()=>check(id),'primary',a);button('Zurück in die Szene',close,'',a);
+  if(p.reasons)reasonChoice(p,d,work,save);
+  const a=actions();button(p.type==='balance'?'Einordnung prüfen':'Mechanismus prüfen',()=>check(id),'primary',a);button('Zurück in die Szene',close,'',a);
   if(has(id)){$('#feedback').className='feedback success';$('#feedback').textContent='Diese Erinnerung hast du bereits erschlossen. Du kannst deine Einordnung erneut ansehen und ändern.';}
+ }
+ function chosenReason(p,d){return p.reasons?.options.find(o=>o.text===d.reason)||null;}
+ function reasonChoice(p,d,work,save){
+  const box=document.createElement('fieldset');box.className='reason-choice';box.innerHTML=`<legend>${esc(p.reasons.q)}</legend><p class="muted">Wähle eine Begründung. Mehrere können passen.</p><div class="reason-options"></div><p class="reason-why" role="status" aria-live="polite"></p>`;work.append(box);
+  const list=box.querySelector('.reason-options'),why=box.querySelector('.reason-why');
+  const show=()=>{const r=chosenReason(p,d);list.querySelectorAll('button').forEach(b=>{const on=b.dataset.text===d.reason;b.setAttribute('aria-pressed',String(on));b.classList.toggle('picked',on);b.classList.toggle('good',on&&r.ok);b.classList.toggle('bad',on&&!r.ok);});why.className='reason-why'+(r?(r.ok?' good':' bad'):'');why.textContent=r?(r.ok?'Passt. ':'Noch nicht tragfähig. ')+r.why:'';};
+  p.reasons.options.forEach(o=>{const b=button(o.text,()=>{d.reason=o.text;box.classList.remove('needs');$('#confirm-reflection')?.remove();save();show();},'reason-option',list);b.dataset.text=o.text;});
+  show();
  }
  function check(id){const p=G.puzzles[id],d=state.drafts[id],fb=$('#feedback');fb.className='feedback';
   if(d.values.some((v,i)=>!Number.isInteger(v)||v<0||v>=p.rows[i].options.length)){fb.textContent='Der Mechanismus ist noch unvollständig. Belege alle Plätze.';fb.scrollIntoView({block:'nearest'});return;}
   const errors=[];p.rows.forEach((r,i)=>{const good=r.answer.includes(d.values[i]);const b=$('#slot-'+i);if(b){b.classList.toggle('correct',good);b.classList.toggle('wrong',!good);b.parentElement.querySelector('.row-feedback')?.remove();if(!good){const n=document.createElement('p');n.className='row-feedback';n.textContent=r.feedback;b.parentElement.append(n);}}if(!good)errors.push(r.feedback);});
   if(errors.length){fb.textContent=errors.join('\n\n');const tb=$('#puzzle-text');if(tb&&tb.hidden){tb.hidden=false;tb.classList.add('pulse');add('seen','textunlock:'+id);save();const n=document.createElement('p');n.className='text-offer';n.innerHTML='Noch nicht ganz. Frag noch einmal die Personen in der Szene – oder lies oben im <strong>📜 Fachtext</strong> nach.';fb.prepend(n);}fb.scrollIntoView({block:'nearest'});return;}
-  if(['balance','bridge'].includes(p.type)&&d.reason.trim().length<30){fb.textContent='Deine Bausteine sind gesetzt. Formuliere jetzt eine eigene Begründung mit mindestens 30 Zeichen. Die Länge ist nur eine Eingabehilfe, keine fachliche Bewertung.';$('#reason').focus();return;}
+  if(p.reasons){const r=chosenReason(p,d);$('.reason-choice')?.classList.remove('needs');
+   if(!r){fb.textContent='Deine Bausteine sind richtig gesetzt. Wähle jetzt unten eine Begründung aus.';$('.reason-choice')?.classList.add('needs');$('.reason-choice button')?.focus();return;}
+   if(!r.ok){fb.textContent='Deine Bausteine sind richtig gesetzt. Die gewählte Begründung trägt aber noch nicht: '+r.why+' Wähle eine andere Begründung.';$('.reason-choice')?.classList.add('needs');return;}}
   if(p.type==='balance'){
-   fb.className='feedback success';fb.innerHTML='<strong>Deine Einordnung ist gespeichert.</strong><p>Prüfe deine Begründung an diesen Perspektiven: Einheit und stabile Ordnung lassen sich politisch erklären. Persönliche religiöse Überzeugung verweist auf Glauben. Förderung christlicher Gemeinden kann beides verbinden. Auch beim Zeichen und beim Sieg sind verschiedene Deutungen möglich; die Vision ist später berichtet.</p><p>Ist deine Einordnung nachvollziehbar begründet? Besprich besonders eine Karte, die auch anders liegen könnte.</p>';
-   if(!$('#confirm-reflection')){const b=button('Ich habe meine Begründung geprüft – Siegel nehmen',()=>complete(id),'primary',fb);b.id='confirm-reflection';}return;
+   fb.className='feedback success';fb.innerHTML='<strong>Deine Einordnung und deine Begründung passen.</strong><p>Zum Weiterdenken: Einheit und stabile Ordnung lassen sich politisch erklären. Persönliche religiöse Überzeugung verweist auf Glauben. Förderung christlicher Gemeinden kann beides verbinden. Auch beim Zeichen und beim Sieg sind verschiedene Deutungen möglich; die Vision ist später berichtet.</p><p>Besprich mit deiner Gruppe eine Karte, die auch anders liegen könnte.</p>';
+   if(!$('#confirm-reflection')){const b=button('Verstanden – Siegel nehmen',()=>complete(id),'primary',fb);b.id='confirm-reflection';}return;
   }
   complete(id);
  }
