@@ -92,4 +92,27 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  for(const f of files){ok(code.includes('assets/minigames/'+f),'Pfad im Code: '+f);ok(fs.existsSync(path.join(root,'assets/minigames',f)),'Datei vorhanden: '+f);}
  const css=fs.readFileSync(path.join(root,'scenegames.css'),'utf8');ok(css.includes('.sg-no-art'),'Ersatzdarstellung für fehlende Grafiken');
 }
-console.log(`PASS: Stadt, Konzil (${6} Runden), Chronik, Asset-Pfade – ${checks} Prüfungen`);
+
+/* ---------- Die Waage des Kaisers ---------- */
+{
+ const {G,M,work,wins,flush,window}=boot();const cfg=G.minigames.motives;const choices=[];window.document.addEventListener('minigame-choice',e=>choices.push(e.detail));
+ ok(cfg.type==='waage'&&cfg.cards.length===7&&cfg.bins.join()==='Glaube,Politik,Beides','Waage: sieben Karten, drei Schalen');
+ cfg.cards.forEach(c=>{ok(c.ok.includes(c.best)&&c.why,'Schwerpunkt und Erklärung: '+c.text);[0,1,2].filter(b=>!c.ok.includes(b)).forEach(b=>ok(c.wrong&&c.wrong[b]&&!/^\s*falsch/i.test(c.wrong[b]),'Fachliche Rückmeldung für unpassende Schale: '+c.text));});
+ ok(cfg.cards.find(c=>/Überzeugung/.test(c.text)).ok.join()==='0','Persönliche Überzeugung gehört eindeutig zum Glauben');
+ ok(cfg.cards.find(c=>/Förderung/.test(c.text)).ok.length===3,'Mehrdeutige Karte (Förderung) wird nirgends als falsch bewertet');
+ ok(cfg.reasons===G.puzzles.motives.reasons&&cfg.reasons.options.filter(o=>o.ok).length>=2,'Begründungen aus dem Rätsel, mehrere tragfähig');
+ M.waage('motives',cfg,work);const root=work.querySelector('.waage-game'),voice=()=>txt(root.querySelector('.sg-voice'));
+ const card=t=>[...root.querySelectorAll('.wg-card')].find(c=>txt(c)===t),pan=b=>root.querySelector(`.wg-pan[data-target="${b}"]`);
+ ok(!root.querySelector('textarea,input'),'Kein Textfeld');
+ card('Persönliche religiöse Überzeugung').click();pan(1).click();
+ ok(!card('Persönliche religiöse Überzeugung').classList.contains('placed')&&/kein politisches Ziel/.test(voice()),'Unpassende Schale: Karte bleibt liegen, fachliche Rückmeldung');
+ cfg.cards.forEach(c=>{card(c.text).click();pan(c.best).click();ok(card(c.text).classList.contains('placed'),'Abgelegt: '+c.text);});
+ ok(root.__debug.count().join()==='2,2,3','Waage im Gleichgewicht (2 Glaube · 2 Politik · 3 beides)');
+ flush();ok(root.__debug.phase()==='reason'&&root.querySelectorAll('.wg-reason').length===4,'Danach: Begründung wählen');
+ const bad=[...root.querySelectorAll('.wg-reason')].find(b=>!cfg.reasons.options[+b.dataset.k].ok);bad.click();
+ ok(bad.classList.contains('tried')&&!choices.length&&!wins.length,'Untragfähige Begründung: Rückmeldung, kein Abschluss');
+ const good=[...root.querySelectorAll('.wg-reason')].find(b=>cfg.reasons.options[+b.dataset.k].ok);good.click();
+ ok(choices.length===1&&choices[0].id==='motives','Gewählte Begründung fürs Notizbuch gemeldet');
+ flush();root.querySelector('.sg-next').click();ok(wins.join()==='motives','Abschluss meldet den Sieg');
+}
+console.log(`PASS: Stadt, Waage, Konzil (${6} Runden), Chronik, Asset-Pfade – ${checks} Prüfungen`);
