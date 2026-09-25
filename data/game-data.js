@@ -158,7 +158,17 @@ window.GAME.summaries={
  council:{learned:['325 lud Konstantin die Bischöfe aus dem ganzen Reich nach Nicäa ein.','Sie stritten über den Glauben und einigten sich auf ein gemeinsames Bekenntnis.','Eine einige Kirche war auch für den Kaiser wichtig, weil Streit Unruhe bringen konnte.'],merke:'Kirche und Kaiser waren nun eng miteinander verbunden.',next:'Die Basilika mit der Chronik wartet auf dich.'},
  timeline:{learned:['303: Beginn der großen Verfolgung unter Diokletian. 311: Galerius beendet die Verfolgung weitgehend.','312: Sieg an der Milvischen Brücke. 313: Mailänder Vereinbarung.','325: Konzil von Nicäa. 337: Taufe Konstantins kurz vor seinem Tod.'],merke:'Die Wende geschah nicht an einem Tag, sondern in mehreren Schritten.',next:'Jetzt ist die Argumentationsbrücke zugänglich.'}
 };
-window.GAME.sealInfo={Konflikt:{sym:'⚡',color:'#9b3b24'},Quelle:{sym:'📜',color:'#6b4b1f'},Anzeige:{sym:'✉',color:'#2f5a4f'},Staat:{sym:'🏛',color:'#5a3a6b'},'312':{sym:'✠',color:'#8a6a12'},Wende:{sym:'☧',color:'#1f4a6b'}};
+/* Siegel: Motiv (für Screenreader/Lehrkraft), Farbe, kurze Bedeutung. Gezeichnet werden sie in seals.js. */
+window.GAME.sealInfo={
+ Konflikt:{sym:'⚔',motif:'zwei gekreuzte Schwerter',color:'#7a3a22',meaning:'Die Opferverweigerung konnte Misstrauen und Konflikte auslösen.'},
+ Quelle:{sym:'📜',motif:'Schriftrolle',color:'#7a5a22',meaning:'Belegt, unsicher oder nicht feststellbar: Quellen prüfen.'},
+ Anzeige:{sym:'✎',motif:'Wachstafel mit Griffel',color:'#3f6a55',meaning:'Im 2. Jahrhundert begann ein Verfahren meist erst mit einer Anzeige.'},
+ Staat:{sym:'🏛',motif:'Säule mit Lorbeer',color:'#5a3a6b',meaning:'Im 3. Jahrhundert: staatliche Opferpflicht und Kontrolle.'},
+ '312':{sym:'☧',motif:'Schild mit Christusmonogramm',color:'#7d2a26',meaning:'Der Sieg von 312 ist belegt, die Vision nur später berichtet.'},
+ Wende:{sym:'⌒',motif:'Brücke mit Wendebogen',color:'#2c4f78',meaning:'Glaube und Politik konnten zusammenwirken.'}};
+/* Optionale Siegelgrafiken in assets/ui/seals/ (seal-konflikt.png … seal-wende.png, seal-wheel-frame.png).
+   Erst eintragen, wenn die Datei wirklich im Repository liegt, z. B. available:['konflikt','wheel-frame']. */
+window.GAME.sealAssets={dir:'assets/ui/seals/',available:[]};
 
 /* Minispiele: ersetzen den Standard-Mechanismus eines Rätsels (Alternative „Ohne Spiel“ bleibt verfügbar). */
 window.GAME.minigames={
