@@ -88,7 +88,7 @@
   if(type==='deposit'){depositArchiveScrolls();return;}
   if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined||scene().discover)talk(id,t,h);else info(t[0],t[1]);return;}
   if(type==='take'){if(own(id)||['lamp','flint'].includes(id)&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}flyToBag(id,state.scene+':'+i);add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
-  if(type==='gate'){info('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
+  if(type==='gate'){sealInfoDialog('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
   if(type==='evidence'){add('evidence',id);save();info(G.evidence[id][0],`Im Licht wird die Spur sichtbar. Überlege, welche Maßnahme sie erklärt: ${G.evidence[id][1]}. Die Spur ist jetzt für die Schubladen festgehalten.`);render();return;}
   if(type==='finalgate'){sealLock();return;}
   if(type==='puzzle')openPuzzle(id);
@@ -136,16 +136,41 @@
    main.focus();
   }show();
  }
+ function sealInfoDialog(title,text){activePuzzle=null;open(title,`<p class="intro-copy">${esc(text)}</p>${window.Seals?window.Seals.collection(state.seals,{placed:state.flags.sealSockets||[]}):''}`,'Die Stadtchronik','seals');button('Zurück in die Szene',close,'primary',actions());}
+ /* Das Siegelrad in der Basilika. Logik unverändert: Siegel wählen, in die gleichnamige Fassung setzen;
+    eingesetzte Siegel stehen in state.flags.sealSockets, nach sechs Siegeln gilt state.flags.sealsPlaced. */
  function sealLock(){
-  if(state.seals.length<6){info('Die Mechanik wartet','Noch fehlen Erkenntnis-Siegel. Erkunde die offenen Orte auf der Stadtkarte.');return;}
-  let chosen=null;const placed=state.flags.sealSockets||[];
-  open('Das Siegelrad','<p>Sechs Erkenntnisse halten die Chronik zusammen. Wähle ein Siegel und setze es in die passende Vertiefung.</p><div class="seal-lock"><div class="seal-rack"></div><div class="seal-wheel"></div></div><p id="seal-message" role="status"></p>','Die Basilika','puzzle');
-  G.seals.forEach((name,i)=>{const pick=button(name,()=>{chosen=name;document.querySelectorAll('.seal-rack button').forEach(b=>b.setAttribute('aria-pressed',String(b===pick)));},'seal found',$('.seal-rack'));pick.disabled=placed.includes(name);
-   const socket=button(placed.includes(name)?'✓ '+name:name,()=>{if(!chosen){$('#seal-message').textContent='Wähle zuerst ein Siegel aus deinem Beutel.';return;}if(chosen!==name){$('#seal-message').textContent='Die Gravur passt noch nicht. Suche die Vertiefung mit derselben Erkenntnis.';return;}
-    if(!placed.includes(name))placed.push(name);state.flags.sealSockets=placed;socket.textContent='✓ '+name;socket.classList.add('fitted');socket.disabled=true;pick.disabled=true;chosen=null;save();$('#seal-message').textContent='Das Siegel rastet ein.';
-    if(placed.length===6){state.flags.sealsPlaced=true;save();render();info('Die sechs Siegel greifen ineinander','Die Zeitmechanik ist frei. Ordne zuerst die Ereignisse; danach kannst du die Argumentationsbrücke bauen.');}
-   },'seal-socket',$('.seal-wheel'));socket.dataset.seal=name;socket.style.left=(50+33*Math.cos(i*Math.PI/3))+'%';socket.style.top=(50+33*Math.sin(i*Math.PI/3))+'%';socket.disabled=placed.includes(name);if(socket.disabled)socket.classList.add('fitted');
-  });if(placed.length===6)button('Zur Zeitmechanik',()=>{state.flags.sealsPlaced=true;save();close();render();},'primary',actions());
+  if(state.seals.length<6){sealInfoDialog('Die Mechanik wartet','Noch fehlen Erkenntnis-Siegel. Erkunde die offenen Orte auf der Stadtkarte.');return;}
+  let chosen=null;const placed=state.flags.sealSockets||[];const S=window.Seals;
+  open('Das Siegelrad',`<div class="seal-chamber${placed.length===6?' complete':''}"><div class="seal-chamber-bg" aria-hidden="true"></div>
+   <aside class="seal-case"><h3 class="seal-case-title">Dein Siegelkasten</h3><div class="seal-rack" role="group" aria-label="Deine Siegel"></div></aside>
+   <div class="seal-relief"><div class="seal-wheel" role="group" aria-label="Siegelrad mit sechs Fassungen">${S.wheelSvg()}</div></div>
+   <p id="seal-message" class="seal-plaque" role="status" aria-live="polite">${placed.length===6?'Die sechs Siegel greifen ineinander. Die Zeitmechanik ist frei.':'Tippe ein Siegel im Kasten an. Setze es dann in die Fassung mit demselben Zeichen.'}</p></div>`,'Die Basilika','seals');
+  const rack=$('.seal-rack'),wheel=$('.seal-wheel'),msg=$('#seal-message');
+  const say=(t,kind='')=>{msg.textContent=t;msg.className='seal-plaque'+(kind?' '+kind:'');};
+  const picks={},sockets={};
+  function paint(){
+   G.seals.forEach(name=>{const st=placed.includes(name)?'placed':chosen===name?'selected':'owned';const b=picks[name];b.className='seal-token is-'+st;b.dataset.state=st;b.setAttribute('aria-pressed',String(st==='selected'));b.setAttribute('aria-label','Siegel '+name+' – '+S.STATE_TEXT[st]);b.querySelector('.seal-state').textContent=S.STATE_TEXT[st];b.disabled=st==='placed';});
+   wheel.classList.toggle('holding',!!chosen);
+  }
+  G.seals.forEach((name,i)=>{
+   const holder=document.createElement('div');holder.innerHTML=S.token(name,'owned',{tag:'button'});const pick=holder.firstElementChild;rack.append(pick);picks[name]=pick;
+   pick.onclick=()=>{if(placed.includes(name))return;chosen=chosen===name?null:name;paint();say(chosen?'Gewählt: '+name+'. Tippe jetzt auf die passende Fassung im Rad.':'Tippe ein Siegel im Kasten an.');};
+   const socket=document.createElement('button');socket.type='button';socket.className='seal-socket';socket.dataset.seal=name;
+   const pos=S.socketPos(i);socket.style.left=pos.left+'%';socket.style.top=pos.top+'%';
+   const fill=()=>{const done=placed.includes(name);socket.innerHTML=(done?S.medal(name,{decorative:true}):S.socket(name))+`<span class="seal-socket-label">${esc(name)}</span>`;socket.classList.toggle('fitted',done);socket.setAttribute('aria-label',done?'Fassung '+name+' – Siegel eingesetzt':'Leere Fassung '+name);socket.disabled=done;};
+   fill();wheel.append(socket);sockets[name]=socket;
+   socket.onclick=()=>{
+    if(!chosen){say('Wähle zuerst ein Siegel aus deinem Siegelkasten.','hint');return;}
+    if(chosen!==name){say('Die Gravur passt nicht. Suche die Fassung mit demselben Zeichen wie '+chosen+'.','hint');socket.classList.remove('refuse');void socket.offsetWidth;socket.classList.add('refuse');return;}
+    if(!placed.includes(name))placed.push(name);state.flags.sealSockets=placed;chosen=null;save();
+    fill();socket.classList.add('snap');paint();say(placed.length<6?'Das Siegel „'+name+'“ rastet ein. Noch '+(6-placed.length)+(placed.length===5?' Fassung.':' Fassungen.'):'Die sechs Siegel greifen ineinander. Die Zeitmechanik ist frei.','good');
+    if(placed.length===6){state.flags.sealsPlaced=true;save();render();$('.seal-chamber').classList.add('complete','turning');finishButton();}
+   };
+  });
+  paint();
+  function finishButton(){if($('#seal-finish'))return;const b=button('Zur Zeitmechanik',()=>{state.flags.sealsPlaced=true;save();close();render();},'primary',actions());b.id='seal-finish';}
+  if(placed.length===6)finishButton();
  }
  function renderInventory(){const inv=$('#inventory');
   inv.innerHTML=`<div class="bag" role="dialog" aria-label="Botenbeutel"><button type="button" class="bag-close" aria-label="Botenbeutel schließen">✕</button><div class="bag-handle" aria-hidden="true"></div><div class="bag-flap"><span>Botenbeutel</span></div><div class="bag-inner"><div class="items"></div></div><p class="inv-help">Gegenstand antippen, dann das Ziel in der Szene. Zum Kombinieren zwei Gegenstände nacheinander antippen.</p></div>`;
@@ -196,6 +221,7 @@
   state.notes.forEach(id=>{const n=G.notes[id];if(n)html+=`<article class="journal"><h3>${esc(n[0])}</h3><p>${esc(n[1])}</p></article>`;});
   ['motives','council','bridge'].forEach(id=>{const d=state.drafts[id];if(!d?.reason)return;const r=chosenReason(G.puzzles[id],d);html+=`<article class="journal"><h3>${esc(G.puzzles[id].title)} · ${r?'Deine gewählte Begründung':'Deine frühere Notiz'}</h3><p class="personal">${esc(d.reason)}</p>${r?`<p class="muted">${esc(r.why)}</p>`:''}</article>`;});
   if(!state.notes.length)html+='<p class="clue">Die Seiten füllen sich, wenn du die Erinnerungen erschließt.</p>';
+  if(window.Seals)html+=`<h3 class="journal-section">Deine Siegelsammlung · ${state.seals.length} von ${G.seals.length}</h3>${window.Seals.collection(state.seals,{placed:state.flags.sealSockets||[]})}`;
   const read=Object.keys(G.texts||{}).filter(k=>state.seen.includes('text:'+k));if(read.length){html+='<h3 class="journal-section">Gelesene Fachtexte</h3>';read.forEach(k=>{html+=`<details class="journal-text"><summary>📜 ${esc(G.texts[k].title)}</summary>${readingHtml(G.texts[k],false)}</details>`;});}
   html+=window.BonusGames?.journalHtml()||'';
   open('Das Notizbuch',html,'Gesammelt unterwegs','journal');window.BonusGames?.bindJournal($('#modal-content'));const a=actions();button('Als Text herunterladen',exportNotes,'primary',a);button('Drucken',()=>window.print(),'',a);
@@ -265,12 +291,11 @@
   if(id==='archive'&&!state.flags.galerius){state.flags.galerius=true;add('notes','galerius');save();render();open('Eine Nachricht verändert die Stadt',`<p class="eyebrow">Zeitsprung · 311</p><p class="intro-copy">Ein Bote verkündet: „Galerius beendet die staatliche Verfolgung weitgehend.“ Die Hauskirche kann wieder geöffnet werden. Der Wandel beginnt schon vor Konstantins Sieg.</p><p>Auf der Stadtkarte ist jetzt das Militärlager erreichbar.</p>`,'Das Tor zum neuen Jahrhundert');button('Die Nachricht weitertragen',close,'primary',actions());return;}
   if(id==='bridge'){state.flags.finished=true;save();open('Die Chronik ist wieder offen',`<div class="ending"><span>✧</span><h3>Im Zeichen der Wende</h3><p>Du hast die Erinnerungen zusammengefügt: von unterschiedlichen Verfolgungen über rechtliche Absicherung bis zur gezielten Förderung des Christentums.</p></div><p style="margin-top:20px">Die Entwicklung geschah in mehreren Schritten. Sie machte 313 nicht alle anderen Religionen illegal.</p><p><strong>Besprecht zum Abschluss:</strong> Welche Veränderung rechtfertigt den Begriff „Wende“ am stärksten? Belegt eure Antwort mit zwei Ereignissen.</p>`,'Die Stadtchronik · vollständig');const a=actions();button('Mein Notizbuch öffnen',showJournal,'primary',a);button('Stadt weiter erkunden',close,'',a);return;}
   const sum=G.summaries?.[id];const fallback=G.notes[id]?.[1]||(id==='map312'?'Die Karte ist vollständig. Konstantins Zelt ist jetzt zugänglich.':'Die Zeitfolge stimmt. Die Argumentationsbrücke ist jetzt zugänglich.');
-  const sealHtml=p.seal?`<div class="seal-award${already?'':' fresh'}">${sealMedal(p.seal,true)}<div class="seal-award-text"><span class="seal-kicker">Erkenntnis-Siegel gesichert</span><strong>„${esc(p.seal)}“</strong><span class="seal-count">${state.seals.length} von 6 Siegeln</span><div class="seal-row">${G.seals.map(n=>`<span class="mini-seal${state.seals.includes(n)?' got':''}" title="${esc(n)}">${state.seals.includes(n)?esc(G.sealInfo?.[n]?.sym||'✦'):''}</span>`).join('')}</div></div></div>`:'';
+  const sealHtml=p.seal?(window.Seals?window.Seals.reward(p.seal,{owned:state.seals,fresh:!already}):`<p class="reward-line">Siegel „${esc(p.seal)}“</p>`):'';
   const body=sum?`<section class="learned"><h3>Das hast du herausgefunden</h3><ul>${sum.learned.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><div class="merke"><span>Merke</span><p>${esc(sum.merke)}</p></div>`:`<p class="intro-copy">${esc(fallback)}</p>`;
   const extra=`${p.reward?`<p class="reward-line"><img src="assets/inventory/${p.reward}.svg" alt=""> Neu in deinem Botenbeutel: <strong>${esc(G.items[p.reward])}</strong></p>`:''}${sum?.next?`<p class="next-line">➜ ${esc(sum.next)}</p>`:''}`;
   open(already?'Erinnerung erneut erschlossen':'Der Mechanismus öffnet sich',sealHtml+body+extra,'Eine neue Spur','reward');const a=actions();button('Weiter erkunden',close,'primary',a);button('Stadtkarte ansehen',showMap,'',a);
  }
- function sealMedal(name,big){const inf=G.sealInfo?.[name]||{sym:'✦',color:'#6b4b1f'};return `<svg class="seal-medal${big?' big':''}" viewBox="0 0 120 120" role="img" aria-label="Siegel ${esc(name)}"><defs><radialGradient id="wax-${esc(name)}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#f7dc93"/><stop offset=".55" stop-color="#d5a24a"/><stop offset="1" stop-color="#8a5f1c"/></radialGradient></defs><path d="M60 4c7 0 9 6 15 7s11-3 16 2 2 11 5 16 10 5 12 12-4 10-4 16 6 10 4 17-9 7-12 12 0 12-5 16-11 0-16 2-8 8-15 8-9-6-15-7-11 3-16-2-2-11-5-16-10-5-12-12 4-10 4-16-6-10-4-17 9-7 12-12 0-12 5-16 11 0 16-2 8-8 15-8z" fill="url(#wax-${esc(name)})" stroke="#6e4a14" stroke-width="2"/><circle cx="60" cy="60" r="38" fill="none" stroke="#fff3c4" stroke-width="2" opacity=".7"/><circle cx="60" cy="60" r="33" fill="${inf.color}" opacity=".92"/><text x="60" y="${name.length>4?57:60}" text-anchor="middle" dominant-baseline="middle" font-size="26" fill="#fff3d0">${esc(inf.sym)}</text><text x="60" y="80" text-anchor="middle" font-size="${name.length>6?11:13}" font-weight="700" letter-spacing="1" fill="#fff3d0" font-family="Georgia,serif">${esc(name.toUpperCase())}</text></svg>`;}
  function reset(){open('Ein neues Spiel beginnen?','<p>Der Spielstand auf diesem Gerät wird ersetzt. Lade bei Bedarf zuerst dein Notizbuch herunter.</p>','Spielmenü');const a=actions();button('Neues Spiel starten',()=>{try{localStorage.removeItem(KEY);}catch(e){}window.BonusGames?.reset();state=fresh();state.started=true;selected=null;activePuzzle=null;close();render();info(G.scenes[0].name,G.scenes[0].intro);},'danger',a);button('Abbrechen',menu,'',a);}
 
  function continuationMenu(){

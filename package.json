@@ -9,8 +9,8 @@
     "@vercel/blob": "^2.3.0"
   },
   "scripts": {
-    "build": "node --check script.js && node --check continuation.js && node --check bonusgames.js && node --check scenegames.js && node --check minigames.js && for f in bonus/*.js; do node --check $f || exit 1; done && node --check api/continuation.js && node tests/continuation.cjs",
-    "test": "node tests/continuation.cjs && node tests/playthrough.cjs && node tests/bonus-unlocks.cjs && node tests/scenegames.cjs && node tests/amphoren.cjs && node tests/sources-and-reasons.cjs"
+    "build": "node --check script.js && node --check continuation.js && node --check bonusgames.js && node --check scenegames.js && node --check minigames.js && node --check seals.js && for f in bonus/*.js; do node --check $f || exit 1; done && node --check api/continuation.js && node tests/continuation.cjs",
+    "test": "node tests/continuation.cjs && node tests/playthrough.cjs && node tests/bonus-unlocks.cjs && node tests/scenegames.cjs && node tests/amphoren.cjs && node tests/sources-and-reasons.cjs && node tests/seals.cjs"
   },
   "devDependencies": {
     "linkedom": "^0.18.12"

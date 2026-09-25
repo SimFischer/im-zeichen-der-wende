@@ -100,7 +100,7 @@ Die Veröffentlichung erfolgt aus `main` und `/ (root)` über GitHubs integriert
 
 - 12 Orte, 12 Rätsel/Mechanismen und ein Ereignis 311.
 - Frei wählbarer Einstieg ins Wohnviertel oder Forum; weitere Orte öffnen sich durch Erkenntnisse.
-- Sechs Siegel: Konflikt, Quelle, Anzeige, Staat, 312, Wende.
+- Sechs Siegel: Konflikt, Quelle, Anzeige, Staat, 312, Wende. Jedes ist ein geprägtes Bronze-Medaillon mit eigenem Motiv (gekreuzte Schwerter, Schriftrolle, Wachstafel mit Griffel, Säule mit Lorbeer, Schild mit Christusmonogramm, Brücke mit Wendebogen). Siehe „Siegelsystem“.
 - Inventar: Feuerstein am Tor, Lampe im Wohnviertel. Beide durch aufeinanderfolgendes Antippen kombinieren. Archivschlüssel im Beutel auswählen und das Archiv auf der Stadtkarte antippen.
 - Drei gestufte Hilfen je Rätsel. Bei offenem Rätsel ist die Hinweis-Schaltfläche im Rätsel erreichbar.
 - Tap-to-place statt Drag-and-drop: Baustein wählen, Platz wählen. Zahnrad durch Antippen drehen. Keine Hover-Abhängigkeit.
@@ -139,6 +139,17 @@ Sicherung: Notizbuch öffnen, Veränderungen im 1., 2., 3. und frühen 4. Jahrhu
 Drei vom Nutzer bereitgestellte Spielgrafiken sind enthalten. `scene-gate.png` und `scene-city-313.png` sind Einzelszenen; `scene-atlas.png` enthält neun Szenen, die CSS als Ausschnitte darstellt. Die Beratung von Nicäa hat einen eigenen Hintergrund. Der Szenenatlas wurde ohne eingebrannte Überschriften neu erstellt; acht Figuren sind als transparente Grafik eingebunden. Die Atlas-Ausschnitte haben geringere Detailauflösung als die Einzelbilder. Illustrationen sind keine historischen Belegbilder.
 
 Texte, Rätsel, Dialoge, Hilfen, akzeptierte Antworten und fachliches Feedback: `data/game-data.js`. Mechanik, Speicherlogik und globale Bedienungstexte: `script.js`. Szenenfiguren und unterschiedliche Rätseloberflächen: `adventure.js`. Darstellung: `style.css` und `adventure.css`. Eine Zeile eines Rätsels enthält Optionen, akzeptierte Antwortindizes und erklärendes Feedback. Bei inhaltlichen Änderungen Lösungsschlüssel und Hilfen zusammen pflegen.
+
+## Siegelsystem
+
+`seals.js` zeichnet alle Siegel an einer Stelle; `seals.css` enthält Zustände, Belohnung und Siegelrad. Der Spielstand wird davon nicht berührt (`state.seals`, `state.flags.sealSockets`, `state.flags.sealsPlaced` bleiben wie bisher).
+
+- **Medaillon:** unregelmäßiger Bronzerand, Perlrand, farbiges Emailfeld je Siegel, erhabenes Motiv mit Schatten, Lichtkante und Gravur. Farben und kurze Bedeutung stehen in `GAME.sealInfo`.
+- **Zustände:** *fehlt noch* (leere, dunkle Fassung mit schwach eingeritztem Motiv), *erhalten*, *ausgewählt* (angehoben, goldener Schein), *eingesetzt* (im Kasten matt mit ✓, im Rad eingerastet).
+- **Belohnung:** Nach jedem Rätsel mit Siegel erscheinen das große Medaillon mit kurzer Präge- und Glanzanimation, ein Pergamentbanner „Neues Siegel erhalten: …“ und die Sammlungsleiste, in der das neue Siegel aufleuchtet. Die Knöpfe zum Weiterspielen sind sofort da und bleiben sichtbar. Bei erneutem Lösen erscheint dieselbe Ansicht ruhig, ohne Animation.
+- **Sammlung:** im Notizbuch („Deine Siegelsammlung“) und bei den Siegelplätzen, solange Siegel fehlen.
+- **Siegelrad (Basilika):** Kulisse ist die Basilikawand mit dem Rad aus der Szene. Davor stehen ein Steinrelief mit Lorbeerkranz, eine Bronzescheibe mit Speichen und sechs Fassungen. Links (im Hochformat unten) steht der hölzerne Siegelkasten. Siegel antippen, dann die Fassung mit demselben Zeichen antippen. Falsche Fassungen wackeln kurz, richtige Siegel rasten mit Lichtring ein. Nach sechs Siegeln dreht sich die Scheibe und die Zeitmechanik wird frei.
+- **Bilddateien:** optional unter `assets/ui/seals/` (siehe dortige README). Solange `GAME.sealAssets.available` leer ist, werden die SVG-Medaillons verwendet.
 
 ## Tests
 

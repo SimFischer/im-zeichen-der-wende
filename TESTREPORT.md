@@ -177,3 +177,15 @@ Noch offen: echtes iPad-Safari (Touch-Genauigkeit, `:has()` wird ab iPadOS 15.4 
 - Waage und Brücke: Ohne Begründung kein Abschluss. Eine falsche Begründung zeigt ihre Rückmeldung und schaltet nicht frei. Eine richtige wird als Text gespeichert und schließt ab. Alle Rätsel sind ohne Tippen lösbar.
 - Alte Spielstände mit Freitext bleiben gültig. Der Fortschritt bleibt erhalten, der alte Text erscheint im Notizbuch als „frühere Notiz“.
 - Chromium (Playwright), 1024×768 und 768×1024: Waage und Brücke real durchgespielt, Schildpuzzle gelöst und Quiz mit falschen Antworten geprüft. Aussage, Antworten und Rückmeldung sind ohne Scrollen sichtbar. Keine JS-Fehler.
+
+
+## Siegelsystem (25.09.2026)
+
+`npm test` bestanden, neu `tests/seals.cjs` (71 Prüfungen). Der Durchlauf (`tests/playthrough.cjs`) setzt die Siegel jetzt über die neuen Fassungen.
+
+- Designsystem: eigenes Motiv und eigene Farbe je Siegel, gemeinsame SVG-Definitionen nur einmal im Dokument, Bildbeschreibung je Medaillon, vier Zustände mit Klasse, Beschriftung und Ansage.
+- Belohnung: Siegel wird wie bisher vergeben. Banner, großes Medaillon und Sammlung erscheinen, „Weiter erkunden“ ist sofort verfügbar. Erneutes Lösen vergibt kein doppeltes Siegel und zeigt keine Animation.
+- Siegelrad: Setzen ohne Auswahl und in eine falsche Fassung wird abgelehnt, erneutes Antippen hebt die Auswahl auf, alle sechs Siegel setzen `sealsPlaced`. Ein alter Spielstand mit zwei eingesetzten Siegeln öffnet korrekt und lässt sich abschließen. Mit weniger als sechs Siegeln erscheint die Sammlung mit leeren Fassungen.
+- Bilddateien: Ein eingetragenes Bild ersetzt nur sein eigenes Siegel. Ohne Eintrag werden keine Bilddateien angefordert.
+- Chromium (Playwright) mit Touch-Eingabe (`tap`) bei 1180×820, 820×1180, 1024×768, 768×1024 und 390×844: alle sechs Siegel per Antippen eingesetzt, kein Scrollen im Siegelrad, keine horizontale Verschiebung, Fassungen 119–163 px (iPad), Beschriftung 14,6–16 px, keine JS-Fehler. Belohnungsfenster bei 1024×768, 768×1024 und 390×844 geprüft.
+- Noch offen: echtes iPad-Safari (`:has()` und Container-Einheiten ab iPadOS 16).

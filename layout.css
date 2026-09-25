@@ -146,17 +146,6 @@
 
 /* Belohnung nach einem gelösten Rätsel */
 #modal[data-mode=reward]{width:min(calc(var(--u)*42),calc(100vw - 24px))}
-.seal-award{display:flex;align-items:center;gap:calc(var(--u)*1.2);margin:.4em 0 1em;padding:calc(var(--u)*.8) calc(var(--u)*1);border:2px solid #c9a86b;border-radius:16px;background:radial-gradient(circle at 12% 50%,#fff3c9,#f3e2bd 60%)}
-.seal-medal{flex:none;width:calc(var(--u)*6.5);height:calc(var(--u)*6.5);filter:drop-shadow(0 6px 10px #5a3a0f66)}
-.seal-award.fresh .seal-medal{animation:seal-stamp .7s cubic-bezier(.3,1.5,.5,1)}
-.seal-award-text{display:flex;flex-direction:column;gap:.15em;min-width:0}
-.seal-kicker{font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:#6b5634}
-.seal-award-text strong{font-size:calc(var(--u)*1.6);line-height:1.1;color:#3a2610}
-.seal-count{font-size:var(--fs-s);color:#4d3c20}
-.seal-row{display:flex;gap:.35em;margin-top:.3em}
-.mini-seal{display:grid;place-items:center;width:calc(var(--u)*1.7);height:calc(var(--u)*1.7);border-radius:50%;border:2px dashed #b89a66;font-size:calc(var(--u)*.85);color:#fff3d0}
-.mini-seal.got{border:2px solid #6e4a14;background:radial-gradient(circle at 35% 30%,#f7dc93,#c08a36)}
-@keyframes seal-stamp{0%{transform:scale(2.2) rotate(-25deg);opacity:0}60%{transform:scale(.92) rotate(4deg);opacity:1}100%{transform:none}}
 #modal .learned h3{margin:.2em 0 .4em;font-size:calc(var(--u)*1.2);color:#5a3a16}
 #modal .learned ul{margin:0;padding-left:1.2em}
 #modal .learned li{margin:.3em 0;font-size:var(--fs-m);line-height:1.45}
@@ -166,8 +155,6 @@
 #modal .reward-line{display:flex;align-items:center;gap:.5em;margin:.6em 0}
 #modal .reward-line img{width:calc(var(--u)*2.2);height:calc(var(--u)*2.2)}
 #modal .next-line{margin:.4em 0 .2em;color:#1f4a40;font-style:italic}
-@media(max-width:650px){.seal-award{flex-direction:column;text-align:center}.seal-row{justify-content:center}}
-@media(prefers-reduced-motion:reduce){.seal-award.fresh .seal-medal{animation:none}}
 #modal #puzzle-text.pulse{animation:text-pulse 1.2s ease-in-out 3;background:#fff1c4;border-color:#b8862e}
 @keyframes text-pulse{50%{box-shadow:0 0 0 6px #e7bc7466}}
 #modal .text-offer{margin:0 0 .6em;font-weight:600;color:#5a3a16}
