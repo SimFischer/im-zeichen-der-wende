@@ -55,6 +55,15 @@ Bonusspiele vergeben keine Siegel und sind keine Pflicht. Ein neues Spiel setzt 
 
 Grafiken optional unter `assets/bonus/secret-signs/` (siehe dortige README).
 
+**Rom brennt!** (überarbeitet) ist ein Plattformer in einer brennenden Gasse im Abendrot. Die Kulisse ist gezeichnet: ferne Stadt, Rauchsäulen, verputzte Häuser mit Fensterläden und Ziegeldächern, Pflaster, Markisen, Brunnen und Zisterne.
+
+- Am Wasser füllt sich der Krug der Figur, auf den drei Dächern wird gelöscht.
+- Die Straße ist durchgehend begehbar. Häuser stehen hinter ihr, nur ihre Dachkanten tragen. Jedes Dach hat eine Leiter oder Kisten mit Markise, und von jedem Dach kann man hinunterspringen. So gibt es keine Sackgasse; `tests/rombrennt.cjs` prüft das für jede erreichbare Stelle.
+- Kurzer Start („Bereit … Los!“), Zeit auf einer kleinen Tafel oben links, Bestzeit in `localStorage` (`im-zeichen-der-wende:rombrennt-best-v1`).
+- Anzeige der gelöschten Brände (1/3 …), Knopf „↺ Neu“ für einen Neustart der Runde, große Bronzeknöpfe für die Steuerung.
+
+Grafiken optional unter `assets/bonus/rome-burns/` (siehe dortige README).
+
 Historische Einordnungen in den Spielen sind bewusst vorsichtig formuliert (Symbole, Brand von Rom, Katakomben als Begräbnisstätten, Tiber/Milvische Brücke). Sie sollten wie die übrigen Texte fachlich gegengelesen werden.
 
 # Update: Minispiele

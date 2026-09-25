@@ -100,12 +100,6 @@
 .circus-banner span{font-size:calc(var(--u)*2.4)!important}
 
 /* Rom brennt */
-.rom-pad{position:absolute;left:0;right:0;bottom:10px;z-index:7;display:flex;justify-content:space-between;align-items:flex-end;padding:0 12px;pointer-events:none}
-.rom-pad button{pointer-events:auto;min-height:0;min-width:0;border:2px solid #7a5a2c;border-radius:18px;background:linear-gradient(#f0cf8cd0,#d9a95cd0);color:#3a2610;opacity:.8;touch-action:none;box-shadow:0 3px 0 #0005}
-.rom-pad button.on{transform:translateY(2px);background:linear-gradient(#d9a95c,#b98a44)}
-.rom-dir{display:flex;gap:10px}
-.rom-dir button{width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);min-width:70px;min-height:70px;font-size:calc(var(--u)*1.7)}
-.rom-jump{width:calc(var(--u)*6.2);height:calc(var(--u)*4.4);min-width:100px;min-height:70px;font-size:var(--fs-m)!important;font-weight:700}
 .rom-chron{display:flex;gap:1em;align-items:center;margin:.4em 0;padding:.6em .8em;border:1px solid #c9a86b;border-radius:12px;background:#f3e4c5}
 .rom-chron img{flex:none;width:84px;height:106px;object-fit:cover;border-radius:10px;border:2px solid #a88a55}
 .rom-chron p{margin:0!important;font-size:var(--fs-m)!important}
@@ -229,3 +223,32 @@
  .zs-board{margin-top:.2em}
 }
 @media (prefers-reduced-motion:reduce){.zs-root *{animation:none!important;transition:none!important}}
+
+
+/* ---------- Rom brennt! (bonus/rombrennt.js) ---------- */
+.rom-hud{position:absolute;left:12px;top:12px;right:12px;z-index:7;display:flex;align-items:flex-start;gap:10px;pointer-events:none}
+.rom-tablet{display:grid;grid-template-columns:auto auto;align-items:baseline;column-gap:.5em;padding:.3em .8em .35em;border-radius:6px;color:#3a2610;
+ background:linear-gradient(180deg,#e6d2a4,#c9ad78);border:2px solid #5a3812;box-shadow:inset 0 0 0 2px #f3e4c5,inset 0 0 0 3px #9c7c4c,0 4px 10px #0008}
+.art-ui .rom-tablet{background:url('assets/bonus/rome-burns/rome-burns-ui.png') center/100% 100% no-repeat;border:0}
+.rom-label{font-size:.72em;letter-spacing:.14em;text-transform:uppercase;color:#6b5634}
+.rom-time{font-size:1.35em;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em;min-width:3.6em}
+.rom-bestline{grid-column:1/-1;font-size:.78em;color:#5a4428}
+.rom-bestline b{font-variant-numeric:tabular-nums}
+.rom-fires{display:flex;align-items:center;gap:.3em;padding:.35em .6em;border-radius:999px;background:#2a1a10c0;border:1px solid #c9a45a88;color:#f6e6c4;font-weight:700}
+.rom-fires.pop{animation:rom-pop .5s ease-out}
+.rom-flame{width:1.1em;height:1.35em;border-radius:50% 50% 45% 45%/65% 65% 35% 35%;background:radial-gradient(ellipse at 50% 75%,#ffd070,#f07a2a 45%,#c83a1a 75%);box-shadow:0 0 8px #ff8a3a}
+.rom-flame.out{background:radial-gradient(circle at 50% 60%,#e8ecef,#9aa6ad 70%);box-shadow:none;border-radius:50%;height:1.1em}
+.rom-firecount{margin-left:.2em;font-variant-numeric:tabular-nums}
+.rom-restart{pointer-events:auto;margin-left:auto;min-height:48px;padding:.2em 1em;border-radius:10px;border:2px solid #5a3812;background:linear-gradient(180deg,#f1e2bf,#d9bf8a);color:#3a2610;font-weight:700;box-shadow:0 3px 0 #3a230c}
+@keyframes rom-pop{40%{transform:scale(1.15)}}
+.rom-count{position:absolute;left:50%;top:42%;z-index:8;transform:translate(-50%,-50%);padding:.2em 1em;border-radius:10px;font-size:clamp(28px,6vh,56px);font-weight:700;color:#fff3d6;text-shadow:0 3px 0 #5a220e,0 0 18px #ff8a3a;opacity:0;pointer-events:none;transition:opacity .2s}
+.rom-count.show{opacity:1}
+.rom-best-note{margin:.3em 0;text-align:center;font-size:var(--fs-s);color:#4d3c20}
+/* Steuerung: große Bronzeknöpfe, mit Abstand zum Rand */
+.rom-pad{position:absolute;left:0;right:0;bottom:16px;z-index:7;display:flex;justify-content:space-between;align-items:flex-end;padding:0 20px;pointer-events:none}
+.rom-pad button{pointer-events:auto;min-height:0;min-width:0;border:3px solid #5a3812;border-radius:50%;background:radial-gradient(circle at 38% 30%,#f7dc93,#c8924a 60%,#8a5a24);color:#3a2610;opacity:.88;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;box-shadow:inset 0 0 0 2px #fff3c855,0 4px 0 #3a230c,0 6px 12px #0007;text-shadow:0 1px 0 #fff3c8}
+.rom-pad button.on{transform:translateY(3px);box-shadow:inset 0 0 0 2px #fff3c855,0 1px 0 #3a230c;background:radial-gradient(circle at 38% 30%,#e8c47a,#a8763a 60%,#6a4418)}
+.rom-dir{display:flex;gap:16px}
+.rom-dir button{width:clamp(76px,calc(var(--u)*5),104px);height:clamp(76px,calc(var(--u)*5),104px);font-size:clamp(26px,calc(var(--u)*2),38px)}
+.rom-jump{width:clamp(104px,calc(var(--u)*7),140px);height:clamp(104px,calc(var(--u)*7),140px);font-size:clamp(17px,calc(var(--u)*1.25),22px)!important;font-weight:700;border-radius:50%!important}
+@media (orientation:portrait){.rom-pad{bottom:20px}.rom-hud{font-size:14px}}

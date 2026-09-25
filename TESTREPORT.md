@@ -232,3 +232,32 @@ Chromium (Playwright) mit echter Touch-Eingabe (`tap`) bei 1024×768, 1180×820,
 - Tippbereiche 61–80 px
 - Fenster scrollt nicht; keine JS-Fehler
 - Hochformat: Tafel, Sprechblase und Antworten unter der Szene
+
+## Bonusspiel „Rom brennt!“ (25.09.2026)
+
+**Ursache der Sackgasse im alten Level:** Zwischen den Häuserblöcken bei x 35–38 und 43–46 lag ein brüchiger Steg über einem 4 Kacheln breiten und 6 Kacheln tiefen Schacht. Brach der Steg, landete man im Schacht, und die Sprunghöhe (2,4 Kacheln) reichte nicht heraus. Zusätzlich reichten beide Blöcke bis auf die Straße: Wer rechts hinuntersprang, bevor Brand 2 gelöscht war, konnte weder zurück noch nach oben.
+
+**Neues Level:**
+
+- Die Straße ist durchgehend begehbar, ohne Gruben.
+- Häuser stehen hinter der Straße, nur ihre Dachkanten tragen.
+- Hindernisse sind höchstens zwei Kacheln hoch.
+- Jedes Dach hat eine Leiter oder Kisten mit Markise, und von jedem Dach kann man gefahrlos hinunterspringen.
+- „↺ Neu“ startet die Runde jederzeit neu.
+
+`npm test` bestanden, neu `tests/rombrennt.cjs` (123 Prüfungen). Geprüft werden:
+
+- **Erreichbarkeit:** Ein Graph über alle begehbaren Stellen mit den echten Sprungwerten zeigt, dass man von jeder erreichbaren Stelle zur Straße zurückkommt. Alle Brände und Wasserstellen sind erreichbar.
+- **Kompletter Lauf:** Ein Autopilot mit fester Physik (60 Hz) schafft den ganzen Lauf: Brunnen, Leiter, Brand 1, Sprung vom Dach, Brunnen, Leiter, Brand 2, Zisterne, Glut, Kisten und Markise, Brand 3. Viermal wiederholt.
+- **Zeit:** Der Countdown hält die Zeit an, die Zeit startet automatisch und stoppt am Ende.
+- **Bestzeit:** Die erste Zeit wird gespeichert, eine bessere überschreibt sie, eine schlechtere nicht, nach dem Neuladen steht sie auf Startkarte und Tafel. Kaputte oder ungültige Werte werden ignoriert.
+- **Bedienung:** „Neu“ setzt Runde und Zeit zurück, Pause und Zurück funktionieren.
+- **Grafiken:** Ohne Eintrag wird keine Datei angefordert, eingetragene Grafiken werden verwendet.
+
+Chromium (Playwright) bei 1024×768, 1180×820 und 768×1024:
+
+- ◀ ▶ und Sprung reagieren auf Pointer-Eingaben.
+- Richtungsknöpfe 76–96 px, Sprungknopf 105–134 px, mit mindestens 42 px Abstand zum Rand.
+- In der Pause steht die Zeit still.
+- Keine JS-Fehler und keine fehlgeschlagenen Ladevorgänge.
+- Im Hochformat liegt die Straße über den Knöpfen.
