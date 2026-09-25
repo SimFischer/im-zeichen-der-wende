@@ -1,0 +1,44 @@
+/* Dokumente der Spielwelt (wiederverwendbar)
+   .case-file = Fallakte / Aktenblatt: vergilbtes Papier, Reiter, Innenrahmen, große gut lesbare Schrift.
+   Aufbau: .case-file > .case-file-tab + .case-file-head(.case-file-kind, .case-file-no) + .case-file-text + .case-file-foot */
+.case-file{--paper:#f5e8c8;--paper-hi:#fdf6e3;--paper-lo:#ead7ab;--ink:#2e1d0c;--rule:#9a7a48;
+ box-sizing:border-box;color:var(--ink);text-align:left;
+ padding:clamp(18px,2.4vh,26px) clamp(20px,2.6vw,34px) clamp(14px,2vh,20px);
+ background:
+  radial-gradient(ellipse at 18% 12%,var(--paper-hi),transparent 55%),
+  radial-gradient(ellipse at 85% 90%,#d8bf8a66,transparent 60%),
+  repeating-linear-gradient(0deg,#0000 0 3px,#8a6a3a08 3px 4px),
+  linear-gradient(170deg,var(--paper),var(--paper-lo));
+ border:1px solid #8a6a3e;border-radius:3px 6px 4px 7px/6px 3px 7px 4px;
+ box-shadow:inset 0 0 0 6px #f6ead0aa,inset 0 0 0 7px #9a7a4899,inset 0 0 26px #a8864e44,3px 4px 0 -1px #e2cc98,3px 4px 0 0 #8a6a3e,6px 8px 0 -1px #d4ba84,6px 8px 0 0 #8a6a3e,0 16px 28px #000a}
+.case-file-tab{position:absolute;top:-1.5em;left:1.4em;padding:.2em 1.1em .25em;border:1px solid #8a6a3e;border-bottom:0;border-radius:7px 7px 0 0;background:linear-gradient(#e4cb92,#d4b577);color:#4a2e10;font-size:clamp(13px,1.3vw,16px);font-weight:700;letter-spacing:.18em;text-transform:uppercase;box-shadow:inset 0 1px 0 #fff3cf}
+.case-file-head{display:flex;align-items:baseline;justify-content:space-between;gap:1em;margin:0 0 .55em;padding-bottom:.35em;border-bottom:1px solid var(--rule);font-size:clamp(12px,1.15vw,15px);letter-spacing:.14em;text-transform:uppercase;color:#6b4a22}
+.case-file-kind{font-weight:600}
+.case-file-no{font-style:italic;letter-spacing:.06em;text-transform:none;white-space:nowrap}
+#modal .case-file .case-file-text{margin:0;font-size:clamp(22px,2.6vw,30px);line-height:1.45;font-weight:500;color:var(--ink);text-wrap:pretty;hyphens:manual}
+.case-file-foot{margin-top:.8em;padding-top:.3em;border-top:1px dashed #9a7a4899;font-size:clamp(11px,1vw,13px);font-style:italic;color:#7a5a32;letter-spacing:.04em}
+
+/* Einbau in das Stempelspiel: Akte mittig, genug Platz für die große Schrift */
+
+.stamp-desk .case-file{top:0;bottom:0;margin:auto 0;height:max-content;max-height:calc(100% - 34px);width:min(84%,max(20em,62cqw),40em);min-height:0;overflow:visible}
+@media (max-width:600px){.stamp-desk .case-file{width:90%}}
+
+/* Stempelspiel füllt die Fensterhöhe, statt zu scrollen: die Akte bekommt den Platz, der übrig ist */
+#modal[data-mode=minigame]:has(.mg-stamp:not(.is-intro)){height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);overflow:hidden}
+#modal[data-mode=minigame][open]:has(.mg-stamp:not(.is-intro)){display:flex;flex-direction:column}
+#modal:has(.mg-stamp:not(.is-intro)) #modal-content{flex:1;min-height:0;display:flex;flex-direction:column}
+#modal:has(.mg-stamp:not(.is-intro)) #puzzle-work{flex:1;min-height:0;display:flex;flex-direction:column}
+#modal:has(.mg-stamp:not(.is-intro)) #feedback:empty{display:none}
+#modal:has(.mg-stamp:not(.is-intro)) #modal-content>.actions{margin-top:.3em}
+#modal:has(.mg-stamp:not(.is-intro)) #modal-content>.actions button{min-height:44px;padding:.3em 1.1em}
+#modal .mg-stamp:not(.is-intro){flex:1;min-height:0}
+#modal .mg-stamp:not(.is-intro) .stamp-stage{flex:1 1 auto;min-height:190px;height:auto!important}
+#modal .mg-stamp .stamp-status{margin:.25em 0 0}
+@media (max-height:900px){#modal:has(.mg-stamp:not(.is-intro)) .puzzle-head>p{display:none}#modal:has(.mg-stamp) h2{margin:0}#modal .mg-stamp .stamp-tool{min-height:52px;padding:4px 6px}#modal .mg-stamp .stamp-tool .stamp-face{width:calc(var(--u)*3.2);height:calc(var(--u)*3.2)}#modal .mg-stamp .stamp-knob{height:18px}}
+
+/* Wird der Tisch niedrig, rückt die Akte zusammen, statt abgeschnitten zu werden */
+#modal .mg-stamp .stamp-stage{container-type:size}
+/* Schriftgröße wächst mit dem verfügbaren Tisch (Breite und Höhe) */
+#modal .mg-stamp .case-file .case-file-text{font-size:clamp(19px,min(3.4cqw,10.5cqh),32px)}
+@container (max-height:250px){.case-file-foot{display:none}.stamp-desk .case-file{padding-top:12px;padding-bottom:10px}.case-file-head{margin-bottom:.35em}#modal .mg-stamp .case-file .case-file-text{line-height:1.35}}
+@container (max-height:190px){.case-file-head{font-size:11px}}
