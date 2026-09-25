@@ -189,3 +189,26 @@ Noch offen: echtes iPad-Safari (Touch-Genauigkeit, `:has()` wird ab iPadOS 15.4 
 - Bilddateien: Ein eingetragenes Bild ersetzt nur sein eigenes Siegel. Ohne Eintrag werden keine Bilddateien angefordert.
 - Chromium (Playwright) mit Touch-Eingabe (`tap`) bei 1180×820, 820×1180, 1024×768, 768×1024 und 390×844: alle sechs Siegel per Antippen eingesetzt, kein Scrollen im Siegelrad, keine horizontale Verschiebung, Fassungen 119–163 px (iPad), Beschriftung 14,6–16 px, keine JS-Fehler. Belohnungsfenster bei 1024×768, 768×1024 und 390×844 geprüft.
 - Noch offen: echtes iPad-Safari (`:has()` und Container-Einheiten ab iPadOS 16).
+
+
+## Argumentationsbrücke (25.09.2026)
+
+`npm test` bestanden, neu `tests/argbridge.cjs` (107 Prüfungen). Geprüft werden:
+
+- vier Satzanfänge mit je einer richtigen und zwei falschen Platten, alle mit fachlicher Rückmeldung
+- die Kernaussage in den richtigen Platten
+- vier Vereinfachungen und zwei tragfähige Aussagen, eine beste Inschrift
+- nie mehr als drei Platten gleichzeitig
+- falsche Platten und Inschriften bauen nichts und speichern nichts
+- keine Texteingabe
+- die gewählte Inschrift wird fürs Notizbuch gemeldet, der Sieg genau einmal
+- eingetragene Grafiken ersetzen die gezeichneten; ohne Eintrag wird keine Datei angefordert
+
+Der Durchlauf öffnet das Finale jetzt als Brückenszene.
+
+Chromium (Playwright) mit Touch-Eingabe bei 1024×768, 1180×820, 768×1024 und 820×1180: alle drei Phasen gespielt, einschließlich falscher Platten, tragfähiger Aussage und falscher Inschrift.
+
+- Die Rätselseite scrollt nicht.
+- Platten sind 52–78 px hoch, Schrift 14,5–18,5 px.
+- Das Rätsel wird gespeichert, das Ende der Chronik erscheint, die gewählte Inschrift steht im Spielstand.
+- Keine JS-Fehler.

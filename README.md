@@ -151,6 +151,16 @@ Texte, Rätsel, Dialoge, Hilfen, akzeptierte Antworten und fachliches Feedback: 
 - **Siegelrad (Basilika):** Kulisse ist die Basilikawand mit dem Rad aus der Szene. Davor stehen ein Steinrelief mit Lorbeerkranz, eine Bronzescheibe mit Speichen und sechs Fassungen. Links (im Hochformat unten) steht der hölzerne Siegelkasten. Siegel antippen, dann die Fassung mit demselben Zeichen antippen. Falsche Fassungen wackeln kurz, richtige Siegel rasten mit Lichtring ein. Nach sechs Siegeln dreht sich die Scheibe und die Zeitmechanik wird frei.
 - **Bilddateien:** optional unter `assets/ui/seals/` (siehe dortige README). Solange `GAME.sealAssets.available` leer ist, werden die SVG-Medaillons verwendet.
 
+## Argumentationsbrücke (Finale)
+
+`argbridge.js` und `argbridge.css`, Inhalte in `GAME.minigames.bridge`. Eine steinerne Brücke mit vier offenen Bögen steht vor der Basilika-Kulisse. Auf jedem Bogen sitzt ein Bronzeschild mit einem Satzanfang.
+
+- **Phase A – Bögen:** Immer nur der leuchtende Bogen ist offen. Unten liegen drei Inschriftplatten mit Symbolmedaillon. Die richtige Platte rastet ein, die Steine des Bogens fallen an ihren Platz und eine kurze Bestätigung erscheint. Falsche Platten bekommen einen Riss und eine kurze fachliche Rückmeldung.
+- **Phase B – Zu einfach?** Sechs Irrtums-Plaketten: vier zu starke Vereinfachungen, zwei tragfähige Aussagen. Angetippte Vereinfachungen bekommen Riss und Wachssiegel „zu einfach“, tragfähige Aussagen das Siegel „trägt“.
+- **Phase C – Inschrift:** Aus vier Sätzen wird die Inschrift über der Brücke gewählt. Die richtige wird in die Brüstung gemeißelt. Danach zeigt eine Schriftrolle die ganze Argumentationskette.
+
+Kein Freitext: Die gewählte Inschrift wird als Auswahl im Notizbuch gespeichert. Grafiken optional unter `assets/minigames/argument-bridge/` (siehe dortige README).
+
 ## Tests
 
 `tests/playthrough.cjs` testet den vollständigen natürlichen Weg in einer DOM-Testumgebung einschließlich Sperren, falscher/unvollständiger Antworten, Fortsetzen, Inventarkombination, Ereignis 311, Finale, Lehrkraftfunktionen und Neustart. Zur Wiederholung nur für Entwicklung `npm install --no-save linkedom`, dann `node tests/playthrough.cjs`. Linkedom gehört nicht zum Spiel und wird zum Hosten nicht benötigt.

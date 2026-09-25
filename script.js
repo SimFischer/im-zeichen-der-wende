@@ -237,6 +237,8 @@
  function locked(message){info('Hier fehlt noch etwas',message);}
  const classicMode=new Set();
  document.addEventListener('minigame-win',e=>{if(G.puzzles[e.detail])complete(e.detail);});
+ // Auswahl aus einem Minispiel (z. B. die Inschrift der Argumentationsbrücke) fürs Notizbuch merken – kein Freitext.
+ document.addEventListener('minigame-choice',e=>{const {id,text}=e.detail||{};const p=G.puzzles[id];if(!p||typeof text!=='string')return;let d=state.drafts[id];if(!d||!Array.isArray(d.values))d=state.drafts[id]={values:p.rows.map(()=>null),reason:''};d.reason=text.slice(0,4000);save();});
  function readingHtml(t,withButton){return `<article class="reading-panel"><h3>${esc(t.title)}</h3>${t.body.map(x=>`<p>${esc(x)}</p>`).join('')}${t.source?`<blockquote class="source-quote"><p>${esc(t.source.text)}</p><cite>${esc(t.source.ref)}</cite></blockquote>`:''}${withButton?'<button type="button" class="primary to-puzzle">← Zurück zum Rätsel</button>':''}</article>`;}
  function openPuzzle(id){
   if(id==='vision'&&!has('map312'))return locked('Die Karte am Lager muss zuerst richtig beschriftet sein.');
