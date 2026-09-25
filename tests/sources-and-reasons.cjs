@@ -36,7 +36,7 @@ P.sources.rows.forEach(r=>{const it=e.items.find(x=>x.text===r.label);if(it)ok(r
 /* 3. Keine Freitextantwort als Fortschrittsbedingung. */
 const texts=JSON.stringify([P,G.steps,G.minigames]);
 for(const w of ['Textfeld','Schreibe danach','Formuliere danach','mit eigenen Worten','mindestens 30 Zeichen','Begründe anschließend'])ok(!texts.includes(w),'No free-text instruction: '+w);
-const code=['script.js','adventure.js','minigames.js','scenegames.js'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
+const code=['script.js','adventure.js','minigames.js','scenegames.js','argbridge.js'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
 ok(!/textarea/i.test(code),'No textarea anywhere in the game code');
 ok(!/reason\.trim\(\)\.length/.test(code),'No text-length condition for progress');
 ok((code.match(/type="text"/g)||[]).length===1&&/id="continuation-code" type="text"/.test(code),'Only text input: continuation code (not a puzzle)');
@@ -45,7 +45,7 @@ ok(/it\.wrong\?\.\[k\]/.test(fs.readFileSync(path.join(root,'minigames.js'),'utf
 /* 4. Begründungen als Auswahl: mehrere richtige, fachliche Rückmeldung für falsche. */
 for(const id of ['motives','bridge']){const r=P[id].reasons;
  ok(r&&r.q&&r.options.length>=3&&r.options.length<=4,'3–4 reason options: '+id);
- ok(r.options.filter(o=>o.ok).length>=2,'Several correct reasons: '+id);ok(r.options.some(o=>!o.ok),'At least one oversimplification: '+id);
+ ok(id==='bridge'?r.options.filter(o=>o.ok).length===1:r.options.filter(o=>o.ok).length>=2,id==='bridge'?'Bridge: exactly one best summary (Inschrift)':'Several correct reasons: '+id);ok(r.options.some(o=>!o.ok),'At least one oversimplification: '+id);
  r.options.forEach(o=>{ok(typeof o.why==='string'&&o.why.length>30,'Feedback for option: '+o.text);ok(!/^\s*falsch/i.test(o.why),'No bare "Falsch": '+o.text);ok(o.text.length<=4000,'Fits save format');});
  ok(new Set(r.options.map(o=>o.text)).size===r.options.length,'Distinct options: '+id);
 }
