@@ -46,6 +46,15 @@ Acht freiwillige Bonusspiele werden ausschließlich im Notizbuch angeboten. Gesp
 
 Bonusspiele vergeben keine Siegel und sind keine Pflicht. Ein neues Spiel setzt auch den Bonusfortschritt zurück. Das Stempelspiel hat eine kompaktere Anleitung mit einem separat angeordneten, mindestens 52 Pixel hohen Startknopf sowie größere Stempel in der Hand und Abdrücke auf der Akte.
 
+**Das geheime Zeichen** (überarbeitet) spielt auf dem Markt am Forum. Die Figuren sind Teil des Szenenbildes, es gibt keine kleinen laufenden Figuren mehr. Das Spiel hat vier Runden:
+
+1. Die Chronistin erklärt die Zeichen. Die Holztafel oben rechts zeigt Fisch, Anker und Taube.
+2. Die drei Zeichen in der Szene finden. Sie sind in Holz, Stein, Stoff, Ton, eine Öllampe oder eine Wachstafel eingearbeitet. Die Tippbereiche sind mindestens 60 px groß. Tipps daneben erzeugen nur eine Staubwolke, nach drei Fehlversuchen schimmert ein Zeichen kurz auf.
+3. Christlich oder nur ähnlich? Nur Fisch, Anker, Taube und Christusmonogramm antippen, nicht Adler, Lorbeer oder Rosette. Jede Wahl wird kurz erklärt.
+4. „Warum waren solche Zeichen hilfreich?“ als Auswahlfrage. Die Antworten stehen auf einer Holzleiste unten im Bild, die Chronistin bleibt sichtbar.
+
+Grafiken optional unter `assets/bonus/secret-signs/` (siehe dortige README).
+
 Historische Einordnungen in den Spielen sind bewusst vorsichtig formuliert (Symbole, Brand von Rom, Katakomben als Begräbnisstätten, Tiber/Milvische Brücke). Sie sollten wie die übrigen Texte fachlich gegengelesen werden.
 
 # Update: Minispiele

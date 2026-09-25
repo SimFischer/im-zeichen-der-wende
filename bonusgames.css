@@ -73,22 +73,6 @@
 .kat-plate.whole span{border-right-color:transparent}
 
 /* Das geheime Zeichen */
-.zeichen-bar{position:absolute;left:10px;top:10px;z-index:6;display:flex;gap:6px;padding:6px 8px;border:2px solid #c9a86b;border-radius:10px;background:#fbf1dbe6;box-shadow:0 4px 12px #0005;pointer-events:none}
-.zeichen-slot{display:grid;place-items:center;width:40px;height:40px;border:2px dashed #b89b6a;border-radius:8px;background:#f3e4c5}
-.zeichen-slot.got{border:2px solid #8a5a1c;background:radial-gradient(circle at 40% 35%,#fff3cf,#f0d59a)}
-.zeichen-slot.pop{animation:zeichen-pop .5s ease-out}
-@keyframes zeichen-pop{40%{transform:scale(1.25)}}
-.zeichen-cards{position:absolute;inset:0;z-index:12;display:flex;align-items:center;justify-content:center;background:#1a120a66;pointer-events:none}
-.zeichen-cards[hidden],.zeichen-again[hidden]{display:none}
-.zeichen-cardbox{padding:calc(var(--u)*.8) calc(var(--u)*1.4);border:2px solid #c9a86b;border-radius:14px;background:#fbf1db;box-shadow:0 12px 36px #000a;text-align:center}
-.zeichen-cardbox p{margin:0 0 .5em;font-size:var(--fs-m);color:#5a3a16}
-.zeichen-row{display:flex;gap:calc(var(--u)*.7);justify-content:center}
-.zeichen-card{display:grid;place-items:center;width:84px;height:84px;border:2px solid #a88a55;border-radius:10px;background:radial-gradient(circle at 40% 30%,#fffaf0,#efdfbf)}
-.zeichen-sand{height:6px;margin-top:.7em;border-radius:3px;background:#e2cfa6;overflow:hidden}
-.zeichen-sand i{display:block;height:100%;background:#8c422a;animation:zeichen-sand linear forwards}
-@keyframes zeichen-sand{from{width:100%}to{width:0}}
-.zeichen-again{position:absolute;right:10px;top:10px;z-index:6}
-.zeichen-again button{min-height:48px;padding:.3em 1em;font-size:var(--fs-s);background:#fbf1dbee}
 
 /* Schildwall */
 .schild-pad{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:8px;padding:6px 10px;border:2px solid #c9a86b;border-radius:12px;background:#fbf1dbd9;box-shadow:0 4px 14px #0006;opacity:.85}
@@ -140,3 +124,108 @@
 .kurier-wrap{position:absolute;inset:0;display:flex;flex-direction:column;padding:.5em .6em;background:#f3e4c5;overflow:hidden}
 .kurier-wrap .racer{flex:1;min-height:0;display:flex;flex-direction:column}
 .kurier-wrap .racer-stage{flex:1;min-height:0;height:auto!important}
+
+
+/* ---------- Das geheime Zeichen (bonus/zeichen.js) ----------
+   Szene im Seitenverhältnis des Bildes, Figuren sind Teil des Bildes. Tafel oben rechts und Sprechblase
+   der Chronistin oben links liegen im Bild; im Hochformat wandern beide unter die Szene. */
+.zs-root{position:absolute;inset:0;container-type:size;--sw:min(100cqw,150cqh);--sh:calc(var(--sw)/1.5);--ox:calc((100cqw - var(--sw))/2);--oy:calc((100cqh - var(--sh))/2);
+ font-size:clamp(13px,calc(var(--sh)*.03),19px);background:#2a2118 url('assets/minigames/forum-blur.jpg') center/cover no-repeat}
+.zs-root,.zs-root *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.zs-scene{position:absolute;left:var(--ox);top:var(--oy);width:var(--sw);height:var(--sh);overflow:hidden;box-shadow:0 0 0 2px #6e4a1455,0 0 40px #000a;touch-action:manipulation;cursor:crosshair}
+.zs-bg,.zs-overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.zs-marks,.zs-ripples{position:absolute;inset:0}
+.zs-ripples{pointer-events:none}
+
+/* Zeichen und ihre Tippbereiche */
+.zs-mark,.zs-prop{position:absolute;width:8.6%;min-width:60px;aspect-ratio:1;transform:translate(-50%,-50%);display:grid;place-items:center;margin:0;padding:0;min-height:0;border:0;border-radius:50%;background:none;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.zs-mark:active{transform:translate(-50%,-50%)}
+.zs-prop{pointer-events:none}
+.zs-mark.m-lamp,.zs-prop.m-lamp{width:7.4%}
+.zs-mark.m-tablet,.zs-prop.m-tablet{width:8.4%}
+/* Wachstafel liegt flach auf dem Hocker: perspektivisch gestaucht; Tippbereich bleibt groß */
+.m-tablet .zs-glyph{transform:perspective(200px) rotateX(52deg) scale(.82)}
+.zs-glyph{width:58%;height:58%;overflow:visible}
+.m-lamp .zs-glyph,.m-tablet .zs-glyph{width:100%;height:100%}
+.zs-glyph path,.zs-glyph .zs-line,.zs-glyph .zs-shade{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.zs-glyph.empty .zs-line,.zs-glyph.empty .zs-shade{display:none}
+.m-stone .zs-line{stroke:#3a2410;stroke-opacity:.7;stroke-width:6}.m-stone .zs-shade{stroke:#fff1d0;stroke-opacity:.55;stroke-width:6;transform:translate(2px,2.5px)}
+.m-wood .zs-line{stroke:#24120450;stroke:#241204;stroke-opacity:.78;stroke-width:6}.m-wood .zs-shade{stroke:#e2b27a;stroke-opacity:.35;stroke-width:6;transform:translate(1.5px,2px)}
+.m-cloth .zs-line{stroke:#f0c860;stroke-width:5;stroke-dasharray:7 5}.m-cloth .zs-shade{stroke:#3a0e06;stroke-opacity:.45;stroke-width:5;transform:translate(1.5px,2px)}
+.m-paint .zs-line{stroke:#6e1e0c;stroke-opacity:.82;stroke-width:7}.m-paint .zs-shade{display:none}
+.m-scratch .zs-line{stroke:#fff6e0;stroke-opacity:.78;stroke-width:4}.m-scratch .zs-shade{stroke:#3a2410;stroke-opacity:.4;stroke-width:4;transform:translate(1.5px,1.5px)}
+.m-lamp .zs-lamp{fill:#b86a3a;stroke:#4a200a;stroke-width:3}.m-lamp .zs-lamp-top{fill:#95502a;stroke:#4a200a;stroke-width:2}.m-lamp .zs-flame{fill:#ffcf5a;stroke:#e08a1a;stroke-width:2}
+.m-lamp .zs-line{stroke:#3a1406;stroke-width:9;stroke-opacity:.85}.m-lamp .zs-shade{stroke:#e8a070;stroke-width:9;stroke-opacity:.5;transform:translate(2px,2px)}
+.m-tablet .zs-tab-frame{fill:#8a5a2a;stroke:#3e240c;stroke-width:3}.m-tablet .zs-tab-wax{fill:#3a2a18;stroke:#1e1408;stroke-width:2}
+.m-tablet .zs-line{stroke:#ecd6a4;stroke-width:6;stroke-opacity:.9}.m-tablet .zs-shade{display:none}
+.m-lamp .zs-glyph,.m-tablet .zs-glyph{filter:drop-shadow(0 3px 2px #0008)}
+.zs-sheet{display:block;background:url('assets/bonus/secret-signs/secret-signs-symbols.png') 0 0/400% 200% no-repeat}
+/* Runde 3: Zeichen deutlich sichtbar, mit weichem Licht */
+.zs-mark.shown{background:radial-gradient(circle,#fff4d0b0 0,#fff4d040 45%,#0000 70%)}
+.zs-mark.found{cursor:default;animation:zs-found .7s ease-out both}
+.zs-mark.found:after{content:'';position:absolute;inset:4%;border-radius:50%;border:3px solid #f3d58c;box-shadow:0 0 14px #ffd98a,inset 0 0 10px #ffd98a88}
+.zs-mark.other{cursor:default;opacity:.45;filter:saturate(.3)}
+.zs-mark.shimmer{animation:zs-shimmer 1.6s ease-in-out 2}
+.zs-mark:disabled{opacity:1}
+.zs-mark.other:disabled{opacity:.45}
+.zs-mark:focus-visible{outline:3px solid #7fe0cf;outline-offset:2px}
+@keyframes zs-found{0%{transform:translate(-50%,-50%) scale(1)}40%{transform:translate(-50%,-50%) scale(1.22)}100%{transform:translate(-50%,-50%)}}
+@keyframes zs-shimmer{50%{background:radial-gradient(circle,#fff4d0cc 0,#fff4d055 45%,#0000 70%)}}
+.zs-ripple{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:2px solid #fff4dcaa;animation:zs-ripple .65s ease-out forwards}
+@keyframes zs-ripple{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+
+/* Holztafel der Chronistin (oben rechts, im Bild hängend) */
+.zs-board{position:absolute;right:calc(var(--ox) + var(--sw)*.018);top:calc(var(--oy) + var(--sh)*.03);z-index:3;display:flex;flex-direction:column;align-items:center;gap:.25em;padding:.35em .6em .5em;border-radius:6px;
+ background:repeating-linear-gradient(92deg,#7a5230 0 5px,#6d4726 5px 9px,#835a34 9px 14px);border:3px solid #3a230c;box-shadow:inset 0 0 0 1px #b48a54,0 8px 14px #000a;color:#f6e6c4}
+.art-panel .zs-board{background:url('assets/bonus/secret-signs/secret-signs-panel.png') center/100% 100% no-repeat;border:0;box-shadow:0 8px 14px #0008}
+.zs-rope{position:absolute;left:18%;right:18%;top:-1.3em;height:1.3em;border-left:2px solid #caa66a;border-right:2px solid #caa66a;pointer-events:none}
+.zs-board-title{font-size:.72em;letter-spacing:.14em;text-transform:uppercase;color:#f0d59a}
+.zs-board-slots{display:flex;align-items:center;gap:.35em}
+.zs-slot{display:grid;justify-items:center;min-width:3.4em;white-space:nowrap;padding:.2em .1em .15em;border-radius:5px;background:#f1e2bf;box-shadow:inset 0 0 0 1px #a88a55;color:#3a2610}
+.zs-slot .zs-plain{width:2.1em;height:2.1em}
+.zs-plain path{fill:none;stroke:#3a2610;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.zs-slot small{font-size:.66em;font-weight:700}
+.zs-slot.got{background:radial-gradient(circle at 40% 30%,#fff3cf,#e8c97e);box-shadow:inset 0 0 0 2px #8a5a1c,0 0 10px #ffd98a}
+.zs-slot.got small:after{content:' ✓'}
+.zs-slot.pop{animation:zs-pop .5s ease-out}
+@keyframes zs-pop{40%{transform:scale(1.2)}}
+.zs-seal{width:1.35em;height:1.35em;border-radius:50%;border:2px dashed #e0c99c}
+.zs-seal.got{border:2px solid #5a3812;background:radial-gradient(circle at 35% 30%,#fff2c0,#d9a441 60%,#8a5a1a)}
+.zs-count{margin-left:.3em;font-size:.8em;font-weight:700}
+
+/* Sprechblase der Chronistin (oben links, Spitze zeigt auf sie) */
+.zs-bubble{position:absolute;left:calc(var(--ox) + var(--sw)*.02);top:calc(var(--oy) + var(--sh)*.03);z-index:4;width:calc(var(--sw)*.42);max-width:calc(100cqw - 24px);padding:.55em .9em .65em;border-radius:12px;
+ background:radial-gradient(at 30% 20%,#fffaf0,#f1e2bf 70%);border:2px solid #a88a55;box-shadow:0 8px 20px #000a;color:#3a2610;opacity:0;transition:opacity .25s}
+.zs-bubble.show{opacity:1}
+.zs-bubble:after{content:'';position:absolute;left:44%;bottom:-14px;width:22px;height:16px;background:#f1e2bf;clip-path:polygon(0 0,100% 0,30% 100%);border:0}
+.zs-bubble.pop{animation:zs-bpop .3s ease-out}
+@keyframes zs-bpop{from{transform:translateY(-4px);opacity:.4}}
+.zs-who{display:block;font-size:.7em;letter-spacing:.14em;text-transform:uppercase;color:#8a6a3a}
+.zs-say{margin:.15em 0 0;font-size:1em;line-height:1.3}
+.zs-bubble.quiet .zs-say{font-size:.92em}
+.zs-bubble.good{border-color:#2d5a4b;background:radial-gradient(at 30% 20%,#f7fbef,#e3edd2 70%)}.zs-bubble.good:after{background:#e3edd2}
+.zs-bubble.hint{border-color:#b8862e;background:radial-gradient(at 30% 20%,#fffaf0,#f6e3c0 70%)}
+.zs-guide{float:left;width:3em;height:3em;margin:0 .5em .2em 0;border-radius:50%;object-fit:cover;border:2px solid #a88a55}
+.zs-go:empty{display:none}
+.zs-go{margin-top:.45em}
+.zs-go .primary{min-height:48px;padding:.3em 1.4em}
+/* Antworten der Abschlussfrage: Holzleiste unten im Bild, die Chronistin bleibt sichtbar */
+.zs-answers{position:absolute;left:calc(var(--ox) + var(--sw)*.03);right:calc(var(--ox) + var(--sw)*.03);bottom:calc(var(--oy) + var(--sh)*.03);z-index:4;display:grid;grid-template-columns:1fr 1fr;gap:.45em;padding:.55em;border-radius:10px;
+ background:repeating-linear-gradient(94deg,#6d4726 0 6px,#7a5230 6px 9px,#65411f 9px 15px);border:3px solid #3a230c;box-shadow:inset 0 0 0 1px #a07644,0 8px 16px #000a}
+.zs-answers:empty{display:none}
+.zs-answer{min-height:52px;margin:0;padding:.4em .7em;font-size:.95em;line-height:1.2;text-align:left;border-radius:8px;border:1px solid #a88a55;background:radial-gradient(at 30% 20%,#fffaf0,#f1e2bf 70%);color:#3a2610;box-shadow:0 3px 0 #3a230c}
+.zs-answer.right{background:#e3edd2;border-color:#2d5a4b;box-shadow:0 0 0 2px #2d5a4b88}
+.zs-answer.tried{opacity:.55;text-decoration:line-through;text-decoration-color:#8c422a}
+
+/* Hochformat: Szene oben, darunter Tafel und Sprechblase */
+@media (orientation:portrait){
+ .zs-root{--sw:100cqw;--sh:calc(100cqw/1.5);--ox:0px;--oy:0px;display:flex;flex-direction:column;align-items:stretch;gap:.4em;padding-top:var(--sh);font-size:clamp(14px,2.2cqw,19px)}
+ .zs-scene{top:0}
+ .zs-board{position:static;align-self:center;margin-top:.4em}
+ .zs-rope{display:none}
+ .zs-bubble{position:relative;left:auto;top:auto;width:auto!important;max-width:none;margin:0 .6em}
+ .zs-bubble:after{display:none}
+ .zs-answers{position:static;margin:0 .6em;grid-template-columns:1fr 1fr}
+ .zs-board{margin-top:.2em}
+}
+@media (prefers-reduced-motion:reduce){.zs-root *{animation:none!important;transition:none!important}}

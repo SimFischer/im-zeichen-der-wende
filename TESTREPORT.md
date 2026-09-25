@@ -212,3 +212,23 @@ Chromium (Playwright) mit Touch-Eingabe bei 1024×768, 1180×820, 768×1024 und 
 - Platten sind 52–78 px hoch, Schrift 14,5–18,5 px.
 - Das Rätsel wird gespeichert, das Ende der Chronik erscheint, die gewählte Inschrift steht im Spielstand.
 - Keine JS-Fehler.
+
+
+## Bonusspiel „Das geheime Zeichen“ (25.09.2026)
+
+`npm test` bestanden, neu `tests/zeichen.cjs` (46 Prüfungen). Geprüft werden:
+
+- keine laufenden Mini-Figuren mehr; die Figuren sind im Szenenbild beschrieben
+- vier Runden in fester Folge; drei Zielzeichen auf der Holztafel
+- Zeichen an ihren Stellen in unterschiedlicher Machart; Tafel füllt sich
+- Adler, Lorbeer und Rosette erhalten eine fachliche Rückmeldung; das Christusmonogramm wird mit Konstantin eingeordnet
+- vier Antworten ohne Texteingabe, Erklärung bei falscher Antwort
+- der Sieg wird nur im Bonusfortschritt gespeichert, der Hauptspielstand bleibt unverändert
+- eingetragene Grafiken (Szene, Figurenebene, Tafel, Zeichenbogen) werden verwendet; ohne Eintrag wird keine Datei angefordert
+
+Chromium (Playwright) mit echter Touch-Eingabe (`tap`) bei 1024×768, 1180×820, 768×1024 und 820×1180:
+
+- alle vier Runden gespielt, einschließlich Fehltipps (Hinweis nach drei Fehlversuchen), Lorbeer und falscher Antwort
+- Tippbereiche 61–80 px
+- Fenster scrollt nicht; keine JS-Fehler
+- Hochformat: Tafel, Sprechblase und Antworten unter der Szene
