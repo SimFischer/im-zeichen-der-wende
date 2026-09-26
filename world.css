@@ -182,3 +182,12 @@
  background:radial-gradient(circle at 35% 25%,#fff0c0,var(--bronze-light) 30%,var(--bronze) 75%,var(--bronze-dark));border:2px solid var(--line-dark);box-shadow:inset 0 0 0 2px #fff4d066,0 4px 8px #000a}
 #modal .scroll-nav .scroll-btn.back::before{content:'‹ '}#modal .scroll-nav .scroll-btn.next:not(.done)::after{content:' ›'}
 @media (prefers-reduced-motion:reduce){.scroll-paper{animation:none}}
+
+/* Aufgabe als einklappbares Schild statt dauerhaftem Band */
+#app .objective{left:12px!important;right:auto;transform:none!important;max-width:min(58%,calc(var(--u)*34))!important;cursor:pointer;padding:.3em .8em!important;
+ color:var(--ink)!important;background:linear-gradient(var(--parchment-light),var(--parchment))!important;border:1.5px solid var(--line-dark)!important;border-radius:6px!important;box-shadow:0 4px 10px #0007!important;text-shadow:none!important;transition:opacity .3s}
+#app .objective:not(.open){padding:.2em .7em!important;opacity:.92}
+#app .objective:not(.open) .obj-text{display:none}
+#app .objective.open .obj-tag{display:none}
+#app .objective .obj-tag{font-size:max(13px,var(--fs-s));font-weight:600;letter-spacing:.06em;color:#5a3a16;white-space:nowrap}
+#app .objective:focus-visible{outline:3px solid var(--bronze-light);outline-offset:2px}
