@@ -136,3 +136,27 @@
 }
 @media (max-height:600px) and (orientation:landscape){.argbridge-game .ab-stage{font-size:14px}.ab-plate{min-height:3.4em}}
 @media (prefers-reduced-motion:reduce){.argbridge-game *{animation:none!important;transition:none!important}}
+
+/* ---------- Gemalte Brücke (10_argumentationsbruecke) ---------- */
+.painted .ab-bridge{width:min(100cqw,100cqh*2.1);aspect-ratio:1590/669;margin-top:6%}
+.painted .abp-ghost{position:absolute;inset:0;width:100%;height:100%;opacity:.28;filter:grayscale(1) sepia(.4) brightness(1.2) contrast(.8);pointer-events:none}
+.painted .abp-seg{position:absolute;top:0;bottom:0;left:calc(var(--i)*100%/var(--n));width:calc(100%/var(--n));overflow:hidden;opacity:0;pointer-events:none}
+.painted .abp-seg img{position:absolute;top:0;height:100%;width:calc(var(--n)*100%);left:calc(var(--i)*-100%);max-width:none}
+.painted .abp-seg.active{opacity:.55;filter:grayscale(.6) brightness(1.1);box-shadow:inset 0 0 0 3px #ffe3a0aa;animation:abp-wait 1.6s ease-in-out infinite}
+@keyframes abp-wait{50%{opacity:.35}}
+.painted .abp-seg.built{opacity:1;filter:drop-shadow(0 10px 12px #000a);box-shadow:none;animation:abp-set .6s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes abp-set{0%{transform:translateY(-14%);opacity:0}70%{transform:translateY(1.5%)}100%{transform:none;opacity:1}}
+.abp-dust{position:absolute;left:10%;right:10%;bottom:8%;height:30%;opacity:0;pointer-events:none;background:radial-gradient(ellipse at 30% 80%,#e9d8b2aa,transparent 60%),radial-gradient(ellipse at 70% 85%,#d9c49a99,transparent 55%)}
+.painted .abp-seg.built .abp-dust{animation:abp-dust 1s .35s ease-out both}
+@keyframes abp-dust{0%{opacity:0;transform:scale(.6)}30%{opacity:1}100%{opacity:0;transform:scale(1.6) translateY(-20%)}}
+.painted .ab-head{left:calc(var(--i)*25% + 1.5%);width:22%;top:-17%;height:13%;font-size:clamp(12px,1.6cqw,18px)}
+.painted .ab-opening{left:calc(var(--i)*25% + 4%);width:17%;top:36%;height:44%}
+.painted .ab-set{font-size:clamp(11px,1.4cqw,16px);padding:.3em .3em .4em;
+ background:radial-gradient(at 30% 25%,#efe1bf,#cdb488 70%,#a88c5c);border:2px solid #4a3a24;border-radius:3px}
+.painted .ab-inscription{top:-18%;height:15%}
+.painted.bridge-built .ab-bridge{filter:drop-shadow(0 0 18px #ffd98a55)}
+/* Platten als Steintafeln statt Karten */
+.painted .ab-plate,.painted .ab-plaque,.painted .ab-tablet{background:radial-gradient(at 30% 25%,#efe1bf,#cdb488 70%,#a88c5c)!important;color:#2a2016!important;border:2px solid #4a3a24!important;border-radius:3px!important;box-shadow:inset 0 0 0 2px #fff4d855,inset 0 -5px 8px #6a52324d,0 5px 9px #000a!important}
+@media (prefers-reduced-motion:reduce){.painted .abp-seg.built,.painted .abp-seg.built .abp-dust{animation:none}}
+.painted .ab-bg{filter:blur(3px) brightness(.5) saturate(.9)}
+.painted .abp-ghost{opacity:.5;filter:grayscale(1) sepia(.35) brightness(1.15) contrast(.85) drop-shadow(0 0 1px #f3dca6)}

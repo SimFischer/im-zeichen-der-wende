@@ -1,0 +1,184 @@
+/* ==========================================================================
+   world.css – gemeinsame Bildsprache „Im Zeichen der Wende“
+   Wird als letzte Stildatei geladen. Gilt für Fenster, Knöpfe, Hotspots und die
+   überarbeiteten Rätsel-Nahansichten. Material statt Web-Karten: Pergament, Holz,
+   Bronze, Sandstein, gedecktes Petrol.
+   ========================================================================== */
+:root{
+ --parchment:#f1e2bf;--parchment-light:#fbf1d9;--parchment-dark:#d8bf8c;
+ --sandstone:#d9c29a;--sandstone-dark:#a88c5c;
+ --terracotta:#b8643a;--terracotta-dark:#8c422a;
+ --wood:#6b4424;--wood-dark:#3b2412;--wood-deep:#24160b;
+ --bronze:#b8863c;--bronze-light:#e8c47a;--bronze-dark:#6b4414;
+ --petrol:#2d5a55;--petrol-dark:#1c3a37;--petrol-light:#4f8a80;
+ --cream:#fff4dc;--ink:#2a1e10;--ink-soft:#4a3a24;
+ --success:#4f7a3e;--success-glow:#d9c46a;--warning:#8c3e24;
+ --line-dark:#24160b;
+ --mat-shadow:0 2px 0 #24160b66,0 6px 14px #0006;
+ --stage-font:clamp(13px,2.35cqh,21px);
+}
+
+/* ---------- Knöpfe: Pergament mit dunkler Kontur und Bronze-/Holzrahmen ---------- */
+#modal button:not(.hotspot):not(.seal-token):not(.seal-socket),#app .speech-bubble button{
+ border:2px solid var(--line-dark);border-radius:10px;background:linear-gradient(#fbf1d9,#e8d3a4);color:var(--ink);
+ box-shadow:inset 0 0 0 2px #fff6df99,0 3px 0 var(--bronze-dark),0 5px 10px #0005;text-shadow:none}
+#modal button.primary,#app .speech-bubble button.primary{background:linear-gradient(#3f7a72,var(--petrol) 55%,var(--petrol-dark));color:var(--cream);border-color:var(--line-dark);box-shadow:inset 0 0 0 2px var(--bronze-light),0 3px 0 var(--bronze-dark),0 5px 10px #0005}
+#modal button.danger{background:linear-gradient(#f6e0cc,#e2bfa2);color:#6a1f14}
+#modal button:not(:disabled):hover{filter:brightness(1.06)}
+#modal button:not(:disabled):active{transform:translateY(2px)}
+#modal button:disabled{opacity:.55}
+
+/* Allgemeine Fenster: Pergament im Holzrahmen */
+#modal{border:3px solid var(--wood-dark);background:radial-gradient(at 30% 8%,#fffaea,transparent 70%),linear-gradient(var(--parchment-light),var(--parchment));box-shadow:0 0 0 6px var(--wood),0 0 0 8px var(--bronze-dark),0 24px 80px #000c}
+#modal .dialog-head{border-bottom:2px solid var(--parchment-dark)}
+#modal .feedback.success{background:#eef0d8;border-color:var(--success);color:#2c4420}
+
+/* ==========================================================================
+   Nahansicht eines Rätsels: großes gemaltes Bild statt Webseite.
+   Gilt für alle Rätsel, die als .scene-game gebaut sind.
+   ========================================================================== */
+#modal[data-mode=minigame]:has(.scene-game){
+ width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;inset:0;padding:0;border:0;border-radius:0;
+ background:#140d07;box-shadow:none;overflow:hidden;color:var(--cream)}
+#modal[data-mode=minigame]:has(.scene-game)::before{content:'';position:absolute;inset:-40px;background:var(--mg-backdrop,none) center/cover no-repeat;filter:blur(18px) brightness(.38) saturate(1.1);z-index:0;pointer-events:none}
+#modal[data-mode=minigame][open]:has(.scene-game){display:flex;flex-direction:column}
+#modal[data-mode=minigame]:has(.scene-game)>*{position:relative;z-index:1}
+/* obere Leiste: dunkles Holz mit Bronzekante */
+#modal[data-mode=minigame]:has(.scene-game) .dialog-head{position:absolute;inset:0 0 auto 0;height:var(--mg-bar);padding:0 12px;border:0;z-index:3;display:flex;align-items:center;justify-content:flex-end;
+ background:linear-gradient(#3a2412f2,#24160bf2);box-shadow:inset 0 -2px 0 var(--bronze-dark),0 3px 10px #0008}
+#modal[data-mode=minigame]:has(.scene-game){--mg-bar:max(52px,calc(var(--u)*3))}
+#modal[data-mode=minigame]:has(.scene-game) #modal-kicker{position:absolute;left:50%;top:6px;transform:translateX(-50%);font-size:max(11px,calc(var(--u)*.55));letter-spacing:.2em;color:var(--bronze-light);opacity:.85;white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+#modal[data-mode=minigame]:has(.scene-game) h2{position:absolute;left:50%;top:0;height:var(--mg-bar);transform:translateX(-50%);z-index:4;margin:0;padding-top:calc(var(--mg-bar)*.3);font-size:clamp(17px,calc(var(--u)*1.25),26px);line-height:1.2;color:var(--cream);text-shadow:0 2px 3px #000;white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+#modal[data-mode=minigame]:has(.scene-game) #close{width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;color:var(--wood-deep);background:radial-gradient(circle at 35% 30%,#fff1c4,var(--bronze-light) 45%,var(--bronze) 75%,var(--bronze-dark));border:2px solid var(--line-dark);box-shadow:0 2px 0 #000a;font-size:20px}
+#modal[data-mode=minigame]:has(.scene-game) #modal-content{position:absolute;inset:var(--mg-bar) 0 0 0;display:flex;flex-direction:column;min-height:0;padding:6px 10px 10px}
+/* „Zurück in die Szene“ sitzt links in der Leiste */
+#modal[data-mode=minigame]:has(.scene-game)>#modal-content>.actions{display:flex;position:fixed;left:10px;top:calc((var(--mg-bar) - 44px)/2);margin:0;z-index:5}
+#modal[data-mode=minigame]:has(.scene-game)>#modal-content>.actions button{min-height:44px;height:44px;padding:0 .9em;font-size:max(14px,var(--fs-s));background:linear-gradient(#5a3a1e,#3b2412);color:var(--cream);border-color:var(--bronze-dark);box-shadow:inset 0 0 0 1px var(--bronze)}
+#modal[data-mode=minigame]:has(.scene-game)>#modal-content>.actions button::before{content:'← '}
+/* Aufgabe als Pergamentband, Hinweis- und Fachtextknöpfe daneben */
+#modal[data-mode=minigame]:has(.scene-game) .puzzle-head{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 6px;flex:none}
+#modal[data-mode=minigame]:has(.scene-game) .puzzle-head>p{margin:0;max-width:min(64em,80vw);padding:.3em 1.4em;color:var(--ink);font-size:max(14px,var(--fs-s));line-height:1.3;text-align:center;
+ background:linear-gradient(90deg,transparent,var(--parchment) 4%,var(--parchment) 96%,transparent);border-top:1.5px solid var(--sandstone-dark);border-bottom:1.5px solid var(--sandstone-dark)}
+#modal[data-mode=minigame]:has(.scene-game) .puzzle-help-buttons{flex-direction:row!important}
+#modal[data-mode=minigame]:has(.scene-game) .puzzle-help-buttons button{min-height:40px;padding:0 .8em;font-size:max(13px,var(--fs-xs))}
+#modal[data-mode=minigame]:has(.scene-game) #hint-box{flex:none;margin:0 auto 6px;max-width:min(60em,90%);padding:.35em 1em;border:2px solid var(--bronze);border-radius:8px;background:#fbeec8;color:var(--ink);font-size:max(14px,var(--fs-s))}
+#modal[data-mode=minigame]:has(.scene-game) #puzzle-work{flex:1;min-height:0;display:flex}
+#modal[data-mode=minigame]:has(.scene-game) #feedback:empty{display:none}
+#modal[data-mode=minigame]:has(.scene-game) .reading-panel{color:var(--ink);max-height:100%;overflow:auto}
+#modal[data-mode=minigame]:has(.scene-game) #modal-content[data-tab=read]{overflow:auto}
+@media (max-width:760px){
+ #modal[data-mode=minigame]:has(.scene-game) h2{left:auto;right:64px;transform:none;max-width:40vw;text-align:right}
+ #modal[data-mode=minigame]:has(.scene-game) #modal-kicker{display:none}
+ #modal[data-mode=minigame]:has(.scene-game)>#modal-content>.actions button{font-size:13px;padding:0 .6em}
+}
+
+/* Bühne: gemaltes Bild im festen Seitenverhältnis, alle Elemente in % darauf */
+.scene-game .sg-stage{border-color:var(--wood-deep);box-shadow:0 0 0 2px var(--bronze-dark),0 16px 40px #000c}
+.scene-game.world{--parch:var(--parchment)}
+.scene-game.world .sg-stage{font-size:var(--stage-font)}
+.w-abs{position:absolute}
+.w-img{position:absolute;display:block;max-width:none;pointer-events:none;-webkit-user-drag:none;user-select:none}
+/* Unsichtbare Tippflächen über gemalten Dingen: sichtbar nur bei Fokus/Hover (Desktop) */
+.w-hit{position:absolute;padding:0;margin:0;min-height:44px;min-width:44px;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.w-hit:focus-visible{outline:3px solid var(--bronze-light)!important;outline-offset:2px}
+@media (hover:hover){.w-hit:hover{box-shadow:0 0 0 2px #f3d58c88,0 0 22px 4px #ffe2a044!important}}
+
+/* Schriftband für Rückmeldungen auf der Bühne (ersetzt Blitzflächen) */
+.w-voice{position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);z-index:12;width:min(62%,40em);margin:0;padding:.5em 1.4em;text-align:center;color:var(--ink);font-size:1.02em!important;line-height:1.32;
+ background:linear-gradient(90deg,transparent,var(--parchment) 5%,var(--parchment) 95%,transparent);border-top:2px solid var(--sandstone-dark);border-bottom:2px solid var(--sandstone-dark);box-shadow:0 8px 16px #0007;pointer-events:none}
+.w-voice:empty{display:none}
+.w-voice.good{border-color:var(--success);background:linear-gradient(90deg,transparent,#eef0d4 5%,#eef0d4 95%,transparent)}
+.w-voice.bad{border-color:var(--warning);background:linear-gradient(90deg,transparent,#f5e3d2 5%,#f5e3d2 95%,transparent)}
+.w-voice.pop{animation:w-voice .35s ease-out}
+@keyframes w-voice{from{opacity:.2;transform:translate(-50%,6px)}}
+
+/* Material-Bausteine für HTML-Text */
+.m-parch{color:var(--ink);background:radial-gradient(at 30% 20%,#fff8e2,transparent 70%),linear-gradient(#f6e8c6,#e7d09e);border:2px solid var(--line-dark);border-radius:6px;box-shadow:inset 0 0 0 3px #fff4d855,inset 0 0 18px #a8844a55,var(--mat-shadow)}
+.m-wax{color:#f7ecd0;background:radial-gradient(at 35% 25%,#6a5a3a,#3e3220 70%);border:.35em solid transparent;border-image:linear-gradient(#8a5a2e,#4a2c12) 1;box-shadow:inset 0 2px 6px #000a,var(--mat-shadow)}
+.m-wood{color:var(--cream);background:repeating-linear-gradient(90deg,#0000 0 11px,#00000012 11px 13px),linear-gradient(#7a4e28,#553318);border:2px solid var(--line-dark);border-radius:8px;box-shadow:inset 0 0 0 2px #c08a4a55,var(--mat-shadow)}
+.m-bronze{color:var(--wood-deep);background:radial-gradient(circle at 35% 25%,#fff0c0,var(--bronze-light) 30%,var(--bronze) 70%,var(--bronze-dark));border:2px solid var(--line-dark);box-shadow:inset 0 0 0 2px #fff4d066,var(--mat-shadow)}
+.m-stone{color:#2a2016;background:radial-gradient(at 30% 25%,#efe1bf,#cdb488 70%,#a88c5c);border:2px solid #4a3a24;border-radius:4px;box-shadow:inset 0 0 0 2px #fff4d855,inset 0 -4px 8px #6a52324d,var(--mat-shadow)}
+
+/* Rückmeldungen an Gegenständen: dezent statt Blitzfläche */
+.w-ok{animation:w-ok .8s ease-out}
+@keyframes w-ok{0%{filter:none}30%{filter:drop-shadow(0 0 10px #f6dc8a) drop-shadow(0 0 22px #b6c96a88) brightness(1.08)}100%{filter:none}}
+.w-bad{animation:w-bad .45s ease-in-out;box-shadow:0 0 0 3px #8c3e24aa,var(--mat-shadow)!important}
+@keyframes w-bad{0%,100%{translate:0}20%{translate:-6px}40%{translate:5px}60%{translate:-4px}80%{translate:3px}}
+.w-snap{animation:w-snap .42s cubic-bezier(.3,1.6,.5,1)}
+@keyframes w-snap{0%{scale:1.08}60%{scale:.97}100%{scale:1}}
+
+/* Abschlussband auf der Bühne (statt Web-Erfolgskarte) */
+.w-finale{position:absolute;inset:auto 0 0 0;z-index:30;display:flex;justify-content:center;padding:0 0 3%;pointer-events:none;animation:sg-fade .6s}
+.w-finale .w-roll{pointer-events:auto;width:min(40em,74%);padding:1em 2em 1.1em;text-align:center;color:var(--ink);
+ background:radial-gradient(at 30% 20%,#fff8e2,transparent 70%),linear-gradient(#f6e8c6,#e7d09e);border:2px solid var(--line-dark);border-radius:4px;
+ box-shadow:0 18px 40px #000b,inset 0 0 0 4px #fff4d855,inset 0 0 20px #a8844a66;position:relative}
+.w-finale .w-roll::before,.w-finale .w-roll::after{content:'';position:absolute;top:-10px;bottom:-10px;width:18px;border-radius:9px;background:linear-gradient(90deg,#4a2c12,#b8863c 45%,#6b4414);border:2px solid var(--line-dark)}
+.w-finale .w-roll::before{left:-12px}.w-finale .w-roll::after{right:-12px}
+#modal .w-finale h3{margin:0 0 .3em;font-size:1.45em!important;color:#5a3a16}
+#modal .w-finale p{margin:.3em 0;font-size:1.02em!important;line-height:1.4}
+.w-finale .primary{margin-top:.6em;min-height:48px;padding:.3em 1.6em;font-size:1.05em}
+
+/* ==========================================================================
+   Hotspots: EIN Positionierungsmodell.
+   Die Szene-Definition liefert Mittelpunkt (--x/--y) und Fläche (--w/--h).
+   Daraus ergeben sich Tippfläche, Hover-Hintergrund, Symbol und Beschriftung.
+   ========================================================================== */
+#app #hotspots .hotspot:not(.exit){left:var(--x)!important;top:var(--y)!important;width:var(--w,calc(var(--u)*2.8))!important;height:var(--h,calc(var(--u)*2.8))!important;
+ min-width:48px!important;min-height:48px!important;padding:0!important;margin:0;transform:translate(-50%,-50%)!important;border:0;background:none!important;box-shadow:none!important;border-radius:18px;--pin:calc(var(--u)*1.35)}
+#app #hotspots .hotspot:not(.exit):active{transform:translate(-50%,-50%)!important}
+#app #hotspots .hotspot:not(.exit)::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .2s;
+ background:radial-gradient(closest-side,#fff1b82e,#fff1b812 70%,transparent);box-shadow:0 0 0 2px #f3d58c80,0 0 26px 6px #ffe2a02e}
+#app #hotspots .hotspot.person::before{border-radius:44% 44% 18% 18%}
+#app #hotspots .hotspot:not(.exit):focus-visible::before,#app #hotspots .hotspot.speaking::before{opacity:1}
+@media (hover:hover){#app #hotspots .hotspot:not(.exit):hover::before{opacity:1}}
+#app #hotspots .hotspot:not(.exit) .pin{position:absolute!important;left:50%!important;top:50%!important;margin:0!important;transform:translate(-50%,-50%);display:grid!important;place-items:center;width:var(--pin);height:var(--pin)}
+#app #hotspots .hotspot.hs-puzzle .pin{--pin:calc(var(--u)*1.7);width:var(--pin);height:var(--pin)}
+#app #hotspots .hotspot.hs-puzzle{--pin:calc(var(--u)*1.7)}
+#app #hotspots .hotspot:not(.exit) .label{position:absolute!important;left:50%!important;top:calc(50% + var(--pin)/2 + 5px)!important;bottom:auto!important;transform:translateX(-50%)!important;margin:0;white-space:normal;text-align:center;pointer-events:none}
+#app #hotspots .hotspot.collectible{--pin:0px}
+#app #hotspots .hotspot.collectible .flint-art{position:absolute;inset:0;width:100%;height:100%}
+#app #hotspots .hotspot.collectible .label{top:calc(100% + 4px)!important}
+#app #hotspots .hotspot.person .label{border-left-width:2px}
+@media (hover:hover){#app #hotspots .hotspot:not(.exit):hover .label{background:var(--parchment);color:var(--ink);text-shadow:none}}
+
+/* Szeneneinstieg */
+#modal[data-mode=intro] .actions .primary::after{content:''}
+
+/* ==========================================================================
+   Bewegung reduzieren
+   ========================================================================== */
+@media (prefers-reduced-motion:reduce){
+ .w-ok,.w-bad,.w-snap,.w-voice.pop{animation:none!important}
+ .scene-game *{transition-duration:.01s!important;animation-duration:.01s!important}
+}
+#modal[data-mode=minigame]:has(.scene-game) #modal-content{z-index:auto}
+#modal .scene-game.world button{font-size:inherit}
+.scene-game [hidden]{display:none!important}
+.scene-game.world .sg-stage{aspect-ratio:1672/941!important;width:min(100cqw,100cqh*1.777)!important;height:auto!important}
+
+/* ==========================================================================
+   Schriftrollen des Archivars: große Papyrusrolle, Text als HTML auf der Rolle
+   ========================================================================== */
+#modal[data-mode=scroll]{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden}
+#modal[data-mode=scroll]::backdrop{background:radial-gradient(ellipse at center,#2a1a0ccc,#0b0703f0);backdrop-filter:blur(4px)}
+#modal[data-mode=scroll][open]{display:flex;flex-direction:column;align-items:center}
+#modal[data-mode=scroll] .dialog-head{position:absolute;inset:0 0 auto 0;border:0;padding:10px 14px;justify-content:flex-end;z-index:3}
+#modal[data-mode=scroll] #modal-kicker{position:absolute;left:50%;top:14px;transform:translateX(-50%);color:var(--bronze-light)}
+#modal[data-mode=scroll] h2{margin:40px 0 0;color:var(--cream);font-size:clamp(18px,calc(var(--u)*1.3),28px);text-shadow:0 2px 4px #000;text-align:center}
+#modal[data-mode=scroll] #close{width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;color:var(--wood-deep);background:radial-gradient(circle at 35% 30%,#fff1c4,var(--bronze-light) 45%,var(--bronze) 75%,var(--bronze-dark));border:2px solid var(--line-dark)}
+#modal[data-mode=scroll] #modal-content{flex:1;min-height:0;width:100%;display:flex;justify-content:center;padding:8px 16px 16px}
+.scroll-view{display:flex;flex-direction:column;align-items:center;gap:10px;width:min(760px,94vw);height:100%;min-height:0}
+.scroll-paper{position:relative;flex:1;min-height:0;width:100%;max-height:560px;box-sizing:border-box;color:#2a1a0a;overflow:auto;overscroll-behavior:contain;
+ border-style:solid;border-width:clamp(62px,11vh,96px) clamp(34px,5vw,48px);border-image:url('assets/puzzles/archivist/scroll-1.webp') 150 70 150 70 fill / clamp(62px,11vh,96px) clamp(34px,5vw,48px) stretch;
+ filter:drop-shadow(0 18px 26px #000c);padding:0 clamp(14px,2.4vw,30px);display:flex;flex-direction:column;justify-content:center;animation:scroll-open .6s ease-out}
+.scroll-paper.s2{border-image-source:url('assets/puzzles/archivist/scroll-2.webp')}
+.scroll-paper.s3{border-image-source:url('assets/puzzles/archivist/scroll-3.webp')}
+@keyframes scroll-open{from{clip-path:inset(0 0 58% 0);opacity:.4}to{clip-path:inset(0 0 0 0);opacity:1}}
+#modal .scroll-paper h3{margin:0 0 .5em;text-align:center;font-size:clamp(20px,calc(var(--u)*1.35),30px);color:#5a3a16;letter-spacing:.02em}
+#modal .scroll-paper p{margin:0;font-size:clamp(18px,calc(var(--u)*1.18),24px);line-height:1.55;text-align:left}
+.scroll-count{display:block;margin-top:.8em;text-align:center;font-size:.8em;letter-spacing:.14em;text-transform:uppercase;color:#8a6a3a}
+.scroll-nav{display:flex;gap:14px;justify-content:center;flex:none}
+#modal .scroll-nav .scroll-btn{min-height:48px;padding:0 1.2em;font-size:max(16px,var(--fs-s));color:var(--wood-deep);border-radius:24px;
+ background:radial-gradient(circle at 35% 25%,#fff0c0,var(--bronze-light) 30%,var(--bronze) 75%,var(--bronze-dark));border:2px solid var(--line-dark);box-shadow:inset 0 0 0 2px #fff4d066,0 4px 8px #000a}
+#modal .scroll-nav .scroll-btn.back::before{content:'‹ '}#modal .scroll-nav .scroll-btn.next:not(.done)::after{content:' ›'}
+@media (prefers-reduced-motion:reduce){.scroll-paper{animation:none}}

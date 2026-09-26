@@ -311,3 +311,12 @@ Nebenbei behoben: Ein verspätetes `close`-Ereignis eines vorherigen Fensters ko
 - Die Stadt 313 behält das Szenenrätsel „Vorher und Nachher“.
 - Tests: `bonus-unlocks` prüft sieben Spiele und dass `wagen` und `kurier` weder registriert noch startbar sind. `playthrough` erwartet „Freigeschaltet: 7 / 7“ und lädt einen alten Bonusstand mit `kurierfahrt`, `kurier` und `wagen` ohne Fehler; die alten Kennungen werden verworfen.
 - `npm test`: alle 13 Testdateien bestanden.
+
+## Asset-Integration: gemalte Nahansichten, Mosaik, Zeitrad, Endsequenz
+
+- `npm test`: alle 14 Testdateien bestanden (neu: `tests/closeups.cjs` mit 81 Prüfungen für Tür, Forum, Amtsstube, Seilzug, Archiv, Schild, Kartenbrett und Endsequenz).
+- `playthrough`: kompletter Durchlauf bis zum Finale, zusätzlich „Szene erkunden“ beim ersten Betreten jedes Ortes, ein Positionsmodell für alle Hotspots, Endsequenz statt Fenster.
+- `scenegames`: Mosaik der Motive (offene Zuordnung, Gesamtbild, keine „Waage“ mehr), Zeitmechanik mit gestufter Fehlerrückmeldung und Notizbuch-Hinweis in der Aufgabe.
+- Chromium-Sichtprüfung aller zwölf Rätsel bei 1024 × 768, 1180 × 820 und 1366 × 1024: Bühne passt ohne Scrollen, keine horizontalen Scrollbalken, keine Konsolenfehler.
+- Noch offen: Prüfung auf einem echten iPad (Safari, Touch), Hochformat nur grob geprüft.
+- Zusammenführung mit dem Betatest-Stand (Commit 31875a4): übernommen wurden gespeicherte Verriegelungen der Zeitmechanik, Fehlversuche je Tafel, ausdrücklich gewählte vollständige Zeitfolge, Aufräumen beim Schließen (`MiniGames.stop`), Abschlussbedingung und „Abbrechen“ zurück zur Abschlussansicht. Neue Prüfungen dafür in `tests/scenegames.cjs` und `tests/closeups.cjs`. `chronicle.js`/`chronicle.css` und ihre Tests entfallen, weil Zeitmechanik und Finale jetzt aus den gemalten Assets gebaut sind.

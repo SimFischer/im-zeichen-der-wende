@@ -120,42 +120,6 @@
 .council-answer.right{background:linear-gradient(#3f7a5a,#2d5a4b);box-shadow:inset 0 0 0 2px #f3dca6,0 4px 0 #1a0f06}
 .council-answer.tried{opacity:.45;text-decoration:line-through;text-decoration-color:#e0a07a}
 
-/* ================= Chronik ================= */
-.chronicle-game .sg-bg{filter:brightness(.72) blur(.5px)}
-.chron-book{position:absolute;left:12%;right:12%;top:15%;height:52%;display:grid;grid-template-columns:1fr 1fr;gap:0;padding:1.2% 1.4%;border-radius:6px;background:linear-gradient(90deg,#5a2a14,#7a3a1c 2%,#5a2a14 50%,#7a3a1c 98%,#5a2a14);box-shadow:0 16px 36px #000b}
-.chron-page{display:grid;grid-template-rows:repeat(3,1fr);gap:3%;padding:3% 4%;background:radial-gradient(at 50% 30%,#fbf1d6,#ecdcb4 75%,#dcc494);box-shadow:inset 0 0 20px #a8864e66}
-.chron-page.left{border-radius:4px 0 0 4px;box-shadow:inset -18px 0 22px -12px #6b4a2a88,inset 0 0 20px #a8864e66}
-.chron-page.right{border-radius:0 4px 4px 0;box-shadow:inset 18px 0 22px -12px #6b4a2a88,inset 0 0 20px #a8864e66}
-.chron-slot{position:relative;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:.6em;min-height:44px;padding:.2em .5em;border:2px dashed #b8986a;border-radius:6px;background:#f6ead0aa;color:var(--ink);text-align:left}
-.chron-slot .chron-medal{height:100%;max-height:100%;width:auto}
-.chron-year{position:absolute;left:.4em;bottom:.1em;font-size:.72em;font-weight:700;color:#8a6a3e;opacity:0}
-.chron-entry{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.5em;align-content:center;height:100%;min-width:0;overflow:hidden}
-.chron-entry .chron-mini{grid-row:1/3;height:3.1em;width:auto;border-radius:3px;box-shadow:0 2px 4px #0005;animation:sg-settle .5s ease-out}
-.entry-title{font-weight:700;font-size:.9em;line-height:1.12;color:#5a2410;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.entry-line{font-size:.85em;line-height:1.2;font-style:italic;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;padding-right:1.4em}
-.chron-slot.filled .chron-medal{height:78%}
-.chronicle-game .sg-voice{top:.8%;width:min(76%,56em);padding:.3em 1.2em;font-size:.98em}
-.entry-line{max-height:1.25em}
-.chron-slot.filled{border:2px solid #a88a55;background:#fbf2dc}
-.wax{position:absolute;right:.3em;bottom:.25em;width:1.4em;height:1.4em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e0602a,#8c2a1a 70%);box-shadow:0 2px 3px #0006;animation:sg-seal .5s ease-out}
-.wax:after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;color:#fbe4c0;font-size:.8em;font-weight:700}
-@keyframes sg-seal{0%{transform:scale(2.4) rotate(-30deg);opacity:0}70%{transform:scale(.9)}}
-.chron-tray{position:absolute;left:1%;right:1%;bottom:1.5%;height:29%;display:flex;gap:1%;align-items:stretch;justify-content:center}
-.chron-card{flex:0 1 15.8%;min-width:0;min-height:44px;display:flex;flex-direction:column;align-items:center;gap:.2em;padding:.35em .35em .4em;border:0;border-radius:6px;color:var(--ink);text-align:center;background:linear-gradient(#f4e6c3,#e2cc9c);box-shadow:0 6px 12px #0009,inset 0 0 0 2px #a88a55;transition:transform .2s}
-.chron-card .chron-mini{height:62%;width:auto;max-width:92%;border-radius:3px}
-.chron-card .sg-text{font-size:.9em;font-weight:600;line-height:1.12}
-.chron-band{position:absolute;left:50%;top:109%;width:60%;transform:translate(-50%,-50%) scaleX(0);transform-origin:left center;z-index:4;pointer-events:none;transition:transform 1.2s ease-out}
-.chron-band .band-art{width:100%;height:auto;filter:drop-shadow(0 6px 8px #0009)}
-.chron-band .band-label{position:absolute;left:50%;top:78%;transform:translateX(-50%);padding:.1em .8em;border-radius:3px;background:#8c2a1a;color:#fbe4c0;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.95em;white-space:nowrap}
-.chronicle-game.complete .chron-band{transform:translate(-50%,-50%) scaleX(1)}
-.chronicle-game.turned .chron-slot.filled:not([data-target="0"]){box-shadow:0 0 0 3px #f7dc93,0 0 14px #f7dc9388}
-.chronicle-game.turned .chron-slot[data-target="0"]{filter:grayscale(.6) brightness(.92)}
-.chron-gaps{position:absolute;left:3%;right:3%;bottom:2.5%;height:15%;display:grid;grid-template-columns:repeat(5,1fr);gap:1.5%}
-.chron-gaps[hidden]{display:none}
-.chron-gap{display:flex;align-items:center;justify-content:center;gap:.4em;min-height:44px;border:0;border-radius:6px;color:#f7ecd2;background:linear-gradient(#6b4424,#4a2e18);box-shadow:inset 0 0 0 2px #c9a45a,0 4px 0 #1a0f06;font-size:1.2em;font-weight:700}
-.chron-gap b{color:#e0a060}
-.chron-gap.right{background:linear-gradient(#a8432a,#8c2a1a);box-shadow:inset 0 0 0 2px #f7dc93,0 0 18px #f7dc9399}
-.chron-gap.tried{opacity:.45}
 
 /* ---------- Ersatz, falls Grafiken fehlen ---------- */
 .sg-no-art .sg-bg{background:radial-gradient(at 50% 30%,#8a6a44,#3a2a1c 80%)}
@@ -167,7 +131,7 @@
 /* ---------- Kompakt: niedrige Höhe / Hochformat ---------- */
 @media (max-height:700px){#modal:has(.scene-game) .puzzle-head p{display:none}}
 @media (orientation:portrait){
- .city-card,.chron-card{flex-basis:22%}
+ .city-card{flex-basis:22%}
  #modal[data-mode=minigame]:has(.scene-game){width:calc(100vw - 10px)}
  .sg-stage{aspect-ratio:auto;width:100cqw;height:100cqh}
  .sg-bg{background-position:30% center}
@@ -179,9 +143,14 @@
  .council-people{bottom:34%}
  .council-bubble{width:70%}
  .council-bubble.left,.council-bubble.right{left:15%;right:auto}
- .chron-book{left:2%;right:2%;top:11%;height:47%}
- .chron-tray{height:38%;flex-wrap:wrap;align-content:flex-end}
- .chron-tray .chron-card{flex:1 1 30%}
- .chron-gaps{grid-template-columns:repeat(3,1fr);height:26%}
 }
 @media (prefers-reduced-motion:reduce){.scene-game *{animation:none!important;transition:none!important}}
+
+
+/* Konzil: Antworten als Pergamentrollen auf dem Beratungstisch statt Knopfleiste */
+.council-answers{background:repeating-linear-gradient(90deg,#0000 0 14px,#00000014 14px 16px),linear-gradient(#6b4424,#3b2412)!important;border-top:3px solid #b8863c}
+.scene-game .council-answer{color:#2a1a0a!important;background:radial-gradient(at 30% 20%,#fff8e2,transparent 70%),linear-gradient(#f6e8c6,#e7d09e)!important;border:2px solid #24160b!important;border-radius:4px!important;box-shadow:inset 0 0 0 3px #fff4d855,0 5px 8px #000a!important;position:relative}
+.scene-game .council-answer::before,.scene-game .council-answer::after{content:'';position:absolute;top:-5px;bottom:-5px;width:9px;border-radius:5px;background:linear-gradient(90deg,#4a2c12,#b8863c 45%,#6b4414);border:1.5px solid #24160b}
+.scene-game .council-answer::before{left:-6px}.scene-game .council-answer::after{right:-6px}
+.scene-game .council-answer.right{background:linear-gradient(#eef0d4,#d8dcae)!important;box-shadow:0 0 0 3px #d9c46a,0 0 16px 4px #f6dc8a88!important}
+.scene-game .council-answer.tried{opacity:.5}

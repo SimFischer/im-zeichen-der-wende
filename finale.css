@@ -1,0 +1,62 @@
+/* Endsequenz (finale.js) */
+body.finale-on #app .hud,body.finale-on #app #hotspots,body.finale-on #objective,body.finale-on #toast{opacity:0;transition:opacity .8s;pointer-events:none}
+#finale{position:fixed;inset:0;z-index:2000;overflow:hidden;color:var(--cream,#fff4dc);font-family:var(--serif);background:#0b0703}
+#finale .fn-bg{position:absolute;inset:-40px;background:url('assets/backgrounds/v3-basilica.png') center/cover no-repeat;filter:blur(14px) brightness(.28) saturate(1.1);opacity:0;transition:opacity 1.2s}
+#finale:not([data-phase=intro]) .fn-bg{opacity:1}
+#finale .fn-camera{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vh;transition:transform 1.6s cubic-bezier(.45,0,.25,1),opacity 1s;transform-origin:34% 42%}
+#finale .fn-book{position:relative;width:min(86vw,62vh*2.1);aspect-ratio:1728/824}
+#finale .fn-closed{position:absolute;left:50%;top:50%;width:58%;transform:translate(-50%,-50%) scale(.86);opacity:0;transition:opacity 1s,transform 1.2s;filter:drop-shadow(0 20px 30px #000)}
+#finale[data-phase=closed] .fn-closed{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#finale .fn-open{position:absolute;inset:0;opacity:0;transform:scale(.94);transition:opacity 1.1s,transform 1.3s;filter:drop-shadow(0 20px 30px #000)}
+#finale .fn-open>img{width:100%;height:100%;display:block}
+#finale:is([data-phase=open],[data-phase=zoom],[data-phase=memories],[data-phase=return],[data-phase=speak],[data-phase=end],[data-phase=memories-static]) .fn-open{opacity:1;transform:none}
+#finale .fn-slot{position:absolute;top:53.4%;width:11.2%;aspect-ratio:1;transform:translate(-50%,-50%);--seal-size:100%;opacity:0;transition:opacity .6s}
+#finale .fn-slot .seal-medallion{width:100%;height:100%}
+#finale:not([data-phase=intro]):not([data-phase=closed]) .fn-slot{opacity:1}
+#finale .fn-seals{display:flex;gap:min(2.2vw,22px);opacity:0;transition:opacity .8s}
+#finale[data-phase=closed] .fn-seals{opacity:1}
+#finale .fn-seal{display:flex;flex-direction:column;align-items:center;gap:6px;--seal-size:clamp(52px,7vh,78px);filter:brightness(.55) saturate(.6);transition:filter .5s}
+#finale .fn-seal small{font-size:clamp(13px,1.8vh,17px);letter-spacing:.1em;color:#e8c47a}
+#finale .fn-seal.lit{filter:none;animation:fn-seal .7s cubic-bezier(.3,1.5,.5,1)}
+#finale .fn-seal.lit .seal-medallion{filter:drop-shadow(0 0 12px #ffd98a) drop-shadow(0 0 26px #ffc55a88)}
+@keyframes fn-seal{0%{transform:scale(1)}35%{transform:scale(1.18)}60%{transform:scale(.96) translateY(2px)}100%{transform:scale(1)}}
+/* Kamerafahrt in das Bild der Chronik */
+#finale[data-phase=zoom] .fn-camera,#finale[data-phase=memories] .fn-camera{transform:scale(2.1) translate(8%,6%)}
+#finale[data-phase=memories] .fn-camera{opacity:.15}
+/* Rückblick */
+#finale .fn-memories{position:absolute;inset:0;pointer-events:none}
+#finale .fn-memory{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .45s}
+#finale .fn-memory.on{opacity:1}
+#finale .fn-pic{position:absolute;inset:6vh 6vw;background:center/cover no-repeat;border:3px solid #24160b;box-shadow:0 0 0 6px #6b4424,0 0 0 8px #b8863c,0 30px 60px #000;transform:scale(1.08) translateX(1.5%)}
+#finale .fn-memory.on .fn-pic{animation:fn-pan 1.3s linear forwards}
+@keyframes fn-pan{from{transform:scale(1.1) translateX(2%)}to{transform:scale(1.02) translateX(-1%)}}
+#finale .fn-memory figcaption{position:absolute;left:50%;bottom:9vh;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;padding:.4em 1.6em;color:#2a1a0a;background:linear-gradient(90deg,transparent,#f1e2bf 8%,#f1e2bf 92%,transparent);border-top:2px solid #a88c5c;border-bottom:2px solid #a88c5c}
+#finale .fn-memory figcaption b{font-size:clamp(18px,2.8vh,26px)}#finale .fn-memory figcaption span{font-size:clamp(13px,1.8vh,17px);letter-spacing:.14em;text-transform:uppercase;color:#6b4a22}
+/* ohne Bewegung: kleiner Rückblick als Bildleiste */
+#finale.still .fn-memories{display:flex;justify-content:center;gap:1.2vw;top:3vh;bottom:auto;inset-inline:0}
+#finale.still .fn-memory{position:relative;inset:auto;opacity:1;width:12vw}
+#finale.still .fn-pic{position:relative;inset:auto;aspect-ratio:3/2;transform:none;box-shadow:0 0 0 3px #6b4424}
+#finale.still .fn-memory figcaption{position:static;transform:none;margin-top:4px;padding:.1em .4em;background:#f1e2bf}
+#finale.still .fn-memory figcaption b{font-size:12px}#finale.still .fn-memory figcaption span{font-size:10px}
+/* Text */
+#finale .fn-text{position:absolute;left:0;right:0;bottom:4vh;display:flex;flex-direction:column;align-items:center;gap:.6vh;text-align:center;padding:0 16px}
+#finale .fn-text p{margin:0;opacity:0;transform:translateY(8px);transition:opacity 1s,transform 1s;text-shadow:0 2px 6px #000}
+#finale .fn-line1{font-size:clamp(26px,4.6vh,44px);color:#ffe9b8;font-weight:600}
+#finale .fn-line2{font-size:clamp(17px,2.6vh,24px);color:#f1e2bf;transition-delay:1.2s!important}
+#finale:is([data-phase=speak],[data-phase=end]) .fn-text p{opacity:1;transform:none}
+#finale .fn-end{display:flex;flex-direction:column;align-items:center;gap:1.2vh;margin-top:1.4vh;opacity:0;transition:opacity .9s;pointer-events:none}
+#finale[data-phase=end] .fn-end{opacity:1;pointer-events:auto}
+#finale .fn-end strong{padding:.25em 1.4em;font-size:clamp(18px,2.8vh,26px);letter-spacing:.18em;text-transform:uppercase;color:#24160b;background:radial-gradient(circle at 35% 25%,#fff0c0,#e8c47a 30%,#b8863c 75%,#6b4414);border:2px solid #24160b;border-radius:4px;box-shadow:0 6px 14px #000a}
+#finale .fn-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+#finale .fn-actions button{min-height:48px;padding:0 1.4em;font-size:clamp(16px,2.2vh,20px);border:2px solid #24160b;border-radius:10px;color:#2a1e10;background:linear-gradient(#fbf1d9,#e8d3a4);box-shadow:inset 0 0 0 2px #fff6df99,0 3px 0 #6b4414,0 5px 10px #0008;cursor:pointer}
+#finale .fn-actions button.primary{color:#fff4dc;background:linear-gradient(#3f7a72,#2d5a55 55%,#1c3a37);box-shadow:inset 0 0 0 2px #e8c47a,0 3px 0 #6b4414,0 5px 10px #0008}
+#finale .fn-actions button.fn-small{font-size:clamp(14px,1.8vh,17px);background:transparent;color:#f1e2bf;border-color:#b8863c;box-shadow:none}
+#finale .fn-skip{position:absolute;right:16px;top:14px;min-height:44px;padding:0 1em;border-radius:22px;border:1.5px solid #b8863c;background:#24160bcc;color:#f1e2bf;font-size:15px;cursor:pointer}
+#finale .fn-skip[hidden]{display:none}
+#finale[data-phase=end] .fn-camera{transform:none;opacity:1}
+#finale[data-phase=end] .fn-seals{display:none}
+@media (max-height:700px){#finale .fn-book{width:min(86vw,54vh*2.1)}}
+@media (prefers-reduced-motion:reduce){
+ #finale *{transition-duration:.2s!important;animation:none!important}
+ #finale .fn-camera{transform:none!important;opacity:1!important}
+}
