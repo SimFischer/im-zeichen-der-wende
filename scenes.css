@@ -12,7 +12,6 @@
 .hotspot{padding:0;min-height:44px;min-width:44px;overflow:visible;font-size:12px}
 .hotspot .pin{width:18px;height:18px;line-height:12px;border:2px solid #fff0c8;background:#bd8c48;box-shadow:0 0 0 4px #21190b65;margin:0 auto}
 .hotspot .label{position:absolute;top:calc(50% + 12px);left:50%;transform:translateX(-50%);max-width:170px;width:max-content;padding:3px 8px;border-radius:20px;background:#20352ef2;border-color:#dcc499;font-size:12px;line-height:1.3;box-shadow:0 2px 8px #0006}
-.hotspot:hover .label,.hotspot:focus-visible .label{background:#f5e6c6;color:#263c32;text-shadow:none}
 .hotspot.person{width:14%;height:48%;padding:0;transform:translate(-50%,-100%);border-radius:40% 40% 10% 10%;isolation:auto}
 .hotspot.person:active{transform:translate(-50%,-100%)}
 .hotspot.person .pin{display:none}.hotspot.person .label{top:100%;max-width:170px}
