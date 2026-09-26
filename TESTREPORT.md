@@ -157,3 +157,12 @@ Das Minispiel „Die Kurierfahrt von 313“ ist entfernt. Die Besitztruhe in der
 - `tests/playthrough.cjs` (401 Prüfungen, bestanden) prüft zusätzlich: Für „change“ ist kein Minispiel registriert, die Besitztruhe öffnet das klassische Rätsel, „Kurierfahrt“ erscheint nirgends in der Oberfläche. Ein alter Spielstand mit fremden Feldern und einer unbekannten Bonus-ID lädt fehlerfrei, das Notizbuch zeigt keinen Kurierfahrt-Eintrag, die unbekannte ID wird verworfen.
 - `tests/bonus-unlocks.cjs` und `tests/archive-flow.cjs` (67 Prüfungen) bestanden unverändert; es bleibt bei acht Bonusspielen.
 - Chromium: Spielstand in der Stadt 313 geladen, Besitztruhe geöffnet, Notizbuch geprüft; keine JavaScript-Fehler. (Die fehlenden EB-Garamond-Schriftdateien unter `assets/fonts/` liefern wie vorher 404; das ist unabhängig von dieser Änderung.)
+
+## „Belade den Wagen!“ entfernt (26.09.2026)
+
+Das Bonusspiel ist entfernt; es gibt jetzt sieben Bonusspiele.
+
+- `tests/bonus-unlocks.cjs` (bestanden): sieben Meilensteine, gesperrte Spiele starten nicht, `wagen` ist nicht registriert und startet nicht, alter Fortschritt mit `wagen` (auch über den Fortsetzungscode) wird verworfen, Notizbuch zeigt „Freigeschaltet: 7 / 7“ ohne Wagen-Eintrag.
+- `tests/playthrough.cjs` (403 Prüfungen, bestanden): nach dem Finale 7 / 7 Bonusspiele; alter Spielstand mit `wagen` lädt fehlerfrei, Notizbuch ohne „Belade den Wagen“.
+- `tests/archive-flow.cjs` und `tests/continuation.cjs` bestanden unverändert.
+- Chromium: Spielstand mit allen Rätseln und altem `wagen`-Eintrag geladen; Notizbuch zeigt sieben Karten ohne leeren Platz, alle sieben Bonusspiele starten, keine JavaScript-Fehler.

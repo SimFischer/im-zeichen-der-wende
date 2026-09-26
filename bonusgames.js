@@ -10,9 +10,9 @@
 window.BonusGames=(()=>{
  const KEY='im-zeichen-der-wende:bonus-v1';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const ORDER=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','wagen','circus'];
+ const ORDER=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','circus'];
  const games={};
- const MILESTONES={zeichen:'conflict',rombrennt:'sources',amphoren:'cases',katakomben:'archive',schildwall:'map312',tiber:'vision',wagen:'change',circus:'bridge'};
+ const MILESTONES={zeichen:'conflict',rombrennt:'sources',amphoren:'cases',katakomben:'archive',schildwall:'map312',tiber:'vision',circus:'bridge'};
  let available=new Set(),session=null;
  function update(state){
   available=new Set(ORDER.filter(id=>(state.solved||[]).includes(MILESTONES[id])));

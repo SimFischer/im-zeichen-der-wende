@@ -1,6 +1,10 @@
+# Update: „Belade den Wagen!“ entfernt
+
+Das Bonusspiel „Belade den Wagen!“ ist vollständig entfernt (`bonus/wagen.js` gelöscht, Einbindung in `index.html` und Eintrag in `bonusgames.js` entfernt). Es gibt jetzt sieben Bonusspiele; das Notizbuch zeigt „Freigeschaltet: x / 7“, nach dem Finale sind alle sieben frei. Die Besitztruhe schaltet kein Bonusspiel mehr frei. Alte Spielstände oder Fortsetzungscodes mit `wagen` werden beim nächsten Laden bereinigt und verursachen keine Fehler.
+
 # Update: Kurierfahrt entfernt
 
-Das Minispiel „Die Kurierfahrt von 313“ ist vollständig entfernt (Spiellogik in `minigames.js`, Inhalte in `data/game-data.js`, zugehörige CSS-Regeln). In der Stadt 313 öffnet die Besitztruhe jetzt das klassische Zuordnungsrätsel „Die Besitztruhe“; Siegel, Belohnung (Verfügung von 313) und die Freischaltung von „Belade den Wagen!“ bleiben unverändert. Es gibt weiterhin acht Bonusspiele. Alte Spielstände brauchen keine Umstellung, weil die Kurierfahrt keine eigenen Daten gespeichert hat.
+Das Minispiel „Die Kurierfahrt von 313“ ist vollständig entfernt (Spiellogik in `minigames.js`, Inhalte in `data/game-data.js`, zugehörige CSS-Regeln). In der Stadt 313 öffnet die Besitztruhe jetzt das klassische Zuordnungsrätsel „Die Besitztruhe“; Siegel und Belohnung (Verfügung von 313) bleiben unverändert. Alte Spielstände brauchen keine Umstellung, weil die Kurierfahrt keine eigenen Daten gespeichert hat.
 
 # Update: Auftrag des Archivars
 
@@ -19,7 +23,7 @@ Prüfung: `node tests/archive-flow.cjs` nach `npm install --no-save linkedom`.
 
 # Update: Bonusspiele
 
-Acht freiwillige Bonusspiele werden ausschließlich im Notizbuch angeboten. Gesperrte Spiele erscheinen als „? ? ?“. Anklickbare Fundstellen in den Szenen entfallen. Freischaltungen richten sich nach gelösten Haupträtseln:
+Sieben freiwillige Bonusspiele werden ausschließlich im Notizbuch angeboten. Gesperrte Spiele erscheinen als „? ? ?“. Anklickbare Fundstellen in den Szenen entfallen. Freischaltungen richten sich nach gelösten Haupträtseln:
 
 | Bonusspiel | Nach Abschluss von |
 |---|---|
@@ -29,7 +33,6 @@ Acht freiwillige Bonusspiele werden ausschließlich im Notizbuch angeboten. Gesp
 | Katakombenlauf | Archiv im Dunkeln |
 | Schildwall | Kartenbrett im Lager |
 | Über den Tiber! | Zeichen auf dem Schild |
-| Belade den Wagen! | Besitztruhe in der Stadt 313 |
 | Circus Maximus | Abschluss der Chronik |
 
 Bonusspiele vergeben keine Siegel und sind keine Pflicht. Ein neues Spiel setzt auch den Bonusfortschritt zurück. Das Stempelspiel hat eine kompaktere Anleitung mit einem separat angeordneten, mindestens 52 Pixel hohen Startknopf sowie größere Stempel in der Hand und Abdrücke auf der Akte.
