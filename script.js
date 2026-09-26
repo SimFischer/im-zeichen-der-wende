@@ -14,7 +14,7 @@
  function refreshSpots(){const sc=scene(),miss=missingInfo(sc),total=infoSpots(sc).length,opened=[];
   document.querySelectorAll('#hotspots .hotspot').forEach(b=>{const i=+b.dataset.index,h=sc.hotspots[i];if(!h)return;b.classList.toggle('seen',state.seen.includes(sc.id+':'+i));
    if(h[3]!=='puzzle')return;const lockedNow=puzzleLocked(sc,h[4]),was=b.classList.contains('locked');b.classList.toggle('locked',lockedNow);
-   const cap=b.querySelector('.hs-cap');b.setAttribute('aria-label',h[0]+(has(h[4])?' – '+(h[4]==='archive'?'gelöst':'Rätsel gelöst'):''));if(cap)cap.textContent=has(h[4])?(h[4]==='archive'?'gelöst':'Rätsel gelöst'):lockedNow?`erst Hinweise sammeln · ${total-miss.length}/${total}`:'Rätsel · jetzt prüfen';
+   const cap=b.querySelector('.hs-cap');b.setAttribute('aria-label',h[0]+(has(h[4])?' – gelöst':''));if(cap)cap.textContent=has(h[4])?'gelöst':lockedNow?`erst Hinweise sammeln · ${total-miss.length}/${total}`:'Rätsel · jetzt prüfen';
    const pin=b.querySelector('.pin');if(pin)pin.textContent=has(h[4])?'✓':lockedNow?'🔒':'✦';
    if(was&&!lockedNow){b.classList.add('unlocked-now');opened.push(h[0]);}});
   if(opened.length)toast(`Du hast genug erfahren. Überprüfe jetzt dein Wissen: ${opened[0]}.`);
@@ -22,16 +22,16 @@
  const add=(key,value)=>{if(!state[key].includes(value))state[key].push(value);};
  const save=()=>{state.progress=state.solved.length;try{localStorage.setItem(KEY,JSON.stringify(state));storageOK=true;}catch(e){storageOK=false;toast('Speichern ist in diesem Browser nicht möglich. Lass diesen Tab geöffnet.');}};
  function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),5500);}
- let modalCleanup=null;
- function disposeModal(){const cleanup=modalCleanup;modalCleanup=null;cleanup?.();window.MiniGames?.stop?.();window.BonusGames?.stop?.();}
- function open(title,html,kicker='Die Stadtchronik',mode='info') {disposeModal();delete $('#modal').dataset.puzzle;delete $('#modal-content').dataset.tab;$('#close').hidden=false;if(!$('#modal').open)returnFocus=document.activeElement;modalMode=mode;$('#modal').dataset.mode=mode;$('#modal-title').textContent=title;$('#modal-kicker').textContent=kicker;$('#modal-content').innerHTML=html;if(!$('#modal').open)$('#modal').showModal();$('#modal').scrollTop=0;$('#close').focus();}
- function close(){if(modalMode==='finale'){window.Chronicle.finish();return;}disposeModal();$('#modal').close();activePuzzle=null;modalMode='';if(returnFocus?.isConnected)returnFocus.focus();refreshSpots(); }
+ function open(title,html,kicker='Die Stadtchronik',mode='info') {window.MiniGames?.stop?.();delete $('#modal-content').dataset.tab;if(!$('#modal').open)returnFocus=document.activeElement;modalMode=mode;$('#modal').dataset.mode=mode;$('#modal-title').textContent=title;$('#modal-kicker').textContent=kicker;$('#modal-content').innerHTML=html;if(!$('#modal').open)$('#modal').showModal();$('#modal').scrollTop=0;$('#close').focus();}
+ function close(){ window.MiniGames?.stop?.();$('#modal').close();activePuzzle=null;modalMode='';if(returnFocus?.isConnected)returnFocus.focus();refreshSpots(); }
  $('#close').onclick=close;$('#modal').addEventListener('cancel',e=>{e.preventDefault();close();});
  function button(text,fn,cls='primary',parent=$('#modal-content')){const b=document.createElement('button');b.textContent=text;b.className=cls;b.onclick=fn;parent.append(b);return b;}
  function actions(){const n=document.createElement('div');n.className='actions';$('#modal-content').append(n);return n;}
  // Kleine Schnittstelle für die optionalen Bonusspiele (bonusgames.js). Kein Zugriff auf den Spielstand.
  window.WendeUI={open,close,button,actions,toast};
- function info(title,body,entry=false){activePuzzle=null;open(title,`<p class="intro-copy">${esc(body)}</p>`);button(entry?'Szene erkunden':'Zurück in die Szene',close,'primary',actions());}
+ function info(title,body,back='Zurück in die Szene'){activePuzzle=null;open(title,`<p class="intro-copy">${esc(body)}</p>`);button(back,close,'primary',actions());}
+ // Erstes Betreten eines Ortes: „Szene erkunden“ statt „Zurück“.
+ function intro(sc){info(sc.name,sc.intro,'Szene erkunden');}
  function unlock(){
   if(has('conflict')&&has('sources'))add('unlocked','office');
   if(has('cases'))add('unlocked','temple');
@@ -59,6 +59,13 @@
   if(p)return `Du weißt genug. Überprüfe dein Wissen: ${p[0]}.`;
   return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
+ /* Ein Positionierungsmodell für alle Hotspots: Mittelpunkt (x/y) und Fläche (w/h) in % der Szene.
+    Personen stehen mit den Füßen auf x/y; ihre Fläche reicht nach oben. Symbol, Beschriftung,
+    Hover-Hintergrund und Tippfläche werden in world.css aus diesen Werten abgeleitet. */
+ function hsBox(s,h){const [,x,y,type,id]=h;const own=G.hotspotBoxes?.[s.id+':'+(id||type)];if(own)return {x:own[0]??x,y:own[1]??y,w:own[2],h:own[3]};
+  if(window.Adventure?.cast?.[id]!==undefined){const P=G.personBoxes?.[s.id]||[14,48];return {x,y:y-P[1]/2,w:P[0],h:P[1]};}
+  if(id==='flint'||id==='lamp')return {x,y,w:8,h:9};
+  return {x,y};}
  let lastPanScene=null;
  function render(){endTalk();unlock();if(state.scene==='archive'&&!has('archive')&&!state.flags.archiveScrollsRead)state.scene='vestibule';const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
   const img=s.image||`assets/backgrounds/v3-${s.art||s.id}.png`;const art=$('#art');art.style.backgroundImage=`url('${img}')`;$('#app').style.setProperty('--scene-img',`url('${img}')`);art.style.backgroundSize=s.image?'cover':'contain';art.style.backgroundPosition='center';$('#scene').classList.toggle('discover',!!s.discover);
@@ -67,7 +74,7 @@
   // Hochformat: Szene größer und seitlich verschiebbar – beim Ortswechsel in die Mitte scrollen und kurz auf das Wischen hinweisen
   if(lastPanScene!==s.id){lastPanScene=s.id;(window.requestAnimationFrame||setTimeout)(()=>{const vp=document.querySelector('.scene-viewport');if(!vp)return;const pan=vp.scrollWidth-vp.clientWidth;vp.scrollLeft=pan>4?pan/2:0;const h=$('#pan-hint');if(h){h.hidden=pan<=4;if(pan>4){h.classList.remove('show');void h.offsetWidth;h.classList.add('show');}}});}
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
-  $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot hs-'+h[3];b.dataset.index=i;b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');const cap=h[3]==='puzzle'?'<small class="hs-cap"></small>':'';b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':h[3]==='take'?'＋':h[3]==='talk'?'i':'·'}</span><span class="label">${esc(h[0])}${cap}</span>`;if(h[3]==='take'){b.querySelector('.pin').remove();b.setAttribute('aria-label',h[0]+' aufnehmen');}if(h[3]==='deposit')b.hidden=!has('archive')||!!state.flags.archiveScrollsDeposited;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
+  $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot hs-'+h[3];b.dataset.index=i;const bx=hsBox(s,h);b.style.left=bx.x+'%';b.style.top=bx.y+'%';b.style.setProperty('--x',bx.x+'%');b.style.setProperty('--y',bx.y+'%');if(bx.w){b.style.setProperty('--w',bx.w+'%');b.style.setProperty('--h',bx.h+'%');}b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');const cap=h[3]==='puzzle'?'<small class="hs-cap"></small>':'';b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':h[3]==='take'?'＋':h[3]==='talk'?'i':'·'}</span><span class="label">${esc(h[0])}${cap}</span>`;if(h[3]==='take'){b.querySelector('.pin').remove();b.setAttribute('aria-label',h[0]+' aufnehmen');}if(h[3]==='deposit')b.hidden=!has('archive')||!!state.flags.archiveScrollsDeposited;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
   window.Adventure.scene(s,state);refreshSpots();document.querySelectorAll('#hotspots .unlocked-now').forEach(b=>b.classList.remove('unlocked-now'));renderExits(s);window.BonusGames?.update(state);$('#objective').textContent=objective();renderInventory();save();
  }
  function travel(id,via){
@@ -79,7 +86,7 @@
  }
  function renderExits(s){(G.exits?.[s.id]||[]).forEach(([target,x,y,label])=>{const dest=G.scenes.find(z=>z.id===target);if(!dest)return;const open=state.unlocked.includes(target);const b=document.createElement('button');b.type='button';b.className='exit'+(open?'':' locked')+(x<18?' edge-left':x>82?' edge-right':'');b.style.left=(x<18?1.5:x>82?98.5:x)+'%';b.style.top=y+'%';b.dataset.exit=target;b.setAttribute('aria-label',(open?'Gehe zu: ':'Noch versperrt: ')+dest.name);b.innerHTML=`<span class="exit-arrow" aria-hidden="true">${open?'➜':'🔒'}</span><span class="label">${esc(label)}${label.includes(dest.name.split(' ').pop())?'':`<small>${esc(dest.name)}</small>`}</span>`;b.onclick=()=>travel(target,'walk');$('#hotspots').append(b);});}
  document.addEventListener('click',e=>{const sc=e.target.closest?.('#scene');if(!sc||!sc.classList.contains('archive-dark')||e.target.closest('.exit'))return;if(own('light'))openPuzzle('archive');else info('Zu dunkel','Du siehst nichts. Öffne den Botenbeutel und kombiniere die Öllampe mit dem Feuerstein. Beide findest du im Wohnviertel und am Stadttor.');});
- function enter(id){if(!state.unlocked.includes(id))return;close();state.scene=id;selected=null;$('#inventory').hidden=true;$('#inventory-toggle').setAttribute('aria-expanded','false');render();if(id==='archive'&&own('light')&&!has('archive')&&G.minigames?.archive){add('seen','intro:archive');save();setTimeout(()=>openPuzzle('archive'),500);return;}if(!state.seen.includes('intro:'+id)){add('seen','intro:'+id);save();info(scene().name,scene().intro,true);}}
+ function enter(id){if(!state.unlocked.includes(id))return;close();state.scene=id;selected=null;$('#inventory').hidden=true;$('#inventory-toggle').setAttribute('aria-expanded','false');render();if(id==='archive'&&own('light')&&!has('archive')&&G.minigames?.archive){add('seen','intro:archive');save();setTimeout(()=>openPuzzle('archive'),500);return;}if(!state.seen.includes('intro:'+id)){add('seen','intro:'+id);save();intro(scene());}}
  // Kleine Animation: der Gegenstand fliegt aus der Szene in den Botenbeutel.
  function flyToBag(id){const from=document.querySelector(`.hotspot[data-hotspot="${id}"]`)?.getBoundingClientRect(),to=$('#inventory-toggle')?.getBoundingClientRect();if(!from||!to||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const img=document.createElement('img');img.src=`assets/inventory/${id}.svg`;img.alt='';img.className='fly-item';img.style.left=(from.left+from.width/2-32)+'px';img.style.top=(from.top+from.height/2-32)+'px';document.body.append(img);
@@ -105,10 +112,11 @@
  }
  function readArchiveScrolls(){
   const t=G.texts.archive;let page=0;
-  function show(){open('Die Schriftrollen des Archivars',`<article class="archive-scroll" aria-label="Schriftrolle ${page+1} von ${t.body.length}"><span class="scroll-count">Schriftrolle ${page+1} von ${t.body.length}</span><h3>${esc(t.title)}</h3><p>${esc(t.body[page])}</p><div class="scroll-navigation actions"></div></article>`,'Auftrag für das Archiv','scrolls');const a=$('.scroll-navigation');
-   if(page>0)button('Zurück',()=>{page--;show();},'',a);
-   if(page<t.body.length-1)button('Nächste Schriftrolle',()=>{page++;show();},'primary',a);
-   else button('Gelesen – zum Archiv bringen',()=>{state.flags.archiveScrollsRead=true;add('seen','text:archive');save();close();render();toast('Die Schriftrollen sind im Botenbeutel. Du kannst sie dort und im Notizbuch nachlesen.');},'primary',a);
+  // Jede Schriftrolle ist eine große Papyrusrolle (Bild als Rahmen), der Fachtext bleibt HTML auf der Textfläche.
+  function show(){open('Die Schriftrollen des Archivars',`<div class="scroll-view"><article class="scroll-paper s${page%3+1}" aria-label="Schriftrolle ${page+1} von ${t.body.length}"><h3>${esc(t.title)}</h3><p>${esc(t.body[page])}</p><span class="scroll-count">Schriftrolle ${page+1} von ${t.body.length}</span></article><nav class="scroll-nav" aria-label="Schriftrollen blättern"></nav></div>`,'Auftrag für das Archiv','scroll');const a=$('.scroll-nav');
+   if(page>0)button('Zurück',()=>{page--;show();},'scroll-btn back',a);
+   if(page<t.body.length-1)button('Nächste Schriftrolle',()=>{page++;show();},'scroll-btn next',a);
+   else button('Gelesen – zum Archiv bringen',()=>{state.flags.archiveScrollsRead=true;add('seen','text:archive');save();close();render();toast('Die Schriftrollen sind im Botenbeutel. Du kannst sie dort und im Notizbuch nachlesen.');},'scroll-btn next done',a);
   }show();
  }
  function depositArchiveScrolls(){
@@ -234,7 +242,10 @@
  $('#notebook').onclick=showJournal;
  function exportNotes(){let text='IM ZEICHEN DER WENDE\n\n';state.notes.forEach(id=>{if(G.notes[id])text+=G.notes[id].join('\n')+'\n\n';});for(const id of ['motives','council','bridge'])if(state.drafts[id]?.reason)text+='Begründung – '+G.puzzles[id].title+'\n'+state.drafts[id].reason+'\n\n';const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Meine-Stadtchronik.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  function hint(){const id=activePuzzle||scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]))?.[4];if(!id){info('Die Öllampe','Sprich mit den Menschen, sammle Gegenstände und öffne die Stadtkarte. Neue Wege entstehen durch deine Erkenntnisse.');return;}
-  const p=G.puzzles[id];if(id==='timeline'&&(state.hints[id]||0)>=2){let box=$('#hint-box');if(!activePuzzle||!box){info('Öllampe · weitgehende Hilfe','Die nächste Hilfe zeigt die vollständige Zeitfolge.');box=$('#modal-content');}else{box.hidden=false;box.textContent='Die nächste Hilfe zeigt die vollständige Zeitfolge.';}button('Vollständige Zeitfolge zeigen',()=>{state.hints[id]=3;save();box.textContent=p.hints[2];},'',box);return;}let level=state.hints[id]||0;if(level<3)level++;state.hints[id]=level;save();
+  const p=G.puzzles[id];
+  // Zeitmechanik: Die vollständige Zeitfolge gibt es nur auf ausdrücklichen Wunsch.
+  if(id==='timeline'&&(state.hints[id]||0)>=2){let box=activePuzzle?$('#hint-box'):null;if(!box){info('Öllampe · weitgehende Hilfe','Die nächste Hilfe zeigt die vollständige Zeitfolge.');box=$('#modal-content');}else{box.hidden=false;box.textContent='Die nächste Hilfe zeigt die vollständige Zeitfolge. ';}button('Vollständige Zeitfolge zeigen',()=>{state.hints[id]=3;save();box.textContent=p.hints[2];},'',box);return;}
+  let level=state.hints[id]||0;if(level<3)level++;state.hints[id]=level;save();
   if(activePuzzle&&$('#hint-box')){$('#hint-box').hidden=false;$('#hint-box').textContent=`Hinweis ${level}/3: ${p.hints[level-1]}`;return;}
   info(`Öllampe · Hinweis ${level}/3`,p.hints[level-1]);
  }
@@ -242,6 +253,8 @@
  function locked(message){info('Hier fehlt noch etwas',message);}
  const classicMode=new Set();
  document.addEventListener('minigame-win',e=>{if(G.puzzles[e.detail])complete(e.detail);});
+ // Zwischenstand von Rätseln (z. B. verriegelte Jahresfelder der Zeitmechanik) im Spielstand merken.
+ document.addEventListener('minigame-progress',e=>{const {id,data}=e.detail||{};if(id==='timeline'&&data){state.flags.timelineLocks=(data.locks||[]).filter(Number.isInteger);state.flags.timelineMisses=data.misses||{};save();}});
  // Auswahl aus einem Minispiel (z. B. die Inschrift der Argumentationsbrücke) fürs Notizbuch merken – kein Freitext.
  document.addEventListener('minigame-choice',e=>{const {id,text}=e.detail||{};const p=G.puzzles[id];if(!p||typeof text!=='string')return;let d=state.drafts[id];if(!d||!Array.isArray(d.values))d=state.drafts[id]={values:p.rows.map(()=>null),reason:''};d.reason=text.slice(0,4000);save();});
  function readingHtml(t,withButton){return `<article class="reading-panel"><h3>${esc(t.title)}</h3>${t.body.map(x=>`<p>${esc(x)}</p>`).join('')}${t.source?`<blockquote class="source-quote"><p>${esc(t.source.text)}</p><cite>${esc(t.source.ref)}</cite></blockquote>`:''}${withButton?'<button type="button" class="primary to-puzzle">← Zurück zum Rätsel</button>':''}</article>`;}
@@ -253,16 +266,16 @@
   if(id==='bridge'&&!canFinish(false))return locked('Für den Abschluss müssen alle Haupträtsel gelöst und die sechs Siegel eingesetzt sein.');
   activePuzzle=id;const p=G.puzzles[id];let d=state.drafts[id];if(!d||!Array.isArray(d.values))d=state.drafts[id]={values:p.rows.map(()=>null),reason:''};
   const steps=G.steps?.[id];const stepsSeen=state.seen.includes('steps:'+id);const text=G.texts?.[id];open(p.title,`${text?readingHtml(text,true):''}<div class="puzzle-head"><p>${esc(p.prompt)}</p><div class="puzzle-help-buttons">${text?`<button type="button" id="puzzle-text" aria-expanded="false"${state.seen.includes('textunlock:'+id)?'':' hidden'}>📜 Fachtext</button>`:''}<button id="puzzle-hint" aria-label="Hinweis zum Rätsel">♧ Hinweis</button></div></div>${steps?`<details class="puzzle-steps"${has(id)||state.seen.includes('steps:'+id)?'':' open'}><summary>So funktioniert's</summary><ol>${steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></details>`:''}<p id="hint-box" class="clue" hidden></p><div id="puzzle-work" class="${p.type}"></div><div id="feedback" role="status" aria-live="polite"></div>`,'Erinnerung · '+scene().era,'puzzle');activePuzzle=id;$('#puzzle-hint').onclick=hint;if(steps&&!stepsSeen){add('seen','steps:'+id);save();}if(text){const mc=$('#modal-content');const setTab=t=>{mc.dataset.tab=t;$('#puzzle-text')?.setAttribute('aria-expanded',String(t==='read'));if(t==='read'){add('seen','text:'+id);save();}$('#modal').scrollTop=0;};$('#puzzle-text').onclick=()=>setTab('read');mc.querySelector('.to-puzzle').onclick=()=>setTab('solve');setTab('solve');}
-  const work=$('#puzzle-work');$('#modal').dataset.puzzle=id;if(id==='timeline')$('.puzzle-steps')?.removeAttribute('open');
+  const work=$('#puzzle-work');
   const mg=G.minigames?.[id];
-  if(mg&&id!=='timeline'&&!classicMode.has(id)&&window.MiniGames?.[mg.type]){$('#modal').dataset.mode='minigame';$('#modal-title').textContent=mg.title;$('.puzzle-head p').textContent=mg.prompt||'';$('.puzzle-steps')?.remove();window.MiniGames[mg.type](id,mg,work);const a=actions();button('Zurück in die Szene',close,'',a);return;}
-  if(id==='timeline'){modalCleanup=window.Chronicle.timeline({p,d,work,cfg:G.minigames.timeline,flags:state.flags,save,onComplete:()=>complete(id),onJournal:()=>{showJournal();button('Zurück zur Chronikmaschine',()=>openPuzzle('timeline'),'primary',actions());}});const a=actions();button('Mechanismus prüfen',()=>window.Chronicle.checkTimeline(),'primary',a);button('Zurück in die Szene',close,'',a);return;}
+  if(id==='timeline'&&mg)mg.restore={locks:state.flags.timelineLocks||[],misses:state.flags.timelineMisses||{}};
+  if(mg&&!classicMode.has(id)&&window.MiniGames?.[mg.type]){$('#modal').dataset.mode='minigame';$('#modal-title').textContent=mg.title;$('.puzzle-head p').textContent=mg.prompt||'';$('.puzzle-steps')?.remove();window.MiniGames[mg.type](id,mg,work);const a=actions();button('Zurück in die Szene',close,'',a);return;}
   if(window.Adventure.renderPuzzle(id,p,d,work,save)){
   }else if(p.type==='gears'){
    work.classList.add('gears');p.rows.forEach((r,i)=>{const g=document.createElement('section');g.className='gear';g.innerHTML=`<h3>${esc(r.label)}</h3>`;const b=button(d.values[i]===null?'Zahnrad drehen':r.options[d.values[i]],()=>{d.values[i]=d.values[i]===null?0:(d.values[i]+1)%r.options.length;g.style.setProperty('--rotation',((d.values[i]+1)*120)+'deg');b.textContent=r.options[d.values[i]];b.setAttribute('aria-label',r.label+': '+r.options[d.values[i]]);save();},'',g);g.append(Object.assign(document.createElement('small'),{textContent:'Antippen zum Drehen'}));work.append(g);});
   }else{
    if(p.type==='map')work.innerHTML='<div class="schematic" aria-label="Schematische Karte: Fluss mit Brücke bei der Stadt"><span>Stadt ▥</span><span>Fluss ≋ · Übergang ═</span><span>Zwei Heere ⚑</span></div>';
-
+   if(p.type==='balance')work.innerHTML='<div class="balance-title"><span>Glaube</span>⚖<span>Politik</span></div>';
    const unique=[...new Set(p.rows.flatMap(r=>r.options))];let token=null;
    const rack=document.createElement('div');rack.className='rack';rack.setAttribute('aria-label','Bausteine auswählen');work.append(rack);
    unique.forEach(value=>{const b=button(value,()=>{token=value;rack.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));$('#placement-help').textContent='Gewählt: '+value+' – tippe jetzt auf einen passenden Platz.';},'',rack);b.setAttribute('aria-pressed','false');});
@@ -271,7 +284,7 @@
    p.rows.forEach((r,i)=>{const slot=document.createElement('div');slot.className='slot';slot.innerHTML=`<span class="slot-label" id="row-${i}">${esc(r.label)}</span>`;const b=button(d.values[i]===null?'＋ Baustein einsetzen':r.options[d.values[i]],()=>{if(token===null){toast('Wähle zuerst einen Baustein oben aus.');return;}const index=r.options.indexOf(token);if(index<0){toast('Dieser Baustein passt zu einem anderen Teil des Mechanismus.');return;}d.values[i]=index;b.textContent=token;b.className='filled';slot.querySelector('.row-feedback')?.remove();save();},d.values[i]===null?'':'filled',slot);b.id='slot-'+i;b.setAttribute('aria-describedby','row-'+i);b.setAttribute('aria-label','Platz: '+r.label);slots.append(slot);});
   }
   if(p.reasons)reasonChoice(p,d,work,save);
-  const a=actions();button(p.type==='mosaic'?'Einordnung prüfen':'Mechanismus prüfen',()=>check(id),'primary',a);button('Zurück in die Szene',close,'',a);
+  const a=actions();button(p.type==='balance'?'Einordnung prüfen':'Mechanismus prüfen',()=>check(id),'primary',a);button('Zurück in die Szene',close,'',a);
   if(has(id)){$('#feedback').className='feedback success';$('#feedback').textContent='Diese Erinnerung hast du bereits erschlossen. Du kannst deine Einordnung erneut ansehen und ändern.';}
  }
  function chosenReason(p,d){return p.reasons?.options.find(o=>o.text===d.reason)||null;}
@@ -289,25 +302,27 @@
   if(p.reasons){const r=chosenReason(p,d);$('.reason-choice')?.classList.remove('needs');
    if(!r){fb.textContent='Deine Bausteine sind richtig gesetzt. Wähle jetzt unten eine Begründung aus.';$('.reason-choice')?.classList.add('needs');$('.reason-choice button')?.focus();return;}
    if(!r.ok){fb.textContent='Deine Bausteine sind richtig gesetzt. Die gewählte Begründung trägt aber noch nicht: '+r.why+' Wähle eine andere Begründung.';$('.reason-choice')?.classList.add('needs');return;}}
-  if(p.type==='mosaic'){
+  if(p.type==='balance'){
    fb.className='feedback success';fb.innerHTML='<strong>Deine Einordnung und deine Begründung passen.</strong><p>Zum Weiterdenken: Einheit und stabile Ordnung lassen sich politisch erklären. Persönliche religiöse Überzeugung verweist auf Glauben. Förderung christlicher Gemeinden kann beides verbinden. Auch beim Zeichen und beim Sieg sind verschiedene Deutungen möglich; die Vision ist später berichtet.</p><p>Besprich mit deiner Gruppe eine Karte, die auch anders liegen könnte.</p>';
    if(!$('#confirm-reflection')){const b=button('Verstanden – Siegel nehmen',()=>complete(id),'primary',fb);b.id='confirm-reflection';}return;
   }
   complete(id);
  }
  function canFinish(includeBridge=true){return G.seals.every(n=>state.seals.includes(n))&&!!state.flags.sealsPlaced&&Object.keys(G.puzzles).filter(id=>includeBridge||id!=='bridge').every(has);}
- function showEnding(replay=false){if(modalMode==='finale'||!canFinish())return;activePuzzle=null;state.flags.finished=true;save();open('Die Chronik spricht wieder.','', 'Die Stadtchronik · vollständig','finale');$('#close').hidden=true;modalCleanup=window.Chronicle.finale({root:$('#modal-content'),seals:G.seals.map(n=>window.Seals.medal(n,{cls:'big'})),replay:replay||!state.flags.finaleSeen,onSeen:()=>{state.flags.finaleSeen=true;save();},onExplore:()=>{modalMode='ending';close();},onReset:()=>reset(()=>showEnding())});}
+ /* Endsequenz (finale.js). replay=false springt direkt zur Abschlussansicht. */
+ function showEnding(replay=true){if(!window.Finale||!canFinish())return false;const m=$('#modal');if(m.open){window.MiniGames?.stop?.();m.close();}activePuzzle=null;state.flags.finished=true;save();
+  const el=window.Finale.play({names:G.seals,seals:state.seals,onExplore:()=>render(),onNewGame:()=>reset(()=>{close();showEnding(false);}),onJournal:()=>showJournal()});if(el&&!replay)el.querySelector('.fn-skip')?.click();state.flags.finaleSeen=true;save();return true;}
  function complete(id){if(id==='bridge'&&!canFinish(false))return locked('Für den Abschluss fehlen noch Haupträtsel oder eingesetzte Siegel.');const p=G.puzzles[id];const already=has(id);add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward&&!own(p.reward)){add('inventory',p.reward);$('#inventory-toggle').classList.add('has-new');}if(G.notes[id])add('notes',id);unlock();save();render();activePuzzle=null;
   if(id==='archive'&&!state.flags.archiveScrollsDeposited){info('Das Archiv ist erhellt','Du hast alle Spuren zugeordnet und das Licht wiederhergestellt. Lege nun die Schriftrollen auf dem freien Regalplatz ab.');return;}
   if(id==='archive'&&!state.flags.galerius){state.flags.galerius=true;add('notes','galerius');save();render();open('Eine Nachricht verändert die Stadt',`<p class="eyebrow">Zeitsprung · 311</p><p class="intro-copy">Ein Bote verkündet: „Galerius beendet die staatliche Verfolgung weitgehend.“ Die Hauskirche kann wieder geöffnet werden. Der Wandel beginnt schon vor Konstantins Sieg.</p><p>Auf der Stadtkarte ist jetzt das Militärlager erreichbar.</p>`,'Das Tor zum neuen Jahrhundert');button('Die Nachricht weitertragen',close,'primary',actions());return;}
-  if(id==='bridge'){showEnding();return;}
+  if(id==='bridge'){if(showEnding(true))return;state.flags.finished=true;save();open('Die Chronik spricht wieder.',`<div class="ending"><span>✧</span><h3>Abenteuer abgeschlossen</h3><p>Du hast die Erinnerungen der Stadt zusammengefügt.</p></div>`,'Die Stadtchronik · vollständig');const a=actions();button('Stadt weiter erkunden',close,'primary',a);button('Neues Spiel',()=>reset(close),'',a);return;}
   const sum=G.summaries?.[id];const fallback=G.notes[id]?.[1]||(id==='map312'?'Die Karte ist vollständig. Konstantins Zelt ist jetzt zugänglich.':'Die Zeitfolge stimmt. Die Argumentationsbrücke ist jetzt zugänglich.');
   const sealHtml=p.seal?(window.Seals?window.Seals.reward(p.seal,{owned:state.seals,fresh:!already}):`<p class="reward-line">Siegel „${esc(p.seal)}“</p>`):'';
   const body=sum?`<section class="learned"><h3>Das hast du herausgefunden</h3><ul>${sum.learned.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><div class="merke"><span>Merke</span><p>${esc(sum.merke)}</p></div>`:`<p class="intro-copy">${esc(fallback)}</p>`;
   const extra=`${p.reward?`<p class="reward-line"><img src="assets/inventory/${p.reward}.svg" alt=""> Neu in deinem Botenbeutel: <strong>${esc(G.items[p.reward])}</strong></p>`:''}${sum?.next?`<p class="next-line">➜ ${esc(sum.next)}</p>`:''}`;
   open(already?'Erinnerung erneut erschlossen':'Der Mechanismus öffnet sich',sealHtml+body+extra,'Eine neue Spur','reward');const a=actions();button('Weiter erkunden',close,'primary',a);button('Stadtkarte ansehen',showMap,'',a);
  }
- function reset(onCancel=menu){if(typeof onCancel!=='function')onCancel=menu;open('Ein neues Spiel beginnen?','<p>Der Spielstand auf diesem Gerät wird ersetzt. Lade bei Bedarf zuerst dein Notizbuch herunter.</p>','Spielmenü');const a=actions();button('Neues Spiel starten',()=>{try{localStorage.removeItem(KEY);}catch(e){}window.BonusGames?.reset();state=fresh();state.started=true;selected=null;activePuzzle=null;close();render();info(G.scenes[0].name,G.scenes[0].intro,true);},'danger',a);button('Abbrechen',onCancel,'',a);}
+ function reset(onCancel=menu){if(typeof onCancel!=='function')onCancel=menu;open('Ein neues Spiel beginnen?','<p>Der Spielstand auf diesem Gerät wird ersetzt. Lade bei Bedarf zuerst dein Notizbuch herunter.</p>','Spielmenü');const a=actions();button('Neues Spiel starten',()=>{try{localStorage.removeItem(KEY);}catch(e){}window.BonusGames?.reset();state=fresh();state.started=true;selected=null;activePuzzle=null;close();render();intro(G.scenes[0]);},'danger',a);button('Abbrechen',onCancel,'',a);}
 
  function continuationMenu(){
   activePuzzle=null;
@@ -335,7 +350,7 @@
       const next={...fresh(),...found.state,started:true};
       localStorage.setItem(KEY,JSON.stringify(next));
       window.BonusGames?.mergeProgress(found.bonus);
-      state=next;selected=null;activePuzzle=null;close();render();if(state.flags.finished&&canFinish())showEnding();else toast('Spielstand geladen. Du kannst hier weiterspielen.');
+      state=next;selected=null;activePuzzle=null;close();render();if(!(state.flags.finished&&showEnding(false)))toast('Spielstand geladen. Du kannst hier weiterspielen.');
      }catch(e){status.textContent='Dein Browser konnte den Stand nicht speichern. Der bisherige Spielstand bleibt erhalten.';}
     },'primary',preview);
    }catch(e){if(valid())status.textContent=e.message||'Laden fehlgeschlagen. Dein lokaler Stand bleibt erhalten.';}
@@ -345,11 +360,11 @@
   button('Zurück zum Spielmenü',menu,'',actions());
  }
 
- function menu(){activePuzzle=null;open('Im Zeichen der Wende',`<p class="eyebrow">Ein historisches Point-and-Click-Adventure</p><p class="intro-copy">Eine verschlossene Chronik. Sechs fehlende Siegel. Und eine Stadt, deren Geschichte sich grundlegend verändert.</p><p>Du bist Bote oder Botin. Untersuche Gegenstände, sprich mit Menschen und verbinde ihre Spuren. Stadtkarte, Botenbeutel und Notizbuch begleiten dich.</p>${!storageOK?'<p class="save-warning">Speichern ist gerade nicht verfügbar. Lass diesen Tab geöffnet.</p>':''}`,'Willkommen','menu');const a=actions();button(state.started?'Spiel fortsetzen':'Die Stadt betreten',()=>{state.started=true;save();close();render();if(state.flags.finished&&canFinish()){showEnding();return;}if(!state.seen.includes('intro:gate')){add('seen','intro:gate');save();info('Das Stadttor',G.scenes[0].intro,true);}},'primary',a);if(state.started)button('Neues Spiel',reset,'',a);button('Spielstand speichern / Code laden',continuationMenu,'',a);button('So spielst du',()=>info('So spielst du','Grüne Markierungen (i) informieren: Sprich mit den Menschen und untersuche die Dinge. Rätsel sind terrakottafarben (✦) – sie öffnen sich erst, wenn du dort genug erfahren hast (🔒 zeigt, wie viel noch fehlt). Beige Namensschilder kennzeichnen Gegenstände zum Mitnehmen. Bonusspiele schaltest du durch gelöste Rätsel frei und startest sie im Notizbuch. Kombinieren: Gegenstand wählen, dann Ziel antippen. Die Öllampe gibt drei gestufte Hilfen.'),'',a);}
+ function menu(){activePuzzle=null;open('Im Zeichen der Wende',`<p class="eyebrow">Ein historisches Point-and-Click-Adventure</p><p class="intro-copy">Eine verschlossene Chronik. Sechs fehlende Siegel. Und eine Stadt, deren Geschichte sich grundlegend verändert.</p><p>Du bist Bote oder Botin. Untersuche Gegenstände, sprich mit Menschen und verbinde ihre Spuren. Stadtkarte, Botenbeutel und Notizbuch begleiten dich.</p>${!storageOK?'<p class="save-warning">Speichern ist gerade nicht verfügbar. Lass diesen Tab geöffnet.</p>':''}`,'Willkommen','menu');const a=actions();button(state.started?'Spiel fortsetzen':'Die Stadt betreten',()=>{state.started=true;save();close();render();if(!state.seen.includes('intro:gate')){add('seen','intro:gate');save();intro(G.scenes[0]);}},'primary',a);if(state.started)button('Neues Spiel',reset,'',a);button('Spielstand speichern / Code laden',continuationMenu,'',a);button('So spielst du',()=>info('So spielst du','Grüne Markierungen (i) informieren: Sprich mit den Menschen und untersuche die Dinge. Rätsel sind terrakottafarben (✦) – sie öffnen sich erst, wenn du dort genug erfahren hast (🔒 zeigt, wie viel noch fehlt). Beige Namensschilder kennzeichnen Gegenstände zum Mitnehmen. Bonusspiele schaltest du durch gelöste Rätsel frei und startest sie im Notizbuch. Kombinieren: Gegenstand wählen, dann Ziel antippen. Die Öllampe gibt drei gestufte Hilfen.'),'',a);}
  const title=$('#title');title.addEventListener('pointerdown',()=>{held=false;clearTimeout(holdTimer);holdTimer=setTimeout(()=>{held=true;teacher();},5000);});for(const e of ['pointerup','pointercancel','pointerleave'])title.addEventListener(e,()=>clearTimeout(holdTimer));title.addEventListener('contextmenu',e=>e.preventDefault());title.onclick=()=>{if(!held)menu();held=false;};title.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.shiftKey){e.preventDefault();teacher();}});
  function teacher(){activePuzzle=null;open('Lehrkraftmodus','<p class="clue">Lokaler Testzugang, kein geschützter Adminbereich. Änderungen betreffen nur dieses Gerät. Zum Zurücksetzen einzelner Rätsel bleiben bereits geöffnete Orte zugänglich.</p><h3>Ort direkt öffnen</h3><div class="teacher-scenes"></div><h3>Rätsel gelöst / ungelöst</h3><div class="teacher-grid"></div><h3>Gegenstände hinzufügen</h3><div id="teacher-items" class="teacher-scenes"></div>','Spieltitel 5 Sekunden halten · alternativ Umschalt + Enter','teacher');
   G.scenes.forEach(s=>button(s.name,()=>{add('unlocked',s.id);enter(s.id);},'',$('.teacher-scenes')));
-  Object.entries(G.puzzles).forEach(([id,p])=>{const label=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.checked=has(id);c.onchange=()=>{if(c.checked){add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward)add('inventory',p.reward);if(G.notes[id])add('notes',id);if(id==='archive'){state.flags.archiveScrollsDeposited=true;state.inventory=state.inventory.filter(x=>x!=='scrolls');state.flags.galerius=true;add('notes','galerius');}}else{state.solved=state.solved.filter(x=>x!==id);state.notes=state.notes.filter(x=>x!==id);if(p.seal){state.seals=state.seals.filter(x=>x!==p.seal);state.flags.sealsPlaced=false;state.flags.sealSockets=[];}if(id==='archive'){state.flags.galerius=false;state.notes=state.notes.filter(x=>x!=='galerius');}state.flags.finished=false;state.flags.finaleSeen=false;if(id==='timeline'){state.flags.timelineLocks=[];state.flags.timelineTransfer=false;}}render();};label.append(c,document.createTextNode(p.title));$('.teacher-grid').append(label);});
+  Object.entries(G.puzzles).forEach(([id,p])=>{const label=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.checked=has(id);c.onchange=()=>{if(c.checked){add('solved',id);if(p.seal)add('seals',p.seal);if(p.reward)add('inventory',p.reward);if(G.notes[id])add('notes',id);if(id==='archive'){state.flags.archiveScrollsDeposited=true;state.inventory=state.inventory.filter(x=>x!=='scrolls');state.flags.galerius=true;add('notes','galerius');}}else{state.solved=state.solved.filter(x=>x!==id);state.notes=state.notes.filter(x=>x!==id);if(p.seal){state.seals=state.seals.filter(x=>x!==p.seal);state.flags.sealsPlaced=false;state.flags.sealSockets=[];}if(id==='archive'){state.flags.galerius=false;state.notes=state.notes.filter(x=>x!=='galerius');}if(id==='bridge')state.flags.finished=false;}render();};label.append(c,document.createTextNode(p.title));$('.teacher-grid').append(label);});
   Object.entries(G.items).forEach(([id,name])=>button(name,()=>{add('inventory',id);render();toast(name+' hinzugefügt.');},'',$('#teacher-items')));
   const a=actions();button('Alle sechs Siegel geben',()=>{state.seals=[...G.seals];save();toast('Alle sechs Siegel vorhanden.');},'',a);button('Finale direkt testen',()=>{state.seals=[...G.seals];state.flags.sealsPlaced=true;add('unlocked','basilica');enter('basilica');},'primary',a);button('Spielstand löschen',reset,'danger',a);
  }

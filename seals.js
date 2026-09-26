@@ -15,7 +15,7 @@ window.Seals=(()=>{
  const slug=name=>String(name).toLowerCase().replace(/[^a-z0-9]+/g,'-');
  const DIR='assets/ui/seals/';
  const hasAsset=key=>(G().sealAssets?.available||[]).includes(key);
- const assetPath=key=>DIR+'seal-'+key+'.png';
+ const assetPath=key=>DIR+'seal-'+key+(G().sealAssets?.ext||'.png');
 
  /* Emailfarbe des Mittelfeldes je Siegel: [hell, dunkel]. Rand und Relief sind bei allen gleich. */
  const FIELD={Konflikt:['#9a5a3c','#4a2416'],Quelle:['#a0783c','#4e3514'],Anzeige:['#5f8a72','#223f33'],Staat:['#7a5a8c','#34223f'],'312':['#a0443c','#4a1a18'],Wende:['#4f7196','#1c3350']};
@@ -97,6 +97,7 @@ window.Seals=(()=>{
  /* Leere Fassung: dunkle Vertiefung mit schwach eingeritztem Motiv. */
  function socket(name,opts={}){
   ensureDefs();const s=slug(name);
+  if(hasAsset(s))return `<span class="seal-setting has-art${opts.cls?' '+opts.cls:''}" data-seal="${esc(name)}" aria-hidden="true"><img src="${assetPath(s)}" alt=""></span>`;
   return `<span class="seal-setting${opts.cls?' '+opts.cls:''}" data-seal="${esc(name)}" aria-hidden="true"><svg viewBox="0 0 100 100" focusable="false">
    <circle cx="50" cy="50" r="48" fill="url(#sg-rim-in)" stroke="#3c250b" stroke-width="1.2"/>
    ${[45,135,225,315].map(a=>`<path d="M50 1.5 L55 9 L45 9 Z" fill="#e7bf6c" stroke="#5a3812" stroke-width=".6" transform="rotate(${a} 50 50)"/>`).join('')}
@@ -134,7 +135,7 @@ window.Seals=(()=>{
  /* Das Siegelrad: steinerne Einfassung, Lorbeerkranz, Bronzescheibe mit Speichen, Mittelrosette. */
  function wheelSvg(){
   ensureDefs();
-  if(hasAsset('wheel-frame'))return `<img class="seal-wheel-art" src="${DIR}seal-wheel-frame.png" alt="">`;
+  if(hasAsset('wheel-frame'))return `<img class="seal-wheel-art" src="${assetPath('wheel-frame')}" alt="">`;
   const C=200;let leaves='';
   for(let i=0;i<60;i++){const a=i*6,side=i%2?1:-1;leaves+=`<ellipse cx="${C}" cy="${C-181}" rx="3.4" ry="8.5" transform="rotate(${a} ${C} ${C}) rotate(${side*38} ${C} ${C-181})"/>`;}
   let ribs='';for(let i=0;i<24;i++)ribs+=`<path d="M${C} 6 V20" transform="rotate(${i*15} ${C} ${C})"/>`;
