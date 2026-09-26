@@ -123,7 +123,8 @@
 .office-stamp .os-face svg{width:88%;height:88%}
 .office-stamp .os-plate{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:.35em;width:150%;padding:.25em .3em;border-radius:6px;font-size:.86em;line-height:1.1;text-align:center;
  color:var(--wood-deep);background:radial-gradient(circle at 35% 25%,#fff0c0,var(--bronze-light) 30%,var(--bronze) 75%,var(--bronze-dark));border:1.5px solid var(--line-dark);box-shadow:0 3px 5px #0008;font-weight:600}
-@media (hover:hover){.office-stamp:hover{transform:translateY(-3%)}}
+@media (hover:hover){
+@media (hover:hover) and (pointer:fine){.office-stamp:hover{transform:translateY(-3%)}}}
 .office-stamp.lift{transform:translate(var(--dx),calc(var(--dy) - 12%)) scale(1.04);z-index:9}
 .office-stamp.lift .os-plate{opacity:0}
 .office-stamp.press{transform:translate(var(--dx),var(--dy)) scale(.97);transition-duration:.12s}

@@ -24,8 +24,10 @@
 .seal-token.is-placed .seal-state{color:#1f6b57}
 .seal-token.is-placed .seal-state:before{content:'✓ '}
 button.seal-token{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-button.seal-token:not(:disabled):hover .seal-medallion{transform:translateY(-3px)}
-button.seal-token.is-selected:hover .seal-medallion{transform:translateY(-5px) scale(1.08)}
+
+@media (hover:hover) and (pointer:fine){button.seal-token:not(:disabled):hover .seal-medallion{transform:translateY(-3px)}}
+
+@media (hover:hover) and (pointer:fine){button.seal-token.is-selected:hover .seal-medallion{transform:translateY(-5px) scale(1.08)}}
 button.seal-token:active{transform:none}
 button.seal-token:disabled{opacity:1;cursor:default}
 button.seal-token:focus-visible{outline:3px solid #2d8a7a;outline-offset:2px}
