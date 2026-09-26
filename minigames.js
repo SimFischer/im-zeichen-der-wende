@@ -107,13 +107,13 @@ window.MiniGames=(()=>{
   const roll=root.querySelector('.forum-roll'),text=root.querySelector('.forum-text'),bar=root.querySelector('.forum-wick i'),boxes=[...root.querySelectorAll('.forum-box')];
   let mul=1,score=0,queue=shuffle(cfg.items),cur=null,left=0,total=0,running=false,locked=false,last=0,done=[];
   root.querySelectorAll('.w-speed button').forEach(b=>b.onclick=()=>{root.querySelectorAll('.w-speed button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));mul=+b.dataset.speed;b.blur();});
-  function next(){if(!queue.length)queue=shuffle(cfg.items.filter(x=>!done.includes(x)));cur=queue.shift();total=left=cfg.time*mul;text.textContent=cur.text;locked=false;roll.classList.remove('filed','ok','bad');pulse(roll,'unroll');boxes.forEach(b=>b.classList.remove('ok','bad'));}
+  function next(){if(!queue.length)queue=shuffle(cfg.items.filter(x=>!done.includes(x)));cur=queue.shift();total=left=cfg.time*mul;text.textContent=cur.text;locked=false;root.say('');roll.classList.remove('filed','ok','bad');pulse(roll,'unroll');boxes.forEach(b=>b.classList.remove('ok','bad'));}
   function resolve(choice){if(locked||!running)return;locked=true;const good=choice!==null&&cur.ok.includes(choice);const box=boxes[choice];
    if(good){score++;done.push(cur);setStuds(root,score);roll.classList.add('filed','ok');pulse(box,'w-ok');box.classList.add('ok');root.say(`<b>Richtig.</b> ${esc(cur.why||'')}`,'good');}
    else{queue.push(cur);pulse(roll,'w-bad');roll.classList.add('bad');if(box)pulse(box,'w-bad');
     root.say(choice===null?`<b>Die Chronistin ist schon weiter.</b> Richtig wäre: ${esc(cur.ok.map(i=>cfg.choices[i]).join(' / '))}. ${esc(cur.why||'')}`:`<b>Nicht ganz.</b> Richtig: ${esc(cur.ok.map(i=>cfg.choices[i]).join(' / '))}. ${esc(cur.why||'')}`,'bad');}
    if(score>=goal){running=false;later(root,1400,()=>{root.say('');finale(root,id,cfg.winTitle,cfg.win,{list:done.map(x=>x.text)});});return;}
-   later(root,good?1600:3400,next);}
+   later(root,good?1800:4500,next);}
   boxes.forEach(b=>b.onclick=()=>resolve(+b.dataset.i));
   function key(e){if(!work.isConnected){removeEventListener('keydown',key);return;}const n=+e.key;if(n>=1&&n<=cfg.choices.length&&running)resolve(n-1);}
   addEventListener('keydown',key);track(()=>removeEventListener('keydown',key));
