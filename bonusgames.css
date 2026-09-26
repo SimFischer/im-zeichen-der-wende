@@ -271,3 +271,39 @@
 .sw-pad button.on{opacity:1;background:radial-gradient(circle at 38% 30%,#fff0bf,#e8b25a 60%,#a8763a);box-shadow:inset 0 0 0 2px #fff3c8,0 0 0 4px #ffe3a0,0 2px 0 #3a230c,0 0 18px #ffd98a;transform:translateY(2px)}
 .sw-pad button:disabled{opacity:.5}
 @media (orientation:portrait){.sw-hud{font-size:14px}.sw-pad{bottom:22px}}
+
+/* ---------- Bonusspiel: Zerbrochene Bilder ---------- */
+.bilder-game{position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;padding:10px;background:radial-gradient(circle at 50% 40%,#4a3018,#1c120a 80%);overflow:auto}
+.bilder-pics{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;flex:none}
+.bonus-stage .bilder-pic{display:flex;align-items:center;gap:.5em;min-height:48px!important;padding:4px 12px 4px 4px!important;border:2px solid #8a6a3a!important;border-radius:10px!important;background:linear-gradient(#fbf1d9,#e8d3a4)!important;color:#2a1e10!important;font:600 max(14px,var(--fs-s))/1.15 var(--serif,Georgia),serif!important;cursor:pointer!important;position:relative}
+.bilder-pic img{width:40px;height:40px;border-radius:6px;object-fit:cover;box-shadow:0 1px 3px #0006}
+.bilder-pic.on{border-color:#1f4a40;box-shadow:0 0 0 3px #f3dca6,0 0 0 5px #2d7a67}
+.bilder-pic i{font-style:normal;color:#1f6a4a;font-weight:700}
+.bonus-stage .bilder-pic.locked{background:#3b2a18!important;color:#e8d3a4!important;border-style:dashed;cursor:default!important;opacity:1!important}
+.bilder-lock{display:grid;place-items:center;width:40px;height:40px;border-radius:6px;background:#24160b;color:#e8c47a;font-weight:700}
+.bilder-main{flex:1;min-height:0;display:flex;gap:14px;align-items:center;justify-content:center}
+.bilder-side{display:flex;flex-direction:column;gap:10px;width:min(13em,30%);flex:none}
+.bilder-opt{display:flex;flex-direction:column;border:2px solid #6b4424;border-radius:10px;overflow:hidden}
+.bonus-stage .bilder-opt button{min-height:44px!important;border:0!important;border-radius:0!important;background:#3b2412!important;color:#f1e2bf!important;font:600 max(14px,var(--fs-s))/1.2 var(--serif,Georgia),serif!important;box-shadow:none!important;cursor:pointer!important}
+.bonus-stage .bilder-opt button+button{border-top:1px solid #6b4424!important}
+.bonus-stage .bilder-opt button[aria-pressed=true]{background:#2d5a55!important;color:#fff4dc!important}
+.bonus-stage .bilder-peek{min-height:44px!important;border:2px solid #24160b!important;border-radius:10px!important;background:linear-gradient(#fbf1d9,#e8d3a4)!important;color:#2a1e10!important;font:600 max(14px,var(--fs-s))/1.2 var(--serif,Georgia),serif!important;cursor:pointer!important}
+.bilder-moves{margin:0;color:#f1e2bf;font-size:max(15px,var(--fs-s));text-align:center}
+.bilder-frame{position:relative;height:100%;max-height:100%;aspect-ratio:1;max-width:min(100%,70vw);padding:8px;border-radius:12px;background:linear-gradient(135deg,#b8863c,#6b4414);box-shadow:0 10px 26px #000b}
+.bilder-board{--n:3;display:grid;grid-template-columns:repeat(var(--n),1fr);grid-template-rows:repeat(var(--n),1fr);gap:2px;width:100%;height:100%;background:#1c120a;border-radius:6px;overflow:hidden}
+.bonus-stage .bilder-tile{min-height:0!important;padding:0!important;margin:0!important;border:0!important;border-radius:2px!important;background-color:#2a1c10!important;background-repeat:no-repeat;box-shadow:inset 0 0 0 1px #0005!important;cursor:pointer!important;transition:transform .12s}
+.bonus-stage .bilder-tile.sel{box-shadow:inset 0 0 0 4px #ffd98a,0 0 12px #ffd98a!important;z-index:1;transform:scale(.96)!important}
+.bonus-stage .bilder-tile.blank{background:#140c06!important;cursor:default!important;box-shadow:inset 0 0 12px #000!important}
+.bonus-stage .bilder-tile:focus-visible{outline:3px solid #ffd98a;outline-offset:-3px}
+.bilder-game.whole .bilder-board{gap:0}.bilder-game.whole .bilder-tile{box-shadow:none;border-radius:0}
+.bilder-ref{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);border-radius:6px;object-fit:cover;z-index:2;box-shadow:0 0 0 2px #ffd98a}
+.bilder-done{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:5;width:min(34em,calc(100% - 24px))}
+.bilder-done-card{padding:.7em 1.2em;border:2px solid #c9a86b;border-radius:12px;background:#fbf1db;color:#2a1e10;box-shadow:0 10px 30px #000b;text-align:center}
+.bilder-done-card h3{margin:0 0 .2em;color:#5a3a16;font-size:max(19px,var(--fs-m))}
+.bilder-done-card p{margin:.25em 0;font-size:max(15px,var(--fs-s));line-height:1.35}
+.bilder-kicker{letter-spacing:.14em;text-transform:uppercase;color:#6b4a22!important;font-size:max(13px,var(--fs-xs))!important;font-weight:600}
+.bilder-count{color:#4a3822}
+.bilder-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:.5em}
+.bilder-actions button{min-height:44px}
+@media (max-width:760px),(max-height:560px){.bilder-main{flex-direction:column}.bilder-side{width:100%;flex-direction:row;flex-wrap:wrap;justify-content:center}.bilder-frame{height:auto;width:min(100%,60vh)}}
+@media (prefers-reduced-motion:reduce){.bonus-stage .bilder-tile{transition:none}}

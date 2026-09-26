@@ -7,27 +7,19 @@
    Ein Spiel registriert sich mit BonusGames.register({...}) (siehe bonus/*.js).
    setup(ctx) baut das Spiel in ctx.stage auf. Alle Timer, Listener und Animation-Frames
    laufen über ctx und werden beim Schließen des Fensters automatisch beendet. */
-
-/* Cached, failure-tolerant artwork. Atlas frames have equal cells with transparent padding. */
-window.BonusArt=(()=>{
- const cache=new Map();
- function load(art){const imgs={},jobs=art.available.map(k=>{const url=art.dir+art.files[k];if(!cache.has(url))cache.set(url,new Promise(resolve=>{const im=new Image();let settled=false;const finish=v=>{if(settled)return;settled=true;clearTimeout(timer);im.onload=im.onerror=null;resolve(v);};const timer=setTimeout(()=>finish(null),12000);im.onload=()=>finish(im);im.onerror=()=>finish(null);im.src=url;}));return cache.get(url).then(im=>{if(im)imgs[k]=im;});});return {imgs,ready:Promise.all(jobs)};}
- function draw(g,im,x,y,w,h,frame=0,count=1,fit='contain'){if(!im)return false;const sw=im.width/count,sh=im.height,s=fit==='cover'?Math.max(w/sw,h/sh):Math.min(w/sw,h/sh),dw=sw*s,dh=sh*s;g.save();g.beginPath();g.rect(x,y,w,h);g.clip();g.drawImage(im,Math.max(0,Math.min(count-1,frame))*sw,0,sw,sh,x+(w-dw)/2,y+(h-dh)/2,dw,dh);g.restore();return true;}
- return {load,draw};
-})();
-
 window.BonusGames=(()=>{
  const KEY='im-zeichen-der-wende:bonus-v1';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const ORDER=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','circus'];
+ const ORDER=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','bilder','circus'];
  const games={};
- const MILESTONES={zeichen:'conflict',rombrennt:'sources',amphoren:'cases',katakomben:'archive',schildwall:'map312',tiber:'vision',circus:'bridge'};
- let available=new Set(),session=null;
+ const MILESTONES={zeichen:'conflict',rombrennt:'sources',amphoren:'cases',katakomben:'archive',schildwall:'map312',tiber:'vision',bilder:'change',circus:'bridge'};
+ let available=new Set(),session=null,solvedNow=[];
  function update(state){
+  solvedNow=[...(state.solved||[])];
   available=new Set(ORDER.filter(id=>(state.solved||[]).includes(MILESTONES[id])));
   const p=load();p.found=[...available];p.won=p.won.filter(id=>available.has(id));store(p);
  }
- function reset(){stop();available.clear();store({found:[],won:[]});}
+ function reset(){stop();available.clear();store({found:[],won:[]});try{localStorage.setItem('im-zeichen-der-wende:bonus-bilder','[]');}catch(e){}}
 
  /* ---------- Fortschritt (nur entdeckt / geschafft) ---------- */
  function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&Array.isArray(v.found)&&Array.isArray(v.won))return {found:v.found.filter(x=>typeof x==='string'),won:v.won.filter(x=>typeof x==='string')};}catch(e){}return {found:[],won:[]};}
@@ -73,11 +65,9 @@ window.BonusGames=(()=>{
    s.raf=requestAnimationFrame(frame);}
   function card(cls,html){const c=document.createElement('div');c.className='bonus-card '+cls;c.innerHTML=`<div class="bonus-card-inner">${html}<div class="bonus-actions"></div></div>`;stage.append(c);return c;}
   function btn(text,fn,cls,parent){const b=document.createElement('button');b.type='button';b.textContent=text;b.className=cls||'';b.onclick=fn;parent.append(b);return b;}
-  const pending=[];
   const ctx={
-   assets(art,changed){if(typeof Image==='undefined')return {};const a=window.BonusArt.load(art);pending.push(a.ready.then(()=>{if(s.alive)changed?.();}));return a.imgs;},
    stage,task,esc,
-   get paused(){return s.paused;},get running(){return s.running;},
+   get paused(){return s.paused;},get running(){return s.running;},get solved(){return solvedNow.slice();},
    reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,
    on,
    after(ms,fn){const t=setTimeout(()=>{if(s.alive)fn();},ms);s.timers.push(t);return t;},
@@ -89,7 +79,7 @@ window.BonusGames=(()=>{
     ctx.observe(stage,()=>{const r=stage.getBoundingClientRect();view.dpr=Math.min(opts.maxDpr||2,window.devicePixelRatio||1);view.W=Math.max(1,r.width);view.H=Math.max(1,r.height);c.width=Math.round(view.W*view.dpr);c.height=Math.round(view.H*view.dpr);c.style.width=view.W+'px';c.style.height=view.H+'px';g.setTransform(view.dpr,0,0,view.dpr,0,0);view.resize?.(view);});
     return view;},
    layer(cls,html=''){const d=document.createElement('div');d.className=cls;d.innerHTML=html;stage.append(d);return d;},
-   say(text,ms=2600,kind=''){let b=stage.querySelector('.bonus-say');if(!b){b=ctx.layer('bonus-say');b.setAttribute('role','status');}b.textContent=text;b.className='bonus-say show '+kind;clearTimeout(b._t);b._t=ctx.after(ms,()=>{if(b.isConnected)b.className='bonus-say';});},
+   say(text,ms=2600,kind=''){let b=stage.querySelector('.bonus-say');if(!b){b=ctx.layer('bonus-say');b.setAttribute('role','status');}b.textContent=text;b.className='bonus-say show '+kind;clearTimeout(b._t);b._t=setTimeout(()=>{if(b.isConnected)b.className='bonus-say';},ms);},
    setTask(t){task.textContent=t||'';},
    btn,
    /* Sieg: kurze Abschlussmeldung, Noch einmal, Zurück. */
@@ -106,7 +96,7 @@ window.BonusGames=(()=>{
   try{s.game=g.setup(ctx)||{};}catch(e){console.error(e);}
   btn(intro.start||'Los geht’s',()=>{ic.remove();shell.classList.add('running');s.running=true;s.paused=false;s.last=0;s.game?.start?.();},'primary',ic.querySelector('.bonus-actions'));
   btn('Zurück in die Szene',()=>UI.close(),'',ic.querySelector('.bonus-actions'));
-  const startButton=ic.querySelector('.primary');if(pending.length){startButton.disabled=true;const label=startButton.textContent;startButton.textContent='Bilder werden geladen …';stage.classList.add('art-loading');Promise.all(pending).then(()=>{if(!s.alive)return;stage.classList.remove('art-loading');startButton.disabled=false;startButton.textContent=label;});}startButton.focus({preventScroll:true});
+  ic.querySelector('.primary').focus({preventScroll:true});
   s.raf=requestAnimationFrame(frame);
  }
  // Für den Fortsetzungscode: exportieren und beim Übernehmen zusammenführen (nichts geht verloren)

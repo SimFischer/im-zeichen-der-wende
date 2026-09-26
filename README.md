@@ -9,7 +9,8 @@ Vier Bereiche sind als gezeichnete Szenen neu gebaut (`scenegames.js`, `scenegam
 
 Bedienung: Karte antippen und Ziel antippen oder ziehen (Pointer Events), keine Hover-Abhängigkeit, Flächen mindestens 44 px, die Bühne passt sich an Quer- und Hochformat an, ohne dass das Fenster scrollt. Fehlt eine der Grafiken, zeigt `.sg-no-art` einen neutralen gezeichneten Ersatz.
 
-- **Kurierfahrt und „Belade den Wagen!“ entfernt:** Beide Spiele gibt es nicht mehr, auch nicht als Bonusspiel. Es bleiben sieben Bonusspiele. Alte Spielstände mit diesen Einträgen laden weiterhin; die Einträge werden ignoriert.
+- **Kurierfahrt und „Belade den Wagen!“ entfernt:** Beide Spiele gibt es nicht mehr, auch nicht als Bonusspiel. Es blieben sieben Bonusspiele; seit „Zerbrochene Bilder“ sind es acht. Alte Spielstände mit diesen Einträgen laden weiterhin; die Einträge werden ignoriert.
+- **Neues Bonusspiel „Zerbrochene Bilder“** (`bonus/bilder.js`, Bilder `assets/bonus/bilder-*.webp`): Schiebepuzzle nach dem Vorbild von „Das Zeichen auf dem Schild“. Freigeschaltet mit „Vorher und Nachher“ (313). Vier Bilder – Schild (312), geöffnete Stadt (313), Konstantin im Mosaik und Konzil von Nicäa; die letzten beiden erst, wenn Mosaik bzw. Konzil gelöst sind. Tauschen oder Schieben, 3 × 3 oder 4 × 4, Vorlage jederzeit, kein Zeitdruck. Erledigte Bilder werden nur auf diesem Gerät abgehakt.
 - **Schrift:** EB Garamond ist jetzt eingebunden (`assets/fonts/`, variable Schrift, normal und kursiv, Stärken 400–800, zusammen ca. 390 KB; Lizenz in `assets/fonts/OFL.txt`).
 
 Tests: `npm install` (bringt `linkedom` als Entwicklungsabhängigkeit), dann `npm test`.
