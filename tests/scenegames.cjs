@@ -68,23 +68,7 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  ok(txt(root.querySelector('.sg-synth'))===cfg.synthesis,'Synthese am Ende');ok(!wins.length,'Abschluss erst nach dem Weiter-Knopf');
  root.querySelector('.sg-next').click();ok(wins.join()==='council','Konzil meldet den Sieg');
 }
-/* ---------- Chronik ---------- */
-{
- const {G,M,work,wins,flush}=boot();const cfg=G.minigames.timeline;
- ok(cfg.type==='chronik','Zeitmechanik ist eine Chronik');ok(cfg.years.map(y=>y.year).join()==='303,311,312,313,325,337','Sechs Jahresabschnitte');
- ok(cfg.art.bg.endsWith('timeline/chronicle-room.png')&&cfg.art.sheet.endsWith('timeline/timeline-assets.png'),'Chronik-Grafiken eingebunden');
- M.chronik('timeline',cfg,work);const root=work.querySelector('.chronicle-game'),voice=()=>txt(root.querySelector('.sg-voice'));
- const card=i=>root.querySelector(`.chron-card[data-card="${i}"]`),slot=i=>root.querySelector(`.chron-slot[data-target="${i}"]`);
- card(0).click();slot(3).click();ok(voice().includes('passt nicht zu 313'),'Falsche Zuordnung gibt Rückmeldung');ok(!slot(3).classList.contains('filled'),'Falsche Karte wird nicht eingetragen');
- for(let i=0;i<5;i++){card(i).click();slot(i).click();ok(slot(i).classList.contains('filled'),'Eingetragen: '+cfg.years[i].year);ok(voice().includes(cfg.years[i].line),'Historischer Satz zu '+cfg.years[i].year);}
- flush();ok(root.querySelector('.chron-gaps').hidden,'Transferfrage erst bei vollständiger Chronik');ok(!wins.length,'Kein Abschluss bei unvollständiger Chronik');
- card(5).click();slot(5).click();flush();
- ok(!root.querySelector('.chron-gaps').hidden&&root.classList.contains('complete'),'Vollständige Chronik: Band und Transferfrage');
- ok(voice().includes('Zwischen welchen Ereignissen liegt der entscheidende Wandel'),'Transferfrage gestellt');
- root.querySelector('.chron-gap[data-gap="3"]').click();ok(voice()===cfg.gapWrong[3],'Falsche Stelle: Rückmeldung');ok(!wins.length,'Noch kein Abschluss');
- root.querySelector('.chron-gap[data-gap="0"]').click();ok(root.classList.contains('turned'),'Wende zwischen 303 und 311 markiert');flush();
- root.querySelector('.sg-next').click();ok(wins.join()==='timeline','Chronik meldet den Sieg');
-}
+/* Physical chronicle, feedback and transfer question: chronicle-lifecycle.cjs. */
 /* ---------- Grafiken und Ersatz ---------- */
 {
  const files=['council/council-scene.png','council/council-officials.png','timeline/chronicle-room.png','timeline/timeline-assets.png','open-city/open-city.png','amphora/amphora-dock.png','amphora/amphora-assets.png','amphora/amphora-merchant.png'];
@@ -93,21 +77,21 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  const css=fs.readFileSync(path.join(root,'scenegames.css'),'utf8');ok(css.includes('.sg-no-art'),'Ersatzdarstellung für fehlende Grafiken');
 }
 
-/* ---------- Die Waage des Kaisers ---------- */
+/* ---------- Die Mosaik des Kaisers ---------- */
 {
  const {G,M,work,wins,flush,window}=boot();const cfg=G.minigames.motives;const choices=[];window.document.addEventListener('minigame-choice',e=>choices.push(e.detail));
- ok(cfg.type==='waage'&&cfg.cards.length===7&&cfg.bins.join()==='Glaube,Politik,Beides','Waage: sieben Karten, drei Schalen');
+ ok(cfg.type==='mosaic'&&cfg.cards.length===7&&cfg.bins.join()==='Glaube,Politik / Herrschaft,Zusammenspiel','Mosaik: sieben Karten, drei Schalen');
  cfg.cards.forEach(c=>{ok(c.ok.includes(c.best)&&c.why,'Schwerpunkt und Erklärung: '+c.text);[0,1,2].filter(b=>!c.ok.includes(b)).forEach(b=>ok(c.wrong&&c.wrong[b]&&!/^\s*falsch/i.test(c.wrong[b]),'Fachliche Rückmeldung für unpassende Schale: '+c.text));});
  ok(cfg.cards.find(c=>/Überzeugung/.test(c.text)).ok.join()==='0','Persönliche Überzeugung gehört eindeutig zum Glauben');
  ok(cfg.cards.find(c=>/Förderung/.test(c.text)).ok.length===3,'Mehrdeutige Karte (Förderung) wird nirgends als falsch bewertet');
  ok(cfg.reasons===G.puzzles.motives.reasons&&cfg.reasons.options.filter(o=>o.ok).length>=2,'Begründungen aus dem Rätsel, mehrere tragfähig');
- M.waage('motives',cfg,work);const root=work.querySelector('.waage-game'),voice=()=>txt(root.querySelector('.sg-voice'));
- const card=t=>[...root.querySelectorAll('.wg-card')].find(c=>txt(c)===t),pan=b=>root.querySelector(`.wg-pan[data-target="${b}"]`);
+ M.mosaic('motives',cfg,work);const root=work.querySelector('.mosaic-game'),voice=()=>txt(root.querySelector('.sg-voice'));
+ const card=t=>[...root.querySelectorAll('.wg-card')].find(c=>txt(c)===t),pan=b=>root.querySelector(`.mosaic-field[data-target="${b}"]`);
  ok(!root.querySelector('textarea,input'),'Kein Textfeld');
  card('Persönliche religiöse Überzeugung').click();pan(1).click();
  ok(!card('Persönliche religiöse Überzeugung').classList.contains('placed')&&/kein politisches Ziel/.test(voice()),'Unpassende Schale: Karte bleibt liegen, fachliche Rückmeldung');
  cfg.cards.forEach(c=>{card(c.text).click();pan(c.best).click();ok(card(c.text).classList.contains('placed'),'Abgelegt: '+c.text);});
- ok(root.__debug.count().join()==='2,2,3','Waage im Gleichgewicht (2 Glaube · 2 Politik · 3 beides)');
+ ok(root.__debug.placed()===7&&root.classList.contains('assembled'),'Seven motifs form the complete picture');ok(!root.querySelector('.wg-beam'),'No scale or tilt');
  flush();ok(root.__debug.phase()==='reason'&&root.querySelectorAll('.wg-reason').length===4,'Danach: Begründung wählen');
  const bad=[...root.querySelectorAll('.wg-reason')].find(b=>!cfg.reasons.options[+b.dataset.k].ok);bad.click();
  ok(bad.classList.contains('tried')&&!choices.length&&!wins.length,'Untragfähige Begründung: Rückmeldung, kein Abschluss');
@@ -115,4 +99,4 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  ok(choices.length===1&&choices[0].id==='motives','Gewählte Begründung fürs Notizbuch gemeldet');
  flush();root.querySelector('.sg-next').click();ok(wins.join()==='motives','Abschluss meldet den Sieg');
 }
-console.log(`PASS: Stadt, Waage, Konzil (${6} Runden), Chronik, Asset-Pfade – ${checks} Prüfungen`);
+console.log(`PASS: Stadt, Mosaik, Konzil (${6} Runden), Chronik, Asset-Pfade – ${checks} Prüfungen`);

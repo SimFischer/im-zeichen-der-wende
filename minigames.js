@@ -3,6 +3,19 @@
    document.dispatchEvent(new CustomEvent('minigame-win',{detail:id})).
    Inhalte (Aussagen, richtig/falsch, Erklärungen) stehen in data/game-data.js unter GAME.minigames. */
 window.MiniGames=(()=>{
+ // Every open minigame owns its timers, frames, global listeners and resize observers.
+ // Stop on both modal close and content replacement; no hidden canvas loops survive.
+ let session=null;
+ function stop(){if(!session)return;const old=session;session=null;old.timers.forEach(window.clearTimeout);old.frames.forEach(window.cancelAnimationFrame);old.listeners.forEach(([type,fn])=>window.removeEventListener(type,fn));old.observers.forEach(o=>o.disconnect());}
+ function setTimeout(fn,ms){const owner=session;const t=window.setTimeout(()=>{owner?.timers.delete(t);if(owner&&session===owner)fn();},ms);owner?.timers.add(t);return t;}
+ function clearTimeout(t){window.clearTimeout(t);session?.timers.delete(t);}
+ function requestAnimationFrame(fn){const owner=session;const f=window.requestAnimationFrame(now=>{owner?.frames.delete(f);if(owner&&session===owner)fn(now);});owner?.frames.add(f);return f;}
+ function addEventListener(type,fn){window.addEventListener(type,fn);session?.listeners.push([type,fn]);}
+ function removeEventListener(type,fn){window.removeEventListener(type,fn);}
+ class ResizeObserver extends window.ResizeObserver{constructor(fn){super(fn);session?.observers.push(this);}}
+ function managed(fn){return (...args)=>{stop();session={timers:new Set(),frames:new Set(),listeners:[],observers:[]};return fn(...args);};}
+ document.querySelector('#modal')?.addEventListener('close',stop);
+
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
  const win=id=>document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));
@@ -236,5 +249,5 @@ window.MiniGames=(()=>{
    done=true;stage.classList.add('won');say('<b>Die Karte ist vollständig!</b> Die Wachen geben den Weg zum Zelt frei.','good',2600);setTimeout(()=>{const o=document.createElement('div');o.className='racer-overlay';stage.append(o);winScreen(o,id,cfg.winTitle,cfg.win);},2200);};
   refresh();return true;
  }
- return {classify,darkroom,slider,lock,stamp,ropes,battlemap};
+ return {stop,...Object.fromEntries(Object.entries({classify,darkroom,slider,lock,stamp,ropes,battlemap}).map(([name,fn])=>[name,managed(fn)]))};
 })();

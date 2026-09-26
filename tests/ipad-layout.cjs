@@ -13,6 +13,6 @@ ok(html.includes('id="pan-hint"'),'Hinweis zum Wischen im Hochformat');
 const c={window:{}};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(root,'data/game-data.js'),'utf8'),c);const G=c.window.GAME;
 const falseCard=G.minigames.change.cards.find(x=>x.side==='falsch');ok(falseCard.icon!=='scroll-cross','Die falsche Tafel verrät ihre Lösung nicht durch ein durchgestrichenes Symbol');
 ok(Object.keys(G.puzzles).every(id=>G.minigames[id]),'Alle zwölf Rätsel haben eine spielbare Szene');
-ok(G.minigames.motives.type==='waage','Die Waage ist eine echte Szene statt eines Formulars');
+ok(G.minigames.motives.type==='mosaic','Das Mosaik ist eine echte Szene statt eines Formulars');
 ok(G.minigames.archive.intro.length<160,'Startkarten sind kurz (Archiv)');
 console.log(`PASS: iPad-Qualitätsschicht – ${checks} Prüfungen`);

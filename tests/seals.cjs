@@ -8,10 +8,10 @@ function boot(raw){if(raw!==undefined)storage.set(KEY,raw);const {window}=parseH
  const localStorage={getItem:k=>storage.has(k)?storage.get(k):null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)};
  document.querySelector('#modal').showModal=function(){this.open=true;};document.querySelector('#modal').close=function(){this.open=false;this.dispatchEvent(new window.Event('close'));};
  window.HTMLElement.prototype.focus=function(){};window.HTMLElement.prototype.scrollIntoView=function(){};
- window.MiniGames=new Proxy({},{get:()=>(id,cfg,work)=>{work.innerHTML='<p class="stub-minigame"></p>';return true;}});
+ window.MiniGames=new Proxy({stop(){}},{get:(target,type)=>target[type]||((id,cfg,work)=>{work.innerHTML='<p class="stub-minigame"></p>';return true;})});
  const matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});window.matchMedia=matchMedia;
  const context={window,document,localStorage,console,Blob,URL,matchMedia,requestAnimationFrame:()=>0,cancelAnimationFrame:()=>{},setTimeout:()=>0,clearTimeout:()=>{},setInterval:()=>0,clearInterval:()=>{}};vm.createContext(context);
- for(const f of ['data/game-data.js','adventure.js','seals.js','bonusgames.js','script.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),context,{filename:f});
+ for(const f of ['data/game-data.js','adventure.js','chronicle.js','seals.js','bonusgames.js','script.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),context,{filename:f});
  return {window,document};}
 
 /* 1. Designsystem */

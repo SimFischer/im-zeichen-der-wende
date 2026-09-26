@@ -7,7 +7,7 @@ function boot(s){raw=JSON.stringify(s);const {window}=parseHTML(fs.readFileSync(
  document.querySelector('#modal').showModal=function(){this.open=true;};document.querySelector('#modal').close=function(){this.open=false;};
  window.HTMLElement.prototype.focus=function(){};window.HTMLElement.prototype.scrollIntoView=function(){};
  const ctx={window,document,console,Blob,URL,localStorage:{getItem:()=>raw,setItem:(k,v)=>raw=v},setTimeout:(f,t)=>{timers.push({f,t});return timers.length;},clearTimeout(){},matchMedia:()=>({matches:true})};vm.createContext(ctx);
- for(const f of ['data/game-data.js','adventure.js','script.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx);
+ for(const f of ['data/game-data.js','adventure.js','chronicle.js','script.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx);
  env={window,document,timers};button('Spiel fortsetzen');
 }
 const $=s=>env.document.querySelector(s),state=()=>JSON.parse(raw);

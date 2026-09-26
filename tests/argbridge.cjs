@@ -61,9 +61,9 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  all('.ab-tablet').find(b=>F[+b.dataset.k].ok).click();
  ok(!$('.ab-inscription').hidden&&txt($('.ab-inscription'))===F.find(o=>o.ok).text&&game.classList.contains('inscribed'),'Inscription carved into the bridge');
  ok(choices.length===1&&choices[0].id==='bridge'&&choices[0].text===F.find(o=>o.ok).text,'Chosen inscription reported for the notebook');
- ok(!wins.length,'Not solved before the final confirmation');flush();
- ok($('.sg-finale .ab-chain li')&&all('.sg-finale .ab-chain li').length===4,'Finale shows the whole argument chain');
- $('.sg-finale .sg-next').click();ok(wins.length===1&&wins[0]==='bridge','Win reported once');
+ ok(!wins.length,'Not solved before the inscription has settled');flush();
+ ok(game.__debug.phase()==='done'&&!$('.sg-finale'),'Completion starts the chronicle finale directly');
+ ok(wins.length===1&&wins[0]==='bridge','Win reported once');
 }
 
 /* Registrierte Grafiken werden verwendet */

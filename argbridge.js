@@ -12,7 +12,9 @@
  if(!window.MiniGames)window.MiniGames={};
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
- const later=(root,ms,fn)=>setTimeout(()=>{if(root.isConnected)fn();},ms);
+ const pending=new Set(),previousStop=window.MiniGames.stop;
+ window.MiniGames.stop=()=>{pending.forEach(clearTimeout);pending.clear();previousStop?.();};
+ const later=(root,ms,fn)=>{const t=setTimeout(()=>{pending.delete(t);if(root.isConnected)fn();},ms);pending.add(t);return t;};
 
  /* Kleine Symbolmedaillons (48er-Raster, als Relieflinien). */
  const ICON={
@@ -143,9 +145,7 @@
     else{b.classList.add('cracked');b.disabled=true;say(o.why,'hint');}
    });
   }
-  function finish(){phase='done';const o=document.createElement('div');o.className='sg-finale';
-   o.innerHTML=`<div class="sg-scroll ab-scroll"><h3>${esc(cfg.winTitle)}</h3><ol class="ab-chain">${cfg.arches.map(a=>`<li>${icon(a.right.icon,art)}<span><b>${esc(a.head)}</b> ${esc(a.right.text)}</span></li>`).join('')}</ol><p>${esc(cfg.win)}</p><button type="button" class="primary sg-next">Weiter</button></div>`;
-   stage.append(o);o.querySelector('.sg-next').onclick=()=>document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));o.querySelector('.sg-next').focus?.({preventScroll:true});}
+  function finish(){if(phase==='done')return;phase='done';document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));}
 
   root.__debug={phase:()=>phase,arch:()=>cur,found:()=>found};
   showArch();return true;
