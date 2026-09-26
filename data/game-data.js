@@ -221,14 +221,14 @@ Object.assign(window.GAME.minigames,{
   rules:['Bewege das <b>Licht</b> mit dem Finger (oder der Maus) über das Bild.','Etwas leuchtet auf? <b>Tippe darauf</b>.','Die Spur kommt in den Archivschrank: Tippe die <b>Schublade</b> mit der Maßnahme von 303, die sie erklärt.','Finde alle <b>4 Spuren</b>.'],
   measures:['Schriften vernichten','Gottesdienste verbieten','Kirchen zerstören','Christen verhaften / bestrafen'],
   spots:[
-   {name:'Verbrannte Schriftrolle',x:13,y:80,w:24,h:20,look:'Die Ränder sind schwarz verkohlt. Man erkennt noch Buchstaben eines Evangeliums.',answer:0,why:'303 wurde befohlen, die heiligen Schriften auszuliefern und zu verbrennen.',hint:'Was geschah mit Büchern und Schriften?'},
-   {name:'Versiegelte Tür',x:18,y:34,w:18,h:32,look:'Ein Amtssiegel verschließt die Tür des Versammlungsraums.',answer:1,why:'Christliche Versammlungen und Gottesdienste wurden verboten.',hint:'Wozu diente der Raum hinter der Tür?'},
-   {name:'Beschädigtes Kirchenmodell',x:49,y:62,w:24,h:27,look:'Das Dach des kleinen Modells ist eingeschlagen.',answer:2,why:'Die Kirchen sollten „dem Erdboden gleichgemacht“ werden.',hint:'Was zeigt das Modell?'},
-   {name:'Kette',x:81,y:34,w:14,h:44,look:'Eine schwere Eisenkette mit Fußfesseln.',answer:3,why:'Geistliche und später viele Christen wurden verhaftet und bestraft.',hint:'Wofür benutzte man Ketten?'}
+   {name:'Verbrannte Schriftrolle',x:13,y:76,look:'Die Ränder sind schwarz verkohlt. Man erkennt noch Buchstaben eines Evangeliums.',answer:0,why:'303 wurde befohlen, die heiligen Schriften auszuliefern und zu verbrennen.',hint:'Was geschah mit Büchern und Schriften?'},
+   {name:'Versiegelte Tür',x:18,y:36,look:'Ein Amtssiegel verschließt die Tür des Versammlungsraums.',answer:1,why:'Christliche Versammlungen und Gottesdienste wurden verboten.',hint:'Wozu diente der Raum hinter der Tür?'},
+   {name:'Beschädigtes Kirchenmodell',x:49,y:67,look:'Das Dach des kleinen Modells ist eingeschlagen.',answer:2,why:'Die Kirchen sollten „dem Erdboden gleichgemacht“ werden.',hint:'Was zeigt das Modell?'},
+   {name:'Kette',x:81,y:52,look:'Eine schwere Eisenkette mit Fußfesseln.',answer:3,why:'Geistliche und später viele Christen wurden verhaftet und bestraft.',hint:'Wofür benutzte man Ketten?'}
   ],
   final:{q:'Was verbindet diese vier Maßnahmen?',options:['Gezielte staatliche und systematische Verfolgung.','Nur ein einzelner privater Streit.','Bereits allgemeine Religionsfreiheit.'],answer:0,why:'Die Befehle kamen vom Kaiser und galten im ganzen Reich – das ist mehr als ein Streit unter Nachbarn.'},
   winTitle:'Das Archiv ist erhellt',win:'Du hast gezeigt: Ab 303 ging der Staat gezielt und planmäßig gegen die Christen vor. Das Licht ist wiederhergestellt. Lege jetzt die Schriftrollen im Archiv ab.'},
- vision:{type:'slider',image:'assets/puzzles/vision/chi-rho-schild.png',title:'Das Zeichen auf dem Schild',
+ vision:{type:'slider',image:'assets/puzzles/camp/chi-rho-shield.webp',title:'Das Zeichen auf dem Schild',
   prompt:'Setze das zerbrochene Schildzeichen wieder zusammen. Danach prüfst du, was man darüber sicher weiß.',
   intro:'In Konstantins Zelt liegt ein Schild. Sein Zeichen ist in neun Teile zerbrochen. Laktanz berichtet, Konstantin habe ein Zeichen Christi auf die Schilde malen lassen.',
   rules:['<b>Tauschen:</b> Tippe zwei Teile nacheinander an, sie tauschen den Platz.','<b>Schieben:</b> Schiebe Teile in die Lücke – für Profis.','Mit „Vorlage zeigen“ siehst du das fertige Bild.','Danach ordnest du vier Aussagen ein.'],
@@ -262,11 +262,11 @@ window.GAME.minigames.sacrifice={type:'ropes',title:'Die beiden Seilzüge',
  winTitle:'Der Archivschlüssel ist frei',win:'Du hast beide Wege der Opferkontrolle rekonstruiert. Im 3. Jahrhundert verlangte der Staat selbst von allen das Opfer und kontrollierte es mit Bescheinigungen.'};
 
 /* Positionen der Orte auf der Stadtkarte (x %, y %), in Spielreihenfolge entlang des Weges */
-window.GAME.mapLayout={gate:[10,70],house:[22,44],forum:[33,15],office:[51,13],temple:[40,44],vestibule:[58,40],archive:[69,16],camp:[89,20],city:[67,51],motives:[87,68],council:[53,72],basilica:[31,74]};
+window.GAME.mapLayout={gate:[10,70],house:[22,44],forum:[33,15],office:[51,13],temple:[40,44],vestibule:[58,40],archive:[69,16],camp:[89,20],city:[69,56],motives:[87,68],council:[53,72],basilica:[31,74]};
 
 window.GAME.minigames.map312={type:'battlemap',title:'Das Kartenbrett',
  prompt:'Stecke die sechs Beschriftungen an die richtigen Stellen der Karte. Dann prüfe die Karte.',
- pins:[['Stadt',86,47,22,32],['Fluss',63,23,18,20],['Übergang',55,44,27,16],['Späterer Sieger',26,24,34,22],['Gegner',66,74,32,24],['Jahr',22,76,24,22]],
+ pins:[['Stadt',24.3,44.6],['Fluss',37.3,78.6],['Übergang',46,29.5],['Späterer Sieger',69.7,58.9],['Gegner',29.9,28.6],['Jahr',9,88.5]],
  winTitle:'Die Karte ist vollständig',win:'Im Jahr 312 besiegte Konstantin seinen Gegner Maxentius an der Milvischen Brücke über den Tiber, kurz vor Rom.'};
 
 /* ---------- Überarbeitete Szenen-Rätsel (scenegames.js) ---------- */
@@ -329,9 +329,9 @@ window.GAME.minigames.council={type:'konzil',title:'Beratung im Konzil',
 
 // Die Zeitmechanik: große Chronik mit sechs Jahresabschnitten.
 window.GAME.minigames.timeline={type:'chronik',title:'Die Zeitmechanik',
- prompt:'Setze jede Zeitspur in das passende Jahresfeld der Chronik. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',
+ prompt:'Setze jede Zeitspur in das passende Jahresfeld des Zeitrads. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',
  art:{bg:'assets/minigames/timeline/chronicle-room.png',sheet:'assets/minigames/timeline/timeline-assets.png'},
- start:'Tippe eine Wachstafel an und dann das passende Jahresfeld im Buch – oder zieh sie hinüber.',
+ start:'Tippe eine Wachstafel an und dann das passende Jahresfeld im Zeitrad – oder zieh sie hinüber.',
  wrongFirst:'Diese Zeitspur gehört an eine andere Stelle.',
  wrongAgain:'Sieh noch einmal in deine Zeitspuren im Notizbuch.',
  years:[
@@ -343,7 +343,7 @@ window.GAME.minigames.timeline={type:'chronik',title:'Die Zeitmechanik',
   {year:337,title:'Taufe Konstantins kurz vor seinem Tod',line:'Konstantin wird kurz vor seinem Tod getauft.',medal:[1361,28,250,291],mini:[1383,328,272,276],hint:'Ganz am Ende seines Lebens.'}],
  bandRect:[696,735,824,199],
  wrong:'„{title}“ passt nicht zu {year}.',
- question:'Die Chronik ist vollständig. Zwischen welchen Jahren liegt der entscheidende Wandel? Wähle den passenden Jahresabstand.',
+ question:'Das Zeitrad ist vollständig. Zwischen welchen Jahren liegt der entscheidende Wandel? Tippe auf den Riegel zwischen zwei Jahresfeldern.',
  gapAnswer:0,
  gapRight:'Ja. Auf die große Verfolgung um 303 folgen 311 und 313 die entscheidenden Veränderungen. Das Band der Wende schließt sich.',
  gapWrong:{1:'Fast: 311 hat der Wandel schon begonnen. Suche die Stelle davor – zwischen Verfolgung und Ende der Verfolgung.',2:'Da ist der Wandel schon im Gang. 311 endet die Verfolgung weitgehend. Schau weiter nach links.',3:'313 und 325 liegen beide schon nach dem Wandel.',4:'Die Taufe 337 kommt ganz am Ende. Der Wandel liegt viel früher.'},
