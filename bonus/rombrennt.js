@@ -169,7 +169,7 @@
     result={ms,best:record?ms:old,record,previous:old};
     ctx.setTask('Die Gasse ist gerettet.');ctx.say(record?(old==null?'Geschafft! Deine erste Bestzeit.':'Neue Bestzeit!'):'Alle Brände gelöscht!',2200);
     ctx.after(1800,()=>ctx.win({title:'Die Brände sind gelöscht.',lines:[`Deine Zeit: ${fmt(ms)}`,record?(old==null?'Das ist deine erste Bestzeit.':`Neue Bestzeit! Vorher: ${fmt(old)}`):`Bestzeit: ${fmt(old)}`],
-     html:`<div class="rom-chron"><img src="assets/minigames/chronistin.jpg" alt=""><div><p class="rom-who">Die Chronistin</p><p>„Der große Brand von Rom im Jahr 64 ist gut belegt. Wer ihn verursachte, lässt sich dagegen nicht sicher feststellen.“</p></div></div><p class="muted" style="text-align:center">Ereignis ≠ sichere Kenntnis der Ursache.</p>`,backLabel:'Zurück zum Forum'}));}
+     html:`<div class="rom-chron"><img src="assets/puzzles/forum/chronistin-face.webp" alt=""><div><p class="rom-who">Die Chronistin</p><p>„Der große Brand von Rom im Jahr 64 ist gut belegt. Wer ihn verursachte, lässt sich dagegen nicht sicher feststellen.“</p></div></div><p class="muted" style="text-align:center">Ereignis ≠ sichere Kenntnis der Ursache.</p>`,backLabel:'Zurück zum Forum'}));}
 
    /* ---------- Zeichnen ---------- */
    function layout(){T=Math.max(30,Math.round(Math.min((view.H||450)/9.4,(view.W||800)/11.5)));staticLayer=null;skyLayer=null;}
