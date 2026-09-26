@@ -1,3 +1,7 @@
+# Update: Kurierfahrt entfernt
+
+Das Minispiel „Die Kurierfahrt von 313“ ist vollständig entfernt (Spiellogik in `minigames.js`, Inhalte in `data/game-data.js`, zugehörige CSS-Regeln). In der Stadt 313 öffnet die Besitztruhe jetzt das klassische Zuordnungsrätsel „Die Besitztruhe“; Siegel, Belohnung (Verfügung von 313) und die Freischaltung von „Belade den Wagen!“ bleiben unverändert. Es gibt weiterhin acht Bonusspiele. Alte Spielstände brauchen keine Umstellung, weil die Kurierfahrt keine eigenen Daten gespeichert hat.
+
 # Update: Auftrag des Archivars
 
 Vor dem dunklen Archiv liegt jetzt die Szene „Beim Archivar“. Der Archivar übergibt Schriftrollen mit dem vorhandenen Fachtext zu 303. Alle drei Abschnitte werden vor dem Eintritt gelesen; danach bleiben sie im Botenbeutel und Notizbuch zugänglich. Brennende Öllampe und Archivschlüssel sind für den Eintritt nötig. Nach dem Rätsel ist das Archiv hell: Erst das Ablegen der Schriftrollen erfüllt den Auftrag und öffnet den Weg zur Nachricht von 311 und zum Tiber. Bereits abgeschlossene alte Spielstände bleiben zugänglich; ein noch ungelöstes Archiv führt zunächst zum Archivar. Die neue Szene verwendet die vorhandene Amtsstubenillustration.
@@ -25,7 +29,7 @@ Acht freiwillige Bonusspiele werden ausschließlich im Notizbuch angeboten. Gesp
 | Katakombenlauf | Archiv im Dunkeln |
 | Schildwall | Kartenbrett im Lager |
 | Über den Tiber! | Zeichen auf dem Schild |
-| Belade den Wagen! | Kurierfahrt von 313 |
+| Belade den Wagen! | Besitztruhe in der Stadt 313 |
 | Circus Maximus | Abschluss der Chronik |
 
 Bonusspiele vergeben keine Siegel und sind keine Pflicht. Ein neues Spiel setzt auch den Bonusfortschritt zurück. Das Stempelspiel hat eine kompaktere Anleitung mit einem separat angeordneten, mindestens 52 Pixel hohen Startknopf sowie größere Stempel in der Hand und Abdrücke auf der Akte.
@@ -34,7 +38,7 @@ Historische Einordnungen in den Spielen sind bewusst vorsichtig formuliert (Symb
 
 # Update: Minispiele
 
-Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Die Rätsel öffnen immer direkt das Spiel.
+Sieben Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/game-data.js` unter `GAME.minigames`). Das Siegel gibt es erst, wenn das Ziel erreicht ist. Die Rätsel öffnen immer direkt das Spiel.
 
 - **Kontrollstelle – Die beiden Seilzüge:** Holzklötze aus der Kiste an die Haken zweier Seile hängen, am Hebel ziehen, danach Vergleichsfrage; die Truhe mit dem Archivschlüssel öffnet sich.
 - **Wohnviertel – Das Türschloss:** Drei Drehwalzen (Tippen, Wischen oder Pfeile) bilden einen Satz; am Griff ziehen prüft, Riegel gleitet zurück und die Tür schwingt auf.
@@ -42,13 +46,13 @@ Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/gam
 - **Amtsstube – Der Stempel des Statthalters:** Die Akte liegt in der Tischmitte, ohne Zeitdruck. Römischen Stempel in die Hand nehmen und auf die Akte drücken; richtige Stempel hinterlassen einen Abdruck, 8 Akten.
 - **Archiv – Das Archiv im Dunkeln:** Mit dem Lichtkegel der Lampe vier Spuren finden und den Maßnahmen von 303 zuordnen.
 - **Lager 312 – Das Zeichen auf dem Schild:** 3×3-Puzzle (Tauschen oder Schieben) mit dem Christusmonogramm, danach Ereignis und Erzählung trennen.
-- **Stadt 313 – Die Kurierfahrt:** Spurwechsel-Rennen. Richtige Aussagen über 311/313 einsammeln, falschen ausweichen, 6 Botschaften.
+- **Lager 312 – Das Kartenbrett:** Sechs Beschriftungen (Rom, Tiber, Milvische Brücke, Konstantin, Maxentius, 312) auf eine gezeichnete Karte stecken.
 
 Wählbares Tempo, keine Leben, falsche Antworten werden erklärt. Der Fachtext-Knopf erscheint nur nach Fehlern in den klassischen Rätseln.
 
 # Update: Fachtexte zum Einlesen
 
-Jedes der 12 Rätsel hat einen zuschaltbaren **„📜 Fachtext“** mit einem kurzen Sachtext für Klasse 7 und, wo sinnvoll, einem kurzen Quellenzitat (Tertullian, Tacitus, Trajan an Plinius, Opferbescheinigung von 250, Eusebius, Mailänder Vereinbarung). Der Fachtext ist eine Hilfe bei Fehlern: Der Knopf „📜 Fachtext“ erscheint erst, nachdem ein Rätsel einmal falsch geprüft wurde. Die Informationen sollen zuerst aus den Gesprächen kommen. Minispiel: „Die Kurierfahrt von 313“ (Spurwechsel-Rennen, `minigames.js`) ersetzt die Besitztruhe. Gelesene Texte stehen im Notizbuch unter „Gelesene Fachtexte“ und werden mitgedruckt. Die Texte stehen in `data/game-data.js` unter `GAME.texts`, die Anleitungen unter `GAME.steps`.
+Jedes der 12 Rätsel hat einen zuschaltbaren **„📜 Fachtext“** mit einem kurzen Sachtext für Klasse 7 und, wo sinnvoll, einem kurzen Quellenzitat (Tertullian, Tacitus, Trajan an Plinius, Opferbescheinigung von 250, Eusebius, Mailänder Vereinbarung). Der Fachtext ist eine Hilfe bei Fehlern: Der Knopf „📜 Fachtext“ erscheint erst, nachdem ein Rätsel einmal falsch geprüft wurde. Die Informationen sollen zuerst aus den Gesprächen kommen. Gelesene Texte stehen im Notizbuch unter „Gelesene Fachtexte“ und werden mitgedruckt. Die Texte stehen in `data/game-data.js` unter `GAME.texts`, die Anleitungen unter `GAME.steps`.
 
 **Hinweis für die Lehrkraft:** Die Fachtexte und die Quellenzitate (eigene, gekürzte Übersetzungen) wurden mit KI-Unterstützung erstellt und sind noch fachlich gegenzulesen und mit den Unterrichtsmaterialien abzugleichen.
 

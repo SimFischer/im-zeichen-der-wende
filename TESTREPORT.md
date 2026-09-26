@@ -148,3 +148,12 @@ Der Durchlauf war seit den Sprechblasen und Minispielen veraltet und schlug scho
 - Weiterhin geprüft: vollständiger Weg bis zum Finale, Neuladen, Hilfen, Inventar, Lehrkraftmodus, Neustart, beschädigter Spielstand, Vollbild.
 - Gegenprobe: Wird die Sperre oder „Ohne Spiel lösen“ wieder eingebaut, schlägt der Test fehl.
 - Ausführen: `npm install --no-save linkedom`, dann `node tests/playthrough.cjs` (ebenso `tests/bonus-unlocks.cjs`, beide bestanden).
+
+## Kurierfahrt entfernt (26.09.2026)
+
+Das Minispiel „Die Kurierfahrt von 313“ ist entfernt. Die Besitztruhe in der Stadt 313 öffnet jetzt das klassische Zuordnungsrätsel „Die Besitztruhe“.
+
+- `npm test` führt alle vier Tests aus (`continuation`, `bonus-unlocks`, `archive-flow`, `playthrough`); `linkedom` steht als devDependency in `package.json`.
+- `tests/playthrough.cjs` (401 Prüfungen, bestanden) prüft zusätzlich: Für „change“ ist kein Minispiel registriert, die Besitztruhe öffnet das klassische Rätsel, „Kurierfahrt“ erscheint nirgends in der Oberfläche. Ein alter Spielstand mit fremden Feldern und einer unbekannten Bonus-ID lädt fehlerfrei, das Notizbuch zeigt keinen Kurierfahrt-Eintrag, die unbekannte ID wird verworfen.
+- `tests/bonus-unlocks.cjs` und `tests/archive-flow.cjs` (67 Prüfungen) bestanden unverändert; es bleibt bei acht Bonusspielen.
+- Chromium: Spielstand in der Stadt 313 geladen, Besitztruhe geöffnet, Notizbuch geprüft; keine JavaScript-Fehler. (Die fehlenden EB-Garamond-Schriftdateien unter `assets/fonts/` liefern wie vorher 404; das ist unabhängig von dieser Änderung.)
