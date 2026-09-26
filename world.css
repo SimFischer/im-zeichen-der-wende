@@ -86,7 +86,7 @@
 /* Schriftband für Rückmeldungen auf der Bühne (ersetzt Blitzflächen) */
 .w-voice{position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);z-index:12;width:min(62%,40em);margin:0;padding:.5em 1.4em;text-align:center;color:var(--ink);font-size:1.02em!important;line-height:1.32;
  background:linear-gradient(90deg,transparent,var(--parchment) 5%,var(--parchment) 95%,transparent);border-top:2px solid var(--sandstone-dark);border-bottom:2px solid var(--sandstone-dark);box-shadow:0 8px 16px #0007;pointer-events:none}
-.w-voice:empty{display:none}
+.w-voice:empty,.scene-game .w-voice:empty{display:none!important}
 .w-voice.good{border-color:var(--success);background:linear-gradient(90deg,transparent,#eef0d4 5%,#eef0d4 95%,transparent)}
 .w-voice.bad{border-color:var(--warning);background:linear-gradient(90deg,transparent,#f5e3d2 5%,#f5e3d2 95%,transparent)}
 .w-voice.pop{animation:w-voice .35s ease-out}
