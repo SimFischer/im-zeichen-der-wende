@@ -9,8 +9,8 @@ const ctx={window,document:window.document,console,localStorage:{getItem:k=>stor
 vm.runInContext(fs.readFileSync(root+'/bonusgames.js','utf8'),ctx);
 for(const f of fs.readdirSync(root+'/bonus').filter(f=>f.endsWith('.js')))vm.runInContext(fs.readFileSync(root+'/bonus/'+f,'utf8'),ctx);
 const B=window.BonusGames,journal=window.document.querySelector('#journal');
-const milestones=['conflict','sources','cases','archive','map312','vision','bridge'];
-const games=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','circus'];
+const milestones=['conflict','sources','cases','archive','map312','vision','change','bridge'];
+const games=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','bilder','circus'];
 for(let n=0;n<=games.length;n++){
  B.update({solved:milestones.slice(0,n)});journal.innerHTML=B.journalHtml();
  assert.equal(journal.querySelectorAll('.bonus-replay').length,n);
@@ -20,8 +20,8 @@ for(let n=0;n<=games.length;n++){
 B.update({solved:['sources']});journal.innerHTML=B.journalHtml();assert.equal(journal.querySelector('.bonus-replay').dataset.bonusStart,'rombrennt','Free choice of early chapters');
 // Exercise the journal click and real common game window without invoking a canvas game.
 B.games.rombrennt.setup=()=>({});B.bindJournal(journal);journal.querySelector('.bonus-replay').click();assert.equal(opened,1);assert.ok(window.document.querySelector('.bonus-introcard'));
-B.reset();B.update({solved:[]});journal.innerHTML=B.journalHtml();assert.equal(journal.querySelectorAll('.bonus-unknown').length,7);
+B.reset();B.update({solved:[]});journal.innerHTML=B.journalHtml();assert.equal(journal.querySelectorAll('.bonus-unknown').length,8);
 assert.equal(B.decorate,undefined,'No scene discovery entry point');
-assert.equal(games.length,7);for(const gone of ['wagen','kurier']){assert.equal(B.games[gone],undefined,'Removed game is not registered: '+gone);B.start(gone);assert.equal(opened,1,'Removed game cannot start: '+gone);}
-storage.set('im-zeichen-der-wende:bonus-v1',JSON.stringify({found:['wagen','kurier'],won:['wagen','kurier']}));B.mergeProgress({found:['wagen','kurier'],won:['wagen','kurier']});B.update({solved:milestones.concat('change')});journal.innerHTML=B.journalHtml();assert.equal(journal.querySelectorAll('.bonus-replay').length,7);assert.ok(!journal.textContent.includes('Wagen'),'No wagon entry in journal');assert.ok(!journal.textContent.includes('Kurierfahrt'),'No courier entry in journal');assert.ok(!B.progress().won.includes('kurier'),'Legacy kurier status dropped');assert.ok(journal.textContent.includes('Freigeschaltet: 7 / 7'));assert.ok(!B.progress().won.includes('wagen'),'Legacy wagen status dropped');
-console.log('PASS: seven milestones, locked start protection, journal launch and fresh-game reset');
+assert.equal(games.length,8);for(const gone of ['wagen','kurier']){assert.equal(B.games[gone],undefined,'Removed game is not registered: '+gone);B.start(gone);assert.equal(opened,1,'Removed game cannot start: '+gone);}
+storage.set('im-zeichen-der-wende:bonus-v1',JSON.stringify({found:['wagen','kurier'],won:['wagen','kurier']}));B.mergeProgress({found:['wagen','kurier'],won:['wagen','kurier']});B.update({solved:milestones.concat('council')});journal.innerHTML=B.journalHtml();assert.equal(journal.querySelectorAll('.bonus-replay').length,8);assert.ok(!journal.textContent.includes('Wagen'),'No wagon entry in journal');assert.ok(!journal.textContent.includes('Kurierfahrt'),'No courier entry in journal');assert.ok(!B.progress().won.includes('kurier'),'Legacy kurier status dropped');assert.ok(journal.textContent.includes('Freigeschaltet: 8 / 8'));assert.ok(!B.progress().won.includes('wagen'),'Legacy wagen status dropped');
+console.log('PASS: eight milestones, locked start protection, journal launch and fresh-game reset');
