@@ -149,20 +149,165 @@ Der Durchlauf war seit den Sprechblasen und Minispielen veraltet und schlug scho
 - Gegenprobe: Wird die Sperre oder „Ohne Spiel lösen“ wieder eingebaut, schlägt der Test fehl.
 - Ausführen: `npm install --no-save linkedom`, dann `node tests/playthrough.cjs` (ebenso `tests/bonus-unlocks.cjs`, beide bestanden).
 
-## Kurierfahrt entfernt (26.09.2026)
 
-Das Minispiel „Die Kurierfahrt von 313“ ist entfernt. Die Besitztruhe in der Stadt 313 öffnet jetzt das klassische Zuordnungsrätsel „Die Besitztruhe“.
+## Szenen-Überarbeitung (Branch `feature/visual-minigame-overhaul`)
 
-- `npm test` führt alle vier Tests aus (`continuation`, `bonus-unlocks`, `archive-flow`, `playthrough`); `linkedom` steht als devDependency in `package.json`.
-- `tests/playthrough.cjs` (401 Prüfungen, bestanden) prüft zusätzlich: Für „change“ ist kein Minispiel registriert, die Besitztruhe öffnet das klassische Rätsel, „Kurierfahrt“ erscheint nirgends in der Oberfläche. Ein alter Spielstand mit fremden Feldern und einer unbekannten Bonus-ID lädt fehlerfrei, das Notizbuch zeigt keinen Kurierfahrt-Eintrag, die unbekannte ID wird verworfen.
-- `tests/bonus-unlocks.cjs` und `tests/archive-flow.cjs` (67 Prüfungen) bestanden unverändert; es bleibt bei acht Bonusspielen.
-- Chromium: Spielstand in der Stadt 313 geladen, Besitztruhe geöffnet, Notizbuch geprüft; keine JavaScript-Fehler. (Die fehlenden EB-Garamond-Schriftdateien unter `assets/fonts/` liefern wie vorher 404; das ist unabhängig von dieser Änderung.)
+`npm test` führt alle Tests aus; Ergebnis beim Abschluss:
 
-## „Belade den Wagen!“ entfernt (26.09.2026)
+- `tests/continuation.cjs`: bestanden.
+- `tests/playthrough.cjs`: 359 Prüfungen bestanden. Neu: Stadtbild und Entdeckungsszene, Rätsel erst nach dem Entdecken, Zähler, richtige Spieltypen für Stadt, Konzil und Chronik, Belohnung „Verfügung von 313“ bleibt.
+- `tests/bonus-unlocks.cjs`: bestanden.
+- `tests/scenegames.cjs` (neu): 110 Prüfungen. Stadt: alle fünf Veränderungen, sieben Tafeln, falsche 313-Aussage mit genau der vorgegebenen Rückmeldung, Abschluss erst bei vollständiger Zuordnung. Konzil: sechs Runden, falsche Antworten mit fachlicher Reaktion ohne Weiterschalten, Synthese, Sieg. Chronik: alle sechs Jahre, falsche Zuordnung mit Rückmeldung, Transferfrage erst bei vollständiger Chronik, falsche und richtige Stelle. Alle neuen Asset-Pfade im Code und im Repository, Ersatzdarstellung vorhanden.
+- `tests/amphoren.cjs` (neu): 26 Prüfungen. Keine alten Sprites, neue Grafiken werden geladen, Händlergröße, Touch-Ziehen und Tippen, Fangen über dem Korb, kein Fangen daneben, Begriffe der dritten Runde.
 
-Das Bonusspiel ist entfernt; es gibt jetzt sieben Bonusspiele.
+Zusätzlich in Chromium (Playwright) geprüft: alle drei Szenen-Rätsel real durchgespielt (Spielstand gespeichert, Belohnungsfenster erscheint), Ziehen mit Pointer Events, Größen 1180×820, 1024×600 und 820×1180 ohne Scrollen des Fensters, Ersatzdarstellung bei blockierten Grafiken, Amphoren-Chaos auf 1180×820 und 1024×768 (nach dem Schließen keine Animation mehr, Spielstand unverändert). Keine JavaScript-Fehler; die einzigen 404-Meldungen betreffen die optionalen Schriftdateien in `assets/fonts/`, die schon vorher fehlten.
 
-- `tests/bonus-unlocks.cjs` (bestanden): sieben Meilensteine, gesperrte Spiele starten nicht, `wagen` ist nicht registriert und startet nicht, alter Fortschritt mit `wagen` (auch über den Fortsetzungscode) wird verworfen, Notizbuch zeigt „Freigeschaltet: 7 / 7“ ohne Wagen-Eintrag.
-- `tests/playthrough.cjs` (403 Prüfungen, bestanden): nach dem Finale 7 / 7 Bonusspiele; alter Spielstand mit `wagen` lädt fehlerfrei, Notizbuch ohne „Belade den Wagen“.
-- `tests/archive-flow.cjs` und `tests/continuation.cjs` bestanden unverändert.
-- Chromium: Spielstand mit allen Rätseln und altem `wagen`-Eintrag geladen; Notizbuch zeigt sieben Karten ohne leeren Platz, alle sieben Bonusspiele starten, keine JavaScript-Fehler.
+Noch offen: echtes iPad-Safari (Touch-Genauigkeit, `:has()` wird ab iPadOS 15.4 unterstützt) und ein Unterrichtstest.
+
+- Nachtrag: Kurierfahrt als Bonusspiel (Notizbuch-Start, Sieg, nach dem Schließen keine Animation mehr, Spielstand unverändert) und Schrift EB Garamond (normal und kursiv geladen, keine 404-Meldungen mehr) in Chromium geprüft. `npm test` bestanden (Bonus-Test jetzt mit neun Spielen).
+
+
+## Quellenkritik und Begründungen ohne Freitext (25.09.2026)
+
+`npm test` bestanden: continuation, playthrough (397 Prüfungen), bonus-unlocks, scenegames (110), amphoren (26) und neu `tests/sources-and-reasons.cjs` (99 Prüfungen).
+
+- Schild/Vision: Jede Aussage hat genau eine Kategorie. Jede falsche Kategorie hat eine eigene fachliche Rückmeldung. Die Berichtsaussage wird als „später berichtet“ gewertet, „tatsächlich gesehen“ als „nicht sicher feststellbar“. Minispiel und klassische Fassung stimmen überein.
+- Echo der Quellen: Mehrdeutige Behauptungen (Neros Brandstiftung, Brandlegung durch Christen) akzeptieren „unsicher“ und „nicht sicher feststellbar“. Die Existenz antiker Berichte gilt als gut belegt, nicht jedes Detail darin.
+- Kein Textfeld im Spielcode. Die einzige Texteingabe ist der Fortsetzungscode. Keine Längenbedingung für Fortschritt.
+- Waage und Brücke: Ohne Begründung kein Abschluss. Eine falsche Begründung zeigt ihre Rückmeldung und schaltet nicht frei. Eine richtige wird als Text gespeichert und schließt ab. Alle Rätsel sind ohne Tippen lösbar.
+- Alte Spielstände mit Freitext bleiben gültig. Der Fortschritt bleibt erhalten, der alte Text erscheint im Notizbuch als „frühere Notiz“.
+- Chromium (Playwright), 1024×768 und 768×1024: Waage und Brücke real durchgespielt, Schildpuzzle gelöst und Quiz mit falschen Antworten geprüft. Aussage, Antworten und Rückmeldung sind ohne Scrollen sichtbar. Keine JS-Fehler.
+
+
+## Siegelsystem (25.09.2026)
+
+`npm test` bestanden, neu `tests/seals.cjs` (71 Prüfungen). Der Durchlauf (`tests/playthrough.cjs`) setzt die Siegel jetzt über die neuen Fassungen.
+
+- Designsystem: eigenes Motiv und eigene Farbe je Siegel, gemeinsame SVG-Definitionen nur einmal im Dokument, Bildbeschreibung je Medaillon, vier Zustände mit Klasse, Beschriftung und Ansage.
+- Belohnung: Siegel wird wie bisher vergeben. Banner, großes Medaillon und Sammlung erscheinen, „Weiter erkunden“ ist sofort verfügbar. Erneutes Lösen vergibt kein doppeltes Siegel und zeigt keine Animation.
+- Siegelrad: Setzen ohne Auswahl und in eine falsche Fassung wird abgelehnt, erneutes Antippen hebt die Auswahl auf, alle sechs Siegel setzen `sealsPlaced`. Ein alter Spielstand mit zwei eingesetzten Siegeln öffnet korrekt und lässt sich abschließen. Mit weniger als sechs Siegeln erscheint die Sammlung mit leeren Fassungen.
+- Bilddateien: Ein eingetragenes Bild ersetzt nur sein eigenes Siegel. Ohne Eintrag werden keine Bilddateien angefordert.
+- Chromium (Playwright) mit Touch-Eingabe (`tap`) bei 1180×820, 820×1180, 1024×768, 768×1024 und 390×844: alle sechs Siegel per Antippen eingesetzt, kein Scrollen im Siegelrad, keine horizontale Verschiebung, Fassungen 119–163 px (iPad), Beschriftung 14,6–16 px, keine JS-Fehler. Belohnungsfenster bei 1024×768, 768×1024 und 390×844 geprüft.
+- Noch offen: echtes iPad-Safari (`:has()` und Container-Einheiten ab iPadOS 16).
+
+
+## Argumentationsbrücke (25.09.2026)
+
+`npm test` bestanden, neu `tests/argbridge.cjs` (107 Prüfungen). Geprüft werden:
+
+- vier Satzanfänge mit je einer richtigen und zwei falschen Platten, alle mit fachlicher Rückmeldung
+- die Kernaussage in den richtigen Platten
+- vier Vereinfachungen und zwei tragfähige Aussagen, eine beste Inschrift
+- nie mehr als drei Platten gleichzeitig
+- falsche Platten und Inschriften bauen nichts und speichern nichts
+- keine Texteingabe
+- die gewählte Inschrift wird fürs Notizbuch gemeldet, der Sieg genau einmal
+- eingetragene Grafiken ersetzen die gezeichneten; ohne Eintrag wird keine Datei angefordert
+
+Der Durchlauf öffnet das Finale jetzt als Brückenszene.
+
+Chromium (Playwright) mit Touch-Eingabe bei 1024×768, 1180×820, 768×1024 und 820×1180: alle drei Phasen gespielt, einschließlich falscher Platten, tragfähiger Aussage und falscher Inschrift.
+
+- Die Rätselseite scrollt nicht.
+- Platten sind 52–78 px hoch, Schrift 14,5–18,5 px.
+- Das Rätsel wird gespeichert, das Ende der Chronik erscheint, die gewählte Inschrift steht im Spielstand.
+- Keine JS-Fehler.
+
+
+## Bonusspiel „Das geheime Zeichen“ (25.09.2026)
+
+`npm test` bestanden, neu `tests/zeichen.cjs` (46 Prüfungen). Geprüft werden:
+
+- keine laufenden Mini-Figuren mehr; die Figuren sind im Szenenbild beschrieben
+- vier Runden in fester Folge; drei Zielzeichen auf der Holztafel
+- Zeichen an ihren Stellen in unterschiedlicher Machart; Tafel füllt sich
+- Adler, Lorbeer und Rosette erhalten eine fachliche Rückmeldung; das Christusmonogramm wird mit Konstantin eingeordnet
+- vier Antworten ohne Texteingabe, Erklärung bei falscher Antwort
+- der Sieg wird nur im Bonusfortschritt gespeichert, der Hauptspielstand bleibt unverändert
+- eingetragene Grafiken (Szene, Figurenebene, Tafel, Zeichenbogen) werden verwendet; ohne Eintrag wird keine Datei angefordert
+
+Chromium (Playwright) mit echter Touch-Eingabe (`tap`) bei 1024×768, 1180×820, 768×1024 und 820×1180:
+
+- alle vier Runden gespielt, einschließlich Fehltipps (Hinweis nach drei Fehlversuchen), Lorbeer und falscher Antwort
+- Tippbereiche 61–80 px
+- Fenster scrollt nicht; keine JS-Fehler
+- Hochformat: Tafel, Sprechblase und Antworten unter der Szene
+
+## Bonusspiel „Rom brennt!“ (25.09.2026)
+
+**Ursache der Sackgasse im alten Level:** Zwischen den Häuserblöcken bei x 35–38 und 43–46 lag ein brüchiger Steg über einem 4 Kacheln breiten und 6 Kacheln tiefen Schacht. Brach der Steg, landete man im Schacht, und die Sprunghöhe (2,4 Kacheln) reichte nicht heraus. Zusätzlich reichten beide Blöcke bis auf die Straße: Wer rechts hinuntersprang, bevor Brand 2 gelöscht war, konnte weder zurück noch nach oben.
+
+**Neues Level:**
+
+- Die Straße ist durchgehend begehbar, ohne Gruben.
+- Häuser stehen hinter der Straße, nur ihre Dachkanten tragen.
+- Hindernisse sind höchstens zwei Kacheln hoch.
+- Jedes Dach hat eine Leiter oder Kisten mit Markise, und von jedem Dach kann man gefahrlos hinunterspringen.
+- „↺ Neu“ startet die Runde jederzeit neu.
+
+`npm test` bestanden, neu `tests/rombrennt.cjs` (123 Prüfungen). Geprüft werden:
+
+- **Erreichbarkeit:** Ein Graph über alle begehbaren Stellen mit den echten Sprungwerten zeigt, dass man von jeder erreichbaren Stelle zur Straße zurückkommt. Alle Brände und Wasserstellen sind erreichbar.
+- **Kompletter Lauf:** Ein Autopilot mit fester Physik (60 Hz) schafft den ganzen Lauf: Brunnen, Leiter, Brand 1, Sprung vom Dach, Brunnen, Leiter, Brand 2, Zisterne, Glut, Kisten und Markise, Brand 3. Viermal wiederholt.
+- **Zeit:** Der Countdown hält die Zeit an, die Zeit startet automatisch und stoppt am Ende.
+- **Bestzeit:** Die erste Zeit wird gespeichert, eine bessere überschreibt sie, eine schlechtere nicht, nach dem Neuladen steht sie auf Startkarte und Tafel. Kaputte oder ungültige Werte werden ignoriert.
+- **Bedienung:** „Neu“ setzt Runde und Zeit zurück, Pause und Zurück funktionieren.
+- **Grafiken:** Ohne Eintrag wird keine Datei angefordert, eingetragene Grafiken werden verwendet.
+
+Chromium (Playwright) bei 1024×768, 1180×820 und 768×1024:
+
+- ◀ ▶ und Sprung reagieren auf Pointer-Eingaben.
+- Richtungsknöpfe 76–96 px, Sprungknopf 105–134 px, mit mindestens 42 px Abstand zum Rand.
+- In der Pause steht die Zeit still.
+- Keine JS-Fehler und keine fehlgeschlagenen Ladevorgänge.
+- Im Hochformat liegt die Straße über den Knöpfen.
+
+## Qualitätsprüfung iPad (25.09.2026, Branch `quality/ipad-review`)
+
+Siehe `QUALITAETSBERICHT.md`. `npm test` bestanden (12 Testdateien, darunter neu `tests/ipad-layout.cjs` und die Waage in `tests/scenegames.cjs`).
+
+Automatische Layout-Prüfung in Chromium:
+
+- **Größen:** 1024×768, 1180×820, 1366×1024 und 820×1180.
+- **Umfang:** Szenen, Rätsel, Dialoge und Bonusspiele.
+- **Ergebnis:**
+  - Keine JS-Fehler, keine fehlgeschlagenen Ladevorgänge.
+  - Kein Rätselfenster muss gescrollt werden; die einzige Ausnahme sind 2 px beim Seilzug bei 1180×820.
+  - Startknöpfe sind sichtbar.
+  - Waage, Kartenbrett und Archiv sind in allen Größen geprüft.
+- **Verbliebene, bewusst akzeptierte Meldungen:**
+  - Das Notizbuch scrollt (gewollt).
+  - Der unsichtbare Lehrkraft-Titel (langes Drücken) hat eine kleine Schrift.
+  - Die Zierinschrift „Anno Domini“ liegt unter dem Kartenplatz.
+
+
+## Bonusspiel „Schildwall“ neu (26.09.2026)
+
+`npm test` bestanden, neu `tests/schildwall.cjs` (33 Prüfungen). Geprüft werden:
+
+- Alte Einzel-Schild-Mechanik entfernt: keine Einzelsoldaten, kein „unten“.
+- Drei beschriftete Knöpfe, die per `pointerdown` sofort reagieren. Alle Schilde schwenken gemeinsam.
+- Salven mit mehreren Pfeilen: Die richtige Richtung wehrt ab (Blockeffekt), die falsche kostet einen Treffer (Anzeige).
+- Nach drei Treffern ist Schluss, die Zeit stoppt.
+- Bestzeit: erste Zeit gespeichert, kürzere überschreibt nicht, längere schon. Sie bleibt nach dem Neuladen, kaputte Werte werden ignoriert.
+- Tempo steigt, bleibt aber fair.
+- Pause funktioniert.
+- Asset-Pfade vorbereitet; ohne Eintrag wird keine Datei angefordert.
+
+Fairness-Probe: Ein automatischer Spieler mit 0,45 s Reaktionszeit hält mindestens 90 s durch.
+
+Chromium (Playwright) mit Touch-Eingabe (`tap`) bei 1024×768, 1180×820, 1366×1024, 768×1024 und 820×1180:
+
+- Knöpfe 96–140 × 80–108 px, mindestens 40 px Abstand zum Rand.
+- Salven werden per Tippen abgewehrt.
+- Kein Scrollen, keine JS-Fehler, keine fehlgeschlagenen Ladevorgänge.
+
+Nebenbei behoben: Ein verspätetes `close`-Ereignis eines vorherigen Fensters konnte ein gerade gestartetes Bonusspiel sofort beenden (`bonusgames.js`).
+
+## Zusammenführung mit `main` (Kurierfahrt und Wagen entfernt)
+
+- Auf `main` waren „Belade den Wagen!“ und die Kurierfahrt entfernt worden. Diese Entscheidung gilt jetzt auch für den Stand dieses Zweigs: `bonus/wagen.js`, `bonus/kurier.js`, `GAME.kurier`, der Renncode `MiniGames.racer` und die nur dafür genutzten CSS-Regeln sind gelöscht.
+- Es gibt sieben Bonusspiele: Das geheime Zeichen, Rom brennt!, Amphoren-Chaos, Katakombenlauf, Schildwall, Über den Tiber!, Circus Maximus.
+- Die Stadt 313 behält das Szenenrätsel „Vorher und Nachher“.
+- Tests: `bonus-unlocks` prüft sieben Spiele und dass `wagen` und `kurier` weder registriert noch startbar sind. `playthrough` erwartet „Freigeschaltet: 7 / 7“ und lädt einen alten Bonusstand mit `kurierfahrt`, `kurier` und `wagen` ohne Fehler; die alten Kennungen werden verworfen.
+- `npm test`: alle 13 Testdateien bestanden.
