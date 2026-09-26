@@ -11,7 +11,7 @@ function boot(raw,opts={}){if(raw!==undefined)storage.set(KEY,raw);const {window
  window.HTMLElement.prototype.focus=function(){};window.HTMLElement.prototype.scrollIntoView=function(){};
  // Minispiele laufen im echten Browser mit Canvas/Animation. Hier ersetzt ein Platzhalter jedes Spiel;
  // geprüft wird die Einbindung: Das Rätsel öffnet das Spiel, und ein Sieg meldet sich über „minigame-win“.
- window.MiniGames=new Proxy({},{get:(_,type)=>(id,cfg,work)=>{work.innerHTML=`<p class="stub-minigame" data-type="${String(type)}">${cfg.title}</p>`;return true;}});
+ window.MiniGames=new Proxy({},{get:(_,type)=>type==='stop'?(()=>{}):(id,cfg,work)=>{work.innerHTML=`<p class="stub-minigame" data-type="${String(type)}">${cfg.title}</p>`;return true;}});
  const matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
  const timers=[];const context={window,document,localStorage,console,Blob,URL,matchMedia,requestAnimationFrame:()=>0,cancelAnimationFrame:()=>{},setTimeout:(f,t)=>{timers.push({f,t});return timers.length;},clearTimeout:()=>{},setInterval:()=>0,clearInterval:()=>{}};
  window.matchMedia=matchMedia;vm.createContext(context);

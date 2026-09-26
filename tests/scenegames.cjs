@@ -85,6 +85,16 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  root.querySelector('.chron-gap[data-gap="0"]').click();ok(root.classList.contains('turned'),'Wende zwischen 303 und 311 markiert');flush();
  root.querySelector('.sg-next').click();ok(wins.join()==='timeline','Chronik meldet den Sieg');
 }
+/* ---------- Zeitmechanik: Wiederöffnen mit gespeicherten Verriegelungen ---------- */
+{
+ const {G,M,work,window}=boot();const cfg={...G.minigames.timeline,restore:{locks:[0,2],misses:{1:1}}};const events=[];window.document.addEventListener('minigame-progress',e=>events.push(e.detail));
+ M.chronik('timeline',cfg,work);const root=work.querySelector('.chronicle-game');
+ ok(root.querySelectorAll('.tm-year.filled').length===2&&!root.querySelector('.tm-card[data-card="0"]'),'Gespeicherte Jahresfelder bleiben verriegelt');
+ root.querySelector('.tm-card[data-card="1"]').click();root.querySelector('.tm-year[data-target="3"]').click();
+ ok(txt(root.querySelector('.sg-voice'))===cfg.wrongAgain,'Fehlversuche je Tafel bleiben gespeichert (zweiter Fehler: Notizbuch)');
+ ok(events.at(-1).id==='timeline'&&events.at(-1).data.misses[1]===2&&events.at(-1).data.locks.join()==='0,2','Zwischenstand wird gemeldet');
+ const all={...G.minigames.timeline,restore:{locks:[0,1,2,3,4,5]}};const w2=window.document.createElement('div');M.chronik('timeline',all,w2);ok(!w2.querySelector('.tm-gaps').hidden,'Vollständig verriegelt: direkt zur Transferfrage');
+}
 /* ---------- Grafiken und Ersatz ---------- */
 {
  const files=['council/council-scene.png','council/council-officials.png','timeline/chronicle-room.png','timeline/timeline-assets.png','open-city/open-city.png','amphora/amphora-dock.png','amphora/amphora-assets.png','amphora/amphora-merchant.png'];

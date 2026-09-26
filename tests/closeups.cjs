@@ -94,6 +94,10 @@ const exists=f=>fs.existsSync(path.join(root,f));
  ok(d.pins.every(p=>p.querySelector('.map-marker')),'Marker rasten an den Kartenpunkten ein');
  $('.map-check').click();flush();$('.w-next').click();ok(wins.join()==='map312','Sieg gemeldet');}
 
+/* Aufräumen beim Schließen */
+{const {G,M,work,$}=boot();M.classify('sources',G.minigames.sources,work);work.id='modal';ok($('.scene-game'),'Bühne vorhanden');}
+{const {window,G,M}=boot();const modal=window.document.querySelector('#modal');const w=window.document.createElement('div');modal.append(w);M.stamp('cases',G.minigames.cases,w);M.stop();ok(!modal.querySelector('.scene-game'),'MiniGames.stop entfernt die Bühne (Timer und Schleifen enden)');}
+
 /* Endsequenz */
 {const {window,G,flush}=boot();const events=[];
  const el=window.Finale.play({names:G.seals,onExplore:()=>events.push('explore'),onNewGame:()=>events.push('new')});
@@ -102,6 +106,7 @@ const exists=f=>fs.existsSync(path.join(root,f));
  flush();ok(el.dataset.phase==='end','Sequenz endet im Abschluss');
  ok(/Die Chronik spricht wieder\./.test(el.textContent)&&/Du hast die Erinnerungen der Stadt zusammengefügt\./.test(el.textContent)&&/Abenteuer abgeschlossen/.test(el.textContent),'Abschlusstexte');
  const b=[...el.querySelectorAll('.fn-actions button')].map(x=>x.textContent);ok(b[0]==='Stadt weiter erkunden'&&b[1]==='Neues Spiel'&&!b.some(t=>/Stadttor/.test(t)),'Zwei Aktionen, nicht „Weiter zum Stadttor“');
- el.querySelectorAll('.fn-actions button')[1].click();ok(events.join()==='new'&&!window.document.querySelector('#finale'),'Neues Spiel führt zur Sicherheitsabfrage (Spiel-Menü)');}
+ const again=window.Finale.play({names:G.seals});ok(window.document.querySelectorAll('#finale').length===1,'Wiederholter Start: nur eine Sequenz');window.Finale.stop();ok(!window.document.querySelector('#finale')&&!window.document.body.classList.contains('finale-on'),'Stop räumt vollständig auf');
+ const el2=window.Finale.play({names:G.seals,onExplore:()=>events.push('explore'),onNewGame:()=>events.push('new')});flush();el2.querySelectorAll('.fn-actions button')[1].click();ok(events.join()==='new'&&!window.document.querySelector('#finale'),'Neues Spiel führt zur Sicherheitsabfrage (Spiel-Menü)');}
 
 console.log(`PASS: Rätsel-Nahansichten und Endsequenz – ${checks} Prüfungen`);
