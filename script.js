@@ -11,6 +11,12 @@
  const infoSpots=sc=>sc.id==='archive'?[]:sc.hotspots.map((h,i)=>({h,i})).filter(({h})=>h[3]==='talk');
  const missingInfo=sc=>infoSpots(sc).filter(({i})=>!state.seen.includes(sc.id+':'+i));
  const puzzleLocked=(sc,id)=>!has(id)&&missingInfo(sc).length>0;
+ /* Aufgabe: erscheint bei neuem Ziel kurz groß und klappt dann zu einem kleinen Schild „Ziel“ zusammen.
+    Antippen zeigt sie wieder – so bleibt die Szene frei. */
+ let objTimer=null,objLast='';
+ function setObjective(text){const el=$('#objective');if(!el.querySelector('.obj-text')){el.innerHTML='<span class="obj-tag" aria-hidden="true">✦ Ziel</span><span class="obj-text"></span>';el.setAttribute('role','button');el.tabIndex=0;el.onclick=()=>showObjective(!el.classList.contains('open'));el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click();}};}
+  el.querySelector('.obj-text').textContent=text;el.setAttribute('aria-label','Ziel: '+text);if(text!==objLast){objLast=text;showObjective(true);}}
+ function showObjective(open){const el=$('#objective');el.classList.toggle('open',open);el.setAttribute('aria-expanded',String(open));clearTimeout(objTimer);if(open)objTimer=setTimeout(()=>showObjective(false),6500);}
  function refreshSpots(){const sc=scene(),miss=missingInfo(sc),total=infoSpots(sc).length,opened=[];
   document.querySelectorAll('#hotspots .hotspot').forEach(b=>{const i=+b.dataset.index,h=sc.hotspots[i];if(!h)return;b.classList.toggle('seen',state.seen.includes(sc.id+':'+i));
    if(h[3]!=='puzzle')return;const lockedNow=puzzleLocked(sc,h[4]),was=b.classList.contains('locked');b.classList.toggle('locked',lockedNow);
@@ -18,7 +24,7 @@
    const pin=b.querySelector('.pin');if(pin)pin.textContent=has(h[4])?'✓':lockedNow?'🔒':'✦';
    if(was&&!lockedNow){b.classList.add('unlocked-now');opened.push(h[0]);}});
   if(opened.length)toast(`Du hast genug erfahren. Überprüfe jetzt dein Wissen: ${opened[0]}.`);
-  $('#objective').textContent=objective();}
+  setObjective(objective());}
  const add=(key,value)=>{if(!state[key].includes(value))state[key].push(value);};
  const save=()=>{state.progress=state.solved.length;try{localStorage.setItem(KEY,JSON.stringify(state));storageOK=true;}catch(e){storageOK=false;toast('Speichern ist in diesem Browser nicht möglich. Lass diesen Tab geöffnet.');}};
  function toast(text){$('#toast').textContent=text;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),5500);}
@@ -75,7 +81,7 @@
   if(lastPanScene!==s.id){lastPanScene=s.id;(window.requestAnimationFrame||setTimeout)(()=>{const vp=document.querySelector('.scene-viewport');if(!vp)return;const pan=vp.scrollWidth-vp.clientWidth;vp.scrollLeft=pan>4?pan/2:0;const h=$('#pan-hint');if(h){h.hidden=pan<=4;if(pan>4){h.classList.remove('show');void h.offsetWidth;h.classList.add('show');}}});}
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
   $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot hs-'+h[3];b.dataset.index=i;const bx=hsBox(s,h);b.style.left=bx.x+'%';b.style.top=bx.y+'%';b.style.setProperty('--x',bx.x+'%');b.style.setProperty('--y',bx.y+'%');if(bx.w){b.style.setProperty('--w',bx.w+'%');b.style.setProperty('--h',bx.h+'%');}b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');const cap=h[3]==='puzzle'?'<small class="hs-cap"></small>':'';b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':h[3]==='take'?'＋':h[3]==='talk'?'i':'·'}</span><span class="label">${esc(h[0])}${cap}</span>`;if(h[3]==='take'){b.querySelector('.pin').remove();b.setAttribute('aria-label',h[0]+' aufnehmen');}if(h[3]==='deposit')b.hidden=!has('archive')||!!state.flags.archiveScrollsDeposited;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
-  window.Adventure.scene(s,state);refreshSpots();document.querySelectorAll('#hotspots .unlocked-now').forEach(b=>b.classList.remove('unlocked-now'));renderExits(s);window.BonusGames?.update(state);$('#objective').textContent=objective();renderInventory();save();
+  window.Adventure.scene(s,state);refreshSpots();document.querySelectorAll('#hotspots .unlocked-now').forEach(b=>b.classList.remove('unlocked-now'));renderExits(s);window.BonusGames?.update(state);setObjective(objective());renderInventory();save();
  }
  function travel(id,via){
   if(!state.unlocked.includes(id)){toast(G.exitHints?.[id]||'Dieser Weg ist noch versperrt. Finde zuerst weitere Spuren.');return;}
