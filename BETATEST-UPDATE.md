@@ -1,3 +1,11 @@
+> **Hinweis (Asset-Integration, Branch `feature/asset-integration`):** Die hier beschriebenen Punkte sind in die gemalten
+> Nahansichten übernommen. Mosaik, Zeitmechanik und Endsequenz verwenden jetzt die Illustrationen aus dem Assetpaket
+> (`assets/puzzles/`, `assets/finale/`) statt der SVG-Fassung; `chronicle.js`/`chronicle.css` und die zugehörigen
+> Tests wurden dadurch ersetzt. Übernommen wurden: gespeicherte Jahres-Verriegelungen und Fehlversuche je Tafel,
+> ausdrücklich gewählte vollständige Zeitfolge, Aufräumen von Timern/Listenern beim Schließen, Abschlussbedingung
+> (alle Rätsel + sechs Siegel), „Neues Spiel“ mit Abbrechen zurück zur Abschlussansicht, Abschlussansicht nach dem
+> Laden eines abgeschlossenen Spielstands. Details: README.md und TESTREPORT.md.
+
 # Betatest-Überarbeitung · 26. September 2026
 
 Integriert auf Basis von `0df52659920580accd5a32156cff17e801a76661`. Die zwischenzeitlich ergänzten Szenenspiele, Begründungsauswahlen, Siegel, Argumentationsbrücke, Schriftarten und iPad-Regeln bleiben erhalten.

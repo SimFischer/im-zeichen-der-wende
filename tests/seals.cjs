@@ -8,10 +8,10 @@ function boot(raw){if(raw!==undefined)storage.set(KEY,raw);const {window}=parseH
  const localStorage={getItem:k=>storage.has(k)?storage.get(k):null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)};
  document.querySelector('#modal').showModal=function(){this.open=true;};document.querySelector('#modal').close=function(){this.open=false;this.dispatchEvent(new window.Event('close'));};
  window.HTMLElement.prototype.focus=function(){};window.HTMLElement.prototype.scrollIntoView=function(){};
- window.MiniGames=new Proxy({stop(){}},{get:(target,type)=>target[type]||((id,cfg,work)=>{work.innerHTML='<p class="stub-minigame"></p>';return true;})});
+ window.MiniGames=new Proxy({},{get:(_,k)=>k==='stop'?(()=>{}):(id,cfg,work)=>{work.innerHTML='<p class="stub-minigame"></p>';return true;}});
  const matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});window.matchMedia=matchMedia;
  const context={window,document,localStorage,console,Blob,URL,matchMedia,requestAnimationFrame:()=>0,cancelAnimationFrame:()=>{},setTimeout:()=>0,clearTimeout:()=>{},setInterval:()=>0,clearInterval:()=>{}};vm.createContext(context);
- for(const f of ['data/game-data.js','adventure.js','chronicle.js','seals.js','bonusgames.js','script.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),context,{filename:f});
+ for(const f of ['data/game-data.js','adventure.js','seals.js','bonusgames.js','script.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),context,{filename:f});
  return {window,document};}
 
 /* 1. Designsystem */
@@ -22,8 +22,10 @@ ok(new Set(G.seals.map(S.slug)).size===6&&S.slug('312')==='312'&&S.slug('Konflik
 const h=env.document.createElement('div');h.innerHTML=G.seals.map(n=>S.medal(n)).join('');
 ok(all('#seal-defs').length===1,'Shared SVG definitions exist once');S.ensureDefs();S.medal('Quelle');ok(all('#seal-defs').length===1,'Definitions not duplicated');
 for(const n of G.seals){const s=S.slug(n);ok($('#sm-raise-'+s)&&$('#sm-eng-'+s),'Relief motif defined: '+n);ok($('#sg-field-'+s),'Field colour defined: '+n);}
-ok(h.querySelectorAll('.seal-medallion svg[role=img]').length===6,'Medallions are labelled images');
-ok([...h.querySelectorAll('.seal-medallion svg')].every(svg=>/Siegel /.test(svg.getAttribute('aria-label'))),'Accessible names');
+ok(h.querySelectorAll('.seal-medallion [role=img]').length===6,'Medallions are labelled images');
+ok([...h.querySelectorAll('.seal-medallion [role=img]')].every(n=>/Siegel /.test(n.getAttribute('aria-label'))),'Accessible names');
+ok(G.seals.every(n=>fs.existsSync(path.join(root,S.assetPath(S.slug(n))))),'Painted medallion file exists for every seal');
+ok(h.querySelectorAll('.seal-medallion img').length===6,'Medallions use the painted seal sheet');
 for(const st of ['locked','owned','selected','placed']){const d=env.document.createElement('div');d.innerHTML=S.token('Staat',st,{tag:'button'});const t=d.firstElementChild;
  ok(t.classList.contains('is-'+st)&&t.dataset.state===st,'State class '+st);ok(t.querySelector('.seal-name').textContent==='Staat','Readable label '+st);ok(t.getAttribute('aria-label').includes(S.STATE_TEXT[st]),'State announced '+st);
  ok(st==='locked'?!!t.querySelector('.seal-setting'):!!t.querySelector('.seal-medallion'),'Locked shows empty setting, others the medallion: '+st);}
@@ -36,11 +38,11 @@ ok(/2 von 6/.test(r.textContent),'Reward shows collection progress');
 ok(!/(XP|Punkte|★|Münze|Konfetti)/.test(r.textContent),'No points/stars/coins aesthetic');
 r.innerHTML=S.reward('Quelle',{owned:['Quelle'],fresh:false});ok(!r.querySelector('.fresh')&&/bereits/.test(r.textContent),'Re-solving shows calm, non-animated reward');
 for(const n of G.seals)ok(G.sealInfo[n]&&G.sealInfo[n].meaning&&G.sealInfo[n].motif,'Meaning and motif text: '+n);
-ok(!/<img/.test(S.medal('Quelle'))&&!/<img/.test(S.wheelSvg()),'SVG fallback while no asset is registered');
+{const keep=G.sealAssets.available;G.sealAssets.available=[];ok(!/<img/.test(S.medal('Quelle'))&&!/<img/.test(S.wheelSvg()),'SVG fallback while no asset is registered');G.sealAssets.available=keep;}
 G.sealAssets.available=['quelle','wheel-frame'];
-ok(S.medal('Quelle').includes('src="assets/ui/seals/seal-quelle.png"')&&!/<img/.test(S.medal('Staat')),'Registered asset replaces only its own seal');
-ok(S.wheelSvg().includes('assets/ui/seals/seal-wheel-frame.png'),'Registered wheel frame used');
-G.sealAssets.available=[];
+ok(S.medal('Quelle').includes('src="assets/ui/seals/seal-quelle.webp"')&&!/<img/.test(S.medal('Staat')),'Registered asset replaces only its own seal');
+ok(S.wheelSvg().includes('assets/ui/seals/seal-wheel-frame.webp'),'Registered wheel frame used');
+G.sealAssets.available=['konflikt','quelle','anzeige','staat','312','wende'];
 for(let i=0;i<6;i++){const p=S.socketPos(i);ok(p.left>15&&p.left<85&&p.top>15&&p.top<85,'Setting inside the wheel '+i);}
 const css=fs.readFileSync(path.join(root,'seals.css'),'utf8');
 ok(/orientation:portrait/.test(css),'Portrait layout rules');ok(/prefers-reduced-motion/.test(css),'Reduced motion respected');

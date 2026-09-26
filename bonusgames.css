@@ -80,7 +80,7 @@
 .schild-sub{text-align:center;font-size:calc(var(--u)*1.35)!important;color:#5a3a16;margin:.2em 0!important}
 .schild-comment{display:flex;align-items:center;gap:.8em;margin-top:.6em;padding:.5em .8em;border:1px solid #c9a86b;border-radius:12px;background:#f3e4c5}
 .schild-comment p{margin:0!important;font-size:var(--fs-s)!important}
-.schild-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/minigames/leute.webp') no-repeat;background-size:auto 640%;background-position:-36px -38px}
+.schild-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/puzzles/forum/chronistin-face.webp') center/cover no-repeat}
 .amph-face{flex:none;width:64px;height:64px;border-radius:50%;border:2px solid #a88a55;background:#d9c49a url('assets/minigames/amphora/amphora-merchant.png') no-repeat;background-size:230% auto;background-position:52% 4%}
 
 /* Circus Maximus */
@@ -103,7 +103,7 @@
 .tiber-quip{position:absolute;left:10px;top:10px;z-index:9;display:flex;align-items:center;gap:.6em;max-width:min(26em,70%);padding:.4em .8em;border:2px solid #c9a86b;border-radius:12px;background:#fbf1dbf2;box-shadow:0 6px 16px #0006;pointer-events:none}
 .tiber-quip[hidden]{display:none}
 .tiber-quip p{margin:0;font-size:var(--fs-s);color:#3a2610}
-.tiber-quip .schild-face{width:52px;height:52px;background-size:auto 520%;background-position:-28px -30px}
+.tiber-quip .schild-face{width:52px;height:52px;background-size:cover;background-position:center}
 
 .bonus-unknown small{display:block;font-size:14px;font-weight:400;letter-spacing:normal;margin-top:6px}
 
@@ -118,7 +118,7 @@
    Szene im Seitenverhältnis des Bildes, Figuren sind Teil des Bildes. Tafel oben rechts und Sprechblase
    der Chronistin oben links liegen im Bild; im Hochformat wandern beide unter die Szene. */
 .zs-root{position:absolute;inset:0;container-type:size;--sw:min(100cqw,150cqh);--sh:calc(var(--sw)/1.5);--ox:calc((100cqw - var(--sw))/2);--oy:calc((100cqh - var(--sh))/2);
- font-size:clamp(13px,calc(var(--sh)*.03),19px);background:#2a2118 url('assets/minigames/forum-blur.jpg') center/cover no-repeat}
+ font-size:clamp(13px,calc(var(--sh)*.03),19px);background:#2a2118 url('assets/backgrounds/v3-forum.png') center/cover no-repeat}
 .zs-root,.zs-root *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .zs-scene{position:absolute;left:var(--ox);top:var(--oy);width:var(--sw);height:var(--sh);overflow:hidden;box-shadow:0 0 0 2px #6e4a1455,0 0 40px #000a;touch-action:manipulation;cursor:crosshair}
 .zs-bg,.zs-overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}

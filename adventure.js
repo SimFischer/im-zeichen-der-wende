@@ -5,12 +5,12 @@ window.Adventure = (() => {
  const cast={archivist:4,guard:0,resident:1,merchant:2,rumor:2,chronicler:3,clerk:4,control:5,messenger:6,advisor:7};
  function scene(s,state){
   const el=document.querySelector('#scene');el.dataset.place=s.id;el.classList.toggle('illuminated',state.inventory.includes('light'));el.classList.toggle('changed',!!state.flags.galerius);
-  document.querySelector('#actors').innerHTML=s.id==='motives'?'<img class="scene-motive-relief" src="assets/puzzles/motive-relief.svg" alt="">':'';
+  document.querySelector('#actors').innerHTML='';
   // Aufgenommene Gegenstände, die ins Bild gemalt sind, werden mit einem passenden Bildausschnitt überdeckt.
   if(s.id==='house'&&(state.inventory.includes('lamp')||state.inventory.includes('light')))document.querySelector('#actors').insertAdjacentHTML('beforeend','<img class="scene-patch" src="assets/backgrounds/house-lamp-taken.png" alt="" style="left:59.766%;top:59.082%;width:5.143%">');
   document.querySelectorAll('.hotspot').forEach((b,i)=>{
    const h=s.hotspots[i];
-   if(cast[h[4]]!==undefined){b.classList.add('person');b.querySelector('.pin')?.remove();}
+   if(cast[h[4]]!==undefined)b.classList.add('person');
    if(h[4]==='lamp'){b.classList.add('collectible');b.hidden=state.inventory.includes('lamp')||state.inventory.includes('light');}
    if(h[4]==='flint'){
     b.classList.add('collectible');b.querySelector('.pin')?.remove();
@@ -31,10 +31,9 @@ window.Adventure = (() => {
   // Cards physically move into labeled trays. Akten use the same reliable touch gesture with a stamp animation.
   if(['sources','vision','cases','archive','change','motives'].includes(id)){
    const frame=make('div','sorting-table '+id);
-   if(id==='motives'){const relief=make('div','motive-relief',frame);relief.innerHTML=`<div class="motive-picture"><img src="assets/puzzles/motive-relief.svg" alt="Verziertes Motivrelief mit sieben Mosaikfeldern">${p.rows.map((_,i)=>'<i class="missing-tessera tessera-'+i+'" aria-hidden="true"></i>').join('')}</div><p>Viele Beweggründe · ein Gesamtbild</p>`;}
    const desk=make('section','card-desk',frame);const title=make('h3','',desk);title.textContent=id==='cases'?'Auf dem Schreibtisch':id==='archive'?'Gesicherte Spuren':'Noch einzuordnen';
    const pending=make('div','pending-cards',desk);const trays=make('div','sorting-trays',frame);const cards=[];const bins=new Map();
-   const options=id==='motives'?[p.rows[0].options[0],p.rows[0].options[2],p.rows[0].options[1]]:[...new Set(p.rows.flatMap(r=>r.options))];
+   const options=[...new Set(p.rows.flatMap(r=>r.options))];
    options.forEach((value,j)=>{const tray=make('section','sorting-tray tray-'+j,trays);const b=btn(value,()=>{
     const row=p.rows[active],choice=row.options.indexOf(value);if(choice<0){status.textContent='Dieses Fach gehört zu einer anderen Akte. Wähle ein passendes Fach für die markierte Karte.';return;}
     set(active,choice);const placed=active;refresh();cards[placed].classList.add('just-placed');status.textContent='Abgelegt: '+row.label+' – '+value;
@@ -46,7 +45,7 @@ window.Adventure = (() => {
    function select(i){active=i;cards.forEach((c,k)=>{c.classList.toggle('chosen',k===i);c.querySelector('button').setAttribute('aria-pressed',String(k===i));});bins.forEach(({b},key)=>b.disabled=!p.rows[i].options.includes(key));status.textContent='Gewählt: '+p.rows[i].label;}
    function refresh(){cards.forEach((c,i)=>{const value=d.values[i]===null?null:p.rows[i].options[d.values[i]];const target=value?bins.get(value).contents:pending;target.append(c);c.querySelector('.assignment').textContent=value?'Zugeordnet: '+value:'';c.querySelector('button').classList.toggle('filled',value!==null);c.querySelector('button').classList.remove('correct','wrong');c.querySelector('.row-feedback')?.remove();});
     title.textContent=d.values.every(v=>v!==null)?'Alle Karten sind abgelegt – prüfe den Mechanismus.':id==='cases'?'Auf dem Schreibtisch':id==='archive'?'Gesicherte Spuren':'Noch einzuordnen';
-    if(id==='motives'){frame.querySelectorAll('.missing-tessera').forEach((tile,i)=>tile.classList.toggle('laid',d.values[i]!==null));frame.classList.toggle('assembled',d.values.every(v=>v!==null));frame.querySelector('.motive-relief p').textContent=d.values.every(v=>v!==null)?'Das Gesamtbild ist gelegt. Begründe nun deine Deutung.':'Viele Beweggründe · ein Gesamtbild';}
+    if(id==='motives'){const left=d.values.filter(v=>v===0).length,right=d.values.filter(v=>v===1).length;frame.style.setProperty('--tilt',(right-left)*3+'deg');}
    }
    refresh();select(Math.max(0,d.values.findIndex(v=>v===null)));return true;
   }

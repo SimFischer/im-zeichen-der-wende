@@ -149,7 +149,7 @@ Der Nero-Bericht wird nicht als sichere Kenntnis einer Brandstiftung dargestellt
 
 Die Plinius-Fallentscheidungen sind im Code als didaktische Modellierung markiert und besonders am Originalarbeitsblatt zu prüfen. Erste Befragung und spätere Bestrafung bei beharrlicher Weigerung sind getrennt. Beim bloßen Gerücht ist „Anzeige zurückweisen“ im vorgegebenen Antwortschema als „kein Verfahren eröffnen“ erläutert. Das Rekonstruieren dieser Praxis bedeutet keine Zustimmung.
 
-Die Motivwaage kennt mehrere mögliche Zuordnungen. Freitext ist nirgends eine Bedingung für den Fortschritt: Nach der Waage und im Finale (Argumentationsbrücke) wählen die Lernenden aus vier Begründungen. Zwei davon sind fachlich tragfähig und werden beide akzeptiert. Zwei sind typische Vereinfachungen und erhalten eine kurze fachliche Rückmeldung. Die gewählte Begründung erscheint im Notizbuch. Das mündliche Begründen bleibt als Gesprächsauftrag bestehen (zum Beispiel beim Konzil).
+Das Mosaik der Motive kennt mehrere mögliche Zuordnungen. Freitext ist nirgends eine Bedingung für den Fortschritt: Nach dem Mosaik und im Finale (Argumentationsbrücke) wählen die Lernenden aus vier Begründungen. Zwei davon sind fachlich tragfähig und werden beide akzeptiert. Zwei sind typische Vereinfachungen und erhalten eine kurze fachliche Rückmeldung. Die gewählte Begründung erscheint im Notizbuch. Das mündliche Begründen bleibt als Gesprächsauftrag bestehen (zum Beispiel beim Konzil).
 
 Quellenkritik mit drei Kategorien (Schild in Konstantins Zelt): **gut feststellbar** heißt, das Ereignis selbst ist durch Quellen und Folgen gesichert. **Später berichtet** heißt, die Aussage gibt wieder, was Autoren Jahre danach erzählen. **Nicht sicher feststellbar** heißt, die Aussage behauptet, wie es wirklich war, und das lässt sich nicht prüfen. Dass es eine Quelle gibt, wird nicht mit der Wahrheit ihres Inhalts gleichgesetzt. Jede falsche Wahl erhält eine eigene Rückmeldung.
 
@@ -208,3 +208,23 @@ Siehe `TESTREPORT.md` für die ausgeführten Prüfungen und Grenzen. Die veröff
 - Bestehende Spielstände bleiben kompatibel.
 
 Bedienung: kein Ziehen nötig. Karte antippen, Fach antippen. Beim Kartenbrett, Seilzug und Zeitstrahl: Baustein antippen, Platz antippen. Alle Bedienflächen sind auch mit Tastatur erreichbar.
+
+## Gemalte Rätsel-Nahansichten (Asset-Integration)
+
+Jedes Rätsel öffnet sich als bildschirmfüllende Nahansicht (16:9-Bühne). Das Bild ist der Gegenstand, HTML liefert Text und Bedienung, unsichtbare Tippflächen liegen über den gemalten Dingen.
+
+- **Tür (Wohnviertel):** gemaltes Messingschloss, drei HTML-Walzen (oben/unten tippen oder wischen), Türring als Tippfläche; Walzen rasten ein, Riegel gleitet, Tür schwingt auf.
+- **Forum:** Chronistin steht auf dem Forum (`v3-forum.png`), Aussagen auf einer Pergamentrolle, drei hölzerne Quellenfächer; statt Blitzflächen Lichtimpuls bzw. Rütteln.
+- **Amtsstube:** gemalter Schreibtisch, Akte als Pergament, vier gemalte Stempel; Stempel antippen – er hebt sich, fährt zur Akte, stempelt.
+- **Kontrollstelle:** Holzrahmen, Seile, Rollen, Haken, Holztafeln; Hebel, gespannte Seile, Truhe mit Schlüssel (kein Erfolgsfenster).
+- **Archivar:** drei große Papyrusrollen; der Fachtext ist HTML, Blättern über Bronzeplaketten.
+- **Archiv:** Lampensuche im Dunkeln, danach der Archivschrank mit vier Schubladen und zentraler Verriegelung. Hotspot heißt jetzt „Archivmechanismus“.
+- **Tiber:** illustriertes Kartenbrett mit Holzmarkern; Schiebepuzzle mit dem gemalten Chi-Rho-Schild, das am Ende ohne Raster erscheint.
+- **Konstantins Motive:** statt der Waage das **Mosaik der Motive** (Glaube · Zusammenspiel · Politik/Herrschaft). Die Zahl der Tafeln je Feld ist offen; am Ende fügen sich die Felder zu einem Gesamtbild.
+- **Konzil:** Antworten als Pergamentrollen auf dem Beratungstisch.
+- **Zeitmechanik:** Jahresfelder im gemalten Zeitrad, Ereignisse als Wachstafeln, Einträge in der Chronik. Fehler: erst „Diese Zeitspur gehört an eine andere Stelle.“, dann „Sieh noch einmal in deine Zeitspuren im Notizbuch.“ – konkret wird es nur über „Hinweis“.
+- **Argumentationsbrücke:** gemalte Steinbrücke, jeder richtige Schritt setzt einen Abschnitt mit Staubimpuls ein.
+- **Finale:** eigene Endsequenz (`finale.js`): Chronik, sechs Siegel rasten ein, Chronik öffnet sich, Rückblick auf sechs Orte, „Die Chronik spricht wieder.“, „Abenteuer abgeschlossen“ mit „Stadt weiter erkunden“ und „Neues Spiel“ (mit Sicherheitsabfrage). Überspringbar; bei reduzierter Bewegung ohne Kamerafahrt.
+- **Siegel:** überall dieselben gemalten Medaillons (`assets/ui/seals/`).
+- **Hotspots:** ein Positionsmodell (Mittelpunkt + Fläche); Symbol, Beschriftung, Hover-Fläche und Tippfläche leiten sich daraus ab. Erstes Betreten eines Ortes: „Szene erkunden“.
+- Neue Dateien: `world.css` (Farbvariablen, Knöpfe, Nahansicht-Rahmen, Hotspots), `closeups.css`, `finale.css`, `finale.js`, `tests/closeups.cjs`.

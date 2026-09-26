@@ -12,9 +12,7 @@
  if(!window.MiniGames)window.MiniGames={};
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
- const pending=new Set(),previousStop=window.MiniGames.stop;
- window.MiniGames.stop=()=>{pending.forEach(clearTimeout);pending.clear();previousStop?.();};
- const later=(root,ms,fn)=>{const t=setTimeout(()=>{pending.delete(t);if(root.isConnected)fn();},ms);pending.add(t);return t;};
+ const later=(root,ms,fn)=>setTimeout(()=>{if(root.isConnected)fn();},ms);
 
  /* Kleine Symbolmedaillons (48er-Raster, als Relieflinien). */
  const ICON={
@@ -67,17 +65,23 @@
   </svg>`;
  }
 
+
+ /* Gemalte Brücke (assets/puzzles/bridge/): unsichtbare Vorzeichnung, jeder richtige Schritt setzt einen Abschnitt ein. */
+ function paintedBridge(img,n){
+  return `<img class="abp-ghost" src="${img}" alt="" aria-hidden="true" draggable="false">${Array.from({length:n},(_,i)=>`<div class="ab-arch abp-seg" data-arch="${i}" style="--i:${i};--n:${n}"><img src="${img}" alt="" draggable="false"><span class="abp-dust" aria-hidden="true"></span></div>`).join('')}`;
+ }
  function argbridge(id,cfg,work){
   const A=cfg.art||{},has=k=>(A.available||[]).includes(k),url=k=>A.dir+A[k];
   const art={scene:has('scene'),segments:has('segments'),tokens:has('tokens'),icons:has('icons')};
   const N=cfg.arches.length;
   const artVars=[art.scene&&`--ab-scene:url('${url('scene')}')`,art.segments&&`--ab-segments:url('${url('segments')}')`,art.tokens&&`--ab-tokens:url('${url('tokens')}')`,art.icons&&`--ab-icons:url('${url('icons')}')`].filter(Boolean).join(';');
-  work.innerHTML=`<div class="scene-game argbridge-game${Object.entries(art).filter(([,v])=>v).map(([k])=>' art-'+k).join('')}" style="${artVars}">
+  document.querySelector('#modal')?.style.setProperty('--mg-backdrop',"url('assets/backgrounds/v3-basilica.png')");
+  work.innerHTML=`<div class="scene-game argbridge-game${A.painted?' painted':''}${Object.entries(art).filter(([,v])=>v).map(([k])=>' art-'+k).join('')}" style="${artVars}">
    <div class="sg-stage ab-stage">
     <div class="sg-bg ab-bg" aria-hidden="true"></div>
     <div class="ab-top"><div class="ab-progress" aria-hidden="true">${cfg.arches.map(()=>'<i></i>').join('')}</div><p class="sg-voice ab-voice" role="status" aria-live="polite"></p></div>
     <div class="ab-bridge-wrap"><div class="ab-bridge">
-     ${bridgeSvg()}
+     ${A.painted?paintedBridge(A.painted,N):bridgeSvg()}
      ${cfg.arches.map((a,i)=>`<div class="ab-head" data-head="${i}" style="--i:${i}"><span>${esc(a.head)}</span></div><div class="ab-opening" data-opening="${i}" style="--i:${i}"></div>`).join('')}
      <div class="ab-inscription" hidden><span></span></div>
      <div class="ab-light" aria-hidden="true"></div>
@@ -145,7 +149,9 @@
     else{b.classList.add('cracked');b.disabled=true;say(o.why,'hint');}
    });
   }
-  function finish(){if(phase==='done')return;phase='done';document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));}
+  function finish(){phase='done';const o=document.createElement('div');o.className='sg-finale';
+   o.innerHTML=`<div class="sg-scroll ab-scroll"><h3>${esc(cfg.winTitle)}</h3><ol class="ab-chain">${cfg.arches.map(a=>`<li>${icon(a.right.icon,art)}<span><b>${esc(a.head)}</b> ${esc(a.right.text)}</span></li>`).join('')}</ol><p>${esc(cfg.win)}</p><button type="button" class="primary sg-next">Weiter</button></div>`;
+   stage.append(o);o.querySelector('.sg-next').onclick=()=>document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));o.querySelector('.sg-next').focus?.({preventScroll:true});}
 
   root.__debug={phase:()=>phase,arch:()=>cur,found:()=>found};
   showArch();return true;

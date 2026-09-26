@@ -21,7 +21,7 @@ window.GAME = {
  {id:'archive',name:'Diokletians Archiv',era:'Ab 303 · staatliche Verfolgung',tile:5,intro:'Stockdunkel. Du siehst nicht einmal deine eigene Hand. Irgendwo in diesem Archiv liegen Spuren der großen Verfolgung – aber ohne Licht findest du nichts. Öffne deinen Botenbeutel und entzünde die Öllampe mit dem Feuerstein.',hotspots:[['Verbrannte Schriftrolle',13,76,'evidence','scroll'],['Versiegelte Tür',18,36,'evidence','door'],['Kirchenmodell',49,67,'evidence','church'],['Kette',81,52,'evidence','chain'],['Amtssiegel',81,70,'talk','seal'],['Archivmechanismus',46,42,'puzzle','archive'],['Schriftrollen ablegen',62,78,'deposit','shelf']]},
  {id:'camp',name:'Am Tiber',era:'312 · Konstantins Militärlager',tile:6,intro:'Nach der Nachricht von Galerius führt dein Weg in eine neue Erinnerung: das Jahr 312. Eine Karte versperrt den Zugang zu Konstantins Zelt.',hotspots:[['Kartenbrett',41,55,'puzzle','map312'],['Konstantins Zelt',64,46,'puzzle','vision'],['Bote',79,83,'talk','messenger']]},
  {id:'city',name:'Die geöffnete Stadt',era:'313 und danach',bg:'city-313',image:'assets/minigames/open-city/open-city.png',discover:true,intro:'Du kennst diesen Ort. Aber etwas hat sich verändert. Schau genau hin: Was ist heute anders?',hotspots:[['Geöffnete Tür',19,57,'talk','openchurch'],['Christliches Zeichen',16,24,'talk','sign'],['Zurückgegebene Truhe',11,88,'talk','returned'],['Baustelle',56,18,'talk','building'],['Tempel und Altar',90,44,'talk','cults'],['Anschlagtafel',49,63,'puzzle','change']]},
- {id:'motives',name:'Das Mosaik der Motive',era:'Glaube und Herrschaft',tile:7,intro:'Sieben Motivtafeln bilden ein Gesamtbild. Ordne mögliche Beweggründe nach Glaube, Zusammenspiel und Politik / Herrschaft. Innere Motive bleiben eine Deutung.',hotspots:[['Motivmosaik',50,48,'puzzle','motives'],['Beraterin',23,87,'talk','advisor'],['Gemeindebrief',86,69,'talk','community']]},
+ {id:'motives',name:'Konstantins Motive',era:'Glaube und Herrschaft',tile:7,intro:'Warum förderte Konstantin die Christen? Auf eine einzige Antwort lässt sich das nicht bringen. Setze das Mosaik der Motive zusammen – Glaube, Herrschaft und ihr Zusammenspiel.',hotspots:[['Mosaik der Motive',50,48,'puzzle','motives'],['Beraterin',23,87,'talk','advisor'],['Gemeindebrief',86,69,'talk','community']]},
  {id:'council',name:'Die Beratung von Nicäa',era:'325 · Einigung und Stabilität',bg:'council',intro:'Ein weiterer Zeitsprung: In Nicäa findet 325 ein Konzil statt. Eine Einigung innerhalb der Kirche kann auch für den Kaiser Bedeutung haben.',hotspots:[['Beratungsrunde',49,58,'puzzle','council'],['Zeitrolle',89,71,'talk','baptism']]},
  {id:'basilica',name:'Die Chronik der Wende',era:'Die Erinnerungen zusammenfügen',tile:8,intro:'Sechs Siegel passen in die große Mechanik. Ordne die Zeit und baue eine tragfähige Begründung der Konstantinischen Wende.',hotspots:[['Sechs Siegelplätze',46,40,'finalgate'],['Zeitmechanik',20,61,'puzzle','timeline'],['Argumentationsbrücke',81,64,'puzzle','bridge']]}
  ],
@@ -74,12 +74,12 @@ row('Konstantin kämpfte 312 gegen Maxentius.',vc,0,'Quellenproblem: Gegner und 
 const cc=['Vor dem Wandel: zeitweise Verfolgung','Ab 313: rechtliche Absicherung','Danach: Förderung unter Konstantin','Trifft nicht zu'];
 P.change=base('Die Besitztruhe','sort','Ordne die Tafeln. Unterscheide rechtliche Veränderungen von der Förderung in der folgenden Zeit.',[
 row('Gottesdienste verboten, Besitz beschlagnahmt.',cc,0,'Sachfehler: Das beschreibt Verfolgung vor dem Wandel, nicht die gesamte Zeit vor Konstantin.'),row('Religionsausübung grundsätzlich erlaubt.',cc,1,'Sachfehler: Das gehört zur Mailänder Vereinbarung von 313.'),row('Beschlagnahmter Besitz wird zurückgegeben.',cc,1,'Sachfehler: Die Rückgabe gehört zur Vereinbarung von 313.'),row('Kirchenbau, Schenkungen und Privilegien für Geistliche.',cc,2,'Historische Vereinfachung: Förderung ist von der rechtlichen Erlaubnis zu unterscheiden.'),row('313 wurde das Christentum zur einzigen erlaubten Religion.',cc,3,'Sachfehler: Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.')],['Schau dir alle Veränderungen in der Stadt an: Tür, Zeichen, Truhe, Baustelle und Tempel.','Vorher: Verbot, Beschlagnahme, Zerstörung. Danach: Erlaubnis, Rückgabe, Förderung.','Die Tafel über die „einzige erlaubte Religion“ stimmt nicht – bring sie zum römischen Altar.'],{reward:'decree'});
-P.motives=base('Das Mosaik der Motive','mosaic','Füge sieben Motivtafeln zu einem Gesamtbild zusammen. Wähle anschließend eine Begründung, die zu deiner Einordnung passt. Es gibt mehrere plausible Lösungen.',[
-...['Christliches Zeichen vor der Schlacht (später berichtet)','Sieg gegen Maxentius','Einheit des Reiches','Wachsende Bedeutung der Kirche','Persönliche religiöse Überzeugung','Stabile Ordnung','Förderung christlicher Gemeinden'].map(label=>row(label,['Glaube','Politik / Herrschaft','Zusammenspiel'],[0,1,2],'Überlege, ob dieser Grund eher mit persönlichem Glauben, mit Herrschaft oder mit beidem zusammenhängt.'))],['Lies beide Stimmen im Raum.','Du darfst mehrere Karten zwischen Glaube und Politik legen.','Einheit und Ordnung sprechen für Politik; religiöse Überzeugung für Glaube; Förderung kann beides verbinden. Eine passende Begründung zeigt, dass beides zusammenwirken kann.'],{seal:'Wende',reasons:{q:'Welche Begründung passt zu deinem Motivmosaik?',options:[{text:'Glaube und Politik können gleichzeitig eine Rolle spielen – manche Gründe liegen deshalb dazwischen.',ok:true,why:'Genau: Viele Beweggründe lassen sich nicht sauber trennen. Die Förderung der Kirche kann religiös gemeint sein und zugleich die Herrschaft stärken.'},{text:'Einheit und Ordnung sprechen eher für Politik, persönliche Überzeugung eher für Glauben – die Förderung der Kirche kann beides verbinden.',ok:true,why:'Nachvollziehbar: Du ordnest die Karten nach ihrem Schwerpunkt und erkennst, dass einige Gründe beide Seiten verbinden.'},{text:'Konstantin handelte sicher nur aus politischen Gründen.',ok:false,why:'Das lässt sich nicht beweisen. Seine inneren Motive kennen wir nicht sicher – er deutete seinen Sieg selbst als Hilfe des Christengottes.'},{text:'Religion hatte damals keine politische Bedeutung.',ok:false,why:'Doch: Religion und Herrschaft hingen in Rom eng zusammen. Der Kaiser war auch oberster Priester, und die Kirche wurde zu einer wichtigen Größe im Reich.'}]}});
+P.motives=base('Glaube, Politik – oder beides?','balance','Lege alle sieben Tafeln in das Mosaik der Motive. Wähle anschließend eine Begründung, die zu deiner Einordnung passt. Es gibt mehrere plausible Lösungen.',[
+...['Christliches Zeichen vor der Schlacht (später berichtet)','Sieg gegen Maxentius','Einheit des Reiches','Wachsende Bedeutung der Kirche','Persönliche religiöse Überzeugung','Stabile Ordnung','Förderung christlicher Gemeinden'].map(label=>row(label,['Glaube','Politik','Zwischenbereich'],[0,1,2],'Überlege, ob dieser Grund eher mit persönlichem Glauben, mit Herrschaft oder mit beidem zusammenhängt.'))],['Lies beide Stimmen im Raum.','Du darfst mehrere Karten zwischen Glaube und Politik legen.','Einheit und Ordnung sprechen für Politik; religiöse Überzeugung für Glaube; Förderung kann beides verbinden. Eine passende Begründung zeigt, dass beides zusammenwirken kann.'],{seal:'Wende',reasons:{q:'Welche Begründung passt zu deinem Mosaik?',options:[{text:'Glaube und Politik können gleichzeitig eine Rolle spielen – manche Gründe liegen deshalb dazwischen.',ok:true,why:'Genau: Viele Beweggründe lassen sich nicht sauber trennen. Die Förderung der Kirche kann religiös gemeint sein und zugleich die Herrschaft stärken.'},{text:'Einheit und Ordnung sprechen eher für Politik, persönliche Überzeugung eher für Glauben – die Förderung der Kirche kann beides verbinden.',ok:true,why:'Gut abgewogen: Du ordnest die Karten nach ihrem Schwerpunkt und erkennst, dass einige Gründe beide Seiten verbinden.'},{text:'Konstantin handelte sicher nur aus politischen Gründen.',ok:false,why:'Das lässt sich nicht beweisen. Seine inneren Motive kennen wir nicht sicher – er deutete seinen Sieg selbst als Hilfe des Christengottes.'},{text:'Religion hatte damals keine politische Bedeutung.',ok:false,why:'Doch: Religion und Herrschaft hingen in Rom eng zusammen. Der Kaiser war auch oberster Priester, und die Kirche wurde zu einer wichtigen Größe im Reich.'}]}});
 P.council=base('Ein Band zwischen Kirche und Reich','council','Verbinde die beiden Gedanken. Besprich danach mit deinem Partner, warum sie zusammenhängen.',[
-row('Eine Einigung innerhalb der Kirche …',['kann zur Stabilität des Reiches beitragen.','beweist, dass nur politische Motive existierten.','bedeutet, dass Konstantin 325 getauft wurde.'],0,'Ursache/Folge: Einheit kann Stabilität fördern. Daraus folgt weder ein Beweis allein politischer Motive noch eine Taufe 325.')],['Denke an das Motivmosaik: Glaube und Politik.','Welche Wirkung kann weniger Streit in der Kirche für das Reich haben?','Passende Antworten verbinden Einheit der Kirche mit Stabilität – und machen es sich nicht zu einfach.']);
+row('Eine Einigung innerhalb der Kirche …',['kann zur Stabilität des Reiches beitragen.','beweist, dass nur politische Motive existierten.','bedeutet, dass Konstantin 325 getauft wurde.'],0,'Ursache/Folge: Einheit kann Stabilität fördern. Daraus folgt weder ein Beweis allein politischer Motive noch eine Taufe 325.')],['Denke an das Mosaik der Motive: Glaube und Politik.','Welche Wirkung kann weniger Streit in der Kirche für das Reich haben?','Passende Antworten verbinden Einheit der Kirche mit Stabilität – und machen es sich nicht zu einfach.']);
 const events=['Konzil von Nicäa','Sieg über Maxentius','Taufe Konstantins kurz vor seinem Tod','Diokletianische Verfolgung','Mailänder Vereinbarung','Galerius beendet die staatliche Verfolgung weitgehend'];
-P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Diese Zeitspur passt noch nicht zu diesem Jahr.')),['Beginne mit Anfang und Ende der Entwicklung: Verfolgung und Taufe.','Das Ende der Verfolgung beginnt vor Konstantins Sieg.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe. Der Wandel liegt zwischen 303 und 311.']);
+P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Sachfehler: '+year+' gehört zu „'+events[[3,5,1,4,0,2][i]]+'“.')),['Das Ende der Verfolgung beginnt schon vor Konstantins Sieg.','Erst die große Verfolgung, dann Galerius, dann Schlacht und Vereinbarung. Konzil und Taufe kommen zuletzt.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe. Der Wandel liegt zwischen 303 und 311.']);
 P.bridge=base('Die Argumentationsbrücke','bridge','Vervollständige die Brücke der Erkenntnis. Danach prüfe, welche Aussagen zu einfach sind.',[
 row('Vor Konstantin …',['waren Christen immer und überall verfolgt.','waren Christen zeitweise staatlicher Verfolgung ausgesetzt.','waren alle Menschen Christen.'],1,'Historische Vereinfachung: Nicht dauerhaft und überall, sondern zeitweise und unterschiedlich.'),row('Ab 311/313 …',['verbesserte sich die Lage grundlegend.','begann erst jede Verfolgung.','wurden alle anderen Religionen sofort verboten.'],0,'Sachfehler: Galerius und die Mailänder Vereinbarung markieren Schritte des Wandels.'),row('Unter Konstantin …',['war das Christentum sofort die einzige erlaubte Religion.','spielte die Kirche keine Rolle.','wurde das Christentum rechtlich abgesichert und gezielt gefördert.'],2,'Historische Vereinfachung: Förderung bedeutet nicht sofortige Ausschließlichkeit.'),row('Deshalb spricht man von einer Wende, weil …',['nur ein Kaiser seinen Namen wechselte.','sich die Stellung des Christentums von zeitweiliger Verfolgung zu Absicherung und Förderung grundlegend veränderte.','wir alle inneren Motive Konstantins sicher kennen.'],1,'Ursache/Folge: Entscheidend ist die grundlegende Veränderung der Stellung des Christentums.')],['Jeder Bogen braucht eine Platte, die nicht zu stark vereinfacht.','Achte auf Wörter wie „immer“, „alle“, „sofort“ und „sicher“ – sie machen Aussagen oft zu einfach.','Zeitweilige Verfolgung → Verbesserung ab 311/313 → Absicherung und Förderung: ein grundlegender Wandel.'],{reasons:{q:'Welche Inschrift gehört über die Brücke?',options:[]}});
 
@@ -96,9 +96,13 @@ window.GAME.exits={
  camp:[['archive',12,92,'Zurück ins Archiv'],['city',94,92,'Zur geöffneten Stadt']],
  city:[['camp',6,36,'Zum Tiber'],['motives',73,51,'Die Treppe hinauf']],
  motives:[['city',8,93,'Zurück in die Stadt'],['council',76,32,'Zur Beratung von Nicäa']],
- council:[['motives',31,24,'Zurück zum Motivmosaik'],['basilica',80,24,'Zur Basilika']],
+ council:[['motives',31,24,'Zurück zu Konstantins Motiven'],['basilica',80,24,'Zur Basilika']],
  basilica:[['council',75,28,'Zurück nach Nicäa'],['gate',50,94,'Zum Stadttor']]
 };
+/* Hotspot-Flächen (world.css): Personen stehen mit den Füßen auf x/y, Fläche [Breite, Höhe] in % der Szene.
+   Einzelne Hotspots können mit hotspotBoxes['szene:id']=[x,y,Breite,Höhe] genau über das gemalte Objekt gelegt werden. */
+window.GAME.personBoxes={gate:[19,61],office:[18,28],vestibule:[18,28]};
+window.GAME.hotspotBoxes={'camp:messenger':[79.5,56,13,62],'motives:advisor':[23.5,52,14,68]};
 window.GAME.exitHints={
  office:'Die Amtsstube öffnet sich, wenn du die Türmechanik im Wohnviertel und das Quellenpult auf dem Forum gelöst hast.',
  temple:'Ordne zuerst die Fallakten in der Amtsstube.',
@@ -107,7 +111,7 @@ window.GAME.exitHints={
  camp:'Erhelle das Archiv und lege die Schriftrollen ab.',
  city:'Erschließe zuerst Konstantins Zelt am Tiber.',
  motives:'Untersuche zuerst die Besitztruhe in der geöffneten Stadt.',
- council:'Vervollständige zuerst das Motivmosaik und reflektiere deine Einordnung.',
+ council:'Setze zuerst das Mosaik der Motive zusammen.',
  basilica:'Löse zuerst die Beratungsrunde von Nicäa.'
 };
 
@@ -117,11 +121,11 @@ window.GAME.steps={
  sources:['In der Lade liegen fünf Karten mit Aussagen über den Brand von Rom und die Verfolgung der Christen.','Tippe eine Karte an. Sie wird markiert.','Tippe dann das passende Fach an: „gut belegbar“ (dafür gibt es Berichte), „unsicher“ (wird behauptet, ist aber umstritten) oder „nicht sicher feststellbar“ (das weiß niemand genau, oder es ist eine Verallgemeinerung ohne Beleg).','Lege alle Karten ab und tippe auf „Mechanismus prüfen“. Tipp: Die Chronistin auf dem Forum hilft dir.'],
  cases:['Auf dem Schreibtisch liegen Fallakten. Jede beschreibt, was vor dem Statthalter passiert.','Tippe eine Akte an und dann den Stempel mit dem nächsten Schritt der Behörde: weiter befragen, freilassen, bestrafen oder Anzeige zurückweisen.','Die letzte Karte fragt, welche Notiz das Vorgehen der Behörden zusammenfasst.','Wenn alle Akten gestempelt sind, tippe auf „Mechanismus prüfen“. Tipp: Sprich vorher mit dem Schreiber.'],
  sacrifice:['Oben liegen Holzstücke mit Begriffen.','Darunter siehst du zwei Seilzüge: Weg A (jemand opfert) und Weg B (jemand verweigert das Opfer). Jeder Weg hat vier Plätze: Wer ist betroffen?, Aufforderung, Reaktion, Folge.','Tippe ein Holzstück an und danach den Platz, an den es gehört. Du kannst jeden Platz neu belegen.','Im letzten Feld wählst du, was sich im Vergleich zu früher verändert hat. Dann „Mechanismus prüfen“. Tipp: Der Kontrolleur beschreibt den Ablauf.'],
- archive:['Untersuche zuerst im Licht der Lampe die vier Spuren im Raum: Schriftrolle, versiegelte Tür, Kirchenmodell und Kette.','Im Rätsel liegen die Spuren als Karten. Tippe eine Karte an und dann die Schublade mit der Maßnahme, die sie erklärt.','Die letzte Karte fragt, wie man diese Maßnahmen insgesamt beschreiben kann.','Dann „Mechanismus prüfen“. Tipp: Das Amtssiegel nennt die Maßnahmen ab 303.'],
+ archive:['Untersuche mit der Lampe den dunklen Raum. Leuchtet eine Spur auf, tippe darauf.','Der Archivschrank öffnet sich: Lege die Spur in die Schublade mit der Maßnahme von 303, die sie erklärt.','Wenn alle vier Spuren im Schrank liegen, beantwortest du an der Verriegelung die letzte Frage.','Tipp: Das Amtssiegel und die Schriftrollen des Archivars nennen die Maßnahmen ab 303.'],
  map312:['Das Kartenbrett zeigt eine Stadt, einen Fluss, eine Brücke und zwei Heerführer. Es ist eine Spielskizze, keine echte Karte der Schlacht.','Tippe oben eine Beschriftung an und dann den Platz auf der Karte, zu dem sie gehört.','Setze alle sechs Beschriftungen und tippe auf „Mechanismus prüfen“. Tipp: Der Bote erzählt, wer wo gegen wen kämpfte.'],
  vision:['Hier geht es um den Unterschied zwischen dem, was 312 geschah, und dem, was später darüber erzählt wurde.','Tippe eine Karte an und dann das Fach: „gut feststellbar“, „später berichtet“ oder „nicht sicher feststellbar“.','Lege alle Karten ab und tippe auf „Mechanismus prüfen“. Tipp: Was weiß man sicher über die Schlacht, und was stammt aus späteren christlichen Berichten?'],
  change:['In der Truhe liegen Tafeln mit Veränderungen rund um das Jahr 313.','Tippe eine Tafel an und lege sie in das passende Fach: vor dem Wandel, ab 313 (rechtliche Absicherung), danach (Förderung unter Konstantin) oder „trifft nicht zu“.','Achtung: Nicht jede Aussage stimmt. Falsche Behauptungen gehören zu „trifft nicht zu“.','Dann „Mechanismus prüfen“. Tipp: Hauskirche, Baustelle und Altar in dieser Szene helfen dir.'],
- motives:['Ordne die Motivtafeln in die Bereiche Glaube, Zusammenspiel und Politik / Herrschaft ein. Danach wählst du eine Begründung. Es geht um ein Gesamtbild, nicht um gleiche Mengen.'],
+ motives:['Lege jede Steintafel in das Feld, das am besten passt: Glaube, Zusammenspiel oder Politik / Herrschaft. Wie viele Tafeln in einem Feld liegen, ist offen. Danach wählst du eine Begründung.'],
  council:['Hier verbindest du zwei Gedanken: eine Einigung innerhalb der Kirche und ihre Bedeutung für das Reich.','Tippe oben den passenden Satzteil an und setze ihn in die Lücke.','Besprich anschließend mündlich mit deinem Partner, warum beides zusammenhängt.'],
  timeline:['Die Zeitmechanik hat sechs Jahresringe: 303, 311, 312, 313, 325 und 337.','Tippe oben ein Ereignis an und dann den Ring mit dem passenden Jahr.','Wenn alle sechs Ringe belegt sind, tippe auf „Mechanismus prüfen“. Tipp: Im Notizbuch stehen alle Jahreszahlen, die du gesammelt hast.'],
  bridge:['Tippe die Platte an, die den leuchtenden Bogen trägt. Danach markierst du zu einfache Aussagen und wählst die Inschrift.']
@@ -153,29 +157,29 @@ window.GAME.summaries={
  archive:{learned:['Ab 303 ließ Kaiser Diokletian Kirchen zerstören und heilige Schriften verbrennen.','Gottesdienste wurden verboten, Christen verhaftet und bestraft.','Es war die letzte große und besonders harte Verfolgung, gezielt vom Staat geplant.'],merke:'Die „große Verfolgung“ ab 303 war staatlich und systematisch, aber im Westen des Reiches endete sie früher als im Osten.',next:'Das Licht ist wieder an. Lege die Schriftrollen im Archiv ab. Danach führt eine neue Nachricht zum Tiber.'},
  map312:{learned:['312 kämpften Konstantin und Maxentius um die Herrschaft im Westen des Reiches.','Die Schlacht fand an der Milvischen Brücke über den Tiber statt, vor den Toren Roms.','Konstantin siegte.'],merke:'Die Schlacht an der Milvischen Brücke 312 ist gut belegt. Das Kartenbrett ist aber nur eine Spielskizze.',next:'Jetzt ist Konstantins Zelt zugänglich.'},
  vision:{learned:['Gut belegt: Konstantin kämpfte 312 gegen Maxentius und gewann.','Christliche Schreiber erzählen später von einem Traum oder einem Zeichen am Himmel.','Die Berichte unterscheiden sich. Was Konstantin wirklich gesehen hat, weiß niemand sicher.'],merke:'Ein Ereignis und die spätere Erzählung darüber sind zwei verschiedene Dinge.',next:'Der Weg führt zurück in die Stadt, die sich verändert hat.'},
- change:{learned:['311 beendete Kaiser Galerius die staatliche Verfolgung weitgehend.','313 wurde vereinbart: Alle dürfen ihre Religion frei ausüben. Christen bekommen ihren Besitz zurück.','Danach förderte Konstantin die Kirche mit Geld, Land, Kirchenbauten und Vorrechten.'],merke:'313 wurde das Christentum erlaubt und geschützt, aber nicht zur einzigen Religion. Andere Kulte blieben erlaubt.',next:'Die Treppe hinauf führt zum Mosaik der Motive.'},
+ change:{learned:['311 beendete Kaiser Galerius die staatliche Verfolgung weitgehend.','313 wurde vereinbart: Alle dürfen ihre Religion frei ausüben. Christen bekommen ihren Besitz zurück.','Danach förderte Konstantin die Kirche mit Geld, Land, Kirchenbauten und Vorrechten.'],merke:'313 wurde das Christentum erlaubt und geschützt, aber nicht zur einzigen Religion. Andere Kulte blieben erlaubt.',next:'Die Treppe hinauf führt zu Konstantins Motiven.'},
  motives:{learned:['Für Glauben spricht: Konstantin sah seinen Sieg als Hilfe des Christengottes und baute Kirchen.','Für Politik spricht: Eine geeinte Kirche konnte helfen, das große Reich zusammenzuhalten.','Beides kann gleichzeitig stimmen.'],merke:'Was ein Mensch im Innersten denkt, können wir nicht beweisen. Wir können es nur gut begründet deuten.',next:'Weiter geht es nach Nicäa, ins Jahr 325.'},
  council:{learned:['325 lud Konstantin Bischöfe aus vielen Teilen des Reiches nach Nicäa ein.','Sie stritten über den Glauben und einigten sich auf ein gemeinsames Bekenntnis.','Eine einige Kirche war auch für den Kaiser wichtig, weil Streit Unruhe bringen konnte.'],merke:'Kirche und Kaiser waren nun eng miteinander verbunden.',next:'Die Basilika mit der Chronik wartet auf dich.'},
  timeline:{learned:['303: Beginn der großen Verfolgung unter Diokletian. 311: Galerius beendet die Verfolgung weitgehend.','312: Sieg an der Milvischen Brücke. 313: Mailänder Vereinbarung.','325: Konzil von Nicäa. 337: Taufe Konstantins kurz vor seinem Tod.'],merke:'Die Wende geschah nicht an einem Tag, sondern in mehreren Schritten.',next:'Jetzt ist die Argumentationsbrücke zugänglich.'}
 };
 /* Siegel: Motiv (für Screenreader/Lehrkraft), Farbe, kurze Bedeutung. Gezeichnet werden sie in seals.js. */
 window.GAME.sealInfo={
- Konflikt:{sym:'⚔',motif:'zwei gekreuzte Schwerter',color:'#7a3a22',meaning:'Die Opferverweigerung konnte Misstrauen und Konflikte auslösen.'},
- Quelle:{sym:'📜',motif:'Schriftrolle',color:'#7a5a22',meaning:'Belegt, unsicher oder nicht feststellbar: Quellen prüfen.'},
- Anzeige:{sym:'✎',motif:'Wachstafel mit Griffel',color:'#3f6a55',meaning:'Im 2. Jahrhundert begann ein Verfahren meist erst mit einer Anzeige.'},
- Staat:{sym:'🏛',motif:'Säule mit Lorbeer',color:'#5a3a6b',meaning:'Im 3. Jahrhundert: staatliche Opferpflicht und Kontrolle.'},
- '312':{sym:'☧',motif:'Schild mit Christusmonogramm',color:'#7d2a26',meaning:'Der Sieg von 312 ist belegt, die Vision nur später berichtet.'},
- Wende:{sym:'⌒',motif:'Brücke mit Wendebogen',color:'#2c4f78',meaning:'Glaube und Politik konnten zusammenwirken.'}};
+ Konflikt:{sym:'✝',motif:'Kreuz auf rotem Grund – die Treue der Christen, die das Opfer verweigern',color:'#7a3a22',meaning:'Die Opferverweigerung konnte Misstrauen und Konflikte auslösen.'},
+ Quelle:{sym:'✦',motif:'Lorbeerkranz mit Stern – was überliefert und belegt ist',color:'#3f6a45',meaning:'Belegt, unsicher oder nicht feststellbar: Quellen prüfen.'},
+ Anzeige:{sym:'🏛',motif:'Tempelfront auf grünem Grund – die Amtsstube des Statthalters',color:'#3f6a55',meaning:'Im 2. Jahrhundert begann ein Verfahren meist erst mit einer Anzeige.'},
+ Staat:{sym:'♛',motif:'Krone auf rotem Grund – die Macht des Kaisers',color:'#7d2a26',meaning:'Im 3. Jahrhundert: staatliche Opferpflicht und Kontrolle.'},
+ '312':{sym:'☀',motif:'Sonne auf blauem Grund – das Zeichen am Himmel, von dem später erzählt wird',color:'#2c4f78',meaning:'Der Sieg von 312 ist belegt, die Vision nur später berichtet.'},
+ Wende:{sym:'🕊',motif:'Taube auf blauem Grund – Frieden nach der Verfolgung',color:'#2c4f78',meaning:'Glaube und Politik konnten zusammenwirken.'}};
 /* Optionale Siegelgrafiken in assets/ui/seals/ (seal-konflikt.png … seal-wende.png, seal-wheel-frame.png).
    Erst eintragen, wenn die Datei wirklich im Repository liegt, z. B. available:['konflikt','wheel-frame']. */
-window.GAME.sealAssets={dir:'assets/ui/seals/',available:[]};
+window.GAME.sealAssets={dir:'assets/ui/seals/',ext:'.webp',available:['konflikt','quelle','anzeige','staat','312','wende']};
 
 /* Minispiele: ersetzen den Standard-Mechanismus eines Rätsels (Alternative „Ohne Spiel“ bleibt verfügbar). */
 window.GAME.minigames={
 };
 
 Object.assign(window.GAME.minigames,{
- sources:{type:'classify',skin:'echo',goal:8,portrait:'assets/minigames/chronistin.jpg',bg:'assets/minigames/forum-blur.jpg',title:'Das Echo der Quellen',counter:'Belege',
+ sources:{type:'classify',skin:'echo',goal:8,portrait:'assets/puzzles/forum/chronistin.webp',bg:'assets/backgrounds/v3-forum.png',title:'Das Echo der Quellen',counter:'Belege',
   prompt:'Die Chronistin ruft dir Aussagen zu. Ordne jede rechtzeitig ein.',
   intro:'Die Chronistin prüft, was auf dem Forum erzählt wird. Sie ruft dir Aussagen zu – du entscheidest schnell, wie sicher sie sind.',
   rules:['<b>Gut belegbar:</b> Dafür gibt es Berichte.','<b>Unsicher:</b> Wird behauptet, ist aber umstritten.','<b>Nicht sicher feststellbar:</b> Das weiß niemand genau – oder es ist eine Verallgemeinerung ohne Beleg.','Schaffe <b>8 richtige Antworten</b>. Das Tempo kannst du oben wählen. <span class="mg-keys">Am PC gehen auch die Tasten 1–3.</span>'],
@@ -211,10 +215,10 @@ Object.assign(window.GAME.minigames,{
    {text:'Eine Christin verweigert auch beim dritten Mal das Opfer.',ok:[3],why:'Nach Plinius’ Vorgehen folgt die Strafe.'},
    {text:'Ein Angeklagter verflucht Christus und opfert Wein und Weihrauch.',ok:[2],why:'Plinius ließ solche Personen frei.'}
   ]},
- archive:{type:'darkroom',image:'assets/backgrounds/v3-archive.png',title:'Das Archiv im Dunkeln',
+ archive:{type:'darkroom',image:'assets/backgrounds/v3-archive.png',title:'Der Archivmechanismus',
   prompt:'Leuchte mit der Lampe durch das Archiv. Finde die vier Spuren und ordne sie zu.',
   intro:'Stockdunkel. Nur deine Lampe spendet Licht. Finde die vier Spuren der Verfolgung ab 303 und ordne sie zu – dann wird es wieder hell.',
-  rules:['Bewege das <b>Licht</b> mit dem Finger (oder der Maus) über das Bild.','Etwas leuchtet auf? <b>Tippe darauf</b>.','Wähle, welche Maßnahme von 303 die Spur erklärt.','Finde alle <b>4 Spuren</b>.'],
+  rules:['Bewege das <b>Licht</b> mit dem Finger (oder der Maus) über das Bild.','Etwas leuchtet auf? <b>Tippe darauf</b>.','Die Spur kommt in den Archivschrank: Tippe die <b>Schublade</b> mit der Maßnahme von 303, die sie erklärt.','Finde alle <b>4 Spuren</b>.'],
   measures:['Schriften vernichten','Gottesdienste verbieten','Kirchen zerstören','Christen verhaften / bestrafen'],
   spots:[
    {name:'Verbrannte Schriftrolle',x:13,y:76,look:'Die Ränder sind schwarz verkohlt. Man erkennt noch Buchstaben eines Evangeliums.',answer:0,why:'303 wurde befohlen, die heiligen Schriften auszuliefern und zu verbrennen.',hint:'Was geschah mit Büchern und Schriften?'},
@@ -224,7 +228,7 @@ Object.assign(window.GAME.minigames,{
   ],
   final:{q:'Was verbindet diese vier Maßnahmen?',options:['Gezielte staatliche und systematische Verfolgung.','Nur ein einzelner privater Streit.','Bereits allgemeine Religionsfreiheit.'],answer:0,why:'Die Befehle kamen vom Kaiser und galten im ganzen Reich – das ist mehr als ein Streit unter Nachbarn.'},
   winTitle:'Das Archiv ist erhellt',win:'Du hast gezeigt: Ab 303 ging der Staat gezielt und planmäßig gegen die Christen vor. Das Licht ist wiederhergestellt. Lege jetzt die Schriftrollen im Archiv ab.'},
- vision:{type:'slider',image:'assets/minigames/chi-rho-schild.svg',title:'Das Zeichen auf dem Schild',
+ vision:{type:'slider',image:'assets/puzzles/camp/chi-rho-shield.webp',title:'Das Zeichen auf dem Schild',
   prompt:'Setze das zerbrochene Schildzeichen wieder zusammen. Danach prüfst du, was man darüber sicher weiß.',
   intro:'In Konstantins Zelt liegt ein Schild. Sein Zeichen ist in neun Teile zerbrochen. Laktanz berichtet, Konstantin habe ein Zeichen Christi auf die Schilde malen lassen.',
   rules:['<b>Tauschen:</b> Tippe zwei Teile nacheinander an, sie tauschen den Platz.','<b>Schieben:</b> Schiebe Teile in die Lücke – für Profis.','Mit „Vorlage zeigen“ siehst du das fertige Bild.','Danach ordnest du vier Aussagen ein.'],
@@ -249,7 +253,7 @@ window.GAME.minigames.conflict={type:'lock',title:'Das Türschloss',
  winTitle:'Die Tür ist offen!',win:'Du hast die Kette erkannt: Christen verweigerten das Opfer, manche Nachbarn wurden misstrauisch, und daraus konnten Anzeigen oder Streit entstehen – nicht überall und nicht immer.'};
 
 window.GAME.minigames.sacrifice={type:'ropes',title:'Die beiden Seilzüge',
- prompt:'Häng die Holzklötze in der richtigen Reihenfolge an die beiden Seile. Dann zieh am Hebel.',
+ prompt:'Häng die Holztafeln in der richtigen Reihenfolge an die beiden Seile. Dann zieh am Hebel.',
  blocks:['Bürger','Opfer verlangt','Opfer geleistet','Verweigerung','Nachweis','Staatliche Strafe / Verfolgung'],
  lines:[{title:'Weg A · Das Opfer wird geleistet',slots:['Wer ist betroffen?','Aufforderung','Reaktion','Folge'],answer:['Bürger','Opfer verlangt','Opfer geleistet','Nachweis']},
         {title:'Weg B · Das Opfer wird verweigert',slots:['Wer ist betroffen?','Aufforderung','Reaktion','Folge'],answer:['Bürger','Opfer verlangt','Verweigerung','Staatliche Strafe / Verfolgung']}],
@@ -262,7 +266,7 @@ window.GAME.mapLayout={gate:[10,70],house:[22,44],forum:[33,15],office:[51,13],t
 
 window.GAME.minigames.map312={type:'battlemap',title:'Das Kartenbrett',
  prompt:'Stecke die sechs Beschriftungen an die richtigen Stellen der Karte. Dann prüfe die Karte.',
- pins:[['Stadt',74,62],['Fluss',40,14],['Übergang',44,36],['Späterer Sieger',16,40],['Gegner',64,24],['Jahr',11,86]],
+ pins:[['Stadt',24.3,44.6],['Fluss',37.3,78.6],['Übergang',46,29.5],['Späterer Sieger',69.7,58.9],['Gegner',29.9,28.6],['Jahr',9,88.5]],
  winTitle:'Die Karte ist vollständig',win:'Im Jahr 312 besiegte Konstantin seinen Gegner Maxentius an der Milvischen Brücke über den Tiber, kurz vor Rom.'};
 
 /* ---------- Überarbeitete Szenen-Rätsel (scenegames.js) ---------- */
@@ -324,10 +328,12 @@ window.GAME.minigames.council={type:'konzil',title:'Beratung im Konzil',
  winTitle:'Ein Band zwischen Kirche und Reich',win:'Kaiser und Kirche arbeiten jetzt eng zusammen. Warum Konstantin das tat, lässt sich nicht auf einen einzigen Grund zurückführen.'};
 
 // Die Zeitmechanik: große Chronik mit sechs Jahresabschnitten.
-window.GAME.minigames.timeline={type:'chronicle',title:'Die Chronik der Wende',
- prompt:'Setze die Ereignistafeln in die sechs Jahresringe. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',
+window.GAME.minigames.timeline={type:'chronik',title:'Die Zeitmechanik',
+ prompt:'Setze jede Zeitspur in das passende Jahresfeld des Zeitrads. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',
  art:{bg:'assets/minigames/timeline/chronicle-room.png',sheet:'assets/minigames/timeline/timeline-assets.png'},
- start:'Tippe eine Ereignistafel und dann einen Jahresring an. Dein Notizbuch enthält die gesammelten Zeitspuren.',
+ start:'Tippe eine Wachstafel an und dann das passende Jahresfeld im Zeitrad – oder zieh sie hinüber.',
+ wrongFirst:'Diese Zeitspur gehört an eine andere Stelle.',
+ wrongAgain:'Sieh noch einmal in deine Zeitspuren im Notizbuch.',
  years:[
   {year:303,title:'Diokletianische Verfolgung',line:'Unter Diokletian beginnt die große staatlich organisierte Verfolgung.',medal:[57,31,242,285],mini:[25,334,252,260],hint:'Denk an das dunkle Archiv.'},
   {year:311,title:'Galerius beendet die staatliche Verfolgung weitgehend',line:'Galerius beendet die staatliche Verfolgung weitgehend.',medal:[318,29,247,289],mini:[286,326,263,275],hint:'Die Nachricht, die die Hauskirche wieder öffnet.'},
@@ -337,7 +343,7 @@ window.GAME.minigames.timeline={type:'chronicle',title:'Die Chronik der Wende',
   {year:337,title:'Taufe Konstantins kurz vor seinem Tod',line:'Konstantin wird kurz vor seinem Tod getauft.',medal:[1361,28,250,291],mini:[1383,328,272,276],hint:'Ganz am Ende seines Lebens.'}],
  bandRect:[696,735,824,199],
  wrong:'„{title}“ passt nicht zu {year}.',
- question:'Die Chronik ist vollständig. Zwischen welchen Ereignissen liegt der entscheidende Wandel? Tippe auf die Stelle zwischen zwei Jahren.',
+ question:'Das Zeitrad ist vollständig. Zwischen welchen Jahren liegt der entscheidende Wandel? Tippe auf den Riegel zwischen zwei Jahresfeldern.',
  gapAnswer:0,
  gapRight:'Ja. Auf die große Verfolgung um 303 folgen 311 und 313 die entscheidenden Veränderungen. Das Band der Wende schließt sich.',
  gapWrong:{1:'Fast: 311 hat der Wandel schon begonnen. Suche die Stelle davor – zwischen Verfolgung und Ende der Verfolgung.',2:'Da ist der Wandel schon im Gang. 311 endet die Verfolgung weitgehend. Schau weiter nach links.',3:'313 und 325 liegen beide schon nach dem Wandel.',4:'Die Taufe 337 kommt ganz am Ende. Der Wandel liegt viel früher.'},
@@ -349,7 +355,7 @@ window.GAME.minigames.timeline={type:'chronicle',title:'Die Chronik der Wende',
    Grafiken (optional) liegen in assets/minigames/argument-bridge/ und werden erst geladen, wenn sie unter art.available stehen. */
 window.GAME.minigames.bridge={type:'argbridge',title:'Die Argumentationsbrücke',
  prompt:'Vervollständige die Brücke der Erkenntnis. Danach prüfe, welche Aussagen zu einfach sind.',
- art:{dir:'assets/minigames/argument-bridge/',scene:'argument-bridge-scene.png',segments:'argument-bridge-segments.png',tokens:'argument-bridge-tokens.png',icons:'argument-bridge-icons.png',available:[]},
+ art:{painted:'assets/puzzles/bridge/bridge.webp',dir:'assets/minigames/argument-bridge/',scene:'argument-bridge-scene.png',segments:'argument-bridge-segments.png',tokens:'argument-bridge-tokens.png',icons:'argument-bridge-icons.png',available:[]},
  icons:['chains','edict','basilica','turn','crown','people','flame','temple','heart','name'],
  start:'Tippe die Platte an, die den leuchtenden Bogen trägt.',
  arches:[
@@ -390,24 +396,26 @@ window.GAME.minigames.bridge={type:'argbridge',title:'Die Argumentationsbrücke'
 /* Die gewählte Inschrift erscheint im Notizbuch; dieselben Optionen gelten für die klassische Fassung. */
 window.GAME.puzzles.bridge.reasons={q:window.GAME.minigames.bridge.final.q,options:window.GAME.minigames.bridge.final.options};
 
-/* Das Mosaik der Motive (scenegames.js · mosaic): Tafeln nach Schwerpunkt in ein Gesamtbild einordnen, dann begründen.
-   bins: 0 Glaube · 1 Politik · 2 beides. ok = vertretbare Bereiche, best = Schwerpunkt; mehrdeutige Karten erlauben mehrere Bereiche. */
-window.GAME.minigames.motives={type:'mosaic',title:'Das Mosaik der Motive',
- prompt:'Mehrere Motive ergeben gemeinsam ein Gesamtbild. Ordne die Tafeln ein und begründe die Deutung. Innere Motive lassen sich nicht sicher beweisen.',
- art:{bg:'assets/backgrounds/v3-motives.png'},
+/* Das Mosaik der Motive (scenegames.js · mosaik): Steintafeln in die drei Felder des Mosaiks legen, dann begründen.
+   bins: 0 Glaube · 1 Politik / Herrschaft · 2 Zusammenspiel. ok = vertretbare Felder, best = Schwerpunkt. Wie viele Tafeln ein Feld bekommt, ist offen. */
+window.GAME.minigames.motives={type:'mosaik',title:'Das Mosaik der Motive',
+ prompt:'Lege jede Steintafel in das Feld des Mosaiks, das am besten passt. Wie viele Tafeln in einem Feld liegen, ist offen.',
+ art:{bg:'assets/backgrounds/v3-motives.png',field:'assets/puzzles/motives/mosaic-field.webp',tiles:'assets/puzzles/motives/tile-'},
  bins:['Glaube','Politik / Herrschaft','Zusammenspiel'],
- start:'Tippe eine Motivtafel und dann einen Bereich des Mosaiks an – oder zieh sie hinüber.',
+ start:'Tippe eine Steintafel an und dann ein Feld des Mosaiks – oder zieh sie hinüber.',
+ wholeLabel:'Glaube · Zusammenspiel · Herrschaft – ein Gesamtbild',
+ wholeText:'Die Felder fügen sich zusammen: Erst alle Motive gemeinsam ergeben ein Bild von Konstantins Handeln.',
  cards:[
-  {text:'Christliches Zeichen vor der Schlacht (später berichtet)',ok:[0,2],best:0,why:'Das Zeichen verweist auf den Christengott – eine religiöse Deutung. Es war zugleich ein Zeichen für das Heer.',alt:'Vertretbar: Das Zeichen war religiös gemeint und zugleich ein Zeichen für das Heer.',wrong:{1:'Nur Politik? Das Zeichen verweist auf den Christengott – Glaube spielt hier sicher mit.'}},
-  {text:'Sieg gegen Maxentius',ok:[1,2],best:2,why:'Der Sieg brachte Konstantin die Herrschaft über Rom – und er deutete ihn als Hilfe des Christengottes. Beides.',alt:'Vertretbar: Der Sieg brachte vor allem Macht. Konstantin deutete ihn aber auch religiös.',wrong:{0:'Nur Glaube? Der Sieg brachte Konstantin vor allem die Herrschaft über Rom.'}},
-  {text:'Einheit des Reiches',ok:[1,2],best:1,why:'Ein geeintes Reich ist vor allem ein politisches Ziel.',alt:'Vertretbar – auch wenn die Einheit des Reiches vor allem ein politisches Ziel ist.',wrong:{0:'Die Einheit des Reiches ist in erster Linie ein Ziel der Herrschaft.'}},
-  {text:'Wachsende Bedeutung der Kirche',ok:[1,2],best:2,why:'Die Kirche war im ganzen Reich organisiert: religiös bedeutsam und politisch nützlich.',alt:'Vertretbar: Die gut organisierte Kirche war politisch nützlich – für Christen aber auch religiös bedeutsam.',wrong:{0:'Die Kirche war im ganzen Reich organisiert. Das hatte auch politisches Gewicht.'}},
-  {text:'Persönliche religiöse Überzeugung',ok:[0],best:0,why:'Überzeugung gehört zum Glauben. Ob Konstantin sie hatte, können wir nur begründet deuten.',wrong:{1:'Persönliche Überzeugung ist kein politisches Ziel – sie gehört zum Glauben.',2:'Hier geht es um das Innere eines Menschen – das gehört zum Glauben.'}},
-  {text:'Stabile Ordnung',ok:[1,2],best:1,why:'Ruhe und Ordnung sind Ziele der Herrschaft.',alt:'Vertretbar – auch wenn stabile Ordnung vor allem ein politisches Ziel ist.',wrong:{0:'Stabile Ordnung ist vor allem ein Ziel der Herrschaft, nicht des Glaubens.'}},
-  {text:'Förderung christlicher Gemeinden',ok:[0,1,2],best:2,why:'Genau: Die Förderung kann religiös gemeint sein und zugleich die Herrschaft stärken.',alt:'Vertretbar. Viele sehen darin aber beides zugleich: Glauben und Politik.'}
+  {text:'Christliches Zeichen vor der Schlacht (später berichtet)',tile:'cross',short:'Zeichen vor der Schlacht',ok:[0,2],best:0,why:'Das Zeichen verweist auf den Christengott – eine religiöse Deutung. Es war zugleich ein Zeichen für das Heer.',alt:'Vertretbar: Das Zeichen war religiös gemeint und zugleich ein Zeichen für das Heer.',wrong:{1:'Nur Politik? Das Zeichen verweist auf den Christengott – Glaube spielt hier sicher mit.'}},
+  {text:'Sieg gegen Maxentius',tile:'soldiers',short:'Sieg 312',ok:[1,2],best:2,why:'Der Sieg brachte Konstantin die Herrschaft über Rom – und er deutete ihn als Hilfe des Christengottes. Beides.',alt:'Vertretbar: Der Sieg brachte vor allem Macht. Konstantin deutete ihn aber auch religiös.',wrong:{0:'Nur Glaube? Der Sieg brachte Konstantin vor allem die Herrschaft über Rom.'}},
+  {text:'Einheit des Reiches',tile:'crown',short:'Einheit des Reiches',ok:[1,2],best:1,why:'Ein geeintes Reich ist vor allem ein politisches Ziel.',alt:'Vertretbar – auch wenn die Einheit des Reiches vor allem ein politisches Ziel ist.',wrong:{0:'Die Einheit des Reiches ist in erster Linie ein Ziel der Herrschaft.'}},
+  {text:'Wachsende Bedeutung der Kirche',tile:'church',short:'Bedeutung der Kirche',ok:[1,2],best:2,why:'Die Kirche war im ganzen Reich organisiert: religiös bedeutsam und politisch nützlich.',alt:'Vertretbar: Die gut organisierte Kirche war politisch nützlich – für Christen aber auch religiös bedeutsam.',wrong:{0:'Die Kirche war im ganzen Reich organisiert. Das hatte auch politisches Gewicht.'}},
+  {text:'Persönliche religiöse Überzeugung',tile:'dove',short:'Persönlicher Glaube',ok:[0],best:0,why:'Überzeugung gehört zum Glauben. Ob Konstantin sie hatte, können wir nur begründet deuten.',wrong:{1:'Persönliche Überzeugung ist kein politisches Ziel – sie gehört zum Glauben.',2:'Hier geht es um das Innere eines Menschen – das gehört zum Glauben.'}},
+  {text:'Stabile Ordnung',tile:'temple',short:'Stabile Ordnung',ok:[1,2],best:1,why:'Ruhe und Ordnung sind Ziele der Herrschaft.',alt:'Vertretbar – auch wenn stabile Ordnung vor allem ein politisches Ziel ist.',wrong:{0:'Stabile Ordnung ist vor allem ein Ziel der Herrschaft, nicht des Glaubens.'}},
+  {text:'Förderung christlicher Gemeinden',tile:'hands',short:'Förderung der Gemeinden',ok:[0,1,2],best:2,why:'Genau: Die Förderung kann religiös gemeint sein und zugleich die Herrschaft stärken.',alt:'Vertretbar. Viele sehen darin aber beides zugleich: Glauben und Politik.'}
  ],
  reasons:window.GAME.puzzles.motives.reasons,
- winTitle:'Das Gesamtbild ist vollständig',
+ winTitle:'Das Mosaik ist vollständig',
  win:'Glaube und Politik schließen sich nicht aus. Was Konstantin im Innersten dachte, können wir nicht beweisen – nur begründet deuten.'};
-/* Klassische Fassung übernimmt dieselben vertretbaren Bereiche */
+/* Klassische Fassung übernimmt dieselben vertretbaren Schalen */
 window.GAME.minigames.motives.cards.forEach(c=>{const r=window.GAME.puzzles.motives.rows.find(r=>r.label===c.text);if(r)r.answer=c.ok.map(b=>b===2?2:b);});

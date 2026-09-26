@@ -16,24 +16,6 @@
 .pm-label b{font-size:max(13px,calc(var(--u)*.72))}
 .pm-label small{font-size:max(12px,calc(var(--u)*.56))}
 
-/* Türschloss (Walzen) */
-.ring-word,.ring-word:not(.current){font-size:max(13px,var(--fs-xs))}
-#modal .door-handle{min-height:44px}
-#modal .ring-btn{min-height:40px;height:max(40px,calc(var(--u)*1.6))}
-
-/* Seilzüge */
-.hook-tag,.rope-line[data-l="1"] .hook-tag{font-size:max(12.5px,calc(var(--u)*.66))}
-#modal .wood{font-size:max(13.5px,calc(var(--u)*.78));min-height:44px}
-#modal .rope-center .crate .wood{font-size:max(13.5px,calc(var(--u)*.72));min-height:44px}
-#modal .hooks .wood{min-height:44px}
-
-/* Kartenbrett */
-.bm-q{font-size:max(12.5px,calc(var(--u)*.62))}
-#modal .bm-tag{min-height:44px}
-
-/* Tempo-, Modus- und Pausenknöpfe in Minispielen */
-#modal .racer-speed button{min-height:40px;font-size:max(13px,var(--fs-xs))}
-#modal .racer-pause{min-height:40px;min-width:44px;font-size:max(13px,var(--fs-xs))}
 
 /* Szenen-Rätsel */
 .city-board header small{font-size:max(12px,.8em)}
@@ -44,8 +26,6 @@
 .ab-step{font-size:max(12.5px,.78em)!important}
 .zs-slot small{font-size:max(13px,.66em)}
 
-/* Kartenbrett: Karte etwas niedriger, damit Prüfen und Zurück ohne Scrollen sichtbar bleiben */
-.bm-stage{max-height:calc(100dvh - var(--u)*26);width:min(100%,calc((100dvh - var(--u)*26)*1.78))}
 
 /* Kleinste Schriftstufe anheben (Kicker, Hinweise, Etiketten) */
 :root{--fs-xs:max(12.5px,calc(var(--u)*.8))}
@@ -74,6 +54,3 @@
 }
 @keyframes pan-hint{0%,8%{opacity:0}15%,75%{opacity:1}100%{opacity:0}}
 
-/* Startkarten der Minispiele: der Startknopf bleibt immer sichtbar, auch bei wenig Höhe */
-.racer-overlay .racer-intro{font-size:var(--fs-m);margin-top:0}
-.racer-overlay .racer-start{position:sticky;bottom:0;align-self:flex-start;margin-top:.6em;box-shadow:0 -8px 14px #fbf1dbee,0 3px 0 #0003}
