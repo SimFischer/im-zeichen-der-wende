@@ -52,7 +52,7 @@
 .drum-roll{position:absolute;inset:0;border-radius:inherit;overflow:hidden;display:grid;grid-template-rows:1fr 1.5fr 1fr;align-items:center;justify-items:center;padding:0 6%;text-align:center;pointer-events:none}
 .drum .dw{display:block;color:#2a1606;line-height:1.08;text-shadow:0 1px 0 #fff4c880}
 .drum .dw.cur{font-size:1.18em;font-weight:700;letter-spacing:.01em}
-.drum .dw.prev,.drum .dw.next{font-size:.8em;opacity:.55;transform:scaleY(.72)}
+.drum .dw.prev,.drum .dw.next{font-size:.84em;opacity:.8;transform:scaleY(.86)}
 .drum.roll-down .drum-roll{animation:drum-down .28s ease-out}.drum.roll-up .drum-roll{animation:drum-up .28s ease-out}
 @keyframes drum-down{from{transform:translateY(22%)}}@keyframes drum-up{from{transform:translateY(-22%)}}
 .drum-up,.drum-down{left:0;width:100%;height:50%}
@@ -123,8 +123,7 @@
 .office-stamp .os-face svg{width:88%;height:88%}
 .office-stamp .os-plate{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:.35em;width:150%;padding:.25em .3em;border-radius:6px;font-size:.86em;line-height:1.1;text-align:center;
  color:var(--wood-deep);background:radial-gradient(circle at 35% 25%,#fff0c0,var(--bronze-light) 30%,var(--bronze) 75%,var(--bronze-dark));border:1.5px solid var(--line-dark);box-shadow:0 3px 5px #0008;font-weight:600}
-@media (hover:hover){
-@media (hover:hover) and (pointer:fine){.office-stamp:hover{transform:translateY(-3%)}}}
+@media (hover:hover){.office-stamp:hover{transform:translateY(-3%)}}
 .office-stamp.lift{transform:translate(var(--dx),calc(var(--dy) - 12%)) scale(1.04);z-index:9}
 .office-stamp.lift .os-plate{opacity:0}
 .office-stamp.press{transform:translate(var(--dx),var(--dy)) scale(.97);transition-duration:.12s}
@@ -264,7 +263,7 @@
 .map-spot .map-marker .mm-label{font-size:.8em;white-space:nowrap}
 .map-spot.filled .ms-q{display:none}
 .map-check{position:absolute;left:75.5%;width:22.5%;top:82%;height:10%;font-size:1.1em!important;font-weight:700;border-radius:10px!important}
-.map-note{position:absolute;left:3%;bottom:1.5%;font-size:.72em;color:#f1e2bf;background:#24160bcc;padding:.1em .5em;border-radius:3px}
+.map-note{position:absolute;left:3%;bottom:1.5%;font-size:max(13px,.72em);color:#f1e2bf;background:#24160bcc;padding:.1em .5em;border-radius:3px}
 .map-game.won .map-board{filter:drop-shadow(0 0 24px #ffd98a88) drop-shadow(0 16px 24px #000c)}
 
 @media (prefers-reduced-motion:reduce){
@@ -299,7 +298,7 @@
 .tm-gap b{font-size:1.1em}
 .tm-gap.tried{opacity:.45}
 .tm-gap.right{box-shadow:0 0 0 3px #fff4d0,0 0 22px 6px #ffd98acc!important}
-.tm-book{position:absolute;left:40.2%;top:42%;width:33.8%;height:24.5%;padding:.25em .9em;color:var(--ink);border-radius:3px;
+.tm-book{position:absolute;left:45.2%;top:42%;width:29.6%;height:24.5%;padding:.25em .9em;color:var(--ink);border-radius:3px;
  background:linear-gradient(90deg,#f6ead0e6 0 49.2%,#d9c49a 49.6% 50.4%,#f6ead0e6 50.8%);box-shadow:inset 0 0 18px #a8844a88}
 .tm-book h3{margin:0 0 .2em!important;text-align:center;font-size:.9em!important;letter-spacing:.16em;text-transform:uppercase;color:#6b4a22}
 .tm-book ol{margin:0;padding:0;list-style:none;columns:2;column-gap:2.2em;font-size:.86em;line-height:1.2}

@@ -3,7 +3,7 @@
    Schrift mindestens 12–13 px, Touchziele mindestens 40–48 px. Die Regeln heben nur zu kleine Werte an. */
 
 /* Kopfzeile und Szenen */
-#app #title strong{font-size:max(12px,calc(var(--u)*.7))}
+#app #title strong{font-size:max(12.5px,calc(var(--u)*.7))}
 #hotspots .hotspot .hs-cap{font-size:max(12.5px,.72em)}
 #app .exit small{font-size:max(13px,.78em)}
 
@@ -14,15 +14,15 @@
 
 /* Stadtkarte */
 .pm-label b{font-size:max(13px,calc(var(--u)*.72))}
-.pm-label small{font-size:max(12px,calc(var(--u)*.56))}
+.pm-label small{font-size:max(12.5px,calc(var(--u)*.56))}
 
 
 /* Szenen-Rätsel */
-.city-board header small{font-size:max(12px,.8em)}
+.city-board header small{font-size:max(13px,.8em);opacity:1}
 .city-card.long .sg-text{font-size:max(12.5px,.78em)}
 .council-round span{font-size:max(12.5px,1em)}
 .council-person figcaption{font-size:max(12.5px,.82em)}
-.council-bubble .who{font-size:max(12px,.78em)}
+.council-bubble .who{font-size:max(13px,.78em)}
 .ab-step{font-size:max(12.5px,.78em)!important}
 .zs-slot small{font-size:max(13px,.66em)}
 
