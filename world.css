@@ -134,7 +134,7 @@
 #app #hotspots .hotspot:not(.exit) .pin{position:absolute!important;left:50%!important;top:50%!important;margin:0!important;transform:translate(-50%,-50%);display:grid!important;place-items:center;width:var(--pin);height:var(--pin)}
 #app #hotspots .hotspot.hs-puzzle .pin{--pin:calc(var(--u)*1.7);width:var(--pin);height:var(--pin)}
 #app #hotspots .hotspot.hs-puzzle{--pin:calc(var(--u)*1.7)}
-#app #hotspots .hotspot:not(.exit) .label{position:absolute!important;left:50%!important;top:calc(50% + var(--pin)/2 + 5px)!important;bottom:auto!important;transform:translateX(-50%)!important;margin:0;white-space:normal;text-align:center;pointer-events:none}
+#app #hotspots .hotspot:not(.exit) .label{position:absolute!important;left:50%!important;top:calc(50% + var(--pin)/2 + 5px)!important;bottom:auto!important;transform:translateX(-50%)!important;margin:0;white-space:normal;text-align:center;pointer-events:auto;cursor:pointer}
 #app #hotspots .hotspot.collectible{--pin:0px}
 #app #hotspots .hotspot.collectible .flint-art{position:absolute;inset:0;width:100%;height:100%}
 #app #hotspots .hotspot.collectible .label{top:calc(100% + 4px)!important}
@@ -191,3 +191,8 @@
 #app .objective.open .obj-tag{display:none}
 #app .objective .obj-tag{font-size:max(13px,var(--fs-s));font-weight:600;letter-spacing:.06em;color:#5a3a16;white-space:nowrap}
 #app .objective:focus-visible{outline:3px solid var(--bronze-light);outline-offset:2px}
+
+/* Kleine Hotspots (Dinge, Rätsel): kein gelber Ring – Hervorhebung nur über Symbol und Beschriftung.
+   Die Beschriftung gehört zum Knopf: Tippen/Klicken auf den Text öffnet dasselbe Feld. */
+#app #hotspots .hotspot:not(.person):not(.exit)::before{display:none}
+#app #hotspots .hotspot:not(.exit):focus-visible:not(.person) .label{outline:3px solid var(--bronze-light);outline-offset:2px}
