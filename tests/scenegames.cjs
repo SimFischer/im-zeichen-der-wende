@@ -68,7 +68,23 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  ok(txt(root.querySelector('.sg-synth'))===cfg.synthesis,'Synthese am Ende');ok(!wins.length,'Abschluss erst nach dem Weiter-Knopf');
  root.querySelector('.sg-next').click();ok(wins.join()==='council','Konzil meldet den Sieg');
 }
-/* Physical chronicle, feedback and transfer question: chronicle-lifecycle.cjs. */
+/* ---------- Chronik ---------- */
+{
+ const {G,M,work,wins,flush}=boot();const cfg=G.minigames.timeline;
+ ok(cfg.type==='chronik','Zeitmechanik ist eine Chronik');ok(cfg.years.map(y=>y.year).join()==='303,311,312,313,325,337','Sechs Jahresabschnitte');
+ ok(cfg.art.bg.endsWith('timeline/chronicle-room.png')&&cfg.art.sheet.endsWith('timeline/timeline-assets.png'),'Chronik-Grafiken eingebunden');
+ M.chronik('timeline',cfg,work);const root=work.querySelector('.chronicle-game'),voice=()=>txt(root.querySelector('.sg-voice'));
+ const card=i=>root.querySelector(`.chron-card[data-card="${i}"]`),slot=i=>root.querySelector(`.chron-slot[data-target="${i}"]`);
+ card(0).click();slot(3).click();ok(voice()===cfg.wrongFirst&&!voice().includes('303'),'Erster Fehler: allgemeine Rückmeldung ohne Lösung');card(0).click();slot(3).click();ok(voice()===cfg.wrongAgain,'Zweiter Fehler: Verweis auf das Notizbuch');ok(/Notizbuch/.test(cfg.prompt),'Notizbuch-Hinweis steht in der Aufgabe');ok(!/Notizbuch/.test(G.puzzles.timeline.hints[0]),'Erster Tipp ist nicht der Notizbuch-Hinweis');ok(!slot(3).classList.contains('filled'),'Falsche Karte wird nicht eingetragen');
+ for(let i=0;i<5;i++){card(i).click();slot(i).click();ok(slot(i).classList.contains('filled'),'Eingetragen: '+cfg.years[i].year);ok(voice().includes(cfg.years[i].line),'Historischer Satz zu '+cfg.years[i].year);}
+ flush();ok(root.querySelector('.tm-gaps').hidden,'Transferfrage erst bei vollständiger Chronik');ok(!wins.length,'Kein Abschluss bei unvollständiger Chronik');
+ card(5).click();slot(5).click();flush();
+ ok(!root.querySelector('.tm-gaps').hidden&&root.classList.contains('complete'),'Vollständige Chronik: Band und Transferfrage');
+ ok(voice()===cfg.question,'Transferfrage gestellt');
+ root.querySelector('.chron-gap[data-gap="3"]').click();ok(voice()===cfg.gapWrong[3],'Falsche Stelle: Rückmeldung');ok(!wins.length,'Noch kein Abschluss');
+ root.querySelector('.chron-gap[data-gap="0"]').click();ok(root.classList.contains('turned'),'Wende zwischen 303 und 311 markiert');flush();
+ root.querySelector('.sg-next').click();ok(wins.join()==='timeline','Chronik meldet den Sieg');
+}
 /* ---------- Grafiken und Ersatz ---------- */
 {
  const files=['council/council-scene.png','council/council-officials.png','timeline/chronicle-room.png','timeline/timeline-assets.png','open-city/open-city.png','amphora/amphora-dock.png','amphora/amphora-assets.png','amphora/amphora-merchant.png'];
@@ -77,26 +93,27 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
  const css=fs.readFileSync(path.join(root,'scenegames.css'),'utf8');ok(css.includes('.sg-no-art'),'Ersatzdarstellung für fehlende Grafiken');
 }
 
-/* ---------- Die Mosaik des Kaisers ---------- */
+/* ---------- Das Mosaik der Motive ---------- */
 {
  const {G,M,work,wins,flush,window}=boot();const cfg=G.minigames.motives;const choices=[];window.document.addEventListener('minigame-choice',e=>choices.push(e.detail));
- ok(cfg.type==='mosaic'&&cfg.cards.length===7&&cfg.bins.join()==='Glaube,Politik / Herrschaft,Zusammenspiel','Mosaik: sieben Karten, drei Schalen');
- cfg.cards.forEach(c=>{ok(c.ok.includes(c.best)&&c.why,'Schwerpunkt und Erklärung: '+c.text);[0,1,2].filter(b=>!c.ok.includes(b)).forEach(b=>ok(c.wrong&&c.wrong[b]&&!/^\s*falsch/i.test(c.wrong[b]),'Fachliche Rückmeldung für unpassende Schale: '+c.text));});
+ ok(cfg.type==='mosaik'&&cfg.cards.length===7&&cfg.bins.join()==='Glaube,Politik / Herrschaft,Zusammenspiel','Mosaik: sieben Tafeln, drei Felder');
+ ok(!/Waage/.test(JSON.stringify([cfg,G.scenes.find(s=>s.id==='motives'),G.puzzles.motives.prompt,G.steps.motives])),'Keine Waage mehr in Rätsel und Szene');
+ cfg.cards.forEach(c=>{ok(c.ok.includes(c.best)&&c.why&&c.tile&&c.short,'Schwerpunkt, Erklärung, Mosaikstein: '+c.text);ok(fs.existsSync(path.join(__dirname,'..',cfg.art.tiles+c.tile+'.webp')),'Mosaikstein vorhanden: '+c.tile);[0,1,2].filter(b=>!c.ok.includes(b)).forEach(b=>ok(c.wrong&&c.wrong[b]&&!/^\s*falsch/i.test(c.wrong[b]),'Fachliche Rückmeldung für unpassendes Feld: '+c.text));});
  ok(cfg.cards.find(c=>/Überzeugung/.test(c.text)).ok.join()==='0','Persönliche Überzeugung gehört eindeutig zum Glauben');
- ok(cfg.cards.find(c=>/Förderung/.test(c.text)).ok.length===3,'Mehrdeutige Karte (Förderung) wird nirgends als falsch bewertet');
+ ok(cfg.cards.find(c=>/Förderung/.test(c.text)).ok.length===3,'Mehrdeutige Tafel (Förderung) wird nirgends als falsch bewertet');
  ok(cfg.reasons===G.puzzles.motives.reasons&&cfg.reasons.options.filter(o=>o.ok).length>=2,'Begründungen aus dem Rätsel, mehrere tragfähig');
- M.mosaic('motives',cfg,work);const root=work.querySelector('.mosaic-game'),voice=()=>txt(root.querySelector('.sg-voice'));
- const card=t=>[...root.querySelectorAll('.wg-card')].find(c=>txt(c)===t),pan=b=>root.querySelector(`.mosaic-field[data-target="${b}"]`);
- ok(!root.querySelector('textarea,input'),'Kein Textfeld');
- card('Persönliche religiöse Überzeugung').click();pan(1).click();
- ok(!card('Persönliche religiöse Überzeugung').classList.contains('placed')&&/kein politisches Ziel/.test(voice()),'Unpassende Schale: Karte bleibt liegen, fachliche Rückmeldung');
- cfg.cards.forEach(c=>{card(c.text).click();pan(c.best).click();ok(card(c.text).classList.contains('placed'),'Abgelegt: '+c.text);});
- ok(root.__debug.placed()===7&&root.classList.contains('assembled'),'Seven motifs form the complete picture');ok(!root.querySelector('.wg-beam'),'No scale or tilt');
- flush();ok(root.__debug.phase()==='reason'&&root.querySelectorAll('.wg-reason').length===4,'Danach: Begründung wählen');
- const bad=[...root.querySelectorAll('.wg-reason')].find(b=>!cfg.reasons.options[+b.dataset.k].ok);bad.click();
+ M.mosaik('motives',cfg,work);const root=work.querySelector('.mosaic-game'),voice=()=>txt(root.querySelector('.sg-voice'));
+ const card=t=>[...root.querySelectorAll('.mo-card')].find(c=>txt(c)===t),field=b=>root.querySelector(`.mo-ledge[data-target="${b}"]`);
+ ok(!root.querySelector('textarea,input'),'Kein Textfeld');ok(root.querySelectorAll('.mo-plate').length===3,'Drei Felder als HTML-Beschriftung');
+ card('Persönliche religiöse Überzeugung').click();field(1).click();
+ ok(card('Persönliche religiöse Überzeugung')&&/kein politisches Ziel/.test(voice()),'Unpassendes Feld: Tafel bleibt liegen, fachliche Rückmeldung');
+ cfg.cards.forEach(c=>{card(c.text).click();field(c.best).click();ok(!card(c.text),'Eingelegt: '+c.text);});
+ ok(root.__debug.count().reduce((a,b)=>a+b,0)===7&&root.querySelectorAll('.mo-piece').length===7,'Alle sieben Steine liegen im Mosaik (Anzahl je Feld offen)');
+ flush();ok(root.__debug.phase()==='reason'&&root.querySelectorAll('.mo-reason').length===4,'Danach: Begründung wählen');
+ const bad=[...root.querySelectorAll('.mo-reason')].find(b=>!cfg.reasons.options[+b.dataset.k].ok);bad.click();
  ok(bad.classList.contains('tried')&&!choices.length&&!wins.length,'Untragfähige Begründung: Rückmeldung, kein Abschluss');
- const good=[...root.querySelectorAll('.wg-reason')].find(b=>cfg.reasons.options[+b.dataset.k].ok);good.click();
+ const good=[...root.querySelectorAll('.mo-reason')].find(b=>cfg.reasons.options[+b.dataset.k].ok);good.click();
  ok(choices.length===1&&choices[0].id==='motives','Gewählte Begründung fürs Notizbuch gemeldet');
- flush();root.querySelector('.sg-next').click();ok(wins.join()==='motives','Abschluss meldet den Sieg');
+ flush();ok(root.classList.contains('whole'),'Alle Teile bilden ein Gesamtbild');root.querySelector('.sg-next').click();ok(wins.join()==='motives','Abschluss meldet den Sieg');
 }
 console.log(`PASS: Stadt, Mosaik, Konzil (${6} Runden), Chronik, Asset-Pfade – ${checks} Prüfungen`);
