@@ -146,17 +146,6 @@
 
 /* Belohnung nach einem gelösten Rätsel */
 #modal[data-mode=reward]{width:min(calc(var(--u)*42),calc(100vw - 24px))}
-.seal-award{display:flex;align-items:center;gap:calc(var(--u)*1.2);margin:.4em 0 1em;padding:calc(var(--u)*.8) calc(var(--u)*1);border:2px solid #c9a86b;border-radius:16px;background:radial-gradient(circle at 12% 50%,#fff3c9,#f3e2bd 60%)}
-.seal-medal{flex:none;width:calc(var(--u)*6.5);height:calc(var(--u)*6.5);filter:drop-shadow(0 6px 10px #5a3a0f66)}
-.seal-award.fresh .seal-medal{animation:seal-stamp .7s cubic-bezier(.3,1.5,.5,1)}
-.seal-award-text{display:flex;flex-direction:column;gap:.15em;min-width:0}
-.seal-kicker{font-size:var(--fs-xs);letter-spacing:.14em;text-transform:uppercase;color:#6b5634}
-.seal-award-text strong{font-size:calc(var(--u)*1.6);line-height:1.1;color:#3a2610}
-.seal-count{font-size:var(--fs-s);color:#4d3c20}
-.seal-row{display:flex;gap:.35em;margin-top:.3em}
-.mini-seal{display:grid;place-items:center;width:calc(var(--u)*1.7);height:calc(var(--u)*1.7);border-radius:50%;border:2px dashed #b89a66;font-size:calc(var(--u)*.85);color:#fff3d0}
-.mini-seal.got{border:2px solid #6e4a14;background:radial-gradient(circle at 35% 30%,#f7dc93,#c08a36)}
-@keyframes seal-stamp{0%{transform:scale(2.2) rotate(-25deg);opacity:0}60%{transform:scale(.92) rotate(4deg);opacity:1}100%{transform:none}}
 #modal .learned h3{margin:.2em 0 .4em;font-size:calc(var(--u)*1.2);color:#5a3a16}
 #modal .learned ul{margin:0;padding-left:1.2em}
 #modal .learned li{margin:.3em 0;font-size:var(--fs-m);line-height:1.45}
@@ -166,14 +155,12 @@
 #modal .reward-line{display:flex;align-items:center;gap:.5em;margin:.6em 0}
 #modal .reward-line img{width:calc(var(--u)*2.2);height:calc(var(--u)*2.2)}
 #modal .next-line{margin:.4em 0 .2em;color:#1f4a40;font-style:italic}
-@media(max-width:650px){.seal-award{flex-direction:column;text-align:center}.seal-row{justify-content:center}}
-@media(prefers-reduced-motion:reduce){.seal-award.fresh .seal-medal{animation:none}}
 #modal #puzzle-text.pulse{animation:text-pulse 1.2s ease-in-out 3;background:#fff1c4;border-color:#b8862e}
 @keyframes text-pulse{50%{box-shadow:0 0 0 6px #e7bc7466}}
 #modal .text-offer{margin:0 0 .6em;font-weight:600;color:#5a3a16}
 #modal .feedback{white-space:pre-line}
 
-/* ---------- Minispiele: gemeinsamer Rahmen (HUD, Bühne, Overlay, Banner) ---------- */
+/* ---------- Minispiele: gemeinsame Bausteine ---------- */
 #modal[data-mode=minigame]{width:min(calc(var(--u)*56),calc(100vw - 24px))}
 .racer{display:flex;flex-direction:column;gap:.6em}
 .racer-hud{display:flex;align-items:center;gap:.8em;flex-wrap:wrap}
@@ -193,6 +180,7 @@
 #modal .racer-overlay h3{margin:0 0 .4em;font-size:calc(var(--u)*1.5);color:#5a3a16}
 #modal .racer-overlay li{font-size:var(--fs-s);margin:.25em 0}
 #modal .racer-overlay .primary{align-self:flex-start;margin-top:.6em;font-size:var(--fs-m);padding:.5em 1.4em}
+.racer-summary{list-style:none;padding:0}
 .racer-banner{position:absolute;left:50%;top:12px;transform:translate(-50%,-20px);max-width:88%;padding:.5em 1em;border-radius:12px;background:#fff8e6;border:2px solid #c9a86b;font-size:var(--fs-s);line-height:1.35;text-align:center;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 6px 18px #0005}
 .racer-banner.show{opacity:1;transform:translate(-50%,0)}
 .racer-banner.good{border-color:#2d7a67;background:#e2f0e8}
@@ -263,6 +251,9 @@
 #modal .quiz-item{margin:.4em 0;padding:.6em 1em;border-left:5px solid #856139;background:#fffaf0;font-size:calc(var(--u)*1.3);font-style:italic}
 #modal .quiz-fb{min-height:1.4em;font-weight:600}.quiz-fb.good{color:#1f6b57}.quiz-fb.bad{color:#9b3b24}
 .slider-quiz .dark-opts{grid-template-columns:repeat(3,1fr)}
+.slider-quiz .dark-opts button{display:flex;flex-direction:column;align-items:center;gap:.15em;line-height:1.25}.slider-quiz .dark-opts button small{font-size:var(--fs-xs);font-weight:400;opacity:.85}
+.racer-overlay.slider-quiz{justify-content:safe center}
+@media (max-width:640px){.slider-quiz .dark-opts{grid-template-columns:1fr}}
 .dark-stage{width:min(100%,calc((100dvh - 17rem)*1.5));min-width:280px}
 .dark-stage{max-height:calc(100dvh - 25rem);width:min(100%,calc((100dvh - 25rem)*1.5))}
 #modal[data-mode=minigame] .puzzle-head{margin:0 0 .2em}
@@ -547,3 +538,22 @@
 #modal .stamp-tool{min-height:64px;padding:10px 6px}
 #modal .stamp-name{font-size:clamp(15px,1.4vw,19px);line-height:1.2}
 @media(max-width:600px){.stamp-rack{grid-template-columns:repeat(2,1fr)}.stamp-file{width:86%}}
+
+/* Begründung wählen statt Freitext (Waage, Brücke) */
+#modal .reason-choice{margin:1em 0 .4em;padding:.8em 1em 1em;border:2px solid #b8955a;border-radius:10px;background:#fbf3df}
+#modal .reason-choice.needs{border-color:#9b3b24;box-shadow:0 0 0 3px rgba(155,59,36,.18)}
+#modal .reason-choice legend{font-weight:700;font-size:var(--fs-m);padding:0 .4em;color:#3c2a12}
+#modal .reason-choice > .muted{margin:.1em 0 .6em;font-size:var(--fs-s)}
+#modal .reason-options{display:grid;gap:.5em}
+#modal .reason-option{display:block;width:100%;text-align:left;min-height:48px;padding:.6em .9em;border:2px solid #cdb78c;border-radius:8px;background:#fffaf0;color:#2b2112;font-size:var(--fs-m);line-height:1.4;white-space:normal}
+#modal .reason-option.picked{border-color:#856139;background:#f3e2bd}
+#modal .reason-option.good{border-color:#1f6b57;background:#e3f1e9}
+#modal .reason-option.bad{border-color:#9b3b24;background:#f8e3dc}
+#modal .reason-why{margin:.6em 0 0;min-height:1.2em;font-weight:600}
+#modal .reason-why.good{color:#1f6b57}#modal .reason-why.bad{color:#9b3b24}
+#modal .reason-choice .reason-option[aria-pressed]{transform:none;box-shadow:none;outline-offset:2px}
+/* Quiz nach dem Schildpuzzle: Bühne wächst, damit Aussage, Antworten und Rückmeldung zusammen sichtbar sind */
+#modal .racer-stage.slider-stage:has(.slider-quiz){height:max(clamp(260px,calc(100dvh - 20rem),calc(var(--u)*46)),22rem)}
+#modal .slider-quiz{padding:calc(var(--u)*.8) calc(var(--u)*1.4)}
+#modal .slider-quiz h3{margin:.1em 0}
+#modal .slider-quiz .quiz-fb{font-size:var(--fs-s);line-height:1.4}

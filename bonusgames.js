@@ -50,7 +50,7 @@ window.BonusGames=(()=>{
   const shell=modal.querySelector('.bonus-shell'),stage=shell.querySelector('.bonus-stage'),task=shell.querySelector('.bonus-task');
   const s=session={id,alive:true,raf:0,timers:[],intervals:[],listeners:[],observers:[],paused:false,running:false,game:null,loops:[],last:0};
   const on=(t,type,fn,o)=>{t.addEventListener(type,fn,o);s.listeners.push([t,type,fn,o]);};
-  on(modal,'close',()=>{if(session===s)stop();});
+  on(modal,'close',()=>{if(session===s&&!modal.open)stop();}); // ein verspätetes „close“ des vorherigen Fensters beendet das neue Spiel nicht
   on(document,'visibilitychange',()=>{if(document.hidden&&s.running)pause(true);});
   shell.querySelector('.bonus-leave').onclick=()=>UI.close();
   const pauseBtn=shell.querySelector('.bonus-pause');pauseBtn.onclick=()=>pause(!s.paused);

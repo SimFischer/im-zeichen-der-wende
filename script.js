@@ -50,17 +50,20 @@
   if(id==='gate')return state.seals.length===6?'Alle Siegel gefunden. Die Chronik wartet in der Basilika.':'Erkunde die Erinnerungen. Finde sechs Erkenntnis-Siegel für die Chronik.';
   if(id==='archive'&&!own('light'))return 'Kombiniere Öllampe und Feuerstein im Botenbeutel.';if(id==='archive'&&!has('archive')&&G.minigames?.archive)return 'Tippe in die Dunkelheit, um mit der Lampe zu suchen.';
   if(id==='archive'&&state.evidence.length<4&&!has('archive'))return 'Untersuche die vier Spuren im Licht deiner Lampe.';
-  {const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));if(p&&puzzleLocked(scene(),p[4])){const all=infoSpots(scene()).length,miss=missingInfo(scene()).length;return `Sammle zuerst Informationen: Sprich mit den Menschen und untersuche die Dinge (${all-miss}/${all}). Dann öffnet sich: ${p[0]}.`;}}
+  {const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));if(p&&puzzleLocked(scene(),p[4])){const all=infoSpots(scene()).length,miss=missingInfo(scene()).length;return scene().discover?`Du kennst diesen Ort – was ist heute anders? Entdeckt: ${all-miss} von ${all} Veränderungen. Dann öffnet sich: ${p[0]}.`:`Sammle zuerst Informationen: Sprich mit den Menschen und untersuche die Dinge (${all-miss}/${all}). Dann öffnet sich: ${p[0]}.`;}}
   if(id==='camp'&&!has('map312'))return 'Beschrifte das Kartenbrett, um Konstantins Zelt zu öffnen.';
   if(id==='basilica'&&!state.flags.sealsPlaced)return 'Setze deine sechs Erkenntnis-Siegel in die große Mechanik.';
   const p=scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]));
   if(p)return `Du weißt genug. Überprüfe dein Wissen: ${p[0]}.`;
   return 'Diese Erinnerung ist erschlossen. Folge einem Weg (➜) oder nutze die Stadtkarte.';
  }
+ let lastPanScene=null;
  function render(){endTalk();unlock();if(state.scene==='archive'&&!has('archive')&&!state.flags.archiveScrollsRead)state.scene='vestibule';const s=scene();$('#scene-name').textContent=s.name;$('#era').textContent=s.era;
-  const art=$('#art');art.style.backgroundImage=`url('assets/backgrounds/v3-${s.art||s.id}.png')`;$('#app').style.setProperty('--scene-img',`url('assets/backgrounds/v3-${s.art||s.id}.png')`);art.style.backgroundSize='contain';art.style.backgroundPosition='center';
+  const img=s.image||`assets/backgrounds/v3-${s.art||s.id}.png`;const art=$('#art');art.style.backgroundImage=`url('${img}')`;$('#app').style.setProperty('--scene-img',`url('${img}')`);art.style.backgroundSize=s.image?'cover':'contain';art.style.backgroundPosition='center';$('#scene').classList.toggle('discover',!!s.discover);
   const archDark=s.id==='archive'&&!has('archive');art.style.filter=archDark?'brightness(.07) saturate(.4)':'';$('#scene').classList.toggle('archive-dark',archDark);
   $('#world-change').className=state.flags.galerius?'open':'';
+  // Hochformat: Szene größer und seitlich verschiebbar – beim Ortswechsel in die Mitte scrollen und kurz auf das Wischen hinweisen
+  if(lastPanScene!==s.id){lastPanScene=s.id;(window.requestAnimationFrame||setTimeout)(()=>{const vp=document.querySelector('.scene-viewport');if(!vp)return;const pan=vp.scrollWidth-vp.clientWidth;vp.scrollLeft=pan>4?pan/2:0;const h=$('#pan-hint');if(h){h.hidden=pan<=4;if(pan>4){h.classList.remove('show');void h.offsetWidth;h.classList.add('show');}}});}
   if(s.id==='house'&&state.flags.galerius)$('#era').textContent='Nach 311 · die Hauskirche ist wieder offen';
   $('#hotspots').innerHTML='';s.hotspots.forEach((h,i)=>{const b=document.createElement('button');b.className='hotspot hs-'+h[3];b.dataset.index=i;b.style.left=h[1]+'%';b.style.top=h[2]+'%';b.dataset.hotspot=h[4]||h[3];const done=h[3]==='puzzle'&&has(h[4]);if(done)b.classList.add('done');if(state.seen.includes(s.id+':'+i))b.classList.add('seen');const cap=h[3]==='puzzle'?'<small class="hs-cap"></small>':'';b.innerHTML=`<span class="pin" aria-hidden="true">${done?'✓':h[3]==='take'?'＋':h[3]==='talk'?'i':'·'}</span><span class="label">${esc(h[0])}${cap}</span>`;if(h[3]==='take'){b.querySelector('.pin').remove();b.setAttribute('aria-label',h[0]+' aufnehmen');}if(h[3]==='deposit')b.hidden=!has('archive')||!!state.flags.archiveScrollsDeposited;b.onclick=()=>interact(h,i);$('#hotspots').append(b);});
   window.Adventure.scene(s,state);refreshSpots();document.querySelectorAll('#hotspots .unlocked-now').forEach(b=>b.classList.remove('unlocked-now'));renderExits(s);window.BonusGames?.update(state);$('#objective').textContent=objective();renderInventory();save();
@@ -86,9 +89,9 @@
   if(id==='archivist'){meetArchivist();return;}
   if(type==='reading'){if(!state.flags.archiveScrollsReceived){meetArchivist();return;}readArchiveScrolls();return;}
   if(type==='deposit'){depositArchiveScrolls();return;}
-  if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined)talk(id,t,h);else info(t[0],t[1]);return;}
+  if(type==='talk'){const t=G.talks[id];if(window.Adventure.cast[id]!==undefined||scene().discover)talk(id,t,h);else info(t[0],t[1]);return;}
   if(type==='take'){if(own(id)||['lamp','flint'].includes(id)&&own('light')){toast('Diesen Gegenstand hast du bereits.');return;}flyToBag(id,state.scene+':'+i);add('inventory',id);save();render();toast(G.items[id]+' in den Botenbeutel gelegt.');return;}
-  if(type==='gate'){info('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
+  if(type==='gate'){sealInfoDialog('Sechs leere Siegelplätze',`Diese Mechanik ist mit der Chronik in der Basilika verbunden. Du hast ${state.seals.length} von sechs Erkenntnis-Siegeln gefunden. Beginne im Wohnviertel und auf dem Forum.`);return;}
   if(type==='evidence'){add('evidence',id);save();info(G.evidence[id][0],`Im Licht wird die Spur sichtbar. Überlege, welche Maßnahme sie erklärt: ${G.evidence[id][1]}. Die Spur ist jetzt für die Schubladen festgehalten.`);render();return;}
   if(type==='finalgate'){sealLock();return;}
   if(type==='puzzle')openPuzzle(id);
@@ -136,16 +139,41 @@
    main.focus();
   }show();
  }
+ function sealInfoDialog(title,text){activePuzzle=null;open(title,`<p class="intro-copy">${esc(text)}</p>${window.Seals?window.Seals.collection(state.seals,{placed:state.flags.sealSockets||[]}):''}`,'Die Stadtchronik','seals');button('Zurück in die Szene',close,'primary',actions());}
+ /* Das Siegelrad in der Basilika. Logik unverändert: Siegel wählen, in die gleichnamige Fassung setzen;
+    eingesetzte Siegel stehen in state.flags.sealSockets, nach sechs Siegeln gilt state.flags.sealsPlaced. */
  function sealLock(){
-  if(state.seals.length<6){info('Die Mechanik wartet','Noch fehlen Erkenntnis-Siegel. Erkunde die offenen Orte auf der Stadtkarte.');return;}
-  let chosen=null;const placed=state.flags.sealSockets||[];
-  open('Das Siegelrad','<p>Sechs Erkenntnisse halten die Chronik zusammen. Wähle ein Siegel und setze es in die passende Vertiefung.</p><div class="seal-lock"><div class="seal-rack"></div><div class="seal-wheel"></div></div><p id="seal-message" role="status"></p>','Die Basilika','puzzle');
-  G.seals.forEach((name,i)=>{const pick=button(name,()=>{chosen=name;document.querySelectorAll('.seal-rack button').forEach(b=>b.setAttribute('aria-pressed',String(b===pick)));},'seal found',$('.seal-rack'));pick.disabled=placed.includes(name);
-   const socket=button(placed.includes(name)?'✓ '+name:name,()=>{if(!chosen){$('#seal-message').textContent='Wähle zuerst ein Siegel aus deinem Beutel.';return;}if(chosen!==name){$('#seal-message').textContent='Die Gravur passt noch nicht. Suche die Vertiefung mit derselben Erkenntnis.';return;}
-    if(!placed.includes(name))placed.push(name);state.flags.sealSockets=placed;socket.textContent='✓ '+name;socket.classList.add('fitted');socket.disabled=true;pick.disabled=true;chosen=null;save();$('#seal-message').textContent='Das Siegel rastet ein.';
-    if(placed.length===6){state.flags.sealsPlaced=true;save();render();info('Die sechs Siegel greifen ineinander','Die Zeitmechanik ist frei. Ordne zuerst die Ereignisse; danach kannst du die Argumentationsbrücke bauen.');}
-   },'seal-socket',$('.seal-wheel'));socket.dataset.seal=name;socket.style.left=(50+33*Math.cos(i*Math.PI/3))+'%';socket.style.top=(50+33*Math.sin(i*Math.PI/3))+'%';socket.disabled=placed.includes(name);if(socket.disabled)socket.classList.add('fitted');
-  });if(placed.length===6)button('Zur Zeitmechanik',()=>{state.flags.sealsPlaced=true;save();close();render();},'primary',actions());
+  if(state.seals.length<6){sealInfoDialog('Die Mechanik wartet','Noch fehlen Erkenntnis-Siegel. Erkunde die offenen Orte auf der Stadtkarte.');return;}
+  let chosen=null;const placed=state.flags.sealSockets||[];const S=window.Seals;
+  open('Das Siegelrad',`<div class="seal-chamber${placed.length===6?' complete':''}"><div class="seal-chamber-bg" aria-hidden="true"></div>
+   <aside class="seal-case"><h3 class="seal-case-title">Dein Siegelkasten</h3><div class="seal-rack" role="group" aria-label="Deine Siegel"></div></aside>
+   <div class="seal-relief"><div class="seal-wheel" role="group" aria-label="Siegelrad mit sechs Fassungen">${S.wheelSvg()}</div></div>
+   <p id="seal-message" class="seal-plaque" role="status" aria-live="polite">${placed.length===6?'Die sechs Siegel greifen ineinander. Die Zeitmechanik ist frei.':'Tippe ein Siegel im Kasten an. Setze es dann in die Fassung mit demselben Zeichen.'}</p></div>`,'Die Basilika','seals');
+  const rack=$('.seal-rack'),wheel=$('.seal-wheel'),msg=$('#seal-message');
+  const say=(t,kind='')=>{msg.textContent=t;msg.className='seal-plaque'+(kind?' '+kind:'');};
+  const picks={},sockets={};
+  function paint(){
+   G.seals.forEach(name=>{const st=placed.includes(name)?'placed':chosen===name?'selected':'owned';const b=picks[name];b.className='seal-token is-'+st;b.dataset.state=st;b.setAttribute('aria-pressed',String(st==='selected'));b.setAttribute('aria-label','Siegel '+name+' – '+S.STATE_TEXT[st]);b.querySelector('.seal-state').textContent=S.STATE_TEXT[st];b.disabled=st==='placed';});
+   wheel.classList.toggle('holding',!!chosen);
+  }
+  G.seals.forEach((name,i)=>{
+   const holder=document.createElement('div');holder.innerHTML=S.token(name,'owned',{tag:'button'});const pick=holder.firstElementChild;rack.append(pick);picks[name]=pick;
+   pick.onclick=()=>{if(placed.includes(name))return;chosen=chosen===name?null:name;paint();say(chosen?'Gewählt: '+name+'. Tippe jetzt auf die passende Fassung im Rad.':'Tippe ein Siegel im Kasten an.');};
+   const socket=document.createElement('button');socket.type='button';socket.className='seal-socket';socket.dataset.seal=name;
+   const pos=S.socketPos(i);socket.style.left=pos.left+'%';socket.style.top=pos.top+'%';
+   const fill=()=>{const done=placed.includes(name);socket.innerHTML=(done?S.medal(name,{decorative:true}):S.socket(name))+`<span class="seal-socket-label">${esc(name)}</span>`;socket.classList.toggle('fitted',done);socket.setAttribute('aria-label',done?'Fassung '+name+' – Siegel eingesetzt':'Leere Fassung '+name);socket.disabled=done;};
+   fill();wheel.append(socket);sockets[name]=socket;
+   socket.onclick=()=>{
+    if(!chosen){say('Wähle zuerst ein Siegel aus deinem Siegelkasten.','hint');return;}
+    if(chosen!==name){say('Die Gravur passt nicht. Suche die Fassung mit demselben Zeichen wie '+chosen+'.','hint');socket.classList.remove('refuse');void socket.offsetWidth;socket.classList.add('refuse');return;}
+    if(!placed.includes(name))placed.push(name);state.flags.sealSockets=placed;chosen=null;save();
+    fill();socket.classList.add('snap');paint();say(placed.length<6?'Das Siegel „'+name+'“ rastet ein. Noch '+(6-placed.length)+(placed.length===5?' Fassung.':' Fassungen.'):'Die sechs Siegel greifen ineinander. Die Zeitmechanik ist frei.','good');
+    if(placed.length===6){state.flags.sealsPlaced=true;save();render();$('.seal-chamber').classList.add('complete','turning');finishButton();}
+   };
+  });
+  paint();
+  function finishButton(){if($('#seal-finish'))return;const b=button('Zur Zeitmechanik',()=>{state.flags.sealsPlaced=true;save();close();render();},'primary',actions());b.id='seal-finish';}
+  if(placed.length===6)finishButton();
  }
  function renderInventory(){const inv=$('#inventory');
   inv.innerHTML=`<div class="bag" role="dialog" aria-label="Botenbeutel"><button type="button" class="bag-close" aria-label="Botenbeutel schließen">✕</button><div class="bag-handle" aria-hidden="true"></div><div class="bag-flap"><span>Botenbeutel</span></div><div class="bag-inner"><div class="items"></div></div><p class="inv-help">Gegenstand antippen, dann das Ziel in der Szene. Zum Kombinieren zwei Gegenstände nacheinander antippen.</p></div>`;
@@ -194,14 +222,15 @@
  $('#map').onclick=showMap;
  function showJournal(){activePuzzle=null;let html='<p>Deine gesicherten Erkenntnisse und eigenen Gedanken. Alles bleibt auf diesem Gerät.</p>';
   state.notes.forEach(id=>{const n=G.notes[id];if(n)html+=`<article class="journal"><h3>${esc(n[0])}</h3><p>${esc(n[1])}</p></article>`;});
-  ['motives','council','bridge'].forEach(id=>{const d=state.drafts[id];if(d?.reason)html+=`<article class="journal"><h3>${esc(G.puzzles[id].title)} · Deine Begründung</h3><p class="personal">${esc(d.reason)}</p><p class="muted">Eigener Text – nicht automatisch fachlich bewertet.</p></article>`;});
+  ['motives','council','bridge'].forEach(id=>{const d=state.drafts[id];if(!d?.reason)return;const r=chosenReason(G.puzzles[id],d);html+=`<article class="journal"><h3>${esc(G.puzzles[id].title)} · ${r?'Deine gewählte Begründung':'Deine frühere Notiz'}</h3><p class="personal">${esc(d.reason)}</p>${r?`<p class="muted">${esc(r.why)}</p>`:''}</article>`;});
   if(!state.notes.length)html+='<p class="clue">Die Seiten füllen sich, wenn du die Erinnerungen erschließt.</p>';
+  if(window.Seals)html+=`<h3 class="journal-section">Deine Siegelsammlung · ${state.seals.length} von ${G.seals.length}</h3>${window.Seals.collection(state.seals,{placed:state.flags.sealSockets||[]})}`;
   const read=Object.keys(G.texts||{}).filter(k=>state.seen.includes('text:'+k));if(read.length){html+='<h3 class="journal-section">Gelesene Fachtexte</h3>';read.forEach(k=>{html+=`<details class="journal-text"><summary>📜 ${esc(G.texts[k].title)}</summary>${readingHtml(G.texts[k],false)}</details>`;});}
   html+=window.BonusGames?.journalHtml()||'';
   open('Das Notizbuch',html,'Gesammelt unterwegs','journal');window.BonusGames?.bindJournal($('#modal-content'));const a=actions();button('Als Text herunterladen',exportNotes,'primary',a);button('Drucken',()=>window.print(),'',a);
  }
  $('#notebook').onclick=showJournal;
- function exportNotes(){let text='IM ZEICHEN DER WENDE\n\n';state.notes.forEach(id=>{if(G.notes[id])text+=G.notes[id].join('\n')+'\n\n';});for(const id of ['motives','council','bridge'])if(state.drafts[id]?.reason)text+='Eigene Begründung – '+G.puzzles[id].title+'\n'+state.drafts[id].reason+'\n\n';const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Meine-Stadtchronik.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+ function exportNotes(){let text='IM ZEICHEN DER WENDE\n\n';state.notes.forEach(id=>{if(G.notes[id])text+=G.notes[id].join('\n')+'\n\n';});for(const id of ['motives','council','bridge'])if(state.drafts[id]?.reason)text+='Begründung – '+G.puzzles[id].title+'\n'+state.drafts[id].reason+'\n\n';const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Meine-Stadtchronik.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  function hint(){const id=activePuzzle||scene().hotspots.find(h=>h[3]==='puzzle'&&!has(h[4]))?.[4];if(!id){info('Die Öllampe','Sprich mit den Menschen, sammle Gegenstände und öffne die Stadtkarte. Neue Wege entstehen durch deine Erkenntnisse.');return;}
   const p=G.puzzles[id];let level=state.hints[id]||0;if(level<3)level++;state.hints[id]=level;save();
   if(activePuzzle&&$('#hint-box')){$('#hint-box').hidden=false;$('#hint-box').textContent=`Hinweis ${level}/3: ${p.hints[level-1]}`;return;}
@@ -211,6 +240,8 @@
  function locked(message){info('Hier fehlt noch etwas',message);}
  const classicMode=new Set();
  document.addEventListener('minigame-win',e=>{if(G.puzzles[e.detail])complete(e.detail);});
+ // Auswahl aus einem Minispiel (z. B. die Inschrift der Argumentationsbrücke) fürs Notizbuch merken – kein Freitext.
+ document.addEventListener('minigame-choice',e=>{const {id,text}=e.detail||{};const p=G.puzzles[id];if(!p||typeof text!=='string')return;let d=state.drafts[id];if(!d||!Array.isArray(d.values))d=state.drafts[id]={values:p.rows.map(()=>null),reason:''};d.reason=text.slice(0,4000);save();});
  function readingHtml(t,withButton){return `<article class="reading-panel"><h3>${esc(t.title)}</h3>${t.body.map(x=>`<p>${esc(x)}</p>`).join('')}${t.source?`<blockquote class="source-quote"><p>${esc(t.source.text)}</p><cite>${esc(t.source.ref)}</cite></blockquote>`:''}${withButton?'<button type="button" class="primary to-puzzle">← Zurück zum Rätsel</button>':''}</article>`;}
  function openPuzzle(id){
   if(id==='vision'&&!has('map312'))return locked('Die Karte am Lager muss zuerst richtig beschriftet sein.');
@@ -235,21 +266,28 @@
    const slots=document.createElement('div');slots.className='slots';work.append(slots);
    p.rows.forEach((r,i)=>{const slot=document.createElement('div');slot.className='slot';slot.innerHTML=`<span class="slot-label" id="row-${i}">${esc(r.label)}</span>`;const b=button(d.values[i]===null?'＋ Baustein einsetzen':r.options[d.values[i]],()=>{if(token===null){toast('Wähle zuerst einen Baustein oben aus.');return;}const index=r.options.indexOf(token);if(index<0){toast('Dieser Baustein passt zu einem anderen Teil des Mechanismus.');return;}d.values[i]=index;b.textContent=token;b.className='filled';slot.querySelector('.row-feedback')?.remove();save();},d.values[i]===null?'':'filled',slot);b.id='slot-'+i;b.setAttribute('aria-describedby','row-'+i);b.setAttribute('aria-label','Platz: '+r.label);slots.append(slot);});
   }
-  if(['balance','bridge','council'].includes(p.type)){
-   const label=document.createElement('label');label.className='reason-label';label.htmlFor='reason';label.textContent=p.type==='balance'?'Begründe eine Karte und wäge ab: Welche Rolle könnten Glaube und Politik zusammen spielen?':p.type==='bridge'?'Deine eigene Begründung der Wende (mindestens zwei Sätze):':'Deine Erklärung (optional, auch mündlich möglich):';work.append(label);const t=document.createElement('textarea');t.id='reason';t.maxLength=4000;t.value=d.reason||'';t.placeholder='Ich begründe meine Einordnung so …';t.oninput=()=>{d.reason=t.value;$('#confirm-reflection')?.remove();save();};work.append(t);
-   const note=document.createElement('p');note.className='muted';note.textContent='Dein Text wird gespeichert. Die App beurteilt offene Begründungen nicht automatisch. Besprich sie mit deiner Gruppe oder Lehrkraft.';work.append(note);
-  }
-  const a=actions();button(p.type==='balance'?'Einordnung reflektieren':'Mechanismus prüfen',()=>check(id),'primary',a);button('Zurück in die Szene',close,'',a);
+  if(p.reasons)reasonChoice(p,d,work,save);
+  const a=actions();button(p.type==='balance'?'Einordnung prüfen':'Mechanismus prüfen',()=>check(id),'primary',a);button('Zurück in die Szene',close,'',a);
   if(has(id)){$('#feedback').className='feedback success';$('#feedback').textContent='Diese Erinnerung hast du bereits erschlossen. Du kannst deine Einordnung erneut ansehen und ändern.';}
+ }
+ function chosenReason(p,d){return p.reasons?.options.find(o=>o.text===d.reason)||null;}
+ function reasonChoice(p,d,work,save){
+  const box=document.createElement('fieldset');box.className='reason-choice';box.innerHTML=`<legend>${esc(p.reasons.q)}</legend><p class="muted">Wähle eine Begründung. Mehrere können passen.</p><div class="reason-options"></div><p class="reason-why" role="status" aria-live="polite"></p>`;work.append(box);
+  const list=box.querySelector('.reason-options'),why=box.querySelector('.reason-why');
+  const show=()=>{const r=chosenReason(p,d);list.querySelectorAll('button').forEach(b=>{const on=b.dataset.text===d.reason;b.setAttribute('aria-pressed',String(on));b.classList.toggle('picked',on);b.classList.toggle('good',on&&r.ok);b.classList.toggle('bad',on&&!r.ok);});why.className='reason-why'+(r?(r.ok?' good':' bad'):'');why.textContent=r?(r.ok?'Passt. ':'Noch nicht tragfähig. ')+r.why:'';};
+  p.reasons.options.forEach(o=>{const b=button(o.text,()=>{d.reason=o.text;box.classList.remove('needs');$('#confirm-reflection')?.remove();save();show();},'reason-option',list);b.dataset.text=o.text;});
+  show();
  }
  function check(id){const p=G.puzzles[id],d=state.drafts[id],fb=$('#feedback');fb.className='feedback';
   if(d.values.some((v,i)=>!Number.isInteger(v)||v<0||v>=p.rows[i].options.length)){fb.textContent='Der Mechanismus ist noch unvollständig. Belege alle Plätze.';fb.scrollIntoView({block:'nearest'});return;}
   const errors=[];p.rows.forEach((r,i)=>{const good=r.answer.includes(d.values[i]);const b=$('#slot-'+i);if(b){b.classList.toggle('correct',good);b.classList.toggle('wrong',!good);b.parentElement.querySelector('.row-feedback')?.remove();if(!good){const n=document.createElement('p');n.className='row-feedback';n.textContent=r.feedback;b.parentElement.append(n);}}if(!good)errors.push(r.feedback);});
   if(errors.length){fb.textContent=errors.join('\n\n');const tb=$('#puzzle-text');if(tb&&tb.hidden){tb.hidden=false;tb.classList.add('pulse');add('seen','textunlock:'+id);save();const n=document.createElement('p');n.className='text-offer';n.innerHTML='Noch nicht ganz. Frag noch einmal die Personen in der Szene – oder lies oben im <strong>📜 Fachtext</strong> nach.';fb.prepend(n);}fb.scrollIntoView({block:'nearest'});return;}
-  if(['balance','bridge'].includes(p.type)&&d.reason.trim().length<30){fb.textContent='Deine Bausteine sind gesetzt. Formuliere jetzt eine eigene Begründung mit mindestens 30 Zeichen. Die Länge ist nur eine Eingabehilfe, keine fachliche Bewertung.';$('#reason').focus();return;}
+  if(p.reasons){const r=chosenReason(p,d);$('.reason-choice')?.classList.remove('needs');
+   if(!r){fb.textContent='Deine Bausteine sind richtig gesetzt. Wähle jetzt unten eine Begründung aus.';$('.reason-choice')?.classList.add('needs');$('.reason-choice button')?.focus();return;}
+   if(!r.ok){fb.textContent='Deine Bausteine sind richtig gesetzt. Die gewählte Begründung trägt aber noch nicht: '+r.why+' Wähle eine andere Begründung.';$('.reason-choice')?.classList.add('needs');return;}}
   if(p.type==='balance'){
-   fb.className='feedback success';fb.innerHTML='<strong>Deine Einordnung ist gespeichert.</strong><p>Prüfe deine Begründung an diesen Perspektiven: Einheit und stabile Ordnung lassen sich politisch erklären. Persönliche religiöse Überzeugung verweist auf Glauben. Förderung christlicher Gemeinden kann beides verbinden. Auch beim Zeichen und beim Sieg sind verschiedene Deutungen möglich; die Vision ist später berichtet.</p><p>Ist deine Einordnung nachvollziehbar begründet? Besprich besonders eine Karte, die auch anders liegen könnte.</p>';
-   if(!$('#confirm-reflection')){const b=button('Ich habe meine Begründung geprüft – Siegel nehmen',()=>complete(id),'primary',fb);b.id='confirm-reflection';}return;
+   fb.className='feedback success';fb.innerHTML='<strong>Deine Einordnung und deine Begründung passen.</strong><p>Zum Weiterdenken: Einheit und stabile Ordnung lassen sich politisch erklären. Persönliche religiöse Überzeugung verweist auf Glauben. Förderung christlicher Gemeinden kann beides verbinden. Auch beim Zeichen und beim Sieg sind verschiedene Deutungen möglich; die Vision ist später berichtet.</p><p>Besprich mit deiner Gruppe eine Karte, die auch anders liegen könnte.</p>';
+   if(!$('#confirm-reflection')){const b=button('Verstanden – Siegel nehmen',()=>complete(id),'primary',fb);b.id='confirm-reflection';}return;
   }
   complete(id);
  }
@@ -258,12 +296,11 @@
   if(id==='archive'&&!state.flags.galerius){state.flags.galerius=true;add('notes','galerius');save();render();open('Eine Nachricht verändert die Stadt',`<p class="eyebrow">Zeitsprung · 311</p><p class="intro-copy">Ein Bote verkündet: „Galerius beendet die staatliche Verfolgung weitgehend.“ Die Hauskirche kann wieder geöffnet werden. Der Wandel beginnt schon vor Konstantins Sieg.</p><p>Auf der Stadtkarte ist jetzt das Militärlager erreichbar.</p>`,'Das Tor zum neuen Jahrhundert');button('Die Nachricht weitertragen',close,'primary',actions());return;}
   if(id==='bridge'){state.flags.finished=true;save();open('Die Chronik ist wieder offen',`<div class="ending"><span>✧</span><h3>Im Zeichen der Wende</h3><p>Du hast die Erinnerungen zusammengefügt: von unterschiedlichen Verfolgungen über rechtliche Absicherung bis zur gezielten Förderung des Christentums.</p></div><p style="margin-top:20px">Die Entwicklung geschah in mehreren Schritten. Sie machte 313 nicht alle anderen Religionen illegal.</p><p><strong>Besprecht zum Abschluss:</strong> Welche Veränderung rechtfertigt den Begriff „Wende“ am stärksten? Belegt eure Antwort mit zwei Ereignissen.</p>`,'Die Stadtchronik · vollständig');const a=actions();button('Mein Notizbuch öffnen',showJournal,'primary',a);button('Stadt weiter erkunden',close,'',a);return;}
   const sum=G.summaries?.[id];const fallback=G.notes[id]?.[1]||(id==='map312'?'Die Karte ist vollständig. Konstantins Zelt ist jetzt zugänglich.':'Die Zeitfolge stimmt. Die Argumentationsbrücke ist jetzt zugänglich.');
-  const sealHtml=p.seal?`<div class="seal-award${already?'':' fresh'}">${sealMedal(p.seal,true)}<div class="seal-award-text"><span class="seal-kicker">Erkenntnis-Siegel gesichert</span><strong>„${esc(p.seal)}“</strong><span class="seal-count">${state.seals.length} von 6 Siegeln</span><div class="seal-row">${G.seals.map(n=>`<span class="mini-seal${state.seals.includes(n)?' got':''}" title="${esc(n)}">${state.seals.includes(n)?esc(G.sealInfo?.[n]?.sym||'✦'):''}</span>`).join('')}</div></div></div>`:'';
+  const sealHtml=p.seal?(window.Seals?window.Seals.reward(p.seal,{owned:state.seals,fresh:!already}):`<p class="reward-line">Siegel „${esc(p.seal)}“</p>`):'';
   const body=sum?`<section class="learned"><h3>Das hast du herausgefunden</h3><ul>${sum.learned.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><div class="merke"><span>Merke</span><p>${esc(sum.merke)}</p></div>`:`<p class="intro-copy">${esc(fallback)}</p>`;
   const extra=`${p.reward?`<p class="reward-line"><img src="assets/inventory/${p.reward}.svg" alt=""> Neu in deinem Botenbeutel: <strong>${esc(G.items[p.reward])}</strong></p>`:''}${sum?.next?`<p class="next-line">➜ ${esc(sum.next)}</p>`:''}`;
   open(already?'Erinnerung erneut erschlossen':'Der Mechanismus öffnet sich',sealHtml+body+extra,'Eine neue Spur','reward');const a=actions();button('Weiter erkunden',close,'primary',a);button('Stadtkarte ansehen',showMap,'',a);
  }
- function sealMedal(name,big){const inf=G.sealInfo?.[name]||{sym:'✦',color:'#6b4b1f'};return `<svg class="seal-medal${big?' big':''}" viewBox="0 0 120 120" role="img" aria-label="Siegel ${esc(name)}"><defs><radialGradient id="wax-${esc(name)}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#f7dc93"/><stop offset=".55" stop-color="#d5a24a"/><stop offset="1" stop-color="#8a5f1c"/></radialGradient></defs><path d="M60 4c7 0 9 6 15 7s11-3 16 2 2 11 5 16 10 5 12 12-4 10-4 16 6 10 4 17-9 7-12 12 0 12-5 16-11 0-16 2-8 8-15 8-9-6-15-7-11 3-16-2-2-11-5-16-10-5-12-12 4-10 4-16-6-10-4-17 9-7 12-12 0-12 5-16 11 0 16-2 8-8 15-8z" fill="url(#wax-${esc(name)})" stroke="#6e4a14" stroke-width="2"/><circle cx="60" cy="60" r="38" fill="none" stroke="#fff3c4" stroke-width="2" opacity=".7"/><circle cx="60" cy="60" r="33" fill="${inf.color}" opacity=".92"/><text x="60" y="${name.length>4?57:60}" text-anchor="middle" dominant-baseline="middle" font-size="26" fill="#fff3d0">${esc(inf.sym)}</text><text x="60" y="80" text-anchor="middle" font-size="${name.length>6?11:13}" font-weight="700" letter-spacing="1" fill="#fff3d0" font-family="Georgia,serif">${esc(name.toUpperCase())}</text></svg>`;}
  function reset(){open('Ein neues Spiel beginnen?','<p>Der Spielstand auf diesem Gerät wird ersetzt. Lade bei Bedarf zuerst dein Notizbuch herunter.</p>','Spielmenü');const a=actions();button('Neues Spiel starten',()=>{try{localStorage.removeItem(KEY);}catch(e){}window.BonusGames?.reset();state=fresh();state.started=true;selected=null;activePuzzle=null;close();render();info(G.scenes[0].name,G.scenes[0].intro);},'danger',a);button('Abbrechen',menu,'',a);}
 
  function continuationMenu(){

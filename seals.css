@@ -1,0 +1,152 @@
+/* Siegel – gemeinsames visuelles System (seals.js).
+   Medaillon · leere Fassung · Zustände · Sammlung · Belohnung · Siegelrad in der Basilika. */
+.seal-defs-host{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+:root{--seal-gold:#f3d58c;--seal-bronze:#8a5a24;--seal-dark:#2a1a08;--seal-glow:#ffe3a0}
+
+/* ---------- Medaillon und Fassung ---------- */
+.seal-medallion,.seal-setting{display:block;width:var(--seal-size,64px);height:var(--seal-size,64px);flex:none;position:relative}
+.seal-medallion svg,.seal-medallion img,.seal-setting svg{display:block;width:100%;height:100%;overflow:visible}
+.seal-medallion svg,.seal-medallion img{filter:drop-shadow(0 3px 3px #2a180466)}
+.seal-medallion.big{--seal-size:clamp(104px,calc(var(--u)*7.6),160px)}
+
+/* ---------- Siegel mit Zustand ---------- */
+.seal-token{--seal-size:clamp(58px,calc(var(--u)*4.4),84px);display:grid;justify-items:center;align-content:start;gap:.15em;position:relative;
+ min-width:0;min-height:0;margin:0;padding:.35em .25em .4em;border:0;border-radius:14px;background:none;box-shadow:none;color:#3a2610;font:inherit;text-align:center;line-height:1.15}
+#modal .seal-token{font-size:var(--fs-s)}
+.seal-token .seal-name{font-weight:700;letter-spacing:.02em;font-size:max(14px,calc(var(--u)*.95))}
+.seal-token .seal-state{font-size:max(11px,calc(var(--u)*.72));letter-spacing:.08em;text-transform:uppercase;color:#6b5634}
+.seal-token .seal-medallion{transition:transform .22s cubic-bezier(.3,1.4,.5,1),filter .22s}
+.seal-token.is-locked .seal-name{color:#7a6848;font-weight:600}
+.seal-token.is-locked .seal-state{color:#8a7654}
+.seal-token.is-selected .seal-medallion{transform:translateY(-5px) scale(1.08);filter:drop-shadow(0 0 7px var(--seal-glow)) drop-shadow(0 0 14px #ffc85a99)}
+.seal-token.is-selected .seal-state{color:#1f6b57;font-weight:700}
+.seal-token.is-placed .seal-medallion{opacity:.38;filter:grayscale(.55) sepia(.3)}
+.seal-token.is-placed .seal-state{color:#1f6b57}
+.seal-token.is-placed .seal-state:before{content:'✓ '}
+button.seal-token{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button.seal-token:not(:disabled):hover .seal-medallion{transform:translateY(-3px)}
+button.seal-token.is-selected:hover .seal-medallion{transform:translateY(-5px) scale(1.08)}
+button.seal-token:active{transform:none}
+button.seal-token:disabled{opacity:1;cursor:default}
+button.seal-token:focus-visible{outline:3px solid #2d8a7a;outline-offset:2px}
+
+/* ---------- Sammlung (Belohnung, Notizbuch, Tor) ---------- */
+.seal-collection{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.3em;margin:.5em 0;padding:.55em .5em .35em;border-radius:12px;
+ background:linear-gradient(180deg,#5a3d22,#3e2814);box-shadow:inset 0 2px 6px #0009,0 1px 0 #fff6;border:2px solid #2a1a0a}
+.seal-collection .seal-slot{display:grid;justify-items:center;border-radius:10px;background:radial-gradient(circle at 50% 38%,#6b2f2a,#3a1614 70%);box-shadow:inset 0 3px 7px #000a}
+.seal-collection .seal-token{color:#f4e2bb}
+.seal-collection .seal-token .seal-state{color:#d9c299}
+.seal-collection .seal-token.is-locked .seal-name{color:#bfa77c}
+.seal-collection .seal-token.is-placed .seal-medallion{opacity:1;filter:none}
+.seal-collection.compact .seal-token{--seal-size:clamp(38px,calc(var(--u)*2.6),50px);padding:.25em .1em}
+.seal-collection.compact .seal-name{font-size:max(11px,calc(var(--u)*.72))}
+@media(max-width:560px){.seal-collection{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* ---------- Belohnung nach einem Rätsel ---------- */
+#modal .seal-reward{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"medal banner" "medal row";align-items:center;gap:.35em calc(var(--u)*1.1);margin:.2em 0 .8em;padding:calc(var(--u)*.7) calc(var(--u)*1);
+ border-radius:16px;border:2px solid #9c7438;background:radial-gradient(ellipse at 22% 40%,#fff4d2 0,#f3e0b5 45%,#e6cc98 100%);box-shadow:inset 0 0 0 5px #f7e9c6,inset 0 0 0 6px #b9965a,0 6px 16px #5a3a0f33;position:relative;overflow:hidden}
+.seal-reward-stage{grid-area:medal;position:relative;display:grid;place-items:center}
+.seal-reward-light{position:absolute;inset:-35%;border-radius:50%;background:radial-gradient(circle,#fff6d6 0,#ffe7a8aa 30%,transparent 65%);opacity:.8}
+.seal-reward-glint{position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none}
+.seal-reward-glint:after{content:'';position:absolute;top:-20%;bottom:-20%;width:30%;left:-60%;background:linear-gradient(100deg,transparent,#fffbe8cc,transparent);transform:skewX(-18deg);opacity:0}
+.seal-banner{grid-area:banner;align-self:end;display:flex;flex-direction:column;gap:.05em;min-width:0;position:relative;padding:.4em 1.4em .5em;
+ background:linear-gradient(180deg,#fbf0d3,#ecd6a6);border:1px solid #a8844a;border-radius:4px;box-shadow:0 3px 8px #5a3a0f33;
+ clip-path:polygon(0 0,100% 0,96% 50%,100% 100%,0 100%,4% 50%)}
+.seal-banner-kicker{font-size:var(--fs-xs);letter-spacing:.16em;text-transform:uppercase;color:#6b5634}
+.seal-banner-name{font-size:calc(var(--u)*1.9);line-height:1.05;color:#3a2610;letter-spacing:.02em}
+.seal-banner-meaning{font-size:var(--fs-s);color:#4d3c20;font-style:italic;line-height:1.3}
+.seal-reward-collection{grid-area:row;align-self:start;display:flex;flex-direction:column;gap:.1em}
+.seal-reward-collection .seal-collection{margin:.3em 0 0}
+.seal-count{font-size:var(--fs-xs);color:#4d3c20;text-align:center;letter-spacing:.04em}
+/* kurze, ruhige Prägung: Medaillon senkt sich, rastet ein, ein Lichtstreif gleitet darüber; Sammlung übernimmt es */
+.seal-reward.fresh .seal-medallion.big{animation:seal-press .75s cubic-bezier(.25,1.35,.45,1) both}
+.seal-reward.fresh .seal-reward-light{animation:seal-light 1.4s ease-out both}
+.seal-reward.fresh .seal-reward-glint:after{animation:seal-glint .9s .55s ease-in-out both}
+.seal-reward.fresh .seal-banner{animation:seal-banner .5s .2s ease-out both}
+.seal-reward.fresh .just-added .seal-medallion{animation:seal-join .6s .8s cubic-bezier(.3,1.5,.5,1) both}
+.seal-collection .just-added{box-shadow:inset 0 3px 7px #000a,0 0 0 2px #f3d58c,0 0 12px #ffd98a88}
+@keyframes seal-press{0%{transform:scale(1.35) rotate(-14deg);opacity:0;filter:blur(2px)}55%{transform:scale(.94) rotate(2deg);opacity:1;filter:none}100%{transform:none}}
+@keyframes seal-light{0%{opacity:0;transform:scale(.6)}35%{opacity:1}100%{opacity:.55;transform:none}}
+@keyframes seal-glint{0%{left:-60%;opacity:0}20%{opacity:1}100%{left:130%;opacity:0}}
+@keyframes seal-banner{0%{opacity:0;transform:translateX(-10px)}100%{opacity:1;transform:none}}
+@keyframes seal-join{0%{transform:scale(.3);opacity:0}100%{transform:none;opacity:1}}
+@media(max-width:620px){#modal .seal-reward{grid-template-columns:1fr;grid-template-areas:"medal" "banner" "row";padding:calc(var(--u)*.8);justify-items:center;text-align:center}.seal-banner{width:100%}}
+
+/* Siegel-Hinweisfenster (Tor, fehlende Siegel) */
+#modal[data-mode=seals]:not(:has(.seal-chamber)){width:min(calc(var(--u)*44),calc(100vw - 24px))}
+
+/* ---------- Das Siegelrad in der Basilika ---------- */
+#modal[data-mode=seals]:has(.seal-chamber){width:min(calc(var(--u)*72),calc(100vw - 16px));max-width:none;height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);overflow:hidden;padding:calc(var(--u)*.6) calc(var(--u)*1) calc(var(--u)*.8)}
+#modal[data-mode=seals][open]:has(.seal-chamber){display:flex;flex-direction:column}
+#modal:has(.seal-chamber) h2{margin:.05em 0 .25em;font-size:calc(var(--u)*1.6)}
+#modal:has(.seal-chamber) #modal-content{flex:1;min-height:0;display:flex;flex-direction:column;gap:.4em}
+#modal:has(.seal-chamber) #modal-content>.actions{margin-top:0}
+.seal-chamber{flex:1;min-height:0;position:relative;display:grid;grid-template-columns:minmax(190px,27%) 1fr;grid-template-rows:minmax(0,1fr) auto;grid-template-areas:"case relief" "plaque plaque";gap:calc(var(--u)*.6);
+ padding:calc(var(--u)*.8);border-radius:16px;overflow:hidden;border:3px solid #6b4a22;box-shadow:inset 0 0 0 2px #d9b877,0 6px 18px #0006;isolation:isolate}
+/* Basilika als Kulisse: die Wand mit dem echten Siegelrad, weich und abgedunkelt */
+.seal-chamber-bg{position:absolute;inset:0;z-index:-1;background:
+ radial-gradient(ellipse at 62% 45%,transparent 0,#1a100680 55%,#120a04e6 100%),
+ url('assets/backgrounds/v3-basilica.png') 46% 34%/260% auto no-repeat,#3a2a18;filter:saturate(.85) blur(1.5px);transform:scale(1.04)}
+.seal-chamber:before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(90deg,#0000 0 118px,#0000001a 118px 121px),linear-gradient(180deg,#0000 60%,#0000004d)}
+
+/* Siegelkasten (links bzw. unten) */
+.seal-case{grid-area:case;min-height:0;display:flex;flex-direction:column;gap:.4em;padding:.55em .55em .6em;border-radius:12px;
+ background:repeating-linear-gradient(94deg,#6d4726 0 6px,#7a5230 6px 9px,#65411f 9px 15px),#6d4726;border:3px solid #3a230c;
+ box-shadow:inset 0 0 0 2px #a07644,inset 0 6px 14px #0007,0 8px 18px #000a}
+.seal-case-title{margin:0 auto;padding:.2em .9em;font-size:var(--fs-xs)!important;letter-spacing:.14em;text-transform:uppercase;color:#3a2610;border-radius:4px;
+ background:linear-gradient(180deg,#f6dc96,#c8924a);border:1px solid #5a3812;box-shadow:0 2px 3px #0006}
+.seal-rack{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,1fr);gap:.4em}
+.seal-rack .seal-token{--seal-size:clamp(56px,min(calc(var(--u)*4.6),9.5vh),92px);align-content:center;border-radius:12px;background:radial-gradient(circle at 50% 40%,#6e2d28,#3a1513 72%);box-shadow:inset 0 3px 8px #000b,0 1px 0 #ffffff26;color:#f6e6c4;padding:.3em .2em}
+.seal-rack .seal-token .seal-state{color:#e0c99c}
+.seal-rack .seal-token.is-selected{background:radial-gradient(circle at 50% 40%,#8a4a2c,#4a1d16 72%);box-shadow:inset 0 3px 8px #0009,0 0 0 3px #f3d58c,0 0 14px #ffd98a88}
+.seal-rack .seal-token.is-selected .seal-state{color:#ffe3a0}
+.seal-rack .seal-token.is-placed .seal-state{color:#b5e0cf}
+
+/* Relief mit Rad */
+.seal-relief{grid-area:relief;min-height:0;min-width:0;display:grid;place-items:center;container-type:size}
+.seal-wheel{position:relative;width:min(100cqw,100cqh);aspect-ratio:1;max-width:100%;max-height:100%}
+@supports not (width:1cqw){.seal-wheel{width:min(100%,62vh)}}
+.seal-wheel-art{position:absolute;inset:0;width:100%;height:100%;display:block;filter:drop-shadow(0 10px 18px #000a)}
+.seal-wheel-art .seal-ring{transform-origin:200px 200px;transition:transform 1.4s cubic-bezier(.4,0,.2,1)}
+.seal-chamber.turning .seal-wheel-art .seal-ring{transform:rotate(60deg)}
+.seal-chamber.complete .seal-wheel-art .seal-hub{filter:drop-shadow(0 0 6px #ffe3a0)}
+.seal-chamber.complete .seal-wheel-art{filter:drop-shadow(0 10px 18px #000a) drop-shadow(0 0 22px #ffcf6a66)}
+
+/* Fassungen: echte Vertiefungen im Rad, als große Touch-Ziele */
+.seal-socket{position:absolute;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);display:block;min-height:0;padding:0;margin:0;border:0;border-radius:50%;background:none;box-shadow:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.seal-socket:active{transform:translate(-50%,-50%)}
+.seal-socket:disabled{opacity:1;cursor:default}
+.seal-socket .seal-setting,.seal-socket .seal-medallion{width:100%;height:100%;--seal-size:100%}
+.seal-socket .seal-socket-label{position:absolute;left:50%;top:100%;transform:translate(-50%,-38%);white-space:nowrap;padding:.1em .6em;font-size:clamp(11px,2.7cqmin,16px);font-weight:700;letter-spacing:.04em;color:#3a2610;
+ border-radius:3px;background:linear-gradient(180deg,#f6dc96,#c8924a);border:1px solid #5a3812;box-shadow:0 2px 3px #0007}
+.seal-socket:focus-visible{outline:3px solid #7fe0cf;outline-offset:3px}
+.seal-wheel.holding .seal-socket:not(.fitted) .seal-setting{animation:seal-await 1.6s ease-in-out infinite}
+.seal-socket.fitted .seal-medallion svg{filter:drop-shadow(0 2px 2px #000a)}
+.seal-socket.snap .seal-medallion{animation:seal-snap .55s cubic-bezier(.25,1.5,.45,1) both}
+.seal-socket.snap:after{content:'';position:absolute;inset:-12%;border-radius:50%;pointer-events:none;border:3px solid #ffe7a8;animation:seal-dust .6s .2s ease-out both}
+.seal-socket.refuse{animation:seal-refuse .35s ease-in-out}
+@keyframes seal-await{0%,100%{filter:none}50%{filter:drop-shadow(0 0 7px #ffe3a0)}}
+@keyframes seal-snap{0%{transform:scale(1.3) rotate(-25deg);opacity:0}60%{transform:scale(.93) rotate(3deg);opacity:1}100%{transform:none}}
+@keyframes seal-dust{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+@keyframes seal-refuse{0%,100%{margin-left:0}25%{margin-left:-6px}75%{margin-left:6px}}
+
+/* Messingschild für Rückmeldungen */
+.seal-plaque{grid-area:plaque;margin:0!important;justify-self:center;max-width:min(100%,46em);padding:.45em 1.2em;text-align:center;font-size:var(--fs-s)!important;line-height:1.35;color:#3a2610;border-radius:6px;
+ background:linear-gradient(180deg,#f7e3a8,#d6a95c);border:2px solid #5a3812;box-shadow:inset 0 0 0 1px #fff3c8,0 4px 10px #0008}
+.seal-plaque.hint{background:linear-gradient(180deg,#f6d9c4,#d9a58a)}
+.seal-plaque.good{background:linear-gradient(180deg,#f3f0c4,#c9c07a)}
+
+/* Hochformat: Rad oben, Kasten als Leiste darunter */
+@media (orientation:portrait),(max-width:700px){
+ .seal-chamber{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto auto;grid-template-areas:"relief" "case" "plaque"}
+ .seal-rack{grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:auto}
+ .seal-rack .seal-token{--seal-size:clamp(50px,min(calc(var(--u)*4.4),13vw),84px)}
+}
+@media (orientation:portrait) and (max-width:560px){.seal-rack{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){
+ .seal-reward.fresh .seal-medallion.big,.seal-reward.fresh .seal-reward-light,.seal-reward.fresh .seal-reward-glint:after,.seal-reward.fresh .seal-banner,.seal-reward.fresh .just-added .seal-medallion,
+ .seal-socket.snap .seal-medallion,.seal-socket.snap:after,.seal-wheel.holding .seal-socket .seal-setting,.seal-socket.refuse{animation:none}
+ .seal-wheel-art .seal-ring{transition:none}
+}
+/* Nach einer Belohnung bleiben „Weiter erkunden“ und „Stadtkarte“ immer erreichbar – der Fortschritt wird nicht durch Scrollen gebremst */
+#modal[data-mode=reward]:has(.seal-reward) #modal-content>.actions{position:sticky;bottom:calc(var(--u)*-1.6);z-index:2;margin-bottom:calc(var(--u)*-1.6);padding:.6em 0 calc(var(--u)*1.6);background:linear-gradient(180deg,#f3e4c500,#f3e4c5 30%)}

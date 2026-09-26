@@ -1,0 +1,138 @@
+/* Die Argumentationsbrücke (argbridge.js)
+   Bühne: Basilika als Kulisse, darüber die steinerne Brücke, unten die Ablage für Platten, Plaketten und Inschriften.
+   Die Brücke ist ein SVG im Raster -30 30 1060 410; die HTML-Ebenen (Satzanfänge, Bogenöffnungen) benutzen dasselbe Raster in Prozent. */
+
+.argbridge-game .ab-stage{display:flex;flex-direction:column;gap:1.2cqh;padding:1.6cqh 1.6cqw 1.8cqh;font-size:clamp(14px,2.55cqh,20px)}
+.argbridge-game .ab-stage>*{position:relative;z-index:1}
+.argbridge-game .ab-stage>.ab-bg{position:absolute;z-index:0}
+.ab-bg{background:radial-gradient(ellipse at 50% 38%,#0000 0,#1a1006a0 60%,#120a04e0 100%),url('assets/backgrounds/v3-basilica.png') 50% 30%/cover no-repeat,#3a2a18!important;filter:saturate(.9)}
+.art-scene .ab-bg{background:radial-gradient(ellipse at 50% 40%,#0000 40%,#120a0499 100%),var(--ab-scene) center/cover no-repeat,#3a2a18!important}
+
+/* Kopfzeile: Fortschritt + Stimme */
+.ab-top{display:flex;align-items:center;justify-content:center;gap:1em;min-height:2.4em}
+.ab-progress{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;gap:.35em;padding:.3em .5em;border-radius:999px;background:#1a1008b0;border:1px solid #c9a45a88}
+.ab-progress i{width:.9em;height:.9em;border-radius:50%;border:2px solid #c9a45a;background:#3a2810}
+.ab-progress i.done{background:radial-gradient(circle at 35% 30%,#fff2c0,#d9a441 60%,#8a5a1a)}
+.argbridge-game .ab-voice{position:static;transform:none;width:auto;background:#f1e2bf;max-width:min(78%,40em);margin:0 auto;font-size:1em;line-height:1.3;padding:.4em 1.4em}
+.argbridge-game .ab-voice.pop{animation:ab-pop .35s ease-out}
+.argbridge-game .sg-voice.good{background:#e6efd6}
+.argbridge-game .sg-voice.hint{background:#f7ead0;border-color:#b8862e;color:#4a3210}
+@keyframes ab-pop{from{transform:translateY(-6px);opacity:.3}}
+
+/* Brücke */
+.ab-bridge-wrap{flex:1 1 auto;min-height:0;display:grid;place-items:center;container-type:size}
+.ab-bridge{position:relative;width:min(100cqw,100cqh*2.585);aspect-ratio:1060/410;container-type:inline-size}
+.ab-bridge-art{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 10px 14px #000a)}
+.art-segments .ab-bridge-art .ab-arch,.art-segments .ab-bridge-art .ab-piers{display:none}
+.art-segments .ab-bridge{background:var(--ab-segments) 0 0/100% 200% no-repeat}
+.art-segments.bridge-built .ab-bridge{background-position:0 100%}
+.ab-piers .ab-cornice{fill:#e2cfa4}
+.ab-arch .ab-wall{fill:url(#ab-stone-g);stroke:#6b5434;stroke-width:1.5;opacity:0;transition:opacity .4s .3s}
+.ab-arch .ab-stone{fill:url(#ab-stone-g);stroke:#5e4a2c;stroke-width:1.6;opacity:0}
+.ab-arch .ab-key{fill:#e9c77e;stroke:#6b4414}
+.ab-arch .ab-deck{fill:#b89868;stroke:#5e4a2c;stroke-width:1.5;opacity:0;transition:opacity .4s .5s}
+.ab-arch .ab-rail{fill:#dcc79a;stroke:#6b5434;stroke-width:1.2;opacity:0;transition:opacity .4s .6s}
+.ab-arch .ab-balusters{fill:#8f7048;opacity:0;transition:opacity .4s .6s}
+.ab-arch .ab-ghost{fill:none;stroke:#f3dca6;stroke-opacity:.55;stroke-width:3;stroke-dasharray:10 9}
+.ab-arch.active .ab-ghost{stroke:#ffe3a0;stroke-opacity:1;stroke-width:4;animation:ab-ghost 1.6s ease-in-out infinite}
+.ab-arch.built .ab-ghost{display:none}
+.ab-arch.built .ab-wall,.ab-arch.built .ab-deck,.ab-arch.built .ab-rail,.ab-arch.built .ab-balusters{opacity:1}
+.ab-arch.built .ab-stone{opacity:1;animation:ab-drop .5s cubic-bezier(.3,1.4,.5,1) var(--d) both}
+@keyframes ab-ghost{50%{stroke-opacity:.45}}
+@keyframes ab-drop{0%{transform:translateY(-40px);opacity:0}100%{transform:none;opacity:1}}
+
+/* Satzanfänge als Bronzeschilder auf der Brüstung */
+.ab-head{position:absolute;left:calc((var(--i)*250 + 38)/1060*100%);width:calc(234/1060*100%);top:calc(40/410*100%);height:calc(74/410*100%);display:grid;place-items:center;padding:0 .4em;text-align:center;
+ font-size:clamp(12px,1.75cqw,19px);font-weight:700;line-height:1.1;color:#3a2610;border-radius:4px;background:linear-gradient(180deg,#f6dc96,#c8924a);border:2px solid #5a3812;box-shadow:inset 0 0 0 1px #fff3c8,0 4px 8px #0008;opacity:.72;transition:opacity .3s,box-shadow .3s}
+.ab-head.active{opacity:1;box-shadow:inset 0 0 0 1px #fff3c8,0 0 0 3px #ffe3a0,0 0 18px #ffd98a}
+.ab-head.built{opacity:1}
+.inscribed .ab-head{opacity:0;pointer-events:none}
+
+/* Bogenöffnungen: hier rastet die Platte ein */
+.ab-opening{position:absolute;left:calc((var(--i)*250 + 67)/1060*100%);width:calc(176/1060*100%);top:calc(178/410*100%);height:calc(236/410*100%);display:grid;place-items:center;pointer-events:none}
+.ab-arch-active-glow{display:none}
+.ab-set{display:grid;justify-items:center;gap:.25em;width:92%;padding:.5em .3em .6em;text-align:center;font-size:clamp(11px,1.6cqw,17px);font-weight:700;line-height:1.15;color:#3a2610;
+ border-radius:6px 6px 4px 4px;background:linear-gradient(180deg,#f3e6c6,#d8c092);border:2px solid #6b5434;box-shadow:inset 0 0 0 3px #efe0bb,inset 0 0 0 4px #b8986888,0 6px 10px #0008;animation:ab-set .55s cubic-bezier(.3,1.5,.5,1) both}
+.ab-set .ab-icon{width:2.4em;height:2.4em}
+@keyframes ab-set{0%{transform:translateY(-60%) scale(1.15);opacity:0}100%{transform:none;opacity:1}}
+
+/* Inschrift über der fertigen Brücke */
+.ab-inscription[hidden]{display:none!important}
+.ab-inscription{position:absolute;left:calc(10/1060*100%);right:calc(10/1060*100%);top:calc(38/410*100%);height:calc(80/410*100%);display:grid;place-items:center;padding:0 1.2em;text-align:center;
+ font-size:clamp(12px,1.75cqw,19px);font-style:italic;font-weight:600;line-height:1.2;color:#2e1c08;border-radius:4px;background:linear-gradient(180deg,#efe0bb,#cbb07c);border:2px solid #5e4a2c;box-shadow:inset 0 0 0 3px #f6ead0,inset 0 0 0 4px #9c7c4c,0 4px 10px #0009;animation:ab-carve 1.1s ease-out both}
+@keyframes ab-carve{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0 0 0)}}
+.ab-light{position:absolute;top:calc(20/410*100%);height:calc(110/410*100%);width:18%;left:-20%;border-radius:50%;background:radial-gradient(ellipse,#fff4c8cc,#ffe3a000 70%);opacity:0;pointer-events:none}
+.inscribed .ab-light{animation:ab-sweep 1.8s .4s ease-in-out both}
+@keyframes ab-sweep{0%{left:-20%;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:102%;opacity:0}}
+
+/* Ablage unten */
+.ab-tray{flex:0 0 auto;display:flex;flex-direction:column;gap:.5em;padding:.6em .8em .8em;border-radius:12px;
+ background:repeating-linear-gradient(94deg,#6d4726 0 6px,#7a5230 6px 9px,#65411f 9px 15px),#6d4726;border:3px solid #3a230c;box-shadow:inset 0 0 0 2px #a07644,inset 0 6px 14px #0007,0 8px 18px #000a}
+.ab-ask{display:flex;align-items:baseline;justify-content:center;gap:.7em;margin:0!important;color:#f6e6c4;text-align:center;font-size:1em!important}
+.ab-ask strong{font-size:1.15em;color:#ffe9b8}
+.ab-step{font-size:.78em;letter-spacing:.14em;text-transform:uppercase;color:#e0c99c}
+.ab-count{display:inline-flex;gap:.3em}
+.ab-count i{width:1.1em;height:1.1em;border-radius:50%;border:2px dashed #e0c99c}
+.ab-count i.on{border:2px solid #5a1410;background:radial-gradient(circle at 35% 30%,#e0604a,#8c2a1a 70%)}
+.argbridge-game button:not(.primary){color:inherit}
+.argbridge-game button{font-family:var(--serif);touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
+.argbridge-game button:focus-visible{outline:3px solid #7fe0cf;outline-offset:2px}
+
+/* Inschriftplatten (Phase A) */
+.ab-plates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6em}
+.ab-plate{position:relative;display:flex;align-items:center;gap:.6em;min-height:4.2em;margin:0;padding:.55em .8em;text-align:left;font-size:1em;line-height:1.25;color:#2e1c08;border-radius:8px;
+ background:linear-gradient(180deg,#f3e6c6,#d6bd8c);border:2px solid #6b5434;box-shadow:inset 0 0 0 3px #efe0bb,inset 0 0 0 4px #b8986866,0 4px 0 #3a230c,0 6px 10px #0007;transition:transform .15s}
+.art-tokens .ab-plate{background:var(--ab-tokens) 0 0/300% 100% no-repeat;box-shadow:0 6px 10px #0007}
+.ab-plate:not(:disabled):active{transform:translateY(2px)}
+.ab-plate .ab-icon{flex:none;width:2.6em;height:2.6em}
+.ab-plate.rise{animation:ab-rise .5s ease-in both}
+@keyframes ab-rise{100%{transform:translateY(-120%) scale(.8);opacity:0}}
+.ab-plate.cracked{opacity:.62;transform:rotate(-1.2deg);cursor:default}
+.art-tokens .ab-plate.cracked{background-position:100% 0}
+.ab-crack{position:absolute;right:.5em;top:8%;bottom:8%;width:1.1em;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 60' preserveAspectRatio='none'%3E%3Cpath d='M12 0 L7 13 L13 22 L6 36 L12 46 L8 60' fill='none' stroke='%238c2a1a' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M7 13 L2 17 M13 22 L18 26 M6 36 L1 38' fill='none' stroke='%238c2a1a' stroke-width='1.4'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+
+/* Irrtums-Plaketten (Phase B) */
+.ab-plaques{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55em}
+.ab-plaque{position:relative;min-height:3.6em;margin:0;padding:.5em 1.6em;text-align:center;font-size:1em;line-height:1.25;color:#2e1c08;border-radius:999px;
+ background:radial-gradient(ellipse at 50% 30%,#f7ecd2,#dcc59a);border:3px double #8a6a3a;box-shadow:0 4px 0 #3a230c,0 6px 10px #0007}
+.ab-plaque .ab-mark{position:absolute;right:-.3em;top:-.7em;display:none;padding:.15em .55em;border-radius:999px;font-size:.72em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff3e0;box-shadow:0 2px 4px #0008}
+.ab-plaque.simple{background:radial-gradient(ellipse at 50% 30%,#f6e0d4,#d9b19a);border-color:#8c2a1a}
+.ab-plaque.simple:after{content:'';position:absolute;left:.9em;top:10%;bottom:10%;width:1em;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 60' preserveAspectRatio='none'%3E%3Cpath d='M12 0 L7 13 L13 22 L6 36 L12 46 L8 60' fill='none' stroke='%238c2a1a' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M7 13 L2 17 M13 22 L18 26 M6 36 L1 38' fill='none' stroke='%238c2a1a' stroke-width='1.4'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.ab-plaque.simple .ab-mark{display:block;background:radial-gradient(circle at 35% 30%,#d8583f,#8c2a1a 70%);animation:ab-stamp .35s cubic-bezier(.3,1.6,.5,1) both}
+.ab-plaque.sound{border-color:#2d5a4b;background:radial-gradient(ellipse at 50% 30%,#eef2df,#cfd9b8)}
+.ab-plaque.sound .ab-mark{display:block;background:radial-gradient(circle at 35% 30%,#4f8a74,#1f4d3f 70%)}
+.ab-plaque:disabled{cursor:default;opacity:1}
+@keyframes ab-stamp{0%{transform:scale(2.2) rotate(-18deg);opacity:0}100%{transform:none;opacity:1}}
+
+/* Inschriften (Phase C) */
+.ab-tablets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55em}
+.ab-tablet{position:relative;min-height:3.6em;margin:0;padding:.55em 1em;text-align:center;font-size:.98em;line-height:1.25;font-style:italic;color:#2e1c08;border-radius:6px;
+ background:linear-gradient(180deg,#efe0bb,#cbb07c);border:2px solid #5e4a2c;box-shadow:inset 0 0 0 3px #f6ead0,inset 0 0 0 4px #9c7c4c88,0 4px 0 #3a230c,0 6px 10px #0007}
+.ab-tablet.right{box-shadow:inset 0 0 0 3px #f6ead0,0 0 0 3px #ffe3a0,0 0 16px #ffd98a}
+.ab-tablet.cracked{opacity:.6;cursor:default}
+.ab-tablet.cracked:after{content:'';position:absolute;right:.6em;top:10%;bottom:10%;width:1em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 60' preserveAspectRatio='none'%3E%3Cpath d='M12 0 L7 13 L13 22 L6 36 L12 46 L8 60' fill='none' stroke='%238c2a1a' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M7 13 L2 17 M13 22 L18 26 M6 36 L1 38' fill='none' stroke='%238c2a1a' stroke-width='1.4'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+
+/* Symbol aus Grafikbogen (optional) */
+.ab-icon-art{display:block;background:var(--ab-icons) 0 0/500% 200% no-repeat}
+
+/* Abschluss: die ganze Argumentationskette */
+.argbridge-game .ab-stage>.sg-finale{position:absolute;z-index:20}
+.ab-scroll{max-height:94%;overflow:auto;padding:.9em 1.4em!important}
+.ab-scroll h3{font-size:1.35em!important}
+.ab-scroll{width:min(40em,90%)!important}
+.ab-chain{list-style:none;margin:.4em 0 .6em;padding:0;display:grid;gap:.35em;text-align:left}
+.ab-chain li{display:flex;align-items:center;gap:.6em;font-size:.98em;line-height:1.25}
+.ab-chain .ab-icon{flex:none;width:2.2em;height:2.2em}
+
+/* Hochformat: Brücke oben, Ablage wächst, Platten untereinander */
+@media (orientation:portrait){
+ .argbridge-game .ab-stage{font-size:clamp(14px,2cqh,19px)}
+ .ab-plates{grid-template-columns:1fr}
+ .ab-plaques{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ab-tablets{grid-template-columns:1fr}
+ .ab-progress{position:static;transform:none}
+ .ab-top{flex-direction:column;gap:.4em}
+ .argbridge-game .ab-voice{max-width:100%}
+}
+@media (max-height:600px) and (orientation:landscape){.argbridge-game .ab-stage{font-size:14px}.ab-plate{min-height:3.4em}}
+@media (prefers-reduced-motion:reduce){.argbridge-game *{animation:none!important;transition:none!important}}

@@ -1,9 +1,9 @@
-/* Schrift: EB Garamond (freie Garamond-Version, SIL Open Font License).
-   Die Schriftdateien werden lokal aus assets/fonts geladen (keine Verbindung zu Google, datenschutzfreundlich).
-   Fehlen die Dateien, greift eine installierte Garamond (Windows mit Office), auf iPad/Mac „Hoefler Text“, sonst Georgia. */
-@font-face{font-family:'Wende Garamond';src:local('EB Garamond'),local('EBGaramond-Regular'),url('assets/fonts/EBGaramond-Regular.woff2') format('woff2'),url('assets/fonts/EBGaramond-Regular.ttf') format('truetype');font-weight:400 500;font-style:normal;font-display:swap}
-@font-face{font-family:'Wende Garamond';src:local('EB Garamond Italic'),local('EBGaramond-Italic'),url('assets/fonts/EBGaramond-Italic.woff2') format('woff2'),url('assets/fonts/EBGaramond-Italic.ttf') format('truetype');font-weight:400 500;font-style:italic;font-display:swap}
-@font-face{font-family:'Wende Garamond';src:local('EB Garamond SemiBold'),local('EBGaramond-SemiBold'),url('assets/fonts/EBGaramond-SemiBold.woff2') format('woff2'),url('assets/fonts/EBGaramond-SemiBold.ttf') format('truetype');font-weight:600 800;font-style:normal;font-display:swap}
+/* Schrift: EB Garamond (freie Garamond-Version, SIL Open Font License, siehe assets/fonts/OFL.txt).
+   Eine Datei je Stil enthält alle Stärken von 400 bis 800 (variable Schrift, auf lateinische,
+   deutsche und griechische Zeichen reduziert). Geladen vom eigenen Server, keine Verbindung zu Google.
+   Fehlen die Dateien, greift eine installierte Garamond, auf iPad/Mac „Hoefler Text“, sonst Georgia. */
+@font-face{font-family:'Wende Garamond';src:url('assets/fonts/EBGaramond-Variable.woff') format('woff');font-weight:400 800;font-style:normal;font-display:swap}
+@font-face{font-family:'Wende Garamond';src:url('assets/fonts/EBGaramond-Italic-Variable.woff') format('woff');font-weight:400 800;font-style:italic;font-display:swap}
 :root{--serif:'Wende Garamond','EB Garamond',Garamond,'Adobe Garamond Pro','Hoefler Text','Palatino Linotype',Palatino,Georgia,serif}
 /* Garamond wirkt bei gleicher Größe kleiner, daher etwas größer setzen */
 :root{--u:max(15px,min(1.62vw,2.38vh))}
