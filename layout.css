@@ -13,7 +13,8 @@
 #app .bar-right{justify-content:flex-end}
 #app .game-button{display:inline-flex;align-items:center;gap:.45em;min-height:48px;height:calc(var(--bar) - 16px);padding:0 1em 0 .75em;border:2px solid #fff0c8;border-radius:12px;background:linear-gradient(#f0cf8c,#d9a95c);color:#231b0f;font:700 calc(var(--u)*.97)/1 system-ui,-apple-system,'Segoe UI',sans-serif;box-shadow:0 3px 0 #7a5a2c,0 6px 14px #0007;backdrop-filter:none;cursor:pointer;white-space:nowrap;transition:transform .1s,filter .15s}
 #app .game-button .ico{font-size:1.35em;line-height:1}
-#app .game-button:hover{filter:brightness(1.08)}
+
+@media (hover:hover) and (pointer:fine){#app .game-button:hover{filter:brightness(1.08)}}
 #app .game-button:active{transform:translateY(2px);box-shadow:0 1px 0 #7a5a2c,0 3px 8px #0007}
 #app .game-button:focus-visible,#app .icon-only:focus-visible{outline:3px solid #8fe0d4;outline-offset:3px}
 #app .hint-button{background:linear-gradient(#fbe3a6,#ecc071)}
@@ -127,7 +128,8 @@
 #app #inventory .slot-empty{opacity:.85}
 #app #inventory .item-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2em;width:auto;min-height:0;padding:.35em;border:0;color:#3a2412;font:600 calc(var(--u)*.72)/1.15 system-ui,sans-serif;text-align:center;cursor:pointer;transition:transform .12s,background .12s}
 #app #inventory .item-card img{width:62%!important;height:auto!important;aspect-ratio:1;margin:0!important;filter:drop-shadow(0 3px 3px #5a2e1766)}
-#app #inventory .item-card:hover{transform:scale(1.04);background:#fff1dc}
+
+@media (hover:hover) and (pointer:fine){#app #inventory .item-card:hover{transform:scale(1.04);background:#fff1dc}}
 #app #inventory .item-card.selected{background:#cdeee2;outline:3px solid #2d8f7b;outline-offset:-3px}
 #app #inventory .inv-help{margin:.8em .2em 0;font:var(--fs-xs)/1.4 system-ui,sans-serif!important;color:#fbe7c3;text-align:center}
 #app #inventory .bag-close{position:absolute;top:calc(var(--u)*.5);right:calc(var(--u)*.5);width:calc(var(--u)*1.9);height:calc(var(--u)*1.9);min-height:0;padding:0;border:2px solid #4a2a17;border-radius:50%;background:#f8e3c7;color:#3a2412;font-size:calc(var(--u)*.9);box-shadow:none;cursor:pointer}
@@ -164,7 +166,8 @@
 #modal button,.racer-stage,.mg-choices,.slider-board{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .dark-stage,.racer-stage canvas{touch-action:none}
 .racer,.racer *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-@media(hover:none){#modal .tile:hover,#app #inventory .item-card:hover,#app .game-button:hover{transform:none;filter:none}}
+@media(hover:none){
+@media (hover:hover) and (pointer:fine){#modal .tile:hover,#app #inventory .item-card:hover,#app .game-button:hover{transform:none;filter:none}}}
 /* Beim Minispiel die Szenen-Tipps (Tasten) auf Touch-Geräten ausblenden */
 @media(hover:none){.mg-keys{display:none}}
 @media(orientation:portrait){.racer-stage:not(.dark-stage){height:clamp(300px,calc(100dvh - 24rem),calc(var(--u)*46))}.skin-stamp .file{width:84%}}
@@ -184,7 +187,8 @@
 .pm-label{margin-top:.3em;padding:.12em .6em .18em;max-width:100%;background:linear-gradient(#fbf1d8,#ecd7a8);border:1.5px solid #8a6a3a;border-radius:3px;box-shadow:0 3px 6px #3a261055;text-align:center;line-height:1.1}
 .pm-label b{display:block;font-size:calc(var(--u)*.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pm-label small{display:block;font-size:calc(var(--u)*.56);color:#5a4630;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#modal .pm-place:hover .pm-medal,#modal .pm-place:focus-visible .pm-medal{transform:scale(1.08)}
+#modal .pm-place:focus-visible .pm-medal{transform:scale(1.08)}
+@media (hover:hover) and (pointer:fine){#modal .pm-place:hover .pm-medal{transform:scale(1.08)}}
 #modal .pm-place:focus-visible{outline:none}#modal .pm-place:focus-visible .pm-label{outline:3px solid #2d7a67}
 .pm-place.here .pm-medal{border-color:#2d7a67;box-shadow:0 0 0 3px #f3dca6,0 0 0 6px #2d7a67,0 6px 14px #0006;animation:here-pulse 1.8s ease-in-out infinite}
 @keyframes here-pulse{50%{box-shadow:0 0 0 3px #f3dca6,0 0 0 10px #2d7a6755,0 6px 14px #0006}}

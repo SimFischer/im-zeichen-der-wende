@@ -5,7 +5,8 @@
 .bonus-spot .bonus-pin{display:block;width:calc(var(--u)*.95);height:calc(var(--u)*.95);min-width:14px;min-height:14px;margin:0 auto;border-radius:50%;border:2px solid #f3dca6aa;background:radial-gradient(circle at 35% 30%,#f2d9a0,#9c6f33);box-shadow:0 0 0 3px #21190b55,0 1px 6px #000c;font:700 10px/1 Georgia,serif;color:#3a2610;opacity:.85;animation:bonus-glint 4.8s ease-in-out infinite}
 .bonus-spot .bonus-label{position:absolute;left:50%;top:calc(50% + calc(var(--u)*.7));transform:translateX(-50%);width:max-content;max-width:min(calc(var(--u)*12),28vw);padding:.15em .6em;border:1px solid #dcc49966;border-radius:20px;background:#20352eb8;font-size:var(--fs-xs);line-height:1.25;opacity:.78;text-shadow:0 1px 3px #000;pointer-events:none}
 .bonus-spot .bonus-label small{display:block;font-size:.78em;letter-spacing:.14em;text-transform:uppercase;color:#f0d59a}
-.bonus-spot:hover .bonus-label,.bonus-spot:focus-visible .bonus-label{opacity:1;background:#20352ef2}
+.bonus-spot:focus-visible .bonus-label{opacity:1;background:#20352ef2}
+@media (hover:hover) and (pointer:fine){.bonus-spot:hover .bonus-label{opacity:1;background:#20352ef2}}
 .bonus-spot.found .bonus-pin{background:radial-gradient(circle at 35% 30%,#f7dc93,#c08a36);border-color:#fff0c8;opacity:1}
 @keyframes bonus-glint{0%,80%,100%{box-shadow:0 0 0 3px #21190b55,0 1px 6px #000c}88%{box-shadow:0 0 0 3px #21190b55,0 0 14px 4px #f7dc93aa}}
 #scene.talking .bonus-spot{opacity:.35}

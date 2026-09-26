@@ -1,0 +1,145 @@
+/* Produktionsrunde: Text und Trefferflächen folgen den tatsächlichen Bildflächen. */
+.w-img,.fb-art,.scroll-art,.tm-book-art,.os-sheet,.map-pin,.ms-socket,.ms-q,
+.dark-room canvas,.cab-face,.seal-socket svg,.seal-token svg,.sg-ghost{pointer-events:none}
+.scene-game button{touch-action:manipulation}
+.scene-game .placed{pointer-events:none}
+#modal[data-mode=minigame]:has(.scene-game) .puzzle-help-buttons button{min-height:44px}
+
+/* Die Schriftrolle selbst bleibt unverzerrt und stationär. Nur ihr Satzspiegel scrollt. */
+.scroll-view{width:min(900px,96vw);justify-content:center;gap:4px}
+#modal .scroll-paper{flex:none;width:min(100%,calc((100dvh - 166px)*1.333));aspect-ratio:1448/1086;height:auto;max-height:none;min-height:0;padding:0;border:0;border-image:none;overflow:visible;display:block;background:none}
+.scroll-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.scroll-safe{position:absolute;inset:23% 18% 21% 18%;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;display:flex;flex-direction:column;justify-content:safe center;padding:0 4px}
+#modal .scroll-paper h3{font-size:clamp(20px,2.2vw,27px);line-height:1.2;margin-bottom:.55em}
+#modal .scroll-paper p{font-size:clamp(18px,1.8vw,23px);line-height:1.4}
+.scroll-count{font-size:14px;letter-spacing:.06em;flex:none}
+.scroll-nav{flex-wrap:wrap;gap:12px}
+
+/* Forum: Aussagen, Rückmeldung und Wahl liegen in drei getrennten Zonen. */
+.forum-chronistin{left:-2%;bottom:0;height:91%;width:33%;object-fit:contain;object-position:bottom}
+.forum-game .w-studs{left:3%;top:3%;max-width:25%;flex-wrap:wrap}
+.forum-game .w-speed{right:3%;top:1%}
+.forum-roll{left:32%;top:10%;width:61%;height:37%;aspect-ratio:auto}
+.forum-roll>img{object-fit:fill}
+.forum-text{inset:16% 13% 23%;font-size:clamp(19px,2.3vw,29px)!important;line-height:1.22}
+.forum-roll.filed{transform:none;opacity:1}
+.forum-game .w-voice{left:30%;right:2%;top:48%;bottom:auto;height:14%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0 .25em;font-size:clamp(16px,1.7vw,22px);line-height:1.2;overflow:auto;transform:none;margin:0;padding:.4em .8em;animation:none}
+.forum-boxes{left:29%;right:1%;top:64%;bottom:0;gap:1%}
+#modal .scene-game .forum-box{position:relative;padding:0!important;border:0!important;box-shadow:none!important;background:none!important;border-radius:0!important;display:block!important;aspect-ratio:1448/1086;align-self:center;width:100%;height:auto;min-height:44px}
+.fb-art{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 4px 5px #000b)}
+.forum-box .fb-label{position:absolute;inset:47% 12% 12%;display:flex;align-items:center;justify-content:center;padding:0 3%;background:repeating-linear-gradient(3deg,#0000 0 9px,#ffffff04 10px 11px),linear-gradient(#49301d,#352519);color:#fff0c5;font-size:clamp(18px,2vw,25px);font-weight:700;line-height:1.12;text-shadow:0 2px 2px #000}
+.forum-box.ok .fb-art{filter:drop-shadow(0 0 9px #e8c47a)}
+.forum-box:focus-visible{outline:3px solid #fff0c5;outline-offset:-8px}
+
+/* Vier Stempel aus einem Bogen, ohne Verzerrung oder abgeschnittenen Stempelkopf. */
+.os-sheet{position:absolute;inset:-28% -5% 0;overflow:hidden}
+.os-sheet img{position:absolute;width:400%;max-width:none;height:auto;left:calc(var(--stamp)*-100%);top:0}
+.office-stamp .os-plate{z-index:1}
+
+/* Der letzte Riegel verwendet breite, unverzerrte Tafeln. */
+.rope-riddle{left:19%;width:62%;top:8%;gap:.3em;max-height:87%;overflow:auto;padding:4px}
+.rope-riddle .rr-q{font-size:clamp(17px,1.8vw,24px)!important}
+#modal .rope-riddle .rope-board{background:url('assets/puzzles/sacrifice/riddle-board.svg') center/contain no-repeat!important;box-shadow:none!important;border:0!important;border-radius:0!important;min-height:80px!important;padding:17% 12% 12%!important;aspect-ratio:210/340;font-size:clamp(16px,1.7vw,22px)!important;line-height:1.2}
+.rope-game:has(.rope-riddle) .w-voice{left:25%;right:25%;bottom:0;font-size:16px}
+.archive-game .dark-spot{min-width:44px!important;min-height:44px!important;aspect-ratio:auto;border-radius:12%!important}
+
+/* Die einzige Schlachtkarte: Bild, sechs Gegenstände und ihre Ziele teilen ein Koordinatensystem. */
+.map-game .map-board{left:1%;top:10%;width:75%;aspect-ratio:1672/941}
+.map-board>img{object-fit:contain}
+.scene-game .map-spot{min-width:44px;min-height:44px!important;border-radius:8px!important;touch-action:manipulation}
+.map-spot .ms-q{bottom:auto;top:0;font-size:clamp(12px,1.4vw,18px);max-width:100%;white-space:normal;line-height:1.1}
+.map-spot .ms-socket{width:22px;height:22px;opacity:.65;pointer-events:none}
+.map-tray{left:77%;width:22%;top:3%;height:76%;gap:6px;padding:10px 6px}
+.scene-game .map-marker{min-width:0;justify-content:center;gap:0}
+.map-marker img{width:100%;height:65%;object-fit:contain}
+.map-marker .mm-label{font-size:clamp(14px,1.5vw,19px);max-width:100%;overflow-wrap:normal;hyphens:auto;padding:3px;box-sizing:border-box;line-height:1.1}
+.map-tray .map-marker.placed{visibility:hidden}
+.map-spot .map-pin{inset:0;transform:none;width:100%;height:100%;min-height:0!important;pointer-events:none}
+.map-spot .map-pin img{height:55%;width:100%;object-fit:contain}
+.map-spot .map-pin .mm-label{font-size:clamp(13px,1.5vw,19px);white-space:normal}
+.map-game .w-voice{left:2%;right:25%;bottom:2%;font-size:clamp(16px,1.7vw,22px)}
+.map-check{left:77%;width:22%;min-height:48px}
+
+/* Große Chronik: Satzspiegel und Jahresfelder sind Kinder derselben Buchfläche. */
+#modal[data-mode=minigame]:has(.time-machine){overflow:hidden}
+#modal[data-mode=minigame]:has(.time-machine) #modal-content{position:absolute;inset:var(--mg-bar) 0 0;margin:0;overflow-y:auto;overflow-x:hidden;display:block}
+#modal[data-mode=minigame]:has(.time-machine) #puzzle-work{display:block}
+.scene-game.time-machine{container-type:normal;display:block;width:100%;height:auto;overflow:visible;font-size:18px}
+.time-machine .sg-stage{container-type:inline-size;touch-action:pan-y;position:relative;width:100%!important;height:auto!important;aspect-ratio:auto!important;padding:0 0 16px;display:flex;flex-direction:column;align-items:center;overflow:visible}
+.time-machine .sg-bg{filter:blur(8px) brightness(.35)}
+.time-machine .tm-book{position:relative;inset:auto;width:min(100%,1100px);height:auto;aspect-ratio:1672/941;transform:none;padding:0;background:none;border:0;box-shadow:none;flex:none}
+.tm-book-art{display:block;width:100%;height:100%;object-fit:contain}
+.tm-book .tm-pages{position:absolute;inset:17% 11% 23% 14%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,minmax(0,1fr));grid-auto-flow:column;column-gap:11%;row-gap:2%;columns:auto;list-style:none;margin:0;padding:0;font-size:inherit}
+.tm-book .tm-pages li{margin:0;display:block;min-width:0;min-height:0}
+#modal .time-machine .tm-year{position:relative;inset:auto;transform:none;width:100%;height:100%;aspect-ratio:auto;display:grid;grid-template-columns:1fr;align-content:center;gap:4px;border-radius:3px!important;filter:none;padding:5px 9px!important;text-align:left;box-shadow:none!important;min-height:44px!important;color:#392615}
+.tm-year .tm-y{font-size:clamp(22px,2.4vw,30px);color:#6b4220!important;font-weight:700}
+.tm-year .tm-t{font-size:clamp(17px,1.9vw,23px);line-height:1.16;font-weight:600;color:#4c3925}
+.tm-year .tm-mini{position:absolute;right:0;top:0;bottom:auto;width:22px;height:22px;background:none;border:0;transform:none;color:#385737;line-height:22px;font-size:20px}
+.tm-year.filled{opacity:1!important;background:#ad995c12!important}
+.time-machine .tm-tray{position:relative;inset:auto;width:96%;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;min-height:100px;order:3}
+#modal .time-machine .tm-card{min-width:0;height:auto;min-height:110px;font-size:18px;justify-content:center;align-items:center;padding:8px!important}
+.tm-card .chron-mini{height:45px;width:45px;flex:none}
+.tm-card .sg-text{font-size:17px;line-height:1.15}
+.time-machine .sg-voice{position:relative;inset:auto;transform:none;order:2;width:94%;box-sizing:border-box;min-height:52px;margin:0 0 12px;padding:8px 16px;font-size:18px;line-height:1.3;text-align:center}
+.tm-gaps{position:relative;order:3;display:flex;flex-wrap:wrap;justify-content:center;gap:14px;padding:8px}
+#modal .time-machine .tm-gap{position:relative;inset:auto;transform:none;aspect-ratio:auto;width:auto;padding:8px 18px!important;border-radius:8px!important;font-size:20px;min-height:48px}
+.time-machine .w-finale{position:fixed;inset:var(--mg-bar) 0 0;z-index:10}
+.time-machine.turned .tm-book{filter:drop-shadow(0 0 20px #e6c16a88)}
+
+/* Die komplette Chronik und die Bonusbelohnung erhalten getrennte Flächen. */
+#finale .fn-book{aspect-ratio:1672/941;width:min(86vw,64vh*1.777)}
+#finale .fn-open>img{object-fit:contain}
+#finale .fn-slot{top:64%;width:8.5%}
+#finale[data-phase=zoom] .fn-camera,#finale[data-phase=memories] .fn-camera{transform:scale(1.06)}
+#finale .fn-memory{transition:opacity .7s}
+#finale .fn-memory.on .fn-pic{animation-duration:2.8s}
+#finale .fn-end[hidden]{display:none}
+#finale[data-phase=end]{display:grid;grid-template-columns:1.35fr 1fr;gap:12px;align-items:center;padding:24px;overflow:auto}
+#finale[data-phase=end] .fn-camera{position:relative;inset:auto;min-width:0}
+#finale[data-phase=end] .fn-book{width:100%}
+#finale[data-phase=end] .fn-text{position:relative;inset:auto;padding:0;min-width:0;z-index:1}
+#finale[data-phase=end] .fn-memories{display:none}
+#finale .fn-line1{font-size:clamp(25px,3vw,40px)}
+#finale .fn-line2{font-size:clamp(17px,1.8vw,24px)}
+#finale .fn-end{width:100%;gap:10px}
+#finale .fn-end>strong{font-size:clamp(16px,1.6vw,23px);letter-spacing:.08em;padding:.4em .6em}
+#finale .fn-reward{position:relative;width:min(100%,380px);aspect-ratio:1448/1086;flex:none;margin:-10px 0 -24px}
+#finale .fn-reward img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+#finale .fn-reward p{position:absolute;inset:37% 16% 27% 27%;display:flex;flex-direction:column;justify-content:center;gap:5px;color:#37220e;font-size:clamp(16px,1.6vw,21px);line-height:1.15;text-shadow:none;transition:none!important}
+#finale .fn-reward b{font-size:1.1em}
+#finale .fn-actions{width:100%;gap:10px}
+#finale .fn-actions button{min-height:48px;font-size:18px;padding:6px 16px}
+@media (max-width:700px){
+ .time-machine .tm-tray{grid-template-columns:repeat(3,minmax(0,1fr))}
+ #finale[data-phase=end]{grid-template-columns:1fr;align-content:start}
+ #finale[data-phase=end] .fn-book{max-height:36vh;width:auto;max-width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+ .time-machine *,#finale *{animation:none!important;transition:none!important}
+}
+
+.rope-riddle .rr-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.shield-game .shield-frame{aspect-ratio:1}
+#modal[data-mode=minigame]:has(.scene-game)::before{inset:0}
+.map-game .w-voice,.rope-game:has(.rope-riddle) .w-voice{transform:none;width:auto}
+#modal[data-mode=minigame]:has(.time-machine){overflow:hidden}
+#modal[data-mode=minigame]:has(.time-machine) #modal-content{position:absolute;inset:var(--mg-bar) 0 0;margin:0;overflow-y:auto;overflow-x:hidden;display:block}
+
+/* Gedrückte absolute Ziele behalten ihren Anker: kein Sprung unter der Maus. */
+#modal .scene-game .dark-spot:active,#modal .scene-game .map-spot:active{transform:translate(-50%,-50%)}
+#modal .time-machine .tm-year:active{transform:none}
+.time-machine .sg-stage{container-type:inline-size;touch-action:pan-y}
+.time-machine .tm-card{touch-action:none}
+
+.seal-wheel-art,.seal-wheel-art *{pointer-events:none}
+#modal[data-mode=seals] .seal-socket:active{transform:translate(-50%,-50%)}
+#modal .scene-game .city-altar:active{transform:translateX(-50%)}
+
+/* Bestehende Zuordnungsspiele: lesbare Tafeln auch auf dem kleinen iPad. */
+.mo-card .sg-text,.city-card .sg-text,.city-card.long .sg-text{font-size:16px;line-height:1.12}
+.mo-card .mo-tile{width:30px;height:34px}
+.city-card.long .sg-icon{height:32%}
+.mo-piece small{font-size:13px;line-height:1.1}
+.scene-game .w-speed button{min-height:44px!important}
+#finale .seal-medallion svg{overflow:hidden}
+#finale[data-phase=end] .fn-text p{transition:none!important}

@@ -25,7 +25,9 @@
   if(typeof Image==='undefined')return;
   urls.forEach(u=>{const im=new Image();im.onerror=()=>{if(root.isConnected)root.classList.add('sg-no-art');};im.src=u;});
  }
- const later=(root,ms,fn)=>setTimeout(()=>{if(root.isConnected)fn();},ms);
+ const pending=new Set();
+ const later=(root,ms,fn)=>{const id=setTimeout(()=>{pending.delete(id);if(root.isConnected)fn();},ms);pending.add(id);return id;};
+ const stop=window.MiniGames.stop;window.MiniGames.stop=()=>{pending.forEach(clearTimeout);pending.clear();stop?.();};
 
  /* Antippen-und-Ablegen oder Ziehen. cards: Elemente mit data-card, targets: Elemente mit data-target. */
  function placement(root,{cardSel,targetSel,onDrop,onSelect}){
@@ -55,8 +57,8 @@
   // Tippen – Tippen (auch Tastatur über click)
   root.addEventListener('click',e=>{
    if(Date.now()-skipClick<400)return;
-   const c=e.target.closest?.(cardSel);if(c&&!c.classList.contains('placed')){select(chosen===c?null:c);return;}
-   const t=e.target.closest?.(targetSel);if(t&&chosen){const c2=chosen;select(null);onDrop(c2,t);}
+   const t=e.target.closest?.(targetSel);if(t&&chosen&&!t.disabled){const c2=chosen;select(null);onDrop(c2,t);return;}
+   const c=e.target.closest?.(cardSel);if(c&&!c.disabled&&!c.classList.contains('placed'))select(chosen===c?null:c);
   });
   return {select,get chosen(){return chosen;}};
  }
@@ -143,17 +145,14 @@
  function chronik(id,cfg,work){
   const A=cfg.art||{};const Y=cfg.years;backdrop(A.bg);
   const cards=shuffle(Y.map((y,i)=>({...y,i})));
-  // Mittelpunkt und Radien des gemalten Zeitrads in % der Bühne
-  const R={cx:31.9,cy:34.6,rx:10.4,ry:18.2};
-  const at=(deg,k=1)=>{const a=deg*Math.PI/180;return [R.cx+R.rx*k*Math.cos(a),R.cy+R.ry*k*Math.sin(a)];};
   work.innerHTML=`<div class="scene-game chronicle-game time-machine" style="--bg:url('${A.bg}')">
    <div class="sg-stage">
     <div class="sg-bg" aria-hidden="true"></div>
-    <span class="tm-glow" aria-hidden="true" style="left:${R.cx}%;top:${R.cy}%"></span>
-    ${Y.map((y,i)=>{const [x,t]=at(-90+60*i);return `<button type="button" class="chron-slot tm-year" data-target="${i}" style="left:${x}%;top:${t}%" aria-label="Jahresfeld ${y.year}">${sprite(A.sheet,y.medal,'chron-medal',String(y.year))}<span class="tm-mini" aria-hidden="true"></span></button>`;}).join('')}
-    <div class="tm-gaps" hidden>${Y.slice(1).map((y,i)=>{const [x,t]=at(-60+60*i,1.02);return `<button type="button" class="chron-gap tm-gap" data-gap="${i}" style="left:${x}%;top:${t}%" aria-label="Zwischen ${Y[i].year} und ${y.year}"><b aria-hidden="true">⇆</b></button>`;}).join('')}</div>
-    <div class="tm-book" aria-live="polite"><h3>Chronik der Wende</h3><ol>${Y.map((y,i)=>`<li data-i="${i}"><span class="tm-y">${y.year}</span><span class="tm-t">…</span></li>`).join('')}</ol></div>
-    <div class="tm-band" aria-hidden="true">${sprite(A.sheet,cfg.bandRect,'band-art','')}<span class="band-label">Die Wende</span></div>
+    <div class="tm-book" aria-label="Chronik mit sechs Jahresfeldern">
+     <img class="tm-book-art" src="assets/puzzles/timeline/chronik-sechs-eintraege.png" alt="Offene Chronik in einem Rahmen aus Holz und Messing" draggable="false">
+     <ol class="tm-pages">${Y.map((y,i)=>`<li data-i="${i}"><button type="button" class="chron-slot tm-year" data-target="${i}" aria-label="Jahresfeld ${y.year}"><span class="tm-y">${y.year}</span><span class="tm-t">Zeitspur einsetzen</span><span class="tm-mini" aria-hidden="true"></span></button></li>`).join('')}</ol>
+    </div>
+    <div class="tm-gaps" hidden role="group" aria-label="Zeitlicher Wendepunkt">${Y.slice(1).map((y,i)=>`<button type="button" class="chron-gap tm-gap" data-gap="${i}">${Y[i].year} – ${y.year}</button>`).join('')}</div>
     <div class="chron-tray tm-tray" role="group" aria-label="Zeitspuren als Wachstafeln">${cards.map(c=>`<button type="button" class="chron-card tm-card" data-card="${c.i}" aria-pressed="false">${sprite(A.sheet,c.mini,'chron-mini',c.title)}<span class="sg-text">${esc(c.title)}</span></button>`).join('')}</div>
     <p class="sg-voice" role="status" aria-live="polite">${esc(cfg.start)}</p>
    </div></div>`;
@@ -162,7 +161,7 @@
   let placed=0,phase='place';const R0=cfg.restore||{};const misses={...(R0.misses||{})};let wrongTotal=Object.values(misses).reduce((a,b)=>a+b,0);
   // Fortschritt melden (script.js speichert verriegelte Jahresfelder und Fehlversuche je Tafel im Spielstand).
   const report=()=>document.dispatchEvent(new CustomEvent('minigame-progress',{detail:{id,data:{locks:[...root.querySelectorAll('.tm-year.filled')].map(t=>+t.dataset.target),misses:{...misses}}}}));
-  function lockYear(ti,card){const t=root.querySelector(`.tm-year[data-target="${ti}"]`);t.classList.add('filled');t.disabled=true;t.querySelector('.tm-mini').innerHTML=card.querySelector('.chron-mini').outerHTML;
+  function lockYear(ti,card){const t=root.querySelector(`.tm-year[data-target="${ti}"]`);t.classList.add('filled');t.disabled=true;t.querySelector('.tm-mini').textContent='✓';t.setAttribute('aria-label',Y[ti].year+': '+Y[ti].title+' – verriegelt');
    const li=root.querySelector(`.tm-book li[data-i="${ti}"]`);li.classList.add('set');li.querySelector('.tm-t').textContent=Y[ti].title;card.remove();placed++;}
   const say=(t,k='')=>{voice.textContent=t;voice.className='sg-voice '+k;voice.classList.remove('pop');void voice.offsetWidth;voice.classList.add('pop');};
   placement(root,{cardSel:'.tm-card',targetSel:'.tm-year',onDrop(card,t){

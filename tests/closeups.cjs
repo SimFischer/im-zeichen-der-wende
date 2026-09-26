@@ -41,7 +41,7 @@ const exists=f=>fs.existsSync(path.join(root,f));
 
 /* 2. Forum: Chronistin als Figur, Aussage auf Pergament, Fächer aus Holz */
 {const {G,M,work,wins,flush,$,all}=boot();const cfg=G.minigames.sources;M.classify('sources',cfg,work);
- ok($('.forum-chronistin')?.getAttribute('src').includes('puzzles/forum/chronistin'),'Chronistin (Produktionsgrafik) steht im Raum');
+ ok($('.forum-chronistin')?.getAttribute('src').includes('characters/chronistin'),'Chronistin (Produktionsgrafik) steht im Raum');
  ok($('.sg-bg')&&/v3-forum/.test($('.scene-game').getAttribute('style')),'Forum-Szene als Hintergrund');ok(!/forum-blur|chronistin\.jpg/.test(work.innerHTML),'Keine alten Forum-Grafiken');
  $('.w-start').click();const d=$('.forum-game').__debug;
  const wrong=cfg.choices.findIndex((_,k)=>!d.cur().ok.includes(k));d.resolve(wrong);ok($('.forum-roll').classList.contains('bad')&&!$('.sg-stage').className.includes('flash'),'Falsch: Pergament rüttelt, keine Blitzfläche');flush();
@@ -73,7 +73,7 @@ const exists=f=>fs.existsSync(path.join(root,f));
 {const {G,M,work,wins,flush,$,all}=boot();const cfg=G.minigames.archive;M.darkroom('archive',cfg,work);
  ok($('.cabinet img')?.getAttribute('src').includes('archive/cabinet'),'Gemalter Archivschrank');ok(all('.cab-drawer').length===4&&all('.cab-tag').length===4,'Vier Schubladen mit Messingschildern');
  $('.w-start').click();const d=$('.archive-game').__debug;
- cfg.spots.forEach((sp,i)=>{all('.dark-spot')[i].classList.add('lit');d.pick(i);ok(!$('.cab-view').hidden,'Schrank öffnet sich für: '+sp.name);
+ cfg.spots.forEach((sp,i)=>{all('.dark-spot')[i].click();ok(!$('.cab-view').hidden,'Schrank öffnet sich für: '+sp.name);
   const wrong=(sp.answer+1)%4;d.file(wrong);ok(/klemmt/.test(txt($('.w-voice'))),'Falsche Schublade klemmt');d.file(sp.answer);flush();});
  const fin=$('.cab-final');ok(fin&&fin.querySelectorAll('button').length===3,'Verriegelung: letzte Frage');
  [...fin.querySelectorAll('button')].find(b=>+b.dataset.k===cfg.final.answer).click();flush();ok($('.archive-game').classList.contains('lit-up'),'Licht kehrt zurück');
@@ -81,14 +81,14 @@ const exists=f=>fs.existsSync(path.join(root,f));
 
 /* 6. Schild: Produktionsgrafik, Rasterlinien verschwinden */
 {const {G,M,work,wins,flush,$,all}=boot();const cfg=G.minigames.vision;M.slider('vision',cfg,work);
- ok(all('.slider-board .tile').every(t=>/chi-rho-shield\.webp/.test(t.style.backgroundImage)),'Neuer Schild als Puzzlebild');ok(!/chi-rho-schild\.svg/.test(work.innerHTML),'Altes SVG nicht mehr verwendet');
+ ok(all('.slider-board .tile').every(t=>/chi-rho-schild\.png/.test(t.style.backgroundImage)),'Neuer Schild als Puzzlebild');ok(!/chi-rho-schild\.svg/.test(work.innerHTML),'Altes SVG nicht mehr verwendet');
  $('.w-start').click();$('.shield-game').__debug.solve();ok($('.shield-game').classList.contains('shield-whole'),'Schild kurz ohne Raster');flush();
  cfg.quiz.items.forEach(it=>{[...work.querySelectorAll('.sq-opts button')].find(b=>+b.dataset.k===it.ok[0]).click();flush();});
  $('.w-next').click();ok(wins.join()==='vision','Sieg gemeldet');}
 
 /* 7. Kartenbrett: Marker auf die Karte */
 {const {G,M,work,wins,flush,$,all}=boot();const cfg=G.minigames.map312;M.battlemap('map312',cfg,work);
- ok($('.map-board img')?.getAttribute('src').includes('camp/map-board'),'Illustrierte Karte');ok(all('.map-marker img').length===6,'Sechs Holzmarker');
+ ok($('.map-board img')?.getAttribute('src').includes('camp/milvische-bruecke-karte'),'Illustrierte Karte');ok(all('.map-marker img').length===6,'Sechs Holzmarker');
  const d=$('.map-game').__debug;const want={'Stadt':'Rom','Fluss':'Tiber','Übergang':'Milvische Brücke','Späterer Sieger':'Konstantin','Gegner':'Maxentius','Jahr':'312'};
  d.pins.forEach(p=>{d.markers.find(m=>m.dataset.t===want[txt(p.querySelector('.ms-q'))]).click();p.click();});
  ok(d.pins.every(p=>p.querySelector('.map-marker')),'Marker rasten an den Kartenpunkten ein');

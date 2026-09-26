@@ -34,7 +34,8 @@ dialog button,.rack button,.socket button,.gear button,.tray-handle,.stamp,.docu
 #app .exit .exit-arrow{display:grid;place-items:center;width:1.9em;height:1.9em;border-radius:50%;background:#e7bc74;color:#2b2416;font-size:1em;flex:none}
 #app .exit .label{display:flex;flex-direction:column}
 #app .exit small{font-weight:400;font-size:.78em;opacity:.85}
-#app .exit:hover,#app .exit:focus-visible{background:#2d5a4b;outline:3px solid #fff0c8;outline-offset:2px}
+#app .exit:focus-visible{background:#2d5a4b;outline:3px solid #fff0c8;outline-offset:2px}
+@media (hover:hover) and (pointer:fine){#app .exit:hover{background:#2d5a4b;outline:3px solid #fff0c8;outline-offset:2px}}
 #app .exit.locked{background:#2a2a26d9;border-color:#9b8d74;animation:none;opacity:.85}
 #app .exit.locked .exit-arrow{background:#8b8069}
 @keyframes exit-pulse{0%,100%{box-shadow:0 0 0 4px #f3dca633,0 4px 14px #000a}50%{box-shadow:0 0 0 9px #f3dca622,0 4px 14px #000a}}

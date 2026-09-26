@@ -12,7 +12,7 @@
  if(!window.MiniGames)window.MiniGames={};
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
- const later=(root,ms,fn)=>setTimeout(()=>{if(root.isConnected)fn();},ms);
+ const later=window.MiniGames._?.later||((root,ms,fn)=>setTimeout(()=>{if(root.isConnected)fn();},ms));
 
  /* Kleine Symbolmedaillons (48er-Raster, als Relieflinien). */
  const ICON={

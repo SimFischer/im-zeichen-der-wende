@@ -10,19 +10,22 @@ window.MiniGames=(()=>{
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const win=id=>document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));
  const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
- const later=(root,ms,fn)=>setTimeout(()=>{if(root.isConnected)fn();},ms);
+ // Alle geplanten Arbeiten gehören zur geöffneten Nahansicht.
+ const pending=new Set(),frames=new Set();
+ const later=(root,ms,fn)=>{const id=setTimeout(()=>{pending.delete(id);if(root.isConnected)fn();},ms);pending.add(id);return id;};
+ const frame=fn=>{const id=requestAnimationFrame(t=>{frames.delete(id);fn(t);});frames.add(id);return id;};
  const reduced=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
  const P='assets/puzzles/';
  /* Aufräumen beim Schließen: globale Listener abmelden, Bühnen entfernen (beendet Timer und Animationsschleifen). */
  const live=new Set();const track=fn=>{live.add(fn);return fn;};
- function stop(){live.forEach(f=>{try{f();}catch(e){}});live.clear();document.querySelectorAll('#modal .scene-game').forEach(r=>r.remove());}
+ function stop(){pending.forEach(clearTimeout);pending.clear();frames.forEach(id=>{if(typeof cancelAnimationFrame==='function')cancelAnimationFrame(id);});frames.clear();live.forEach(f=>{try{f();}catch(e){}});live.clear();document.querySelectorAll('#modal .scene-game').forEach(r=>r.remove());}
  const ART={
   door:P+'door/door-closeup.webp',
-  roll:P+'forum/parchment-roll.webp',chronistin:P+'forum/chronistin.webp',
+  roll:P+'forum/parchment-roll.webp',chronistin:'assets/characters/chronistin.png',
   desk:P+'office/desk.webp',stamps:['eagle','chirho','temple','scales'].map(n=>P+'office/stamp-'+n+'.webp'),
   beam:P+'sacrifice/beam.webp',base:P+'sacrifice/base.webp',board:P+'sacrifice/board.webp',hook:P+'sacrifice/hook.webp',lever:P+'sacrifice/lever.webp',
   cabinet:P+'archive/cabinet.webp',
-  map:P+'camp/map-board.webp',pawn:P+'camp/pawn.webp',shield:P+'camp/chi-rho-shield.webp'
+  map:P+'camp/milvische-bruecke-karte.png',pawn:P+'camp/pawn.webp',shield:P+'vision/chi-rho-schild.png'
  };
  const BG={house:'assets/backgrounds/v3-house.png',forum:'assets/backgrounds/v3-forum.png',office:'assets/backgrounds/v3-office.png',temple:'assets/backgrounds/v3-temple.png',archive:'assets/backgrounds/v3-archive.png',camp:'assets/backgrounds/v3-camp.png'};
 
@@ -31,7 +34,7 @@ window.MiniGames=(()=>{
   document.querySelector('#modal')?.style.setProperty('--mg-backdrop',`url('${bg}')`);
   work.innerHTML=`<div class="scene-game world ${cls}" style="--bg:url('${bg}')"><div class="sg-stage"><div class="sg-bg${blur?' w-blur':''}" aria-hidden="true"></div>${inner}<p class="w-voice" role="status" aria-live="polite"></p></div></div>`;
   const root=work.querySelector('.scene-game');const v=root.querySelector('.w-voice');let t=null;
-  root.say=(html,kind='',ms=0)=>{v.innerHTML=html;v.className='w-voice '+kind;v.classList.remove('pop');void v.offsetWidth;v.classList.add('pop');clearTimeout(t);if(ms)t=setTimeout(()=>{if(v.isConnected&&v.innerHTML===html)v.innerHTML='';},ms);};
+  root.say=(html,kind='',ms=0)=>{v.innerHTML=html;v.className='w-voice '+kind;v.classList.remove('pop');void v.offsetWidth;v.classList.add('pop');clearTimeout(t);if(ms)t=later(root,ms,()=>{if(v.innerHTML===html)v.innerHTML='';});};
   return root;
  }
  const pulse=(el,cls)=>{if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);};
@@ -100,7 +103,7 @@ window.MiniGames=(()=>{
    ${studs(goal,cfg.counter||'Belege')}
    <div class="w-speed" role="group" aria-label="Tempo"><span>Tempo</span>${[['Ruhig',1],['Normal',.75],['Schnell',.55]].map((o,i)=>`<button type="button" data-speed="${o[1]}" aria-pressed="${i===0}">${o[0]}</button>`).join('')}</div>
    <div class="forum-roll"><img class="w-img" src="${ART.roll}" alt="" draggable="false"><p class="forum-text mg-text" aria-live="polite"></p><div class="forum-wick" aria-hidden="true"><i></i></div></div>
-   <div class="forum-boxes" role="group" aria-label="Quellenfächer">${cfg.choices.map((c,i)=>`<button type="button" class="forum-box m-wood mg-choice" data-i="${i}"><span class="fb-ico" aria-hidden="true">${esc(cfg.icons?.[i]||'')}</span><span class="fb-label">${esc(c)}</span></button>`).join('')}</div>`,{blur:false});
+   <div class="forum-boxes" role="group" aria-label="Quellenfächer">${cfg.choices.map((c,i)=>`<button type="button" class="forum-box m-wood mg-choice" data-i="${i}"><img class="fb-art" src="assets/puzzles/forum/categories/${['gut-belegbar','unsicher','nicht-sicher-feststellbar'][i]}.png" alt="" draggable="false"><span class="fb-label">${esc(c)}</span></button>`).join('')}</div>`,{blur:false});
   const roll=root.querySelector('.forum-roll'),text=root.querySelector('.forum-text'),bar=root.querySelector('.forum-wick i'),boxes=[...root.querySelectorAll('.forum-box')];
   let mul=1,score=0,queue=shuffle(cfg.items),cur=null,left=0,total=0,running=false,locked=false,last=0,done=[];
   root.querySelectorAll('.w-speed button').forEach(b=>b.onclick=()=>{root.querySelectorAll('.w-speed button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));mul=+b.dataset.speed;b.blur();});
@@ -116,10 +119,10 @@ window.MiniGames=(()=>{
   addEventListener('keydown',key);track(()=>removeEventListener('keydown',key));
   function loop(now){if(!root.isConnected)return;const dt=Math.min(.1,(now-last)/1000||0);last=now;
    if(running&&!locked){left-=dt;const f=Math.max(0,left/total);bar.style.transform=`scaleX(${f})`;bar.classList.toggle('late',f<.3);if(left<=0)resolve(null);}
-   requestAnimationFrame(loop);}
+   frame(loop);}
   intro(root,cfg,cfg.rules,cfg.startLabel||'Los geht’s',()=>{running=true;next();last=performance.now();});
   root.__debug={resolve,cur:()=>cur,score:()=>score,start:()=>root.querySelector('.w-start')?.click()};
-  requestAnimationFrame(loop);return true;
+  frame(loop);return true;
  }
 
  /* ================= 3. Amtsstube · Der Stempel des Statthalters ================= */
@@ -133,7 +136,7 @@ window.MiniGames=(()=>{
    ${studs(goal,cfg.counter||'Akten')}
    <div class="office-pile" aria-hidden="true"></div>
    <article class="office-file m-parch case-file" aria-live="polite"><header><span class="of-kind">Fallakte · Sachverhalt</span><span class="of-no"></span></header><p class="of-text mg-text"></p><footer aria-hidden="true">Amtsstube des Statthalters</footer><div class="of-marks"></div></article>
-   ${cfg.choices.map((c,i)=>`<button type="button" class="office-stamp stamp-tool" data-i="${i}" style="left:${SPOTS[i][0]}%;top:${SPOTS[i][1]}%"><img class="w-img" src="${ART.stamps[i]}" alt="" draggable="false">${ART.stamps[i].includes('chirho')?`<span class="os-face" aria-hidden="true">${seal(c,'f'+i)}</span>`:''}<span class="os-plate">${esc(c.label)}</span></button>`).join('')}`);
+   ${cfg.choices.map((c,i)=>`<button type="button" class="office-stamp stamp-tool" data-i="${i}" style="left:${SPOTS[i][0]}%;top:${SPOTS[i][1]}%"><span class="os-sheet" aria-hidden="true" style="--stamp:${[0,3,2,1][i]}"><img src="assets/puzzles/office/siegelstempel-sheet.png" alt="" draggable="false"></span><span class="os-plate">${esc(c.label)}</span></button>`).join('')}`);
   const file=root.querySelector('.office-file'),text=root.querySelector('.of-text'),marks=root.querySelector('.of-marks'),pile=root.querySelector('.office-pile'),tools=[...root.querySelectorAll('.office-stamp')];
   let queue=shuffle(cfg.items),cur=null,running=false,busy=false,score=0,done=[];
   function next(){if(!queue.length)queue=shuffle(cfg.items.filter(v=>!done.includes(v)));cur=queue.shift();text.textContent=cur.text;marks.innerHTML='';file.classList.remove('filed');pulse(file,'slide-in');file.querySelector('.of-no').textContent='Nr. '+(done.length+1);busy=false;}
@@ -212,7 +215,7 @@ window.MiniGames=(()=>{
     <div class="cab-hand m-parch" aria-live="polite"></div></div>`,{blur:false});
   const room=root.querySelector('.dark-room'),canvas=room.querySelector('canvas'),ctx=canvas.getContext('2d'),layer=room.querySelector('.dark-spots'),cab=root.querySelector('.cab-view'),hand=root.querySelector('.cab-hand');
   let W=0,H=0,lx=.5,ly=.5,found=new Set(),running=false,holding=null,phase='search';
-  spots.forEach((sp,i)=>{const b=document.createElement('button');b.type='button';b.className='dark-spot';b.style.left=sp.x+'%';b.style.top=sp.y+'%';b.setAttribute('aria-label',sp.name);b.onclick=e=>{e.stopPropagation();pick(i);};layer.append(b);});
+  spots.forEach((sp,i)=>{const b=document.createElement('button');b.type='button';b.className='dark-spot';b.style.left=sp.x+'%';b.style.top=sp.y+'%';b.style.width=(sp.w||16)+'%';b.style.height=(sp.h||20)+'%';b.setAttribute('aria-label',sp.name);b.onclick=e=>{e.stopPropagation();pick(i);};layer.append(b);});
   function paint(){const r=room.getBoundingClientRect();if(!r.width)return;const d=Math.min(2,devicePixelRatio||1);if(W!==r.width||H!==r.height){W=r.width;H=r.height;canvas.width=W*d;canvas.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
    ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(8,6,4,.94)';ctx.fillRect(0,0,W,H);ctx.globalCompositeOperation='destination-out';const R=Math.min(W,H)*.22,x=lx*W,y=ly*H;const g=ctx.createRadialGradient(x,y,R*.2,x,y,R);g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.7,'rgba(0,0,0,.85)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.fill();
    ctx.globalCompositeOperation='source-over';ctx.fillStyle='rgba(255,190,90,.10)';ctx.beginPath();ctx.arc(x,y,R,0,7);ctx.fill();
@@ -222,7 +225,8 @@ window.MiniGames=(()=>{
   room.addEventListener('pointermove',move);room.addEventListener('pointerdown',e=>{move(e);if(running&&e.target===canvas)root.say('Hier ist nichts Besonderes. Leuchte weiter herum.','',1800);});
   function showCabinet(on){cab.hidden=!on;root.classList.toggle('at-cabinet',on);}
   function pick(i){if(!running||phase!=='search')return;const sp=spots[i];if(found.has(i)){root.say(`Diese Spur hast du schon: ${esc(sp.name)}.`,'',1600);return;}
-   const b=layer.children[i];if(!b.classList.contains('lit')){root.say('Zu dunkel – leuchte erst mit der Lampe dorthin.','',1800);return;}
+   // Ein gezielter Tipp beleuchtet UND untersucht das Objekt in derselben Aktion.
+   lx=sp.x/100;ly=sp.y/100;paint();
    holding=i;phase='file';hand.innerHTML=`<b>${esc(sp.name)}</b><span>${esc(sp.look)}</span><em>Welche Maßnahme von 303 erklärt diese Spur? Lege sie in die passende Schublade.</em>`;showCabinet(true);root.say('');}
   function file(k){if(phase!=='file')return;const sp=spots[holding];const drawer=root.querySelector(`.cab-drawer[data-k="${k}"]`),tag=root.querySelector(`.cab-tag[data-k="${k}"]`);
    if(k===sp.answer){found.add(holding);setStuds(root,found.size);drawer.classList.add('open');tag.classList.add('filled');root.say(`<b>Die Schublade nimmt die Spur auf.</b> ${esc(sp.why)}`,'good');phase='busy';
@@ -237,7 +241,7 @@ window.MiniGames=(()=>{
     else{x.disabled=true;pulse(x,'w-bad');root.say(esc(f.why),'bad');}});}
   intro(root,cfg,cfg.rules,'Lampe hochhalten',()=>{running=true;paint();});
   root.__debug={pick,file,spots,light:(x,y)=>{lx=x;ly=y;paint();},phase:()=>phase,final:()=>root.querySelector('.cab-final')};
-  requestAnimationFrame(paint);return true;
+  frame(paint);return true;
  }
 
  /* ================= 6. Tiber · Das Zeichen auf dem Schild ================= */
@@ -277,16 +281,21 @@ window.MiniGames=(()=>{
  function battlemap(id,cfg,work){
   const rows=window.GAME.puzzles[id].rows;const val=rows.map(()=>null);const tags=[...new Set(rows.flatMap(r=>r.options))];let held=null,done=false;
   const root=stage(work,'map-game',BG.camp,`
-   <div class="map-board"><img class="w-img" src="${ART.map}" alt="Illustriertes Kartenbrett: Stadt, Fluss mit Brücken, Heerlager und Fahnen" draggable="false">
-    ${cfg.pins.map((pn,i)=>`<button type="button" class="map-spot bm-pin" data-i="${i}" style="left:${pn[1]}%;top:${pn[2]}%"><span class="ms-q">${esc(pn[0])}</span><span class="ms-socket" aria-hidden="true"></span></button>`).join('')}
+   <div class="map-board"><img class="w-img" src="${ART.map}" alt="Illustriertes Kartenbrett: Unbeschriftete Tiberkarte: blaues Heer links, rotes Heer und Stadt rechts, eine Brücke" draggable="false">
+    ${cfg.pins.map((pn,i)=>`<button type="button" class="map-spot bm-pin" data-i="${i}" style="left:${pn[1]}%;top:${pn[2]}%;width:${pn[3]}%;height:${pn[4]}%" aria-label="${esc(pn[0])} auf der Karte"><span class="ms-q">${esc(pn[0])}</span><span class="ms-socket" aria-hidden="true"></span></button>`).join('')}
     <small class="map-note">Spielskizze – keine genaue Karte der Schlacht</small></div>
    <div class="map-tray m-wood" role="group" aria-label="Marker mit Beschriftungen"><span class="mt-title">Marker</span>${shuffle(tags).map(t=>`<button type="button" class="map-marker bm-tag" data-t="${esc(t)}" aria-pressed="false"><img class="w-img" src="${ART.pawn}" alt="" draggable="false"><span class="mm-label">${esc(t)}</span></button>`).join('')}</div>
    <button type="button" class="map-check m-bronze bm-check">Karte prüfen</button>`);
   const pins=[...root.querySelectorAll('.map-spot')],markers=[...root.querySelectorAll('.map-marker')],tray=root.querySelector('.map-tray');
   cfg.pins.forEach((pn,i)=>{pins[i].dataset.row=rows.findIndex(x=>x.label===pn[0]);});
   const markerFor=t=>markers.find(m=>m.dataset.t===t);
-  function place(m,target){const from=m.getBoundingClientRect();target.append(m);const to=m.getBoundingClientRect();if(!reduced()&&from.width){m.animate?.([{transform:`translate(${from.left-to.left}px,${from.top-to.top}px)`},{transform:'none'}],{duration:420,easing:'cubic-bezier(.3,1.3,.5,1)'});}}
-  function refresh(){pins.forEach(p=>{const v=val[+p.dataset.row];p.classList.toggle('filled',v!==null);});markers.forEach(m=>m.classList.toggle('placed',val.includes(m.dataset.t)));}
+  // Die Zielknöpfe enthalten ausschließlich dekorative Marker, niemals weitere Knöpfe.
+  function place(m,target){
+   root.querySelectorAll('.map-pin').forEach(p=>{if(p.dataset.t===m.dataset.t)p.remove();});
+   if(target===tray)return;
+   const pin=document.createElement('span');pin.className='map-marker map-pin';pin.dataset.t=m.dataset.t;pin.setAttribute('aria-hidden','true');pin.innerHTML=m.innerHTML;target.append(pin);pulse(pin,'w-snap');
+  }
+  function refresh(){pins.forEach(p=>{const v=val[+p.dataset.row];p.classList.toggle('filled',v!==null);p.setAttribute('aria-label',cfg.pins[+p.dataset.i][0]+(v!==null?': '+v+' – antippen zum Entfernen':''));});markers.forEach(m=>{const placed=val.includes(m.dataset.t);m.classList.toggle('placed',placed);m.disabled=placed;});}
   function hold(t){held=held===t?null:t;markers.forEach(m=>m.setAttribute('aria-pressed',String(m.dataset.t===held)));root.classList.toggle('holding',held!==null);if(held)root.say(`Marker <b>${esc(held)}</b> in der Hand – tippe auf die passende Stelle der Karte.`);}
   markers.forEach(m=>m.onclick=e=>{e.stopPropagation();if(done)return;if(m.classList.contains('placed')&&held===null){const r=val.indexOf(m.dataset.t);if(r>=0){val[r]=null;place(m,tray);refresh();root.say('Marker zurück auf das Brett gelegt.');}return;}hold(m.dataset.t);});
   pins.forEach(p=>p.onclick=()=>{if(done)return;const r=+p.dataset.row;p.classList.remove('ok','bad');
