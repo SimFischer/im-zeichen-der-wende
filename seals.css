@@ -24,10 +24,8 @@
 .seal-token.is-placed .seal-state{color:#1f6b57}
 .seal-token.is-placed .seal-state:before{content:'✓ '}
 button.seal-token{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-
-@media (hover:hover) and (pointer:fine){button.seal-token:not(:disabled):hover .seal-medallion{transform:translateY(-3px)}}
-
-@media (hover:hover) and (pointer:fine){button.seal-token.is-selected:hover .seal-medallion{transform:translateY(-5px) scale(1.08)}}
+button.seal-token:not(:disabled):hover .seal-medallion{transform:translateY(-3px)}
+button.seal-token.is-selected:hover .seal-medallion{transform:translateY(-5px) scale(1.08)}
 button.seal-token:active{transform:none}
 button.seal-token:disabled{opacity:1;cursor:default}
 button.seal-token:focus-visible{outline:3px solid #2d8a7a;outline-offset:2px}
@@ -151,7 +149,7 @@ button.seal-token:focus-visible{outline:3px solid #2d8a7a;outline-offset:2px}
  .seal-wheel-art .seal-ring{transition:none}
 }
 /* Nach einer Belohnung bleiben „Weiter erkunden“ und „Stadtkarte“ immer erreichbar – der Fortschritt wird nicht durch Scrollen gebremst */
-#modal[data-mode=reward]:has(.seal-reward) #modal-content>.actions{position:sticky;bottom:calc(var(--u)*-1.6);z-index:2;margin-bottom:calc(var(--u)*-1.6);padding:.6em 0 calc(var(--u)*1.6);background:linear-gradient(180deg,#f3e4c500,#f3e4c5 30%)}
+#modal[data-mode=reward]:has(.seal-reward) #modal-content>.actions{position:sticky;bottom:calc(var(--u)*-1.6);z-index:2;margin-bottom:calc(var(--u)*-1.6);padding:.6em 0 calc(var(--u)*1.6);background:linear-gradient(180deg,#f3e4c500,#f3e4c5 .6em)}
 /* Gemalte Medaillons (assets/ui/seals/*.webp): leere Fassung = dunkle, eingelassene Prägung desselben Siegels */
 .seal-setting.has-art{border-radius:50%;background:radial-gradient(circle,#1a1008 0 60%,#3b2412 72%,#6b4414 76%,#b8863c 82%,#4a2c12 90%);box-shadow:inset 0 3px 8px #000c,0 1px 0 #fff4d055}
 .seal-setting.has-art img{position:absolute;inset:14%;width:72%;height:72%;border-radius:50%;opacity:.28;filter:grayscale(1) brightness(.6) contrast(1.2);mix-blend-mode:screen}

@@ -19,13 +19,12 @@
 }
 
 /* ---------- Knöpfe: Pergament mit dunkler Kontur und Bronze-/Holzrahmen ---------- */
-#modal button:not(.hotspot):not(.seal-token):not(.seal-socket),#app .speech-bubble button{
+#modal button:not(.hotspot):not(.seal-token):not(.seal-socket):not(.pm-place),#app .speech-bubble button{
  border:2px solid var(--line-dark);border-radius:10px;background:linear-gradient(#fbf1d9,#e8d3a4);color:var(--ink);
  box-shadow:inset 0 0 0 2px #fff6df99,0 3px 0 var(--bronze-dark),0 5px 10px #0005;text-shadow:none}
 #modal button.primary,#app .speech-bubble button.primary{background:linear-gradient(#3f7a72,var(--petrol) 55%,var(--petrol-dark));color:var(--cream);border-color:var(--line-dark);box-shadow:inset 0 0 0 2px var(--bronze-light),0 3px 0 var(--bronze-dark),0 5px 10px #0005}
 #modal button.danger{background:linear-gradient(#f6e0cc,#e2bfa2);color:#6a1f14}
-
-@media (hover:hover) and (pointer:fine){#modal button:not(:disabled):hover{filter:brightness(1.06)}}
+#modal button:not(:disabled):hover{filter:brightness(1.06)}
 #modal button:not(:disabled):active{transform:translateY(2px)}
 #modal button:disabled{opacity:.55}
 
@@ -48,7 +47,7 @@
 #modal[data-mode=minigame]:has(.scene-game) .dialog-head{position:absolute;inset:0 0 auto 0;height:var(--mg-bar);padding:0 12px;border:0;z-index:3;display:flex;align-items:center;justify-content:flex-end;
  background:linear-gradient(#3a2412f2,#24160bf2);box-shadow:inset 0 -2px 0 var(--bronze-dark),0 3px 10px #0008}
 #modal[data-mode=minigame]:has(.scene-game){--mg-bar:max(52px,calc(var(--u)*3))}
-#modal[data-mode=minigame]:has(.scene-game) #modal-kicker{position:absolute;left:50%;top:6px;transform:translateX(-50%);font-size:max(11px,calc(var(--u)*.55));letter-spacing:.2em;color:var(--bronze-light);opacity:.85;white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+#modal[data-mode=minigame]:has(.scene-game) #modal-kicker{position:absolute;left:50%;top:6px;transform:translateX(-50%);font-size:max(12.5px,calc(var(--u)*.55));letter-spacing:.16em;color:#f0cf8a;white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
 #modal[data-mode=minigame]:has(.scene-game) h2{position:absolute;left:50%;top:0;height:var(--mg-bar);transform:translateX(-50%);z-index:4;margin:0;padding-top:calc(var(--mg-bar)*.3);font-size:clamp(17px,calc(var(--u)*1.25),26px);line-height:1.2;color:var(--cream);text-shadow:0 2px 3px #000;white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 #modal[data-mode=minigame]:has(.scene-game) #close{width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;color:var(--wood-deep);background:radial-gradient(circle at 35% 30%,#fff1c4,var(--bronze-light) 45%,var(--bronze) 75%,var(--bronze-dark));border:2px solid var(--line-dark);box-shadow:0 2px 0 #000a;font-size:20px}
 #modal[data-mode=minigame]:has(.scene-game) #modal-content{position:absolute;inset:var(--mg-bar) 0 0 0;display:flex;flex-direction:column;min-height:0;padding:6px 10px 10px}
@@ -82,8 +81,7 @@
 /* Unsichtbare Tippflächen über gemalten Dingen: sichtbar nur bei Fokus/Hover (Desktop) */
 .w-hit{position:absolute;padding:0;margin:0;min-height:44px;min-width:44px;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .w-hit:focus-visible{outline:3px solid var(--bronze-light)!important;outline-offset:2px}
-@media (hover:hover){
-@media (hover:hover) and (pointer:fine){.w-hit:hover{box-shadow:0 0 0 2px #f3d58c88,0 0 22px 4px #ffe2a044!important}}}
+@media (hover:hover){.w-hit:hover{box-shadow:0 0 0 2px #f3d58c88,0 0 22px 4px #ffe2a044!important}}
 
 /* Schriftband für Rückmeldungen auf der Bühne (ersetzt Blitzflächen) */
 .w-voice{position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);z-index:12;width:min(62%,40em);margin:0;padding:.5em 1.4em;text-align:center;color:var(--ink);font-size:1.02em!important;line-height:1.32;
@@ -132,8 +130,7 @@
  background:radial-gradient(closest-side,#fff1b82e,#fff1b812 70%,transparent);box-shadow:0 0 0 2px #f3d58c80,0 0 26px 6px #ffe2a02e}
 #app #hotspots .hotspot.person::before{border-radius:44% 44% 18% 18%}
 #app #hotspots .hotspot:not(.exit):focus-visible::before,#app #hotspots .hotspot.speaking::before{opacity:1}
-@media (hover:hover){
-@media (hover:hover) and (pointer:fine){#app #hotspots .hotspot:not(.exit):hover::before{opacity:1}}}
+@media (hover:hover){#app #hotspots .hotspot:not(.exit):hover::before{opacity:1}}
 #app #hotspots .hotspot:not(.exit) .pin{position:absolute!important;left:50%!important;top:50%!important;margin:0!important;transform:translate(-50%,-50%);display:grid!important;place-items:center;width:var(--pin);height:var(--pin)}
 #app #hotspots .hotspot.hs-puzzle .pin{--pin:calc(var(--u)*1.7);width:var(--pin);height:var(--pin)}
 #app #hotspots .hotspot.hs-puzzle{--pin:calc(var(--u)*1.7)}
@@ -142,8 +139,7 @@
 #app #hotspots .hotspot.collectible .flint-art{position:absolute;inset:0;width:100%;height:100%}
 #app #hotspots .hotspot.collectible .label{top:calc(100% + 4px)!important}
 #app #hotspots .hotspot.person .label{border-left-width:2px}
-@media (hover:hover){
-@media (hover:hover) and (pointer:fine){#app #hotspots .hotspot:not(.exit):hover .label{background:var(--parchment)!important;color:var(--ink)!important;border-color:var(--line-dark)!important;text-shadow:none!important}}}
+@media (hover:hover){#app #hotspots .hotspot:not(.exit):hover .label{background:var(--parchment)!important;color:var(--ink)!important;border-color:var(--line-dark)!important;text-shadow:none!important}}
 
 /* Szeneneinstieg */
 #modal[data-mode=intro] .actions .primary::after{content:''}
@@ -180,7 +176,7 @@
 @keyframes scroll-open{from{clip-path:inset(0 0 58% 0);opacity:.4}to{clip-path:inset(0 0 0 0);opacity:1}}
 #modal .scroll-paper h3{margin:0 0 .5em;text-align:center;font-size:clamp(20px,calc(var(--u)*1.35),30px);color:#5a3a16;letter-spacing:.02em}
 #modal .scroll-paper p{margin:0;font-size:clamp(18px,calc(var(--u)*1.18),24px);line-height:1.55;text-align:left}
-.scroll-count{display:block;margin-top:.8em;text-align:center;font-size:.8em;letter-spacing:.14em;text-transform:uppercase;color:#8a6a3a}
+.scroll-count{display:block;margin-top:.8em;text-align:center;font-size:.8em;letter-spacing:.14em;text-transform:uppercase;color:#5e4020;font-weight:600}
 .scroll-nav{display:flex;gap:14px;justify-content:center;flex:none}
 #modal .scroll-nav .scroll-btn{min-height:48px;padding:0 1.2em;font-size:max(16px,var(--fs-s));color:var(--wood-deep);border-radius:24px;
  background:radial-gradient(circle at 35% 25%,#fff0c0,var(--bronze-light) 30%,var(--bronze) 75%,var(--bronze-dark));border:2px solid var(--line-dark);box-shadow:inset 0 0 0 2px #fff4d066,0 4px 8px #000a}

@@ -55,6 +55,10 @@ body.finale-on #app .hud,body.finale-on #app #hotspots,body.finale-on #objective
 #finale .fn-skip[hidden]{display:none}
 #finale[data-phase=end] .fn-camera{transform:none;opacity:1}
 #finale[data-phase=end] .fn-seals{display:none}
+/* Chronik rückt nach oben, damit Schlusstext und Knöpfe frei stehen */
+#finale .fn-book{transition:transform 1.2s cubic-bezier(.45,0,.25,1)}
+#finale:is([data-phase=speak],[data-phase=end]) .fn-book{transform:translateY(-13vh) scale(.84)}
+#finale.still:is([data-phase=speak],[data-phase=end]) .fn-book{transform:translateY(-4vh) scale(.72)}
 @media (max-height:700px){#finale .fn-book{width:min(86vw,54vh*2.1)}}
 @media (prefers-reduced-motion:reduce){
  #finale *{transition-duration:.2s!important;animation:none!important}

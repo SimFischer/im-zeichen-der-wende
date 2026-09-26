@@ -108,7 +108,7 @@
 .council-bubble.show{opacity:1}
 .council-bubble.left{left:clamp(1%,calc(var(--x) - 6%),57%)}
 .council-bubble.right{right:clamp(1%,calc(100% - var(--x) - 6%),57%)}
-.council-bubble .who{display:block;font-size:.78em;letter-spacing:.12em;text-transform:uppercase;color:#8a6a3e}
+.council-bubble .who{display:block;font-size:.78em;letter-spacing:.12em;text-transform:uppercase;color:#5e4020;font-weight:600}
 .council-bubble p{margin:.15em 0 0;font-size:1.18em;line-height:1.3}
 .council-bubble.good{border-color:#2d5a4b;background:#eef2e0}
 .council-bubble.think{border-color:#b8862e;background:#fbeecb}
