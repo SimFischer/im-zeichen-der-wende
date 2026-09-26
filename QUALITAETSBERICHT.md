@@ -8,7 +8,7 @@ Branch: `quality/ipad-review` (auf Basis von `feature/visual-minigame-overhaul`)
   - alle 12 Szenen
   - alle 12 Rätsel, jeweils Start- und Spielzustand
   - Karte, Notizbuch, Botenbeutel und Menü
-  - alle 9 Bonusspiele, jeweils Startkarte und Spiel
+  - alle Bonusspiele (damals 9, inzwischen 7), jeweils Startkarte und Spiel
 - **Gemessen** wurde je Ansicht:
   - Schrift unter 13 px
   - Touchziele unter 40 px
@@ -67,6 +67,6 @@ Branch: `quality/ipad-review` (auf Basis von `feature/visual-minigame-overhaul`)
 
 1. **Gemalte Grafiken** für Rom brennt!, das geheime Zeichen (eigene Marktszene) und die Argumentationsbrücke. Die Pfade und READMEs liegen bereit.
 2. **Hub-Hotspots im Hochformat:** Ausgänge am Bildrand liegen jetzt außerhalb des ersten Blicks, man erreicht sie per Wischen. Eine eigene Pfeilleiste wäre komfortabler.
-3. **Bonusspiele Tiber, Wagen, Circus** sind spielerisch gut, fachlich aber dünn. Ein Satz Einordnung auf der Siegkarte ist vorhanden. Mehr Fachinhalt würde sie verlängern.
+3. **Bonusspiele Tiber, Circus (Wagen inzwischen entfernt)** sind spielerisch gut, fachlich aber dünn. Ein Satz Einordnung auf der Siegkarte ist vorhanden. Mehr Fachinhalt würde sie verlängern.
 4. **Test auf echten iPads** mit Safari, dazu ein Unterrichtstest zur tatsächlichen Spieldauer (geplant 35–45 Minuten).
 5. **Fachliche Endabnahme** der Texte durch eine Fachkollegin oder einen Fachkollegen.

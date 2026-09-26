@@ -9,7 +9,7 @@ Vier Bereiche sind als gezeichnete Szenen neu gebaut (`scenegames.js`, `scenegam
 
 Bedienung: Karte antippen und Ziel antippen oder ziehen (Pointer Events), keine Hover-Abhängigkeit, Flächen mindestens 44 px, die Bühne passt sich an Quer- und Hochformat an, ohne dass das Fenster scrollt. Fehlt eine der Grafiken, zeigt `.sg-no-art` einen neutralen gezeichneten Ersatz.
 
-- **Die Kurierfahrt von 313** bleibt als neuntes Bonusspiel erhalten (`bonus/kurier.js`, Inhalte in `GAME.kurier`). Sie wird durch die Waage des Kaisers freigeschaltet und im Notizbuch gestartet.
+- **Kurierfahrt und „Belade den Wagen!“ entfernt:** Beide Spiele gibt es nicht mehr, auch nicht als Bonusspiel. Es bleiben sieben Bonusspiele. Alte Spielstände mit diesen Einträgen laden weiterhin; die Einträge werden ignoriert.
 - **Schrift:** EB Garamond ist jetzt eingebunden (`assets/fonts/`, variable Schrift, normal und kursiv, Stärken 400–800, zusammen ca. 390 KB; Lizenz in `assets/fonts/OFL.txt`).
 
 Tests: `npm install` (bringt `linkedom` als Entwicklungsabhängigkeit), dann `npm test`.
@@ -41,7 +41,6 @@ Acht freiwillige Bonusspiele werden ausschließlich im Notizbuch angeboten. Gesp
 | Katakombenlauf | Archiv im Dunkeln |
 | Schildwall | Kartenbrett im Lager |
 | Über den Tiber! | Zeichen auf dem Schild |
-| Belade den Wagen! | Kurierfahrt von 313 |
 | Circus Maximus | Abschluss der Chronik |
 
 Bonusspiele vergeben keine Siegel und sind keine Pflicht. Ein neues Spiel setzt auch den Bonusfortschritt zurück. Das Stempelspiel hat eine kompaktere Anleitung mit einem separat angeordneten, mindestens 52 Pixel hohen Startknopf sowie größere Stempel in der Hand und Abdrücke auf der Akte.
@@ -84,7 +83,7 @@ Sechs Rätsel sind jetzt eigene Minispiele (`minigames.js`, Inhalte in `data/gam
 - **Amtsstube – Der Stempel des Statthalters:** Die Akte liegt in der Tischmitte, ohne Zeitdruck. Römischen Stempel in die Hand nehmen und auf die Akte drücken; richtige Stempel hinterlassen einen Abdruck, 8 Akten.
 - **Archiv – Das Archiv im Dunkeln:** Mit dem Lichtkegel der Lampe vier Spuren finden und den Maßnahmen von 303 zuordnen.
 - **Lager 312 – Das Zeichen auf dem Schild:** 3×3-Puzzle (Tauschen oder Schieben) mit dem Christusmonogramm, danach Ereignis und Erzählung trennen.
-- **Stadt 313 – Die Kurierfahrt:** Spurwechsel-Rennen. Richtige Aussagen über 311/313 einsammeln, falschen ausweichen, 6 Botschaften.
+- **Stadt 313 – Vorher und Nachher:** Veränderungen im Stadtbild entdecken, dann Wachstafeln der richtigen Seite zuordnen (`citychange`).
 
 Wählbares Tempo, keine Leben, falsche Antworten werden erklärt. Der Fachtext-Knopf erscheint nur nach Fehlern in den klassischen Rätseln.
 

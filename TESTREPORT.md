@@ -303,3 +303,11 @@ Chromium (Playwright) mit Touch-Eingabe (`tap`) bei 1024×768, 1180×820, 1366×
 - Kein Scrollen, keine JS-Fehler, keine fehlgeschlagenen Ladevorgänge.
 
 Nebenbei behoben: Ein verspätetes `close`-Ereignis eines vorherigen Fensters konnte ein gerade gestartetes Bonusspiel sofort beenden (`bonusgames.js`).
+
+## Zusammenführung mit `main` (Kurierfahrt und Wagen entfernt)
+
+- Auf `main` waren „Belade den Wagen!“ und die Kurierfahrt entfernt worden. Diese Entscheidung gilt jetzt auch für den Stand dieses Zweigs: `bonus/wagen.js`, `bonus/kurier.js`, `GAME.kurier`, der Renncode `MiniGames.racer` und die nur dafür genutzten CSS-Regeln sind gelöscht.
+- Es gibt sieben Bonusspiele: Das geheime Zeichen, Rom brennt!, Amphoren-Chaos, Katakombenlauf, Schildwall, Über den Tiber!, Circus Maximus.
+- Die Stadt 313 behält das Szenenrätsel „Vorher und Nachher“.
+- Tests: `bonus-unlocks` prüft sieben Spiele und dass `wagen` und `kurier` weder registriert noch startbar sind. `playthrough` erwartet „Freigeschaltet: 7 / 7“ und lädt einen alten Bonusstand mit `kurierfahrt`, `kurier` und `wagen` ohne Fehler; die alten Kennungen werden verworfen.
+- `npm test`: alle 13 Testdateien bestanden.
