@@ -160,27 +160,6 @@ window.GAME.sealInfo={Konflikt:{sym:'⚡',color:'#9b3b24'},Quelle:{sym:'📜',co
 
 /* Minispiele: ersetzen den Standard-Mechanismus eines Rätsels (Alternative „Ohne Spiel“ bleibt verfügbar). */
 window.GAME.minigames={
- change:{type:'racer',goal:6,title:'Die Kurierfahrt von 313',prompt:'Bringe die Nachricht aus Mailand in die Stadt. Sammle sechs richtige Aussagen.',
-  intro:'Die Kaiser haben sich in Mailand geeinigt. Reite mit der Nachricht in die Stadt! Unterwegs liegen Schriftrollen auf der Straße – aber nicht alle sagen die Wahrheit.',
-  win:'Du hast sechs richtige Aussagen über die Wende gesammelt. Die Stadt erfährt, was sich wirklich geändert hat.',
-  statements:[
-   {ok:true,text:'313: Alle dürfen ihre Religion frei ausüben.'},
-   {ok:true,text:'Christen bekommen beschlagnahmten Besitz zurück.'},
-   {ok:true,text:'Christen dürfen sich wieder öffentlich versammeln.'},
-   {ok:true,text:'311: Galerius beendet die Verfolgung weitgehend.'},
-   {ok:true,text:'Konstantin lässt große Kirchen bauen.'},
-   {ok:true,text:'Geistliche erhalten Vorrechte.'},
-   {ok:true,text:'Römische Kulte bleiben weiter erlaubt.'},
-   {ok:true,text:'Die Vereinbarung schließen Konstantin und Licinius.'},
-   {ok:false,text:'313 wird das Christentum die einzige Religion.',why:'Andere Religionen blieben erlaubt. Staatsreligion wurde das Christentum erst gegen Ende des 4. Jahrhunderts.'},
-   {ok:false,text:'Ab 313 müssen alle Menschen Christen werden.',why:'Die Vereinbarung erlaubte gerade die freie Wahl der Religion.'},
-   {ok:false,text:'313 werden alle Tempel geschlossen.',why:'Die römischen Tempel und Kulte bestanden weiter.'},
-   {ok:false,text:'Christen müssen auch nach 313 opfern.',why:'Die Opferpflicht galt nicht mehr – Christen durften ihren Glauben frei leben.'},
-   {ok:false,text:'Die Verfolgung beginnt erst im Jahr 313.',why:'Umgekehrt: 311 und 313 endete die staatliche Verfolgung.'}
-  ]}
-};
-
-Object.assign(window.GAME.minigames,{
  sources:{type:'classify',skin:'echo',goal:8,portrait:'assets/minigames/chronistin.jpg',bg:'assets/minigames/forum-blur.jpg',title:'Das Echo der Quellen',counter:'Belege',
   prompt:'Die Chronistin ruft dir Aussagen zu. Ordne jede rechtzeitig ein.',
   intro:'Die Chronistin prüft, was auf dem Forum erzählt wird. Sie ruft dir Aussagen zu – du entscheidest schnell, wie sicher sie sind.',
@@ -242,7 +221,7 @@ Object.assign(window.GAME.minigames,{
     {text:'Wir wissen genau, was Konstantin gesehen hat.',ok:[2],why:'Die Berichte widersprechen sich – genau wissen wir es nicht.',hint:'Stimmen die Berichte überein?'}
    ]},
   winTitle:'Ereignis und Erzählung getrennt',win:'Die Schlacht von 312 ist gut belegt. Die Vision kennen wir nur aus späteren Erzählungen – und die unterscheiden sich.'}
-});
+};
 
 window.GAME.minigames.conflict={type:'lock',title:'Das Türschloss',
  prompt:'Drehe die drei Walzen, bis ein richtiger Satz entsteht. Dann zieh am Griff.',
