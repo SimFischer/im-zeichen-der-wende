@@ -64,6 +64,14 @@ Grafiken optional unter `assets/bonus/secret-signs/` (siehe dortige README).
 
 Grafiken optional unter `assets/bonus/rome-burns/` (siehe dortige README).
 
+**Schildwall** (neu gebaut) ist ein Reaktionsspiel an der Milvischen Brücke im Oktober 312.
+
+- Ein Trupp aus fünf Legionären steht als geschlossene Formation, Pfeilsalven kommen von links, oben oder rechts.
+- Drei große Knöpfe (↖ Links, ↑ Oben, ↗ Rechts) stellen die Schilde des ganzen Trupps gemeinsam, ein leuchtender Bogen zeigt vorher, woher die Salve kommt.
+- Nach drei Treffern ist Schluss. Gemessen wird die Überlebenszeit, die längste Zeit steht in `localStorage` unter `im-zeichen-der-wende:schildwall-best-v1`.
+- Das Tempo steigt über 90 Sekunden an, Doppelsalven gibt es erst nach 20 Sekunden.
+- Grafiken optional unter `assets/bonus/shieldwall/`.
+
 Historische Einordnungen in den Spielen sind bewusst vorsichtig formuliert (Symbole, Brand von Rom, Katakomben als Begräbnisstätten, Tiber/Milvische Brücke). Sie sollten wie die übrigen Texte fachlich gegengelesen werden.
 
 # Update: Minispiele

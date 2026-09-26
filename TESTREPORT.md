@@ -279,3 +279,27 @@ Automatische Layout-Prüfung in Chromium:
   - Das Notizbuch scrollt (gewollt).
   - Der unsichtbare Lehrkraft-Titel (langes Drücken) hat eine kleine Schrift.
   - Die Zierinschrift „Anno Domini“ liegt unter dem Kartenplatz.
+
+
+## Bonusspiel „Schildwall“ neu (26.09.2026)
+
+`npm test` bestanden, neu `tests/schildwall.cjs` (33 Prüfungen). Geprüft werden:
+
+- Alte Einzel-Schild-Mechanik entfernt: keine Einzelsoldaten, kein „unten“.
+- Drei beschriftete Knöpfe, die per `pointerdown` sofort reagieren. Alle Schilde schwenken gemeinsam.
+- Salven mit mehreren Pfeilen: Die richtige Richtung wehrt ab (Blockeffekt), die falsche kostet einen Treffer (Anzeige).
+- Nach drei Treffern ist Schluss, die Zeit stoppt.
+- Bestzeit: erste Zeit gespeichert, kürzere überschreibt nicht, längere schon. Sie bleibt nach dem Neuladen, kaputte Werte werden ignoriert.
+- Tempo steigt, bleibt aber fair.
+- Pause funktioniert.
+- Asset-Pfade vorbereitet; ohne Eintrag wird keine Datei angefordert.
+
+Fairness-Probe: Ein automatischer Spieler mit 0,45 s Reaktionszeit hält mindestens 90 s durch.
+
+Chromium (Playwright) mit Touch-Eingabe (`tap`) bei 1024×768, 1180×820, 1366×1024, 768×1024 und 820×1180:
+
+- Knöpfe 96–140 × 80–108 px, mindestens 40 px Abstand zum Rand.
+- Salven werden per Tippen abgewehrt.
+- Kein Scrollen, keine JS-Fehler, keine fehlgeschlagenen Ladevorgänge.
+
+Nebenbei behoben: Ein verspätetes `close`-Ereignis eines vorherigen Fensters konnte ein gerade gestartetes Bonusspiel sofort beenden (`bonusgames.js`).
