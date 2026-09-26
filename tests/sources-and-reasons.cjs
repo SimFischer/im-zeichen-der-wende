@@ -24,10 +24,13 @@ q.items.filter(it=>/Maxentius/.test(it.text)).forEach(it=>ok(it.ok[0]===0,'Battl
 ok(P.vision.rows.length===q.items.length,'Classic vision rows match quiz');
 P.vision.rows.forEach((r,i)=>{ok(r.label===q.items[i].text,'Same wording classic/minigame: '+r.label);ok(r.answer.join()===q.items[i].ok.join(),'Same category classic/minigame: '+r.label);});
 
-/* 2. Echo der Quellen: Mehrdeutige Aussagen werden nicht als eindeutig falsch bewertet. */
+/* 2. Echo der Quellen: drei klar getrennte Fächer, jede Aussage hat genau eine richtige Antwort. */
 const e=G.minigames.sources;
-const multi=['Nero ließ Rom absichtlich anzünden.','Die Christen hatten den Brand gelegt.'];
-multi.forEach(t=>{const it=e.items.find(x=>x.text===t);ok(it&&it.ok.includes(1)&&it.ok.includes(2),'Ambiguous claim accepts „unsicher“ and „nicht sicher feststellbar“: '+t);});
+ok(e.choices.join('|')==='gut belegt|umstritten|nicht belegt','Echo categories: gut belegt / umstritten / nicht belegt');
+for(const it of e.items)ok(it.ok.length===1,'Exactly one answer: '+it.text);
+ok(e.items.find(x=>x.text==='Nero ließ Rom absichtlich anzünden.')?.ok[0]===1,'Nero arson → umstritten');
+ok(e.items.find(x=>x.text==='Die Christen hatten den Brand gelegt.')?.ok[0]===2,'Christians arson → nicht belegt');
+ok(!e.items.some(it=>/^Die genaue Zahl/.test(it.text)),'Every Echo item is a full statement');
 ok(!e.items.some(it=>/^Wir kennen die genaue Zahl/.test(it.text)),'Old ambiguous number statement removed');
 const rep=e.items.find(it=>/antike Berichte/.test(it.text));ok(rep&&rep.ok.join()==='0'&&/nicht jedes Detail/.test(rep.why),'Report existence ≠ every detail true');
 for(const it of e.items)ok(it.why&&it.why.length>10,'Explanation for every Echo statement: '+it.text);

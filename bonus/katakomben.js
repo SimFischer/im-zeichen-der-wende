@@ -4,6 +4,8 @@
    Leere Lampe = sehr kleiner Lichtkreis, Ölschalen füllen wieder auf. */
 (()=>{
  if(!window.BonusGames)return;
+ const ART={"dir":"assets/bonus/catacombs/","files":{"bg":"catacombs-bg.png","tiles":"catacombs-tiles.png","player":"catacombs-player.png","objects":"catacombs-objects.png","symbols":"catacombs-symbols.png","exit-ui":"catacombs-exit-ui.png"},"available":["bg","tiles","player","objects","symbols","exit-ui"]};
+ const paint=(...a)=>window.BonusArt?.draw(...a);
  const DIRS={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
  const OPP={up:'down',down:'up',left:'right',right:'left'};
  const SYMBOLS=['Fisch','Anker','Taube','Chi-Rho'];
@@ -107,7 +109,7 @@
   intro:{text:'Du erkundest eine unterirdische Begräbnisstätte. Finde den Weg zurück zum Ausgang. Deine Öllampe wird langsam schwächer – kleine Ölschalen in den Gängen füllen sie wieder auf.',
    controls:['<b>Wischen</b> nach oben, unten, links oder rechts: Die Figur geht los, bis sie auf eine Wand trifft.','Du kannst schon vor einer Abzweigung wischen – die Figur biegt dort ab.','Kurz <b>tippen</b> hält an. Alternativ die großen Pfeiltasten<span class="mg-keys"> oder Pfeiltasten/WASD</span>.','Drei Bruchstücke einer Inschrift sind versteckt. Sie sind freiwillig.'],start:'Hinabsteigen'},
   setup(ctx){
-   const view=ctx.canvas({maxDpr:2}),g=view.g;
+   const view=ctx.canvas({maxDpr:2}),g=view.g;const imgs=ctx.assets?.(ART,()=>{if(M)renderStatic();})||{};
    const dark=document.createElement('canvas'),dg=dark.getContext('2d');
    let M,T=64,oc=null,odpr=1;
    const P={x:0,y:0,tx:0,ty:0,dir:null,queued:null,qT:0,moving:false,from:[0,0],to:[0,0],p:0,face:'right',step:0};
@@ -160,6 +162,9 @@
       }
      }
     }
+    // Artwork uses exactly the same collision grid; decoration never adds blocking cells.
+    if(imgs.tiles){for(let r=0;r<M.rows;r++)for(let c=0;c<M.cols;c++){const tile=M.g[r][c],x=c*T,y=r*T;const face=tile===1&&M.g[r+1]?.[c]!==1;paint(o,imgs.tiles,x,y,T,T,tile===1?(face?2:0):tile===2?7:5,8,'cover');if(tile===1){o.fillStyle=face?'#120c0644':'#120c0699';o.fillRect(x,y,T,T);}if(tile===3)paint(o,imgs.objects,x,y,T,T,5,7);if(tile===1&&face&&c%5===0)paint(o,imgs.objects,x,y,T,T,c%2?4:6,7);}
+     M.marks.forEach(m=>paint(o,imgs.symbols,m.c*T+T*.1,m.r*T+T*.1,T*.8,T*.8,SYMBOLS.indexOf(m.sym),4));paint(o,imgs['exit-ui'],M.exit[0]*T,M.exit[1]*T,T,T);}
     // Hebel und Tafel am Start
     if(M.lever){const [c,r]=M.lever;o.fillStyle='#3b2a1c';o.fillRect(c*T+T*.38,r*T+T*.62,T*.24,T*.16);}
    }
@@ -219,7 +224,7 @@
     ctx.win({title:'Du hast den Ausgang gefunden.',lines:[`Erkundete Wege: ${pct} %`,`Gefundene Fragmente: ${n}/3`],html:plate+plateText+'<div class="bonus-history"><h4>Spuren aus der Antike</h4><p>Einige christliche Symbole sind aus der Antike überliefert. Wie genau sie im Alltag verwendet wurden, lässt sich nicht immer sicher rekonstruieren.</p><p style="margin-top:.4em">Katakomben waren vor allem Begräbnisstätten. Christen lebten nicht dort.</p></div>',backLabel:'Zurück ins Archiv'});}
 
    /* Darstellung */
-   function draw(t){if(!M||!oc||!view.W)return;const W=view.W,H=view.H;
+   function draw(t){if(!M||!oc||!view.W)return;if(ctx.reduced)t=0;const W=view.W,H=view.H;
     const mw=M.cols*T,mh=M.rows*T;let vx=Math.max(0,Math.min(mw-W,cam.x-W/2)),vy=Math.max(0,Math.min(mh-H,cam.y-H/2));if(mw<W)vx=(mw-W)/2;if(mh<H)vy=(mh-H)/2;
     const off={x:-vx,y:-vy};
     g.fillStyle='#1a130d';g.fillRect(0,0,W,H);
@@ -231,7 +236,7 @@
     // Hebel
     if(M.lever){const p=S(...M.lever);g.save();g.translate(p.x+T*.5,p.y+T*.7);g.rotate(lever?.7:-.7);g.fillStyle='#6b4a2a';g.fillRect(-T*.05,-T*.42,T*.1,T*.42);g.fillStyle='#8d6a3e';g.beginPath();g.arc(0,-T*.42,T*.08,0,7);g.fill();g.restore();}
     // Ölschalen
-    M.bowls.forEach(([c,r],i)=>{if(!inView(c,r))return;const p=S(c,r),used=bowlUsed(i);const cx=p.x+T*.5,cy=p.y+T*.62;
+    M.bowls.forEach(([c,r],i)=>{if(!inView(c,r))return;const p=S(c,r),used=bowlUsed(i);const cx=p.x+T*.5,cy=p.y+T*.62;if(paint(g,imgs.objects,p.x+T*.2,p.y+T*.2,T*.6,T*.6,used?2:1,7))return;
      g.fillStyle='#00000055';g.beginPath();g.ellipse(cx,cy+T*.08,T*.2,T*.07,0,0,7);g.fill();
      g.fillStyle='#a45a30';g.beginPath();g.ellipse(cx,cy,T*.19,T*.1,0,0,Math.PI);g.fill();g.fillStyle=used?'#3b2a1c':'#d4a24a';g.beginPath();g.ellipse(cx,cy,T*.17,T*.06,0,0,7);g.fill();
      if(!used){const f=1+.12*Math.sin(t*9+i)+.06*Math.sin(t*23+i*2);g.fillStyle='#f6b64a';g.beginPath();g.moveTo(cx-T*.05,cy-T*.02);g.quadraticCurveTo(cx,cy-T*.3*f,cx+T*.05,cy-T*.02);g.fill();g.fillStyle='#fff1b8';g.beginPath();g.moveTo(cx-T*.02,cy-T*.02);g.quadraticCurveTo(cx,cy-T*.15*f,cx+T*.02,cy-T*.02);g.fill();}});
@@ -242,6 +247,7 @@
     const pp={x:(P.x+.5)*T+off.x,y:(P.y+.5)*T+off.y};const bob=P.moving?Math.sin(P.step*Math.PI*2)*T*.025:0;
     const [fx,fy]=DIRS[P.face]||[1,0];
     g.fillStyle='#00000066';g.beginPath();g.ellipse(pp.x,pp.y+T*.2,T*.22,T*.09,0,0,7);g.fill();
+    if(imgs.player){const f={down:5,up:3,right:2,left:4}[P.face]??0;paint(g,imgs.player,pp.x-T*.4,pp.y-T*.6,T*.8,T*.9,f,6);}else{
     g.save();g.translate(pp.x,pp.y+bob);
     g.scale(1.2,1.2);g.fillStyle='#2d5a4b';g.beginPath();g.ellipse(0,T*.04,T*.2,T*.17,0,0,7);g.fill();g.strokeStyle='#1b3a30';g.lineWidth=1.5;g.stroke();
     g.fillStyle='#d9c79e';g.beginPath();g.ellipse(-fx*T*.02,T*.02-fy*T*.02,T*.12,T*.05,0,0,7);g.fill();
@@ -249,6 +255,7 @@
     const lx=fx*T*.24+(fy?T*.1:0),ly=fy*T*.2+(fx?T*.05:0)-T*.02;g.fillStyle='#b5703f';g.beginPath();g.ellipse(lx,ly,T*.07,T*.045,0,0,7);g.fill();
     const fl=(.35+.65*oil)*(1+.1*Math.sin(t*13));g.fillStyle='#f6b64a';g.beginPath();g.moveTo(lx-T*.03,ly-T*.01);g.quadraticCurveTo(lx,ly-T*.17*fl,lx+T*.03,ly-T*.01);g.fill();
     g.restore();
+    }
     // Licht und Dunkelheit
     const flick=1+.035*Math.sin(t*11.3)+.025*Math.sin(t*23.7+1)+.015*Math.sin(t*41);
     const rad=T*(1.15+(3.3-1.15)*Math.sqrt(oil))*flick;const lpx=pp.x+fx*T*.18,lpy=pp.y+fy*T*.14;
@@ -266,20 +273,21 @@
     {const p=S(...M.exit);const ex=p.x+T*.5,ey=p.y+T*.5,er=T*(1.6+fin*9);const eg=g.createRadialGradient(ex,ey,0,ex,ey,er);eg.addColorStop(0,`rgba(255,246,214,${.35+fin*.5})`);eg.addColorStop(1,'rgba(255,246,214,0)');g.fillStyle=eg;g.fillRect(ex-er,ey-er,er*2,er*2);}
     g.restore();
     // Staubpartikel im Lichtkegel
-    for(const m of motes){const x=(m.x+.5)*T+off.x,y=(m.y+.5)*T+off.y;const d=Math.hypot(x-lpx,y-lpy)/rad;if(d>1)continue;g.fillStyle=`rgba(255,236,190,${(1-d)*.7})`;g.beginPath();g.arc(x,y,1.3,0,7);g.fill();}
+    for(const m of (ctx.reduced?[]:motes)){const x=(m.x+.5)*T+off.x,y=(m.y+.5)*T+off.y;const d=Math.hypot(x-lpx,y-lpy)/rad;if(d>1)continue;g.fillStyle=`rgba(255,236,190,${(1-d)*.7})`;g.beginPath();g.arc(x,y,1.3,0,7);g.fill();}
     // Ablage mit Fragmenten (oben links)
     const pw=Math.max(96,T*1.9),ph=pw*.36,sx0=14,sy0=14;g.fillStyle='#3b2a1cd9';g.fillRect(sx0-8,sy0-8,pw+16,ph+16);g.strokeStyle='#c9a86b';g.lineWidth=1.5;g.strokeRect(sx0-8,sy0-8,pw+16,ph+16);
     for(let k=0;k<3;k++){if(frags.includes(k))continue;g.save();fragPath(g,k,sx0,sy0,pw,ph);g.setLineDash([4,3]);g.strokeStyle='#c9a86b99';g.lineWidth=1.2;g.stroke();g.restore();}
     // Die Bruchstücke landen an ihrem Platz in der Tafel
     frags.forEach(fi=>{const f=fly.find(q=>q.k===fi);if(f&&f.t<.9){const e=f.t/.9,ee=1-Math.pow(1-e,3);g.save();g.translate((f.from.x-sx0)*(1-ee),(f.from.y-sy0-ph/2)*(1-ee)-Math.sin(e*Math.PI)*50);drawFragment(g,fi,sx0,sy0,pw,ph);g.restore();}else drawFragment(g,fi,sx0,sy0,pw,ph);});
     // Lampe mit Ölstand (unten links)
-    const ls=Math.max(30,Math.min(52,T*.7));lampArt(g,ls*1.25+12,H-ls*.95-10,ls,oil,t);
+    const ls=Math.max(30,Math.min(52,T*.7));if(imgs.objects){paint(g,imgs.objects,12,H-ls*2-12,ls*2,ls*2,oil>0?0:2,7);g.fillStyle='#ead59b';g.font='16px Georgia';g.textAlign='left';g.fillText('Öl '+Math.round(oil*100)+' %',12,H-8);}else lampArt(g,ls*1.25+12,H-ls*.95-10,ls,oil,t);
     if(finishing){g.fillStyle=`rgba(255,248,226,${Math.max(0,(finishing-1.4)/.8)*.85})`;g.fillRect(0,0,W,H);}
    }
    ctx.loop({update,draw});
-   ctx.stage.__debug={setOil:v=>oil=v,map:()=>M,player:()=>P,frags:()=>frags};
+   ctx.stage.__debug={art:ART,update,input,reset,setOil:v=>oil=v,map:()=>M,player:()=>P,frags:()=>frags};
    reset();
    return {start(){reset();}};
   }
  });
+ window.BonusGames.games.katakomben.art=ART;
 })();

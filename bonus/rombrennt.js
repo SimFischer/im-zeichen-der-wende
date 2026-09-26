@@ -13,7 +13,8 @@
    mit dem Spiel. Die Bestzeit steht in localStorage unter BEST_KEY. */
 (()=>{
  if(!window.BonusGames)return;
- const ART={dir:'assets/bonus/rome-burns/',files:{bg:'rome-burns-bg.png',tiles:'rome-burns-tiles.png',player:'rome-burns-player.png',jar:'rome-burns-water-jar.png',fire:'rome-burns-fire.png',fg:'rome-burns-fg.png',ui:'rome-burns-ui.png',smoke:'rome-burns-smoke.png',platforms:'rome-burns-platforms.png',goal:'rome-burns-goal.png'},available:[]};
+ const ART={dir:'assets/bonus/rome-burns/',files:{bg:'rome-burns-bg.png',tiles:'rome-burns-tiles.png',player:'rome-burns-player.png',jar:'rome-burns-water-jar.png',fire:'rome-burns-fire.png',fg:'rome-burns-fg.png',ui:'rome-burns-ui.png',smoke:'rome-burns-smoke.png',platforms:'rome-burns-platforms.png',goal:'rome-burns-goal.png'},available:['bg','tiles','player','jar','fire','smoke','platforms','goal']};
+ const paint=(...a)=>window.BonusArt?.draw(...a);
  const BEST_KEY='im-zeichen-der-wende:rombrennt-best-v1';
  const loadBest=()=>{try{const v=JSON.parse(localStorage.getItem(BEST_KEY));const ms=v&&v.ms;return Number.isFinite(ms)&&ms>0&&ms<3600000?ms:null;}catch(e){return null;}};
  const saveBest=ms=>{try{localStorage.setItem(BEST_KEY,JSON.stringify({ms:Math.round(ms)}));}catch(e){}};
@@ -60,7 +61,7 @@
   setup(ctx){
    const has=k=>ART.available.includes(k),src=k=>ART.dir+ART.files[k];
    const view=ctx.canvas({maxDpr:2}),g=view.g;
-   const imgs={};Object.keys(ART.files).filter(has).forEach(k=>{if(typeof Image==='undefined')return;const im=new Image();im.onload=()=>{imgs[k]=im;staticLayer=null;};im.src=src(k);});
+   const imgs=ctx.assets?.(ART,()=>{staticLayer=null;skyLayer=null;})||{};
    const hud=ctx.layer('rom-hud'+(has('ui')?' art-ui':''),`<div class="rom-tablet" role="timer" aria-live="off"><span class="rom-label">Zeit</span><span class="rom-time">0:00,0</span><span class="rom-bestline">Bestzeit <b class="rom-best">${fmt(loadBest())}</b></span></div><div class="rom-fires" aria-label="Gelöschte Brände"></div><button type="button" class="rom-restart" aria-label="Runde neu starten">↺ Neu</button>`);
    const pad=ctx.layer('rom-pad','<div class="rom-dir"><button type="button" data-k="l" aria-label="Nach links">◀</button><button type="button" data-k="r" aria-label="Nach rechts">▶</button></div><button type="button" class="rom-jump" data-k="j" aria-label="Springen und klettern">Sprung</button>');
    const count=ctx.layer('rom-count','');count.setAttribute('aria-live','polite');
@@ -169,7 +170,7 @@
     result={ms,best:record?ms:old,record,previous:old};
     ctx.setTask('Die Gasse ist gerettet.');ctx.say(record?(old==null?'Geschafft! Deine erste Bestzeit.':'Neue Bestzeit!'):'Alle Brände gelöscht!',2200);
     ctx.after(1800,()=>ctx.win({title:'Die Brände sind gelöscht.',lines:[`Deine Zeit: ${fmt(ms)}`,record?(old==null?'Das ist deine erste Bestzeit.':`Neue Bestzeit! Vorher: ${fmt(old)}`):`Bestzeit: ${fmt(old)}`],
-     html:`<div class="rom-chron"><img src="assets/puzzles/forum/chronistin-face.webp" alt=""><div><p class="rom-who">Die Chronistin</p><p>„Der große Brand von Rom im Jahr 64 ist gut belegt. Wer ihn verursachte, lässt sich dagegen nicht sicher feststellen.“</p></div></div><p class="muted" style="text-align:center">Ereignis ≠ sichere Kenntnis der Ursache.</p>`,backLabel:'Zurück zum Forum'}));}
+     html:`${imgs.goal?'<img class="bonus-result-art" src="'+src('goal')+'" alt="Die gerettete Gasse">':''}<div class="rom-chron"><img src="assets/puzzles/forum/chronistin-face.webp" alt=""><div><p class="rom-who">Die Chronistin</p><p>„Der große Brand von Rom im Jahr 64 ist gut belegt. Wer ihn verursachte, lässt sich dagegen nicht sicher feststellen.“</p></div></div><p class="muted" style="text-align:center">Ereignis ≠ sichere Kenntnis der Ursache.</p>`,backLabel:'Zurück zum Forum'}));}
 
    /* ---------- Zeichnen ---------- */
    function layout(){T=Math.max(30,Math.round(Math.min((view.H||450)/9.4,(view.W||800)/11.5)));staticLayer=null;skyLayer=null;}
@@ -178,6 +179,7 @@
    function roughRect(o,x,y,w,h,r,j){o.beginPath();o.moveTo(x+wob(r,j),y+wob(r,j));const n=Math.max(2,Math.round(w/(T*.8)));for(let i=1;i<=n;i++)o.lineTo(x+w*i/n+wob(r,j),y+wob(r,j));const m=Math.max(2,Math.round(h/(T*.8)));for(let i=1;i<=m;i++)o.lineTo(x+w+wob(r,j),y+h*i/m+wob(r,j));for(let i=n-1;i>=0;i--)o.lineTo(x+w*i/n+wob(r,j),y+h+wob(r,j));for(let i=m-1;i>0;i--)o.lineTo(x+wob(r,j),y+h*i/m+wob(r,j));o.closePath();}
    const PLASTER=[['#e4b77a','#c98d52'],['#d9a07a','#b06a44'],['#e8cf9a','#c4a066'],['#caa27a','#9c7650']];
    function facade(o,x,y,w,h,tint,r,opts={}){
+    if(imgs.tiles){paint(o,imgs.tiles,x*T,y*T,w*T,h*T,0,3,'cover');return;}
     const X=x*T,Y=y*T,W=w*T,H=h*T,[c1,c2]=PLASTER[tint%PLASTER.length];
     const gr=o.createLinearGradient(0,Y,0,Y+H);gr.addColorStop(0,c1);gr.addColorStop(1,c2);
     roughRect(o,X,Y,W,H,r,T*.05);o.fillStyle=imgs.tiles?o.createPattern(imgs.tiles,'repeat'):gr;o.fill();
@@ -216,9 +218,9 @@
      // begehbare Dachkante: heller Gesimsstein, damit man tragende Dächer sofort erkennt
      o.fillStyle='#f0dcae';o.fillRect(h.x*T-T*.18,h.y*T-T*.02,h.w*T+T*.36,T*.1);o.strokeStyle='#5a3a1a';o.lineWidth=1.5;o.strokeRect(h.x*T-T*.18,h.y*T-T*.02,h.w*T+T*.36,T*.1);});
     // Kisten
-    LEVEL.crates.forEach(c=>{const X=c.x*T,Y=c.y*T;o.fillStyle='#9a6a3a';roughRect(o,X+1,Y+1,T-2,T-2,r,T*.03);o.fill();o.strokeStyle='#4a2a12';o.lineWidth=2;o.stroke();o.beginPath();o.moveTo(X+T*.1,Y+T*.1);o.lineTo(X+T*.9,Y+T*.9);o.moveTo(X+T*.9,Y+T*.1);o.lineTo(X+T*.1,Y+T*.9);o.moveTo(X,Y+T*.5);o.lineTo(X+T,Y+T*.5);o.stroke();});
+    LEVEL.crates.forEach(c=>{const X=c.x*T,Y=c.y*T;if(paint(o,imgs.platforms,X,Y,T,T,1,4))return;o.fillStyle='#9a6a3a';roughRect(o,X+1,Y+1,T-2,T-2,r,T*.03);o.fill();o.strokeStyle='#4a2a12';o.lineWidth=2;o.stroke();o.beginPath();o.moveTo(X+T*.1,Y+T*.1);o.lineTo(X+T*.9,Y+T*.9);o.moveTo(X+T*.9,Y+T*.1);o.lineTo(X+T*.1,Y+T*.9);o.moveTo(X,Y+T*.5);o.lineTo(X+T,Y+T*.5);o.stroke();});
     // Markisen (tragen): gestreiftes Tuch mit Bogenkante
-    LEVEL.awnings.forEach(a=>{const X=a.x*T,Y=a.y*T,W2=a.w*T;o.strokeStyle='#5a3a1c';o.lineWidth=Math.max(3,T*.08);o.beginPath();o.moveTo(X+W2-T*.1,Y+T*.2);o.lineTo(X+W2-T*.1,GROUND*T);o.stroke();
+    LEVEL.awnings.forEach(a=>{const X=a.x*T,Y=a.y*T,W2=a.w*T;if(imgs.platforms){for(let k=0;k<a.w;k++)paint(o,imgs.platforms,X+k*T,Y-T*.1,T,T*.5,0,4,'cover');return;}o.strokeStyle='#5a3a1c';o.lineWidth=Math.max(3,T*.08);o.beginPath();o.moveTo(X+W2-T*.1,Y+T*.2);o.lineTo(X+W2-T*.1,GROUND*T);o.stroke();
      for(let k=0;k<a.w*3;k++){o.fillStyle=k%2?'#efe2c4':'#a8322a';o.fillRect(X+k*T/3,Y,T/3+.5,T*.3);}
      for(let k=0;k<a.w*3;k++){o.fillStyle=k%2?'#efe2c4':'#a8322a';o.beginPath();o.arc(X+k*T/3+T/6,Y+T*.3,T/6,0,Math.PI);o.fill();}
      o.strokeStyle='#5a220e';o.lineWidth=1.5;o.strokeRect(X,Y,W2,T*.3);});
@@ -226,6 +228,7 @@
     LEVEL.ladders.forEach(l=>{const X=l.x*T,Y0=l.top*T-T*.35,Y1=GROUND*T;o.strokeStyle='#7a4a24';o.lineWidth=Math.max(3,T*.09);o.beginPath();o.moveTo(X+T*.22,Y0);o.lineTo(X+T*.2,Y1);o.moveTo(X+T*.78,Y0);o.lineTo(X+T*.8,Y1);o.stroke();o.lineWidth=Math.max(2,T*.07);o.beginPath();for(let y=Y0+T*.3;y<Y1;y+=T*.42){o.moveTo(X+T*.22,y+wob(r,2));o.lineTo(X+T*.78,y+wob(r,2));}o.stroke();});
     // Wasserstellen: Brunnen mit Löwenkopf, Zisterne als großes Tongefäß
     LEVEL.water.forEach(w=>{const X=w.x*T,Y=GROUND*T;
+     if(imgs.tiles){paint(o,imgs.tiles,X-T,Y-T*2,T*2,T*2,w.kind==='zisterne'?2:1,3);return;}
      if(w.kind==='zisterne'){o.fillStyle='#b8683a';o.beginPath();o.ellipse(X,Y-T*.75,T*.62,T*.72,0,0,7);o.fill();o.strokeStyle='#5a2a10';o.lineWidth=2;o.stroke();o.fillStyle='#8a4a24';o.fillRect(X-T*.35,Y-T*1.55,T*.7,T*.2);o.fillStyle='#4a86a0';o.beginPath();o.ellipse(X,Y-T*1.45,T*.32,T*.08,0,0,7);o.fill();o.strokeStyle='#e8b27a88';o.beginPath();o.arc(X-T*.2,Y-T*.9,T*.35,Math.PI*.9,Math.PI*1.4);o.stroke();}
      else{o.fillStyle='#a8987a';o.beginPath();o.moveTo(X-T*.95,Y);o.lineTo(X-T*.85,Y-T*.8);o.quadraticCurveTo(X,Y-T*.95,X+T*.85,Y-T*.8);o.lineTo(X+T*.95,Y);o.closePath();o.fill();o.strokeStyle='#4a3a28';o.lineWidth=2;o.stroke();
       o.fillStyle='#4a86a0';o.beginPath();o.ellipse(X,Y-T*.82,T*.78,T*.1,0,0,7);o.fill();
@@ -242,7 +245,7 @@
      else if(t<.75){o.beginPath();o.ellipse(x,b-s*.9,s*.16,s*.9,0,0,7);o.fill();}
      else{o.fillRect(x,b-s*.7,s*1.4,s*.7);}}
     o.strokeStyle='#4a2226';o.lineWidth=H*.012;for(let k=0;k<14;k++){const x=W*.2+k*H*.09;o.beginPath();o.arc(x,H*.6,H*.04,Math.PI,0);o.stroke();}o.fillStyle='#4a2226';o.fillRect(W*.2-H*.04,H*.55,14*H*.09,H*.012);}
-   function draw(t){if(!view.W||!grid)return;const W=view.W,H=view.H;
+   function draw(t){if(!view.W||!grid)return;if(ctx.reduced)t=0;const W=view.W,H=view.H;
     if(!staticLayer)renderStatic();if(!skyLayer||skyLayer.height!==Math.round(H))renderSky();
     const ox=W/2-cam.x*T,oy=H/2-cam.y*T;
     // Kulisse mit Parallaxe (oder Grafik rome-burns-bg.png)
@@ -265,7 +268,7 @@
     // Brandstellen
     fires.forEach((f,i)=>{const x=ox+f.x*T,y=oy+f.y*T;
      if(f.level>0){g.save();g.globalCompositeOperation='lighter';const gl=g.createRadialGradient(x,y-T*.6,0,x,y-T*.6,T*3.2*f.level);gl.addColorStop(0,`rgba(255,150,60,${.5*f.level})`);gl.addColorStop(1,'rgba(255,150,60,0)');g.fillStyle=gl;g.fillRect(x-T*3.5,y-T*4,T*7,T*7);g.restore();
-      if(imgs.fire){const fr=Math.floor(t*10)%4,fw=imgs.fire.width/4;g.drawImage(imgs.fire,fr*fw,0,fw,imgs.fire.height,x-T*1.1,y-T*2.2*f.level,T*2.2,T*2.2*f.level);}
+      if(imgs.fire){paint(g,imgs.fire,x-T*1.1,y-T*2.2,T*2.2,T*2.2,Math.floor(t*7)%5,5);}
       else for(let layer=0;layer<3;layer++){const cols=['#c83a1a','#f07a2a','#ffd070'][layer],sc=[1,.72,.45][layer]*f.level;g.fillStyle=cols;g.beginPath();g.moveTo(x-T*.9*sc,y);
        for(let k=0;k<=6;k++){const px=x-T*.9*sc+k*T*1.8*sc/6,hh=T*(1.2+((k*37)%5)*.2)*sc*(1+.18*Math.sin(t*(8+k)+k*1.3+i));g.quadraticCurveTo(px-T*.15*sc,y-hh*.55,px,y-hh*(k%2?1:.6));}
        g.lineTo(x+T*.9*sc,y);g.closePath();g.fill();}}
@@ -273,17 +276,17 @@
      if(!f.out){g.fillStyle='rgba(255,246,224,.95)';g.strokeStyle='#3a1a0a';g.lineWidth=3;g.font=`700 ${Math.round(T*.32)}px Georgia,serif`;g.textAlign='center';g.strokeText(`Brand ${i+1}`,x,y-T*2.2);g.fillText(`Brand ${i+1}`,x,y-T*2.2);}});
     parts.forEach(p=>{const x=ox+p.x*T,y=oy+p.y*T,a=1-p.t/p.life;if(p.k==='ember'){g.fillStyle=`rgba(255,${160+(p.x*97%80|0)},60,${a})`;g.beginPath();g.arc(x,y,T*.06+T*.05*a,0,7);g.fill();}else if(p.k==='drop'){g.fillStyle=`rgba(130,190,225,${a})`;g.beginPath();g.arc(x,y,T*.08,0,7);g.fill();}else{g.fillStyle=`rgba(200,170,120,${.6*a})`;g.beginPath();g.arc(x,y,T*.12+p.t*T*.2,0,7);g.fill();}});
     drawPlayer(ox+P.x*T,oy+P.y*T,t);
-    smoke.forEach(p=>{const x=ox+p.x*T,y=oy+p.y*T;const a=Math.sin(Math.min(1,p.t/3.6)*Math.PI)*(p.steam?.28:.22);g.fillStyle=p.steam?`rgba(240,240,236,${a})`:`rgba(70,60,60,${a})`;g.beginPath();g.arc(x,y,T*p.s*(1+p.t*.45),0,7);g.fill();});
+    smoke.forEach(p=>{const x=ox+p.x*T,y=oy+p.y*T;if(imgs.smoke){g.save();g.globalAlpha=.35*(1-p.t/3.6);paint(g,imgs.smoke,x-T*p.s,y-T*p.s*2,T*p.s*2,T*p.s*3,Math.min(5,Math.floor(p.t*2)),6);g.restore();return;}const a=Math.sin(Math.min(1,p.t/3.6)*Math.PI)*(p.steam?.28:.22);g.fillStyle=p.steam?`rgba(240,240,236,${a})`:`rgba(70,60,60,${a})`;g.beginPath();g.arc(x,y,T*p.s*(1+p.t*.45),0,7);g.fill();});
     LEVEL.smoke.forEach(s=>{const x=ox+s.x*T,y=oy+s.y*T;for(let k=0;k<3;k++){g.fillStyle='rgba(90,80,80,.13)';g.beginPath();g.ellipse(x+Math.sin(t*.8+k)*T*.4,y-1*T-k*T*.35,T*s.rx*.6,T*.45,0,0,7);g.fill();}});
     if(imgs.fg){const fw=imgs.fg.width*H/imgs.fg.height,px=((ox*1.25)%fw+fw)%fw-fw;for(let x=px;x<W;x+=fw)g.drawImage(imgs.fg,x,0,fw,H);}
     if(stumble>0&&stumble<.35){g.fillStyle=`rgba(20,12,8,${(.35-stumble)/.35*.6})`;g.fillRect(0,0,W,H);}
    }
-   function drawJar(x,y,s,full){if(imgs.jar){g.drawImage(imgs.jar,x-s*.4,y-s*.9,s*.8,s*.9);return;}
+   function drawJar(x,y,s,full){if(paint(g,imgs.jar,x-s*.4,y-s*.9,s*.8,s*.9,full?1:0,2))return;
     g.fillStyle='#b8683a';g.beginPath();g.moveTo(x-s*.12,y-s*.78);g.quadraticCurveTo(x-s*.42,y-s*.55,x-s*.28,y-s*.15);g.quadraticCurveTo(x,y+s*.02,x+s*.28,y-s*.15);g.quadraticCurveTo(x+s*.42,y-s*.55,x+s*.12,y-s*.78);g.closePath();g.fill();g.strokeStyle='#5a2a10';g.lineWidth=Math.max(1.5,s*.05);g.stroke();
     g.fillStyle='#8a4a24';g.fillRect(x-s*.16,y-s*.9,s*.32,s*.14);g.beginPath();g.moveTo(x+s*.14,y-s*.8);g.quadraticCurveTo(x+s*.38,y-s*.8,x+s*.3,y-s*.5);g.stroke();
     if(full){g.fillStyle='#6ab0d4';g.beginPath();g.ellipse(x,y-s*.88,s*.14,s*.05,0,0,7);g.fill();g.fillStyle='#ffffff55';g.fillRect(x-s*.2,y-s*.6,s*.06,s*.3);}}
    function drawPlayer(x,y,t){const s=T;const f=P.face;
-    if(imgs.player){const fr=P.climb?7:!P.on?6:Math.abs(P.vx)>.4?1+Math.floor(P.run*2)%4:0,fw=imgs.player.width/8;g.save();g.translate(x,y);g.scale(f,1);g.drawImage(imgs.player,fr*fw,0,fw,imgs.player.height,-s*.6,-s*1.6,s*1.2,s*1.6);g.restore();return;}
+    if(imgs.player){const fr=P.climb?6:!P.on?5:Math.abs(P.vx)>.4?Math.floor(P.run*2)%4:0;g.save();g.translate(x,y);g.scale(f,1);if(P.inv>0&&!ctx.reduced&&Math.floor(t*12)%2)g.globalAlpha=.55;paint(g,imgs.player,-s*.6,-s*1.6,s*1.2,s*1.6,fr,8);drawJar(s*.35,-s*.45,s*.5,jar.full);g.restore();return;}
     g.save();g.translate(x,y);if(stumble>0)g.rotate(f*.8*Math.min(1,(.7-stumble)*4));if(P.inv>0&&Math.floor(t*12)%2)g.globalAlpha=.55;
     g.fillStyle='#00000040';g.beginPath();g.ellipse(0,0,s*.32,s*.07,0,0,7);g.fill();g.scale(f,1);g.lineCap='round';g.lineJoin='round';
     const run=P.on&&Math.abs(P.vx)>.3?Math.sin(P.run*2.2):0,air=!P.on&&!P.climb;

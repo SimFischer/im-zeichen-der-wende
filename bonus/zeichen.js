@@ -10,8 +10,8 @@
    Ohne eigene Szene dient das Forum-Gemälde (Figuren sind dort Teil des Bildes) als Übergangslösung. */
 (()=>{
  if(!window.BonusGames)return;
- const ART={dir:'assets/bonus/secret-signs/',files:{scene:'secret-signs-scene.png',characters:'secret-signs-characters.png',symbols:'secret-signs-symbols.png',panel:'secret-signs-panel.png',guide:'secret-signs-npc-guide.png',stall:'secret-signs-stall.png'},available:[]};
- const has=k=>ART.available.includes(k),src=k=>ART.dir+ART.files[k];
+ const ART={dir:'assets/bonus/secret-signs/',files:{scene:'secret-signs-scene.png',characters:'secret-signs-characters.png',symbols:'secret-signs-symbols.png',panel:'secret-signs-panel.png',guide:'secret-signs-npc-guide.png',stall:'secret-signs-stall.png'},available:['scene','characters','symbols','panel','guide','stall']};
+ const failed=new Set();const has=k=>ART.available.includes(k)&&!failed.has(k),src=k=>ART.dir+ART.files[k];
 
  /* Szenen-Layout (Anteile in % des Bildes). Bei einer neuen secret-signs-scene.png hier eigene Stellen eintragen. */
  const LAYOUTS={
@@ -25,7 +25,14 @@
     {x:57.4,y:57.4,m:'lamp',on:'auf einer Öllampe'},{x:89.5,y:54.5,m:'stone',on:'an der Mauer'},
     {x:14,y:51.2,m:'wood',on:'am Brett des Marktstands'},{x:34.6,y:67.2,m:'tablet',on:'auf einer Wachstafel'},
     {x:84.8,y:71,m:'wood',on:'auf dem Fass'},{x:52.5,y:87,m:'scratch',on:'ins Pflaster geritzt'}]},
-  custom:null
+  custom:{img:ART.dir+ART.files.scene,ratio:699/278,guide:{name:'Chronistin',x:22,y:50},slots:[
+ {x:12,y:64,m:'wood',on:'am Brett des Marktstands'},{x:25,y:78,m:'cloth',on:'am Tuch des Marktstands'},
+ {x:36,y:83,m:'paint',on:'auf der Tontafel'},{x:48,y:83,m:'stone',on:'auf dem Pflaster'},
+ {x:60,y:79,m:'stone',on:'auf dem Pflaster'},{x:73,y:82,m:'wood',on:'auf einer kleinen Tafel'},
+ {x:87,y:86,m:'scratch',on:'auf dem Pflaster'},{x:94,y:61,m:'stone',on:'an der Mauer'},
+ {x:82,y:52,m:'lamp',on:'auf einer Öllampe'},{x:69,y:51,m:'stone',on:'am Steinblock'},
+ {x:57,y:45,m:'wood',on:'am Holzbrett'},{x:44,y:56,m:'tablet',on:'auf einer Wachstafel'},
+ {x:30,y:45,m:'wood',on:'am Marktstand'},{x:6,y:87,m:'scratch',on:'auf dem Pflaster'}]}
  };
  const L=()=>has('scene')&&LAYOUTS.custom?LAYOUTS.custom:{...LAYOUTS.forum,img:has('scene')?src('scene'):LAYOUTS.forum.img};
 
@@ -52,14 +59,14 @@
 
  /* Ein Zeichen in einer Machart. Gegenstände (Lampe, Wachstafel) zeichnen ihren Träger mit. */
  function glyph(name,m,cls=''){
-  if(has('symbols')){const i=ORDER.indexOf(name);return `<span class="zs-glyph zs-sheet m-${m} ${cls}" style="background-position:${(i%4)*100/3}% ${Math.floor(i/4)*100}%" aria-hidden="true"></span>`;}
+  if(has('symbols')&&['Fisch','Anker','Taube','Chi-Rho','Lorbeer'].includes(name)){const i=['Fisch','Anker','Taube','Chi-Rho','Lorbeer'].indexOf(name);return `<span class="zs-glyph zs-sheet m-${m} ${cls}" style="background-position:${i*25}% 0" aria-hidden="true"></span>`;}
   const d=SYM[name].d;
   const carrier=m==='lamp'?'<path class="zs-lamp" d="M-58 18 Q-60 -22 0 -26 Q46 -24 60 -6 L84 -10 Q88 0 80 6 Q58 30 0 30 Q-40 30 -58 18 Z M-58 4 Q-80 -6 -74 -26 Q-64 -18 -54 -10"/><ellipse class="zs-lamp-top" cx="-4" cy="0" rx="40" ry="20"/><path class="zs-flame" d="M84 -12 Q90 -30 82 -44 Q78 -30 76 -14 Z"/>'
    :m==='tablet'?'<rect class="zs-tab-frame" x="-62" y="-46" width="124" height="92" rx="6"/><rect class="zs-tab-wax" x="-50" y="-35" width="100" height="70" rx="3"/>':'';
   const scale=m==='lamp'?.42:m==='tablet'?.62:1;
   return `<svg class="zs-glyph m-${m} ${cls}" viewBox="${m==='lamp'?'-95 -60 190 120':m==='tablet'?'-70 -55 140 110':'-50 -50 100 100'}" aria-hidden="true" focusable="false">${carrier}<g transform="scale(${scale})${m==='lamp'?' translate(-8 0)':''}"><path class="zs-shade" d="${d}"/><path class="zs-line" d="${d}"/></g></svg>`;
  }
- const plain=name=>`<svg class="zs-plain" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><path d="${SYM[name].d}"/></svg>`;
+ const plain=name=>has('symbols')&&['Fisch','Anker','Taube','Chi-Rho','Lorbeer'].includes(name)?glyph(name,'stone','zs-plain'):`<svg class="zs-plain" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><path d="${SYM[name].d}"/></svg>`;
 
  window.BonusGames.register({
   id:'zeichen',title:'Das geheime Zeichen',kicker:'Bonusspiel · Auf dem Markt',scene:'house',
@@ -67,12 +74,13 @@
   intro:{text:'Auf dem Markt sind Zeichen versteckt – in Holz geritzt, auf Stoff gestickt, auf Ton gemalt. Die Chronistin zeigt dir, welche Zeichen Christen nutzten, um sich zu erkennen.',
    controls:['<b>Tippe</b> im Bild auf die Stellen, an denen du ein Zeichen entdeckst.','Die gesuchten Zeichen hängen oben auf der Holztafel.','Falsche Tipps kosten nichts.'],start:'Auf den Markt'},
   setup(ctx){
-   const lay=L();
+   const lay=L();const imgs=ctx.assets?.(ART,()=>{for(const k of ART.available)if(!imgs[k])failed.add(k);root.querySelectorAll('img').forEach(im=>{if(im.complete&&!im.naturalWidth){if(im.classList.contains('zs-bg'))im.src=LAYOUTS.forum.img;else im.hidden=true;}});});
+
    const root=ctx.layer('zs-root'+Object.keys(ART.files).filter(has).map(k=>' art-'+k).join(''),`
     <div class="zs-scene" style="--zs-ratio:${lay.ratio}">
      <img class="zs-bg" src="${esc(lay.img)}" alt="Marktplatz auf dem Forum. Links steht die Chronistin mit einer Schriftrolle, rechts ein Mann in rotem Mantel, dazwischen Kisten, Tücher und Amphoren." draggable="false">
-     ${has('stall')?`<img class="zs-overlay" src="${src('stall')}" alt="" draggable="false">`:''}
-     ${has('characters')?`<img class="zs-overlay" src="${src('characters')}" alt="" draggable="false">`:''}
+     ${has('stall')?`<img class="zs-overlay zs-stall" src="${src('stall')}" alt="" draggable="false">`:''}
+     ${has('characters')?`<img class="zs-overlay zs-person" src="${src('characters')}" alt="" draggable="false">`:''}
      <div class="zs-marks"></div>
      <div class="zs-ripples" aria-hidden="true"></div>
     </div>

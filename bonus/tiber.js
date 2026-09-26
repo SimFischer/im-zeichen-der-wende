@@ -4,6 +4,8 @@
    Spielt nur mit dem Ort am Tiber; keine Behauptung, dass so eine Überquerung Teil der Schlacht war. */
 (()=>{
  if(!window.BonusGames)return;
+ const ART={"dir":"assets/bonus/tiber/","files":{"bank-views":"tiber-bank-views.png","bg":"tiber-bg.png","player":"tiber-player.png","platforms":"tiber-platforms.png","decor":"tiber-decor.png","splash":"tiber-splash.png","target-bank":"tiber-target-bank.png"},"available":["bank-views","bg","player","platforms","decor","splash","target-bank"]};
+ const paint=(...a)=>window.BonusArt?.draw(...a);
  const COLS=11;
  const QUIPS=['„Sehr überzeugender Angriff.“','„Vielleicht doch die Brücke?“','„Der Tiber gehört offensichtlich Maxentius.“','„Das war … fast geplant.“'];
  // Zeilen von unten (Start-Ufer) nach oben (Ziel-Ufer). Wasserzeilen: Richtung, Tempo, Treibgut
@@ -19,7 +21,7 @@
   intro:{text:'Ein Bote aus dem Lager soll ans andere Ufer. Auf dem Tiber treiben Stämme, Bretter und kleine Flöße. Spring von einem zum nächsten – immer ein Feld weit.',
    controls:['Kurz <b>wischen</b>: ein Feld nach oben, unten, links oder rechts. Oder die großen Pfeiltasten<span class="mg-keys"> bzw. Pfeiltasten/WASD</span>.','Auf Holz treibst du mit. Ins Wasser fallen ist nicht schlimm: Es geht am letzten Ufer weiter.','Drei kurze Überquerungen, die letzten mit Insel.'],start:'Ans Ufer'},
   setup(ctx){
-   const view=ctx.canvas({maxDpr:2}),g=view.g;
+   const view=ctx.canvas({maxDpr:2}),g=view.g;const imgs=ctx.assets?.(ART)||{};
    const pad=ctx.layer('bonus-pad','<button type="button" class="up" data-d="up" aria-label="Nach oben">▲</button><button type="button" class="left" data-d="left" aria-label="Nach links">◀</button><button type="button" class="right" data-d="right" aria-label="Nach rechts">▶</button><button type="button" class="down" data-d="down" aria-label="Nach unten">▼</button>');
    const quip=ctx.layer('tiber-quip','<span class="schild-face" aria-hidden="true"></span><p></p>');quip.hidden=true;
    let cross,rows,P,splash,safeRow,falls,flowT,won,drops,tip;
@@ -41,7 +43,7 @@
    const KM={ArrowUp:'up',w:'up',W:'up',ArrowDown:'down',s:'down',S:'down',ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right'};
    ctx.on(window,'keydown',e=>{const d=KM[e.key];if(!d||!ctx.running)return;e.preventDefault();if(!e.repeat)input(d);});
    function fall(){if(splash)return;falls++;splash={t:0,x:P.x,r:P.r};for(let k=0;k<14;k++)drops.push({x:P.x+.5,y:P.r+.5,vx:(Math.random()-.5)*3,vy:(Math.random()-.5)*3,t:0});
-    quip.querySelector('p').textContent='Legionär: '+QUIPS[falls%QUIPS.length];quip.hidden=false;clearTimeout(quip._t);quip._t=setTimeout(()=>{if(quip.isConnected)quip.hidden=true;},2600);}
+    quip.querySelector('p').textContent='Legionär: '+QUIPS[falls%QUIPS.length];quip.hidden=false;clearTimeout(quip._t);quip._t=ctx.after(2600,()=>{if(quip.isConnected)quip.hidden=true;});}
    function update(dt,t){flowT+=dt;
     rows.forEach(row=>{if(row.bank||row.island)return;let f=1;if(row.stop){const ph=(t+row.dir)%5;f=ph<1.3?0:1;}row.f=f;row.off+=row.dir*row.sp*f*dt;
      row.items.forEach(it=>{if(it.sink>0){it.sink-=dt;if(it.sink<=0)it.tip=0;}});});
@@ -62,19 +64,20 @@
    }
    function finish(){won=true;ctx.setTask('Am anderen Ufer.');ctx.win({title:'Geschafft.',html:'<p style="text-align:center">Für die eigentliche Geschichte ist allerdings die <b>Milvische Brücke</b> entscheidend.</p><p class="muted" style="text-align:center">Das Spiel spielt nur mit dem Ort am Tiber. Eine solche Überquerung war nicht Teil der Schlacht von 312.</p>',backLabel:'Zurück ins Lager'});}
    /* Zeichnen */
-   function draw(t){if(!view.W||!rows)return;const W=view.W,H=view.H,n=rows.length,s=cell();const padW=(pad.offsetWidth||180)+20;const ox=Math.max(8,Math.min((W-COLS*s)/2,W-COLS*s-padW)),oy=(H-n*s)/2;const Y=r=>oy+(n-1-r)*s;
-    g.fillStyle='#2e4a42';g.fillRect(0,0,W,H);
+   function draw(t){if(!view.W||!rows)return;if(ctx.reduced)t=0;const W=view.W,H=view.H,n=rows.length,s=cell();const padW=(pad.offsetWidth||180)+20;const ox=Math.max(8,Math.min((W-COLS*s)/2,W-COLS*s-padW)),oy=(H-n*s)/2;const Y=r=>oy+(n-1-r)*s;
+    g.fillStyle='#2e4a42';g.fillRect(0,0,W,H);paint(g,imgs.bg,0,0,W,H,0,1,'cover');
     rows.forEach((row,r)=>{const y=Y(r);
-     if(row.bank||row.island){g.fillStyle=row.island?'#8a9a5a':'#b89a64';g.fillRect(0,y,W,s);g.fillStyle=row.island?'#6f8a4a':'#a8864e';for(let k=0;k<30;k++){const x=((k*97+r*31)%100)/100*W;g.fillRect(x,y+((k*13)%10)/10*s,3,2);}
+     if(row.bank||row.island){if(imgs['target-bank']){g.fillStyle='#97825c';g.fillRect(0,y,W,s);for(let xx=0;xx<W;xx+=s*2)g.drawImage(imgs['bank-views'],200,24,176,50,xx,y,s*2,s);if(row.goal)paint(g,imgs['target-bank'],W-s*2,y-s*.35,s*1.5,s*1.35);if(row.island)paint(g,imgs.decor,ox+2*s,y,s,s,0,2);return;}g.fillStyle=row.island?'#8a9a5a':'#b89a64';g.fillRect(0,y,W,s);g.fillStyle=row.island?'#6f8a4a':'#a8864e';for(let k=0;k<30;k++){const x=((k*97+r*31)%100)/100*W;g.fillRect(x,y+((k*13)%10)/10*s,3,2);}
       // Schilf und Steine
       for(let k=0;k<8;k++){const x=((k*137+r*53)%100)/100*W;g.strokeStyle='#5f7a3a';g.lineWidth=2;g.beginPath();g.moveTo(x,y+s*(row.goal?.95:.05));g.lineTo(x+4,y+s*(row.goal?.55:.45));g.stroke();}
       if(row.goal){const bx=W*.6,bw=W*.34;g.fillStyle='#8a7e68';g.fillRect(bx,y+s*.1,bw,s*.42);g.fillStyle='#6f6454';g.fillRect(bx,y+s*.1,bw,s*.08);g.fillStyle='#35606a';for(let k=0;k<4;k++){const ax=bx+bw*(k+.5)/4;g.beginPath();g.moveTo(ax-bw/10,y+s*.52);g.lineTo(ax-bw/10,y+s*.36);g.arc(ax,y+s*.36,bw/10,Math.PI,0);g.lineTo(ax+bw/10,y+s*.52);g.fill();}g.fillStyle='#f3e4c5';g.font=`600 ${Math.round(s*.22)}px Georgia,serif`;g.textAlign='center';g.fillText('Ziel-Ufer',W*.25,y+s*.62);}
       if(row.island){g.fillStyle='#8f887c';g.beginPath();g.ellipse(ox+s*2.5,y+s*.5,s*.3,s*.2,0,0,7);g.fill();g.fillStyle='#4f6a2a';g.beginPath();g.arc(ox+s*8.3,y+s*.45,s*.32,0,7);g.fill();}
       return;}
-     const wg=g.createLinearGradient(0,y,0,y+s);wg.addColorStop(0,'#3f6f78');wg.addColorStop(1,'#335c64');g.fillStyle=wg;g.fillRect(0,y,W,s);
+     const wg=g.createLinearGradient(0,y,0,y+s);wg.addColorStop(0,'#3f6f78');wg.addColorStop(1,'#335c64');g.fillStyle=wg;g.fillRect(0,y,W,s);if(imgs['bank-views']){g.save();g.globalAlpha=.12;for(let xx=0;xx<W;xx+=s*2)g.drawImage(imgs['bank-views'],8,20,176,56,xx,y,s*2,s);g.restore();}
      g.strokeStyle='rgba(200,230,230,.25)';g.lineWidth=2;for(let k=0;k<6;k++){const x=((k*s*2.1+flowT*row.dir*row.sp*s*1.2)%(W+s*2)+W+s*2)%(W+s*2)-s;g.beginPath();g.moveTo(x,y+s*(.3+(k%3)*.2));g.quadraticCurveTo(x+s*.3,y+s*(.25+(k%3)*.2),x+s*.6,y+s*(.3+(k%3)*.2));g.stroke();}
      row.items.forEach(it=>{for(const shift of [0,-LOOP,LOOP]){const ix=itemX(row,it)+shift;if(ix>COLS+1||ix+it.len<-1)continue;const x=ox+ix*s,w=it.len*s;const sinkA=it.sink>0?Math.min(1,it.sink):0;const wob=it.tips&&it.tip>.4?Math.sin(t*30)*s*.03*it.tip:0;
       g.save();g.translate(0,wob);g.globalAlpha=it.sink>0?.35:1;
+      if(imgs.platforms){const fr=it.kind==='stamm'?0:it.kind==='brett'?1:2;g.fillStyle='#745231';g.strokeStyle='#c4a46d';g.lineWidth=2;g.beginPath();if(g.roundRect)g.roundRect(x+2,y+s*.2,w-4,s*.6,s*.18);else g.rect(x+2,y+s*.2,w-4,s*.6);g.fill();g.stroke();const count=Math.ceil(it.len/2),part=(w-4)/count;for(let j=0;j<count;j++)paint(g,imgs.platforms,x+2+j*part,y+s*.08,part,s*.84,fr,5,'contain');g.restore();continue;}
       if(it.kind==='stamm'){g.fillStyle='#7a5230';g.beginPath();g.roundRect?g.roundRect(x+2,y+s*.18,w-4,s*.64,s*.3):g.rect(x+2,y+s*.18,w-4,s*.64);g.fill();g.strokeStyle='#4a321c';g.lineWidth=2;g.stroke();g.strokeStyle='#9a7040';g.beginPath();g.moveTo(x+s*.3,y+s*.38);g.lineTo(x+w-s*.4,y+s*.36);g.moveTo(x+s*.5,y+s*.6);g.lineTo(x+w-s*.3,y+s*.62);g.stroke();g.fillStyle='#b08a5a';g.beginPath();g.ellipse(x+w-s*.12,y+s*.5,s*.1,s*.3,0,0,7);g.fill();}
       else if(it.kind==='brett'){g.fillStyle=it.tips?'#a8864e':'#9a7a4a';g.fillRect(x+3,y+s*.26,w-6,s*.48);g.strokeStyle='#5a3a1c';g.lineWidth=2;g.strokeRect(x+3,y+s*.26,w-6,s*.48);for(let k=1;k<it.len;k++){g.beginPath();g.moveTo(x+k*s,y+s*.26);g.lineTo(x+k*s,y+s*.74);g.stroke();}if(it.tips){g.fillStyle='#5a3a1c';g.font=`${Math.round(s*.2)}px Georgia`;g.textAlign='center';g.fillText('~',x+w/2,y+s*.56);}}
       else{g.fillStyle='#8a6a3e';for(let k=0;k<it.len*2;k++){g.fillRect(x+3+k*(w-6)/(it.len*2),y+s*.12,(w-6)/(it.len*2)-2,s*.76);}g.strokeStyle='#c9a86b';g.lineWidth=3;g.beginPath();g.moveTo(x+4,y+s*.3);g.lineTo(x+w-4,y+s*.3);g.moveTo(x+4,y+s*.7);g.lineTo(x+w-4,y+s*.7);g.stroke();if(row.stop&&row.f===0){g.fillStyle='#f3e4c5';g.font=`${Math.round(s*.2)}px Georgia`;g.textAlign='center';g.fillText('hält an',x+w/2,y-2);}}
@@ -83,15 +86,16 @@
     g.fillStyle='rgba(18,28,26,.5)';g.fillRect(0,0,Math.max(0,ox),H);g.fillRect(ox+COLS*s,0,W-ox-COLS*s,H);g.strokeStyle='rgba(243,220,166,.35)';g.lineWidth=2;g.strokeRect(ox,oy,COLS*s,n*s);
     // Spielfigur (Draufsicht)
     if(!splash){const px=ox+(P.x+.5)*s,py=Y(P.y)+s*.5;const hop=P.move?Math.sin(Math.min(1,P.move.t)*Math.PI)*s*.12:0;const rot={up:0,down:Math.PI,left:-Math.PI/2,right:Math.PI/2}[P.dir];
-     g.fillStyle='#00000040';g.beginPath();g.ellipse(px,py+s*.08,s*.28,s*.12,0,0,7);g.fill();g.save();g.translate(px,py-hop);g.rotate(rot);g.scale(1.45+hop/s,1.45+hop/s);
-     g.fillStyle='#3a6a8a';g.beginPath();g.ellipse(0,s*.04,s*.24,s*.19,0,0,7);g.fill();g.fillStyle='#8a5a2e';g.fillRect(-s*.24,-s*.02,s*.16,s*.2);g.fillStyle='#c89a6e';g.beginPath();g.arc(0,-s*.06,s*.12,0,7);g.fill();g.fillStyle='#3a2616';g.beginPath();g.arc(0,-s*.02,s*.11,Math.PI*.1,Math.PI*.9,true);g.fill();g.restore();}
+     g.fillStyle='#00000040';g.beginPath();g.ellipse(px,py+s*.08,s*.28,s*.12,0,0,7);g.fill();g.save();g.translate(px,py-hop);if(!imgs.player)g.rotate(rot);g.scale(1.45+hop/s,1.45+hop/s);
+     if(imgs.player){paint(g,imgs.player,-s*.25,-s*.35,s*.5,s*.7,({up:3,down:5,left:4,right:2}[P.dir]??0),6);}else{g.fillStyle='#3a6a8a';g.beginPath();g.ellipse(0,s*.04,s*.24,s*.19,0,0,7);g.fill();g.fillStyle='#8a5a2e';g.fillRect(-s*.24,-s*.02,s*.16,s*.2);g.fillStyle='#c89a6e';g.beginPath();g.arc(0,-s*.06,s*.12,0,7);g.fill();g.fillStyle='#3a2616';g.beginPath();g.arc(0,-s*.02,s*.11,Math.PI*.1,Math.PI*.9,true);g.fill();}g.restore();}
     drops.forEach(d=>{g.fillStyle=`rgba(210,235,245,${1-d.t/.8})`;g.beginPath();g.arc(ox+d.x*s,Y(d.y-.5)+s*.5,s*.07*(1+d.t),0,7);g.fill();});
-    if(splash){const x=ox+(splash.x+.5)*s,y=Y(splash.r)+s*.5,e=splash.t/.9;g.strokeStyle=`rgba(230,245,250,${1-e})`;g.lineWidth=3;for(let k=0;k<3;k++){g.beginPath();g.ellipse(x,y,s*(.2+e*.6+k*.12),s*(.1+e*.3+k*.06),0,0,7);g.stroke();}g.fillStyle='#fff';g.font=`${Math.round(s*.5)}px sans-serif`;g.textAlign='center';g.globalAlpha=1-e;g.fillText('💦',x,y-s*.4);g.globalAlpha=1;}
+    if(splash){const x=ox+(splash.x+.5)*s,y=Y(splash.r)+s*.5,e=splash.t/.9;if(paint(g,imgs.splash,x-s*.6,y-s*.6,s*1.2,s*1.2,Math.min(2,Math.floor(e*3)),3))return;g.strokeStyle=`rgba(230,245,250,${1-e})`;g.lineWidth=3;for(let k=0;k<3;k++){g.beginPath();g.ellipse(x,y,s*(.2+e*.6+k*.12),s*(.1+e*.3+k*.06),0,0,7);g.stroke();}g.fillStyle='#fff';g.font=`${Math.round(s*.5)}px sans-serif`;g.textAlign='center';g.globalAlpha=1-e;g.fillText('💦',x,y-s*.4);g.globalAlpha=1;}
    }
    ctx.loop({update,draw});
-   ctx.stage.__debug={P:()=>P,rows:()=>rows,under,itemX:(r,it)=>itemX(rows[r],it),cross:()=>cross,input,falls:()=>falls,won:()=>won};
+   ctx.stage.__debug={art:ART,update,reset,P:()=>P,rows:()=>rows,under,itemX:(r,it)=>itemX(rows[r],it),cross:()=>cross,input,falls:()=>falls,won:()=>won};
    reset();
    return {start(){reset();}};
   }
  });
+ window.BonusGames.games.tiber.art=ART;
 })();

@@ -5,6 +5,8 @@
    Sieben Runden – gezählt mit den sieben Delfinen auf der spina (wie im antiken Circus). */
 (()=>{
  if(!window.BonusGames)return;
+ const ART={"dir":"assets/bonus/circus/","files":{"crowd":"circus-crowd.png","bg":"circus-bg.png","chariots":"circus-chariots.png","track":"circus-track.png","dust":"circus-dust.png","ui-icons":"circus-ui-icons.png"},"available":["crowd","bg","chariots","track","dust","ui-icons"]};
+ const paint=(...a)=>window.BonusArt?.draw(...a);
  const LW=100,R=560,LS=1800,LAPS=7,LANES=[-1.5,-.5,.5,1.5];
  const LAP=2*LS+2*Math.PI*R;
  const QUESTIONS=[
@@ -29,7 +31,8 @@
   intro:{text:'Großer Renntag im Circus Maximus! Du lenkst das grüne Gespann. Der Wagen fährt von selbst – du wählst die Spur. Sieben Runden, gezählt mit den Delfinen auf der Mittelmauer.',
    controls:['<b>Wischen</b> oder links/rechts ins Bild <b>tippen</b>: eine Spur nach links oder rechts<span class="mg-keys"> (am PC Pfeiltasten)</span>.','In den Kurven ist die <b>innere Spur</b> kürzer.','Sand, Radspuren und Amphoren bremsen nur. Sammle <b>Lorbeerzweige</b>.','An drei Toren entscheidet dein Wissen über den kürzeren Weg.'],start:'Zum Start'},
   setup(ctx){
-   const view=ctx.canvas({maxDpr:2}),g=view.g;let pats=null;
+   const view=ctx.canvas({maxDpr:2}),g=view.g;const imgs=ctx.assets?.(ART,()=>{pats=null;})||{};let pats=null;
+   const counter=ctx.layer('rom-count show','');counter.setAttribute('aria-live','polite');
    const q=ctx.layer('circus-q');q.hidden=true;
    const pad=ctx.layer('circus-pad','<button type="button" data-d="-1" aria-label="Spur nach links">◀</button><button type="button" data-d="1" aria-label="Spur nach rechts">▶</button>');
    let P,ais,things,dust,gates,laurel,finished,countdown,cam,camH,msgT,crowdT,results;
@@ -94,6 +97,7 @@
     crowd:pattern(g,(o,s)=>{o.fillStyle='#8a7658';o.fillRect(0,0,s,s);for(let r=0;r<8;r++){o.fillStyle='#6f5e44';o.fillRect(0,r*16+12,s,4);for(let k=0;k<11;k++){const x=k*11.6+(r%2)*5+Math.random()*3,y=r*16+6;o.fillStyle=['#a8432a','#efe2c4','#3a5f8a','#3f7a4a','#c98a3e','#6b4a2a','#d9c49a'][Math.floor(Math.random()*7)];o.beginPath();o.arc(x,y+2,4,0,7);o.fill();o.fillStyle=['#c89a6e','#a8784e','#8a5a3a','#d9b08a'][Math.floor(Math.random()*4)];o.beginPath();o.arc(x,y-3,2.6,0,7);o.fill();}}},128)};}
    function ovalPath(r){g.beginPath();g.moveTo(-LS/2,r);g.lineTo(LS/2,r);g.arc(LS/2,0,r,Math.PI/2,-Math.PI/2,true);g.lineTo(-LS/2,-r);g.arc(-LS/2,0,r,-Math.PI/2,Math.PI/2,true);g.closePath();}
    function chariot(r,t){const w=pos(r.p,r.d);const col=COLORS[r.color][0];g.save();g.translate(w.x,w.y);g.rotate(w.h);g.scale(1.3,1.3);
+    if(imgs.chariots){const f={rot:0,blau:1,gruen:2,weiss:3}[r.color];g.save();if(r.color==='weiss')g.filter='saturate(.12) brightness(1.15)';paint(g,imgs.chariots,-65,-48,190,96,f,4);g.restore();if(r===P){g.strokeStyle='#f7dc93';g.lineWidth=3;g.beginPath();g.ellipse(20,0,98,48,0,0,7);g.stroke();}g.restore();return;}
     const gallop=Math.sin(t*14+r.swayT)*4;
     g.fillStyle='#00000030';g.beginPath();g.ellipse(18,6,90,34,0,0,7);g.fill();
     // zwei Pferde
@@ -107,6 +111,7 @@
     if(r===P){g.strokeStyle='rgba(247,220,147,.8)';g.lineWidth=3;g.beginPath();g.ellipse(18,0,98,40,0,0,7);g.stroke();}
     g.restore();}
    function thing(tn){const w=pos(tn.p,LANES[tn.lane]);g.save();g.translate(w.x,w.y);g.rotate(w.h);
+    if(imgs.track&&imgs['ui-icons']){const im=tn.kind==='lorbeer'?imgs['ui-icons']:imgs.track;paint(g,im,-40,-30,80,60,tn.kind==='sand'?1:tn.kind==='amphore'?2:0,tn.kind==='lorbeer'?1:3);g.restore();return;}
     if(tn.kind==='lorbeer'){g.strokeStyle='#4a6a2a';g.lineWidth=3;g.beginPath();g.moveTo(-26,0);g.quadraticCurveTo(0,-8,26,0);g.stroke();for(let k=0;k<6;k++){const x=-20+k*8;g.fillStyle=k%2?'#5f8a3a':'#6f9a44';g.beginPath();g.ellipse(x,-7+(k%2)*14,8,4,(k%2?.6:-.6),0,7);g.fill();}const gl=(Math.sin(performance.now()/200)+1)/2;g.fillStyle=`rgba(255,240,180,${.25+.3*gl})`;g.beginPath();g.arc(0,0,30,0,7);g.fill();}
     else if(tn.kind==='sand'){g.fillStyle='#c9a86b';g.beginPath();g.ellipse(0,0,40,30,0,0,7);g.fill();g.fillStyle='#e0c690';g.beginPath();g.ellipse(-6,-6,24,16,0,0,7);g.fill();}
     else if(tn.kind==='rille'){g.strokeStyle='#8a6a3e';g.lineWidth=5;g.beginPath();g.moveTo(-45,-18);g.quadraticCurveTo(0,-4,45,-20);g.moveTo(-45,16);g.quadraticCurveTo(0,4,45,18);g.stroke();}
@@ -119,13 +124,13 @@
     const inner=gt.correctInner?gt.a[0]:gt.a[1],outer=gt.correctInner?gt.a[1]:gt.a[0];
     g.save();g.rotate(Math.PI/2);g.fillStyle='#f7ecd2';g.font='600 22px Georgia,serif';g.textAlign='center';g.textBaseline='middle';g.fillText(inner,-LW,0);g.fillText(outer,LW,0);g.restore();
     g.restore();}
-   function draw(t){if(!view.W)return;const W=view.W,H=view.H;if(!pats)makePatterns();
+   function draw(t){if(!view.W)return;if(ctx.reduced)t=0;const W=view.W,H=view.H;if(!pats)makePatterns();
     const zoom=Math.max(.42,Math.min(W/1450,H/820));
     const w=pos(P.p,P.d-2.2);if(!cam){cam={x:w.x,y:w.y};camH=w.h;}cam.x+=(w.x-cam.x)*.25;cam.y+=(w.y-cam.y)*.25;let dh=w.h-camH;while(dh>Math.PI)dh-=2*Math.PI;while(dh<-Math.PI)dh+=2*Math.PI;camH+=dh*.18;
     g.save();g.fillStyle='#6f5e44';g.fillRect(0,0,W,H);
     g.translate(W/2+(shake?(Math.random()-.5)*6:0),H*.64);g.scale(zoom,zoom);g.rotate(-Math.PI/2-camH);g.translate(-cam.x,-cam.y);
     // Tribünen mit Publikum
-    g.fillStyle=pats.crowd;ovalPath(R+2*LW+420);g.fill();
+    g.fillStyle=imgs.crowd?g.createPattern(imgs.crowd,'repeat'):pats.crowd;ovalPath(R+2*LW+420);g.fill();if(imgs.crowd){for(let k=0;k<32;k++){const bp=pos(k*LAP/32,3.4);g.save();g.translate(bp.x,bp.y);g.rotate(bp.h);paint(g,imgs.crowd,-150,-70,300,140,0,1,'cover');g.restore();}}
     g.fillStyle='#b8a888';ovalPath(R+2*LW+44);g.fill();
     g.fillStyle=pats.sand;ovalPath(R+2*LW+20);g.fill();
     // Banner an der Außenmauer (wehen leicht)
@@ -141,15 +146,16 @@
     for(let k=0;k<LAPS;k++){const x=-LS/2+140+k*60,down=k<P.lap;g.save();g.translate(x,0);g.rotate(down?.9:-.3);g.fillStyle='#b88a3a';g.beginPath();g.ellipse(0,0,20,8,0,0,7);g.fill();g.beginPath();g.moveTo(18,0);g.lineTo(28,-8);g.lineTo(28,8);g.fill();g.restore();}
     gates.forEach(gateDraw);
     things.forEach(tn=>{if(!tn.hit)thing(tn);});
-    dust.forEach(d=>{g.fillStyle=`rgba(230,210,170,${.45*(1-d.t/1.2)})`;g.beginPath();g.arc(d.x,d.y,d.s*(1+d.t),0,7);g.fill();});
+    dust.forEach(d=>{if(ctx.reduced)return;if(imgs.dust){g.save();g.globalAlpha=.5*(1-d.t/1.2);paint(g,imgs.dust,d.x-35,d.y-25,70,50,Math.floor(d.t*2)%2,2);g.restore();return;}g.fillStyle=`rgba(230,210,170,${.45*(1-d.t/1.2)})`;g.beginPath();g.arc(d.x,d.y,d.s*(1+d.t),0,7);g.fill();});
     [...ais,P].sort((a,b)=>total(a)-total(b)).forEach(r=>chariot(r,t));
     g.restore();
-    if(countdown>0){g.fillStyle='rgba(20,14,8,.35)';g.fillRect(0,0,W,H);g.fillStyle='#f7ecd2';g.font=`600 ${Math.round(H*.16)}px Georgia,serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(countdown>2.2?'III':countdown>1.2?'II':'I',W/2,H*.4);}
+    counter.textContent=countdown>0?(countdown>2.2?'III':countdown>1.2?'II':'I'):'';
    }
    ctx.loop({update,draw});
-   ctx.stage.__debug={P:()=>P,ais:()=>ais,things:()=>things,gates:()=>gates,total,LANES,LAP,setLane:l=>P.lane=l,finished:()=>finished,laurel:()=>laurel,skip:n=>{P.lap+=n;ais.forEach(a=>a.lap+=n);}};
+   ctx.stage.__debug={P:()=>P,ais:()=>ais,things:()=>things,gates:()=>gates,total,LANES,LAP,art:ART,update,reset,setLane:l=>P.lane=l,finished:()=>finished,laurel:()=>laurel,skip:n=>{P.lap+=n;ais.forEach(a=>a.lap+=n);}};
    reset();
    return {start(){reset();}};
   }
  });
+ window.BonusGames.games.circus.art=ART;
 })();

@@ -3,7 +3,7 @@
 const fs=require('fs'),vm=require('vm'),path=require('path'),assert=require('node:assert/strict');
 const {parseHTML}=require('linkedom'),root=path.resolve(__dirname,'..');
 let checks=0;const ok=(v,m)=>{assert.ok(v,m);checks++;};
-function boot(avail){
+function boot(avail=[]){
  const {window}=parseHTML('<html><body><dialog id="modal"></dialog></body></html>');
  window.HTMLElement.prototype.focus=function(){};
  const storage=new Map(),timers=[];

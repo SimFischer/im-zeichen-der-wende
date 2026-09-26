@@ -1,0 +1,30 @@
+const {chromium}=require('playwright'),fs=require('fs'),path=require('path'),http=require('http'),assert=require('node:assert/strict');
+const root=process.env.BONUS_ROOT||path.resolve(__dirname,'..'),out=process.env.WENDE_SCREENSHOTS;
+const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+(req.url==='/'?'/index.html':req.url.split('?')[0]));if(!file.startsWith(root+path.sep))return res.writeHead(403).end();fs.readFile(file,(e,b)=>{if(e)return res.writeHead(404).end();res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml'})[path.extname(file)]||'application/octet-stream');res.end(b);});});
+(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_BROWSER});const ids=['rombrennt','schildwall','zeichen','circus','katakomben','tiber'];let checks=0;
+try{for(const [width,height,touch]of [[1024,768,true],[1180,820,true],[1366,1024,true],[1440,1000,false]]){if(process.env.WENDE_WIDTH&&+process.env.WENDE_WIDTH!==width)continue;
+ const context=await browser.newContext({viewport:{width,height},hasTouch:touch,isMobile:touch,reducedMotion:width===1366?'reduce':'no-preference'}),page=await context.newPage(),errors=[],missing=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()===404)missing.push(r.url());});if(process.env.WENDE_FAIL_ASSETS)await page.route('**/assets/bonus/**',r=>r.abort());await page.goto('http://127.0.0.1:'+server.address().port);
+ await page.evaluate(()=>{localStorage.setItem('im-zeichen-der-wende:v1',JSON.stringify({version:1,started:true,scene:'basilica',unlocked:GAME.scenes.map(s=>s.id),inventory:['light','key','scrolls'],solved:Object.keys(GAME.puzzles),seals:GAME.seals,notes:Object.keys(GAME.notes),seen:GAME.scenes.flatMap(s=>['intro:'+s.id,...s.hotspots.map((_,i)=>s.id+':'+i)]),evidence:['scroll','door','church','chain'],drafts:{},hints:{},flags:{archiveScrollsReceived:true,archiveScrollsRead:true,archiveScrollsDeposited:true,sealsPlaced:true},progress:10}));});await page.reload();await page.getByRole('button',{name:'Spiel fortsetzen',exact:true}).click();
+ const mainSave=await page.evaluate(()=>localStorage.getItem('im-zeichen-der-wende:v1'));const hit=async l=>{if(typeof l==='string')l=page.locator(l);await (touch?l.tap():l.click());};const snap=async n=>{if(out){fs.mkdirSync(out,{recursive:true});await page.screenshot({path:path.join(out,width+'-'+n+'.png')});}};
+ for(const id of ids){if(process.env.WENDE_ONLY&&!process.env.WENDE_ONLY.split(',').includes(id))continue;await page.evaluate(id=>BonusGames.start(id,false),id);const start=page.locator('.bonus-introcard .primary');await start.waitFor();await page.waitForFunction(()=>!document.querySelector('.bonus-introcard .primary').disabled);await snap(id+'-start');await hit(start);await page.waitForTimeout(id==='circus'?3400:1700);assert.equal(errors.length,0,errors.join('\n'));await snap(id+'-running');
+ assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));checks++;
+ const controls=await page.locator('.bonus-stage button:visible').evaluateAll(bs=>bs.map(b=>({text:b.textContent,w:b.getBoundingClientRect().width,h:b.getBoundingClientRect().height})));assert(controls.every(b=>b.w>=43&&b.h>=43),JSON.stringify(controls));checks++;
+ const art=await page.evaluate(id=>BonusGames.games[id].art,id);for(const k of art.available){assert(fs.existsSync(path.join(root,art.dir,art.files[k])));checks++;}
+ if(id==='schildwall'){for(const d of ['left','right','up']){await hit('[data-d="'+d+'"]');assert.equal(await page.locator('.bonus-stage').evaluate(n=>n.__debug.S().dir),d);await snap(id+'-'+d);}}
+ if(width===1024){
+  if(id==='zeichen'){await hit('.zs-go .primary');for(let i=0;i<3;i++)await hit(page.locator('.zs-mark:not(.found)').first());await page.waitForTimeout(1700);await snap('zeichen-search');for(const name of ['Fisch','Anker','Taube','Chi-Rho'])await hit('.zs-mark[data-name="'+name+'"]');await page.waitForTimeout(2700);await hit('.zs-answer[data-i="0"]');await page.waitForTimeout(1900);}
+  else await page.locator('.bonus-stage').evaluate((n,id)=>{const d=n.__debug;
+   if(id==='rombrennt'){d.update(2);for(const f of d.fires()){d.jar().full=true;d.tp(f.x,f.y);d.update(.02);}}
+   if(id==='schildwall'){d.S().lives=1;d.S().volleys=[{dir:d.S().dir==='left'?'right':'left',t:1,fly:1,n:1,arrows:[],done:false}];d.update(.02);}
+   if(id==='circus'){d.P().lap=6;d.P().p=d.LAP-1;d.update(4,4);d.update(.05,4.05);}
+   if(id==='katakomben'){const p=d.player(),e=d.map().exit;p.to=e;p.from=e;p.p=.99;p.moving=true;d.update(.05,1);d.update(2.3,3.3);}
+   if(id==='tiber'){const p=d.P(),r=d.rows();p.r=r.length-2;p.y=p.r;p.x=5;p.move=null;d.input('up');d.update(.2,1);}
+  },id);
+  if(id==='tiber'){for(let i=0;i<2;i++){await page.waitForTimeout(800);await page.locator('.bonus-stage').evaluate(n=>{const d=n.__debug,p=d.P();p.r=d.rows().length-2;p.y=p.r;p.x=5;p.move=null;d.input('up');d.update(.2,1);});}}
+  await page.locator('.bonus-endcard').waitFor({timeout:6000});await snap(id+'-result');checks++;await hit(page.getByRole('button',{name:'Noch einmal',exact:true}));await page.waitForFunction(()=>!document.querySelector('.bonus-introcard .primary').disabled);await hit('.bonus-introcard .primary');assert.equal(await page.locator('.bonus-endcard').count(),0);checks++;
+ }
+ await hit('.bonus-leave');await page.waitForTimeout(100);await page.evaluate(id=>BonusGames.start(id,false),id);await page.waitForFunction(()=>!document.querySelector('.bonus-introcard .primary').disabled);await hit('.bonus-leave');checks++;
+ }
+ assert.equal(await page.evaluate(()=>localStorage.getItem('im-zeichen-der-wende:v1')),mainSave,'Main save unchanged');assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);console.log('PASS',width,height,'touch',touch,'no errors/404');await context.close();}
+ console.log('PASS bonus artwork:',checks,'checks');
+}finally{await browser.close();server.close();}})().catch(e=>{console.error(e);process.exitCode=1;server.close();});

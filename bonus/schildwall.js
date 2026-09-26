@@ -12,7 +12,8 @@
    Bestzeit (längste Überlebenszeit): localStorage unter BEST_KEY. */
 (()=>{
  if(!window.BonusGames)return;
- const ART={dir:'assets/bonus/shieldwall/',files:{bg:'shieldwall-bg.png',squad:'shieldwall-squad.png',left:'shieldwall-shields-left.png',up:'shieldwall-shields-up.png',right:'shieldwall-shields-right.png',arrows:'shieldwall-arrows.png',hit:'shieldwall-hit.png',ui:'shieldwall-ui.png',bridge:'shieldwall-bridge-silhouette.png',banners:'shieldwall-banners.png',impact:'shieldwall-impact.png',gameover:'shieldwall-gameover.png'},available:[]};
+ const ART={dir:'assets/bonus/shieldwall/',files:{bg:'shieldwall-bg.png',squad:'shieldwall-squad.png',left:'shieldwall-shields-left.png',up:'shieldwall-shields-up.png',right:'shieldwall-shields-right.png',arrows:'shieldwall-arrows.png',hit:'shieldwall-hit.png',ui:'shieldwall-ui.png',bridge:'shieldwall-bridge-silhouette.png',banners:'shieldwall-banners.png',impact:'shieldwall-impact.png',gameover:'shieldwall-gameover.png'},available:['bg','squad','left','up','right','arrows','hit','banners','impact','gameover']};
+ const paint=(...a)=>window.BonusArt?.draw(...a);
  const FALLBACK_BG='assets/backgrounds/v3-camp.png';
  const FALLBACK_CROP=[0,.04,.31,.5]; // Tiber, Milvische Brücke und Rom im Lager-Gemälde (Anteile x,y,w,h)
  const BEST_KEY='im-zeichen-der-wende:schildwall-best-v1';
@@ -31,10 +32,7 @@
    controls:['Drei große Knöpfe: <b>↖ Links</b>, <b>↑ Oben</b>, <b>↗ Rechts</b><span class="mg-keys"> – am PC die Pfeiltasten</span>.','Der ganze Trupp hebt die Schilde gemeinsam in diese Richtung.','Leuchtende Bögen am Himmel zeigen, woher die nächste Salve kommt.','Drei Treffer – dann ist die Runde vorbei. Gemessen wird deine Zeit.'],start:'Schilde hoch!'},
   setup(ctx){
    const has=k=>ART.available.includes(k),src=k=>ART.dir+ART.files[k];
-   const view=ctx.canvas({maxDpr:2}),g=view.g;const imgs={};
-   const loadImg=(key,url)=>{if(typeof Image==='undefined')return;const im=new Image();im.onload=()=>{imgs[key]=im;bgc=null;};im.src=url;};
-   if(has('bg'))loadImg('bg',src('bg'));else loadImg('camp',FALLBACK_BG);
-   Object.keys(ART.files).filter(k=>k!=='bg'&&has(k)).forEach(k=>loadImg(k,src(k)));
+   const view=ctx.canvas({maxDpr:2}),g=view.g;const imgs=ctx.assets?.(ART,()=>{bgc=null;})||{};
    const best0=loadBest();
    const hud=ctx.layer('sw-hud'+(has('ui')?' art-ui':''),`<div class="sw-tablet" role="timer"><span class="sw-label">Zeit</span><span class="sw-time">0:00,0</span><span class="sw-bestline">Bestzeit <b class="sw-best">${fmt(best0)}</b></span></div><div class="sw-lives" aria-label="Verbleibende Treffer: ${LIVES}">${'<span class="sw-life"></span>'.repeat(LIVES)}</div><div class="sw-waves" aria-live="polite">Abgewehrt: <b>0</b></div>`);
    const pad=ctx.layer('sw-pad',`<button type="button" data-d="left" aria-label="Schilde nach links"><span aria-hidden="true">↖</span>Links</button><button type="button" data-d="up" aria-label="Schilde nach oben"><span aria-hidden="true">↑</span>Oben</button><button type="button" data-d="right" aria-label="Schilde nach rechts"><span aria-hidden="true">↗</span>Rechts</button>`);
@@ -68,7 +66,7 @@
    function gameOver(){S.phase='over';const ms=Math.round(S.clock*1000);timeEl.textContent=fmt(ms);const old=loadBest();const record=old==null||ms>old;if(record){saveBest(ms);bestEl.textContent=fmt(ms);}
     S.result={ms,record,previous:old,blocked:S.blocked};pad.querySelectorAll('button').forEach(b=>b.disabled=true);
     ctx.after(1300,()=>ctx.win({title:'',lines:[`Durchgehalten: ${fmt(ms)}`,`Abgewehrte Salven: ${S.blocked}`,record?(old==null?'Das ist deine erste Bestzeit.':`Neue Bestzeit! Vorher: ${fmt(old)}`):`Bestzeit: ${fmt(old)}`],
-     html:`<div class="schild-banner"><span>${record?'FORMATIO TENET':'RECEPTUI!'}</span></div><p class="schild-sub">${record?'Neue Bestzeit – die Formation hat gehalten!':'Der Trupp zieht sich geordnet zurück.'}</p><div class="bonus-history"><h4>Zur Einordnung</h4><p>Am 28. Oktober 312 siegte Konstantin an der Milvischen Brücke über Maxentius. Über den Ablauf der Schlacht wissen wir wenig; diese Szene ist erfunden. Dass Konstantins Soldaten ein christliches Zeichen auf den Schilden trugen, berichtet erst später Laktanz.</p></div>`,backLabel:'Zurück ins Lager'}));}
+     html:`${imgs.gameover?'<img class="bonus-result-art" src="'+src('gameover')+'" alt="Das Lager nach dem Pfeilregen">':''}<div class="schild-banner"><span>${record?'FORMATIO TENET':'RECEPTUI!'}</span></div><p class="schild-sub">${record?'Neue Bestzeit – die Formation hat gehalten!':'Der Trupp zieht sich geordnet zurück.'}</p><div class="bonus-history"><h4>Zur Einordnung</h4><p>Am 28. Oktober 312 siegte Konstantin an der Milvischen Brücke über Maxentius. Über den Ablauf der Schlacht wissen wir wenig; diese Szene ist erfunden. Dass Konstantins Soldaten ein christliches Zeichen auf den Schilden trugen, berichtet erst später Laktanz.</p></div>`,backLabel:'Zurück ins Lager'}));}
 
    function update(dt){if(!S||S.phase!=='play'){if(S){S.fx.forEach(f=>f.t+=dt);S.fx=S.fx.filter(f=>f.t<1);}return;}
     S.clock+=dt;const tenth=Math.floor(S.clock*10);if(tenth!==S.lastShown){S.lastShown=tenth;timeEl.textContent=fmt(S.clock*1000);}
@@ -89,6 +87,7 @@
      const fade=o.createLinearGradient(0,H*.56,0,Math.min(bottom,H*.66));fade.addColorStop(0,'rgba(90,70,50,0)');fade.addColorStop(1,'rgba(90,70,50,1)');o.fillStyle=fade;o.fillRect(0,H*.56,W,H*.12);}
     else{o.fillStyle='#3a3040';o.beginPath();o.moveTo(0,H*.5);for(let x=0;x<=W;x+=W/10)o.lineTo(x,H*.45-Math.abs(Math.sin(x*.01))*H*.08);o.lineTo(W,H*.62);o.lineTo(0,H*.62);o.fill();
      o.fillStyle='#3b5566';o.fillRect(0,H*.52,W,H*.08);o.fillStyle='#4a4238';for(let k=0;k<5;k++){const bx=W*.1+k*W*.08;o.beginPath();o.moveTo(bx,H*.5);o.lineTo(bx+W*.08,H*.5);o.lineTo(bx+W*.08,H*.56);o.arc(bx+W*.04,H*.56,W*.032,0,Math.PI,true);o.fill();}}
+    if(imgs.bg){paint(o,imgs.banners,W*.04,H*.35,W*.08,H*.5);paint(o,imgs.banners,W*.88,H*.35,W*.08,H*.5);return;}
     // Vordergrund: zertretenes Ufer, Standarten des Heeres
     const gr=o.createLinearGradient(0,H*.6,0,H);gr.addColorStop(0,'#6b5438');gr.addColorStop(1,'#3e2e1c');o.fillStyle=gr;o.beginPath();o.moveTo(0,H*.62);for(let x=0;x<=W;x+=W/16)o.lineTo(x,H*.6+Math.sin(x*.02)*H*.01);o.lineTo(W,H);o.lineTo(0,H);o.fill();
     for(let k=0;k<70;k++){o.fillStyle=`rgba(${40+Math.random()*30|0},${30+Math.random()*20|0},20,.35)`;o.beginPath();o.ellipse(Math.random()*W,H*.64+Math.random()*H*.36,4+Math.random()*14,2+Math.random()*4,0,0,7);o.fill();}
@@ -99,7 +98,7 @@
    function path(dir,o,{W,H,cx,feet,sq}){const top=feet-sq*.42,spread=sq*.42;
     if(dir==='up')return {x0:cx+o*spread*1.1,y0:-H*.08,x1:cx+o*spread,y1:top-sq*.02};
     const s=dir==='left'?-1:1;return {x0:cx+s*W*.62,y0:H*(.08+o*.05+.08),x1:cx+s*sq*.36+o*sq*.08,y1:top+sq*.08+o*sq*.1};}
-   function draw(t){if(!view.W||!S)return;const G=geo();const {W,H,cx,feet,sq}=G;if(!bgc)renderBg();
+   function draw(t){if(!view.W||!S)return;if(ctx.reduced)t=0;const G=geo();const {W,H,cx,feet,sq}=G;if(!bgc)renderBg();
     const sh=S.shake>0?Math.sin(t*90)*S.shake*10:0;g.save();g.translate(sh,0);g.drawImage(bgc,0,0,W,H);
     // Warnbögen: woher kommt die nächste Salve?
     S.volleys.forEach(v=>{if(v.done||v.t<0)return;const k=Math.min(1,v.t/v.fly);const a=.35+.45*Math.sin(t*14)*(k>.6?1:.4);
@@ -111,13 +110,13 @@
       const x=p.x0+(p.x1-p.x0)*k,y=p.y0+(p.y1-p.y0)*k-(v.dir==='up'?0:Math.sin(k*Math.PI)*H*.14);const nx=p.x0+(p.x1-p.x0)*Math.min(1,k+.02),ny=p.y0+(p.y1-p.y0)*Math.min(1,k+.02)-(v.dir==='up'?0:Math.sin(Math.min(1,k+.02)*Math.PI)*H*.14);
       arrow(x,y,Math.atan2(ny-y,nx-x),G.u*1.05);});});
     // Effekte
-    S.fx.forEach(f=>{const e=f.t;if(f.k==='block'){for(let i=0;i<7;i++){const p=path(f.dir,(i-3)/3,G);const ang=f.dir==='up'?-Math.PI/2+(i-3)*.3:(f.dir==='left'?-Math.PI*.8:-Math.PI*.2)+(i-3)*.18;const d=e*G.u*5;g.save();g.globalAlpha=1-e;arrow(p.x1+Math.cos(ang)*d,p.y1+Math.sin(ang)*d+e*e*G.u*6,ang+e*6,G.u*.9);g.restore();
+    S.fx.forEach(f=>{const e=f.t;if(imgs.impact&&imgs.hit){g.save();g.globalAlpha=1-e;paint(g,f.k==='block'?imgs.impact:imgs.hit,cx-sq*.5,feet-sq*.6,sq,sq*.6,Math.min(1,Math.floor(e*3)),2);g.restore();return;}if(f.k==='block'){for(let i=0;i<7;i++){const p=path(f.dir,(i-3)/3,G);const ang=f.dir==='up'?-Math.PI/2+(i-3)*.3:(f.dir==='left'?-Math.PI*.8:-Math.PI*.2)+(i-3)*.18;const d=e*G.u*5;g.save();g.globalAlpha=1-e;arrow(p.x1+Math.cos(ang)*d,p.y1+Math.sin(ang)*d+e*e*G.u*6,ang+e*6,G.u*.9);g.restore();
        g.fillStyle=`rgba(255,230,160,${(1-e)*.9})`;g.beginPath();g.arc(p.x1,p.y1,G.u*.18*(1+e*2),0,7);g.fill();}}
      else if(f.k==='hit'){g.fillStyle=`rgba(160,30,20,${.28*(1-e)})`;g.fillRect(-20,-20,W+40,H+40);}});
     g.restore();
     if(S.phase==='over'){g.fillStyle='rgba(20,10,5,.35)';g.fillRect(0,0,W,H);}
    }
-   function arrow(x,y,a,len){if(imgs.arrows){g.save();g.translate(x,y);g.rotate(a);g.drawImage(imgs.arrows,-len,-len*.12,len,len*.24);g.restore();return;}
+   function arrow(x,y,a,len){if(imgs.arrows){g.save();g.translate(x,y);g.rotate(a);paint(g,imgs.arrows,-len,-len*.1,len,len*.2);g.restore();return;}
     g.save();g.translate(x,y);g.rotate(a);g.lineCap='round';
     g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=Math.max(4,len*.09);g.beginPath();g.moveTo(-len,2);g.lineTo(0,2);g.stroke();
     g.strokeStyle='#6a4424';g.lineWidth=Math.max(3,len*.06);g.beginPath();g.moveTo(-len,0);g.lineTo(-len*.02,0);g.stroke();
@@ -128,7 +127,7 @@
    function drawSquad({cx,feet,sq,u},t){
     const art=imgs.squad,shieldArt=imgs[S.dir];
     const fl=S.flinch>0?Math.sin(S.flinch*30)*u*.15:0;
-    if(art){const w=sq,h=w*art.height/art.width;g.drawImage(art,cx-w/2+fl,feet-h,w,h);if(shieldArt){g.drawImage(shieldArt,cx-w/2+fl,feet-h,w,h);}return;}
+    if(art&&shieldArt){const h=sq*.43;[-.32,-.16,0,.16,.32].forEach((dx,i)=>{const x=cx+dx*sq+fl,y=feet-(i%2)*u*.1;paint(g,art,x-h*.35,y-h,h*.7,h,i%3,3);g.save();g.translate(x+(S.dir==='left'?-1:S.dir==='right'?1:0)*h*.16,y-h*(S.dir==='up'?.84:.5));g.rotate(S.dir==='left'?-.65:S.dir==='right'?.65:Math.PI/2);paint(g,shieldArt,-h*.23,-h*.3,h*.46,h*.6);g.restore();});return;}
     const men=[[-.3,0,.9],[.3,0,.9],[-.15,.05,.97],[.15,.05,.97],[0,.1,1.03]]; // x, Tiefe, Maßstab (hinten zuerst)
     g.fillStyle='rgba(0,0,0,.35)';g.beginPath();g.ellipse(cx,feet+u*.1,sq*.5,u*.5,0,0,7);g.fill();
     // erst alle Körper, dann alle Schilde: die Schildreihe liegt als geschlossene Wand vor dem Trupp
