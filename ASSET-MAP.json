@@ -1,0 +1,116 @@
+{
+  "secret_code": {
+    "dir": "assets/bonus/secret-code/",
+    "board": "codeboard.png",
+    "symbols": {
+      "fish": {
+        "normal": "fish-normal.png",
+        "active": "fish-active.png",
+        "error": "fish-error.png"
+      },
+      "anchor": {
+        "normal": "anchor-normal.png",
+        "active": "anchor-active.png",
+        "error": "anchor-error.png"
+      },
+      "dove": {
+        "normal": "dove-normal.png",
+        "active": "dove-active.png",
+        "error": "dove-error.png"
+      },
+      "chi-rho": {
+        "normal": "chi-rho-normal.png",
+        "active": "chi-rho-active.png",
+        "error": "chi-rho-error.png"
+      }
+    },
+    "optional": [
+      "dialog-panel.png",
+      "success-effect.png",
+      "error-effect.png",
+      "guide-character.png"
+    ]
+  },
+  "tiber_topdown": {
+    "dir": "assets/bonus/tiber-topdown/",
+    "background": "tiber-background.png",
+    "banks": [
+      "bank-start.png",
+      "bank-goal.png"
+    ],
+    "terrain": [
+      "rock-large.png",
+      "island-small.png",
+      "water-tile.png"
+    ],
+    "platforms": [
+      "log-large.png",
+      "log-small.png",
+      "plank.png",
+      "raft.png",
+      "boat-small.png",
+      "boat-large.png"
+    ],
+    "player": [
+      "player-down.png",
+      "player-up.png",
+      "player-left.png",
+      "player-right.png"
+    ],
+    "effects": [
+      "splash-small.png",
+      "splash-large.png",
+      "current.png",
+      "waves.png",
+      "goal-banner.png"
+    ]
+  },
+  "catacombs": {
+    "dir": "assets/bonus/catacombs/",
+    "background": "catacombs-background.png",
+    "floor_tiles": [
+      "floor-straight.png",
+      "floor-corner.png",
+      "floor-t-junction.png",
+      "floor-cross.png"
+    ],
+    "walls": [
+      "wall.png",
+      "door-closed.png",
+      "door-open.png",
+      "collapse.png"
+    ],
+    "objects": [
+      "sarcophagus.png",
+      "grave-niche.png",
+      "inscription.png",
+      "symbol-fish.png",
+      "symbol-chi-rho.png",
+      "symbol-anchor.png",
+      "symbol-dove.png",
+      "vessel.png",
+      "rubble.png",
+      "column.png",
+      "oil-lamp.png"
+    ],
+    "player": [
+      "player-down.png",
+      "player-up.png",
+      "player-left.png",
+      "player-right.png"
+    ],
+    "effects": [
+      "light-cone-small.png",
+      "light-cone-large.png",
+      "torch.png",
+      "flame.png",
+      "footprints.png",
+      "stones.png"
+    ],
+    "goal": [
+      "exit.png",
+      "locked-door.png",
+      "key.png"
+    ]
+  }
+}
