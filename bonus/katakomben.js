@@ -103,7 +103,7 @@
   g.fillStyle='#8c3a22';g.font=`600 ${Math.round(h*.5)}px Georgia,serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(FRAG_TEXT[k],x+w*[.18,.52,.84][k],y+h*.55);g.restore();}
 
  window.BonusGames.register({
-  id:'katakomben',title:'Katakombenlauf',kicker:'Bonusspiel · Unter der Stadt',scene:'archive',
+  art:ART,id:'katakomben',title:'Katakombenlauf',kicker:'Bonusspiel · Unter der Stadt',scene:'archive',
   spot:[34,53,'Alte Grabplatte'],
   when:state=>state.solved.includes('archive'), // im dunklen Archiv noch nicht sichtbar
   intro:{text:'Du erkundest eine unterirdische Begräbnisstätte. Finde den Weg zurück zum Ausgang. Deine Öllampe wird langsam schwächer – kleine Ölschalen in den Gängen füllen sie wieder auf.',

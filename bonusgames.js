@@ -49,7 +49,7 @@ window.BonusGames=(()=>{
   UI.open(g.title,`<div class="bonus-shell" data-game="${id}"><div class="bonus-bar"><span class="bonus-tag">Bonusspiel</span><span class="bonus-task" aria-live="polite"></span><button type="button" class="bonus-pause" aria-label="Pause">❚❚</button><button type="button" class="bonus-leave">Zurück</button></div><div class="bonus-stage"></div></div>`,g.kicker||'Bonusspiel','bonus');
   const modal=document.querySelector('#modal');modal.classList.add('bonus-open');
   const shell=modal.querySelector('.bonus-shell'),stage=shell.querySelector('.bonus-stage'),task=shell.querySelector('.bonus-task');
-  const s=session={id,alive:true,raf:0,timers:[],intervals:[],listeners:[],observers:[],paused:false,running:false,game:null,loops:[],last:0};
+  const s=session={id,alive:true,raf:0,timers:[],intervals:[],listeners:[],observers:[],paused:false,running:false,game:null,loads:[],loops:[],last:0};
   const on=(t,type,fn,o)=>{t.addEventListener(type,fn,o);s.listeners.push([t,type,fn,o]);};
   on(modal,'close',()=>{if(session===s&&!modal.open)stop();}); // ein verspätetes „close“ des vorherigen Fensters beendet das neue Spiel nicht
   on(document,'visibilitychange',()=>{if(document.hidden&&s.running)pause(true);});
@@ -67,6 +67,7 @@ window.BonusGames=(()=>{
   function btn(text,fn,cls,parent){const b=document.createElement('button');b.type='button';b.textContent=text;b.className=cls||'';b.onclick=fn;parent.append(b);return b;}
   const ctx={
    stage,task,esc,
+   assets(art,done){if(!window.BonusArt)return {};const a=window.BonusArt.load(art);s.loads.push(a.ready);a.ready.then(()=>{if(s.alive)done?.();});return a.imgs;},
    get paused(){return s.paused;},get running(){return s.running;},get solved(){return solvedNow.slice();},
    reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,
    on,
@@ -94,7 +95,8 @@ window.BonusGames=(()=>{
   const intro=g.intro||{};
   const ic=card('bonus-introcard',`${first?'<p class="bonus-found">Du hast ein Bonusspiel freigeschaltet!</p>':''}<h3>${esc(g.title)}</h3>${intro.text?`<p>${esc(intro.text)}</p>`:''}${intro.controls?`<ul class="bonus-controls">${intro.controls.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}<p class="muted bonus-note">Freiwillig. Dein Spielstand in der Stadt bleibt unverändert.</p>`);
   try{s.game=g.setup(ctx)||{};}catch(e){console.error(e);}
-  btn(intro.start||'Los geht’s',()=>{ic.remove();shell.classList.add('running');s.running=true;s.paused=false;s.last=0;s.game?.start?.();},'primary',ic.querySelector('.bonus-actions'));
+  const startButton=btn(intro.start||'Los geht’s',()=>{ic.remove();shell.classList.add('running');s.running=true;s.paused=false;s.last=0;s.game?.start?.();},'primary',ic.querySelector('.bonus-actions'));
+  if(s.loads.length){startButton.disabled=true;const label=startButton.textContent;startButton.textContent='Grafiken laden …';Promise.all(s.loads).then(()=>{if(s.alive){startButton.disabled=false;startButton.textContent=label;}});}
   btn('Zurück in die Szene',()=>UI.close(),'',ic.querySelector('.bonus-actions'));
   ic.querySelector('.primary').focus({preventScroll:true});
   s.raf=requestAnimationFrame(frame);

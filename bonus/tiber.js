@@ -16,7 +16,7 @@
  const LOOP=COLS+5;
 
  window.BonusGames.register({
-  id:'tiber',title:'Über den Tiber!',kicker:'Bonusspiel · Lager am Tiber, 312',scene:'camp',
+  art:ART,id:'tiber',title:'Über den Tiber!',kicker:'Bonusspiel · Lager am Tiber, 312',scene:'camp',
   spot:[15,57,'Treibholz am Ufer'],
   intro:{text:'Ein Bote aus dem Lager soll ans andere Ufer. Auf dem Tiber treiben Stämme, Bretter und kleine Flöße. Spring von einem zum nächsten – immer ein Feld weit.',
    controls:['Kurz <b>wischen</b>: ein Feld nach oben, unten, links oder rechts. Oder die großen Pfeiltasten<span class="mg-keys"> bzw. Pfeiltasten/WASD</span>.','Auf Holz treibst du mit. Ins Wasser fallen ist nicht schlimm: Es geht am letzten Ufer weiter.','Drei kurze Überquerungen, die letzten mit Insel.'],start:'Ans Ufer'},

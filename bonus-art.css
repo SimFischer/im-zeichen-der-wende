@@ -1,17 +1,6 @@
-.art-loading .bonus-canvas,.art-loading .zs-root{visibility:hidden}
+.art-loading .bonus-canvas{visibility:hidden}
 .bonus-result-art{display:block;width:min(100%,320px);height:110px;object-fit:cover;margin:0 auto 10px;border:3px solid #74502a;border-radius:5px}
 .bonus-card-inner{border-radius:5px;border:3px double #997440;background:radial-gradient(ellipse at 20% 10%,#fff8e8,transparent 70%),linear-gradient(100deg,#e6cd9e,#fff2d2 48%,#e2c799);box-shadow:0 16px 40px #000b,inset 0 0 25px #a77c3e44}
 .bonus-stage button{touch-action:manipulation;min-width:44px;min-height:44px}
 .bonus-shell .bonus-task{font-weight:600}.bonus-shell .bonus-bar{border-bottom:2px solid #a07a43;padding-bottom:4px}
 @media(prefers-reduced-motion:reduce){.bonus-stage *{animation:none!important;transition:none!important}}
-
-.zs-root.art-scene{--sw:100cqw;--sh:min(calc(100cqw / 2.514),calc(100cqh - 165px));--ox:0px;--oy:calc(100cqh - var(--sh));background:#382619}
-.art-scene .zs-scene{height:var(--sh)}.art-scene .zs-bg{object-fit:fill}.art-scene .zs-bubble{top:10px;left:12px;width:53%;max-height:150px;overflow:auto}.art-scene .zs-board{top:10px;right:12px}.art-scene .zs-answers{bottom:8px}.art-scene .zs-stall{left:0;top:25%;width:26%;height:65%;object-fit:contain}.art-scene .zs-person{left:27%;top:33%;width:10%;height:45%;object-fit:contain}
-.zs-sheet{background-size:500% 100%;background-repeat:no-repeat}.art-symbols .zs-glyph{width:68%;height:68%;min-width:30px;min-height:30px}.art-symbols .zs-slot .zs-glyph{width:38px;height:38px}.art-panel .zs-board{background:#49321e;border:3px double #cda563}.art-panel .zs-board:before{content:'';position:absolute;inset:0;background:url('assets/bonus/secret-signs/secret-signs-panel.png') center/cover;opacity:.15;pointer-events:none}.art-scene .zs-mark{width:7%;min-width:52px;min-height:52px}.art-scene .m-tablet .zs-glyph{transform:none}
-#modal .zs-mark,#modal .zs-mark:not(:disabled):active{transform:translate(-50%,-50%);border:0;background:transparent;box-shadow:none;padding:0}
-#modal .zs-glyph.zs-sheet{background-image:url('assets/bonus/secret-signs/secret-signs-symbols.png');background-size:500% 100%;background-repeat:no-repeat;border:0;box-shadow:none;border-radius:0}
-#modal .zs-root.art-scene{--sw:min(100cqw,calc((100cqh - 165px)*2.514));--sh:calc(var(--sw)/2.514);--ox:calc((100cqw - var(--sw))/2)}
-#modal .zs-bg{object-fit:contain}
-
-#modal .zs-mark{background:none!important;box-shadow:none!important;border:0!important}#modal .zs-mark svg{background:none;border:0;box-shadow:none}#modal .zs-slot .zs-sheet{background-color:transparent}
-#modal .zs-board-title{color:#fff0c2}#modal .zs-count{color:#fff0c2;font-size:16px}

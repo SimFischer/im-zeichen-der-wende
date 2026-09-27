@@ -25,7 +25,7 @@
  function pattern(g,draw,size){const c=document.createElement('canvas');c.width=c.height=size;draw(c.getContext('2d'),size);return g.createPattern(c,'repeat');}
 
  window.BonusGames.register({
-  id:'circus',title:'Circus Maximus – Das Rennen',kicker:'Bonusspiel · Nach der Chronik',scene:'city',
+  art:ART,id:'circus',title:'Circus Maximus – Das Rennen',kicker:'Bonusspiel · Nach der Chronik',scene:'city',
   spot:[16,31,'Ankündigung: Wagenrennen'],
   when:state=>!!state.flags?.finished, // erst nach dem Abschluss der Hauptgeschichte
   intro:{text:'Großer Renntag im Circus Maximus! Du lenkst das grüne Gespann. Der Wagen fährt von selbst – du wählst die Spur. Sieben Runden, gezählt mit den Delfinen auf der Mittelmauer.',
