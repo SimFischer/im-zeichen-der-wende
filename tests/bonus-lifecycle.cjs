@@ -13,9 +13,15 @@ const $=s=>doc.querySelector(s),click=s=>{const b=$(s);assert(b&&!b.disabled,'en
 function frame(){now+=50;const queue=[...rafs];rafs.clear();queue.forEach(([,f])=>f(now));for(const [id,t]of [...timers])if(t.t<=now){timers.delete(id);t.f();}}
 function start(id){delete window.BonusArt;B.start(id);window.BonusArt={draw(){}};click('.bonus-introcard .primary');frame();}
 function close(id){window.WendeUI.close();assert.equal(rafs.size,0,'no animation left after close');assert.equal(timers.size,0,'no timers left after close');delete window.BonusArt;B.start(id);window.BonusArt={draw(){}};assert($('.bonus-introcard'));window.WendeUI.close();}
-start('zeichen');let seq=[],prev=-1;for(let n=1;n<=5;n++){
+start('zeichen');
+assert.equal(doc.querySelectorAll('.code-board img').length,1,'only the original board, no duplicated symbols');
+assert.equal(doc.querySelectorAll('.code-symbol img,.code-effect').length,0,'no symbol or centre image overlay');
+assert.equal($('.code-board').children.length,5,'board and four transparent hit areas only');
+click('.bonus-pause');const pausedStatus=$('.code-status').textContent;for(let i=0;i<30;i++)frame();assert.equal($('.code-status').textContent,pausedStatus);assert($('.code-replay').disabled);click('.bonus-pausecard .primary');
+close('zeichen');start('zeichen');assert.equal($('.code-round').textContent,'Runde 1 von 5','reopening during playback starts cleanly');
+let seq=[],prev=-1;for(let n=1;n<=5;n++){
  let guard=0;while($('.code-symbol').disabled&&guard++<500){frame();const active=[...doc.querySelectorAll('.code-symbol')].findIndex(b=>b.dataset.state==='active');if(active>=0&&active!==prev)seq.push(active);prev=active;}
- assert(guard<500);assert.equal(seq.length,n);if(n===1){click('[data-symbol="'+((seq[0]+1)%4)+'"]');assert($('.code-status').textContent.includes('Fast'));seq=[];prev=-1;n--;continueOnce();}else for(const i of seq)click('[data-symbol="'+i+'"]');
+ assert(guard<500);assert.equal(seq.length,n);if(n===1){click('[data-symbol="'+((seq[0]+1)%4)+'"]');assert($('.code-status').textContent.includes('Noch nicht ganz'));seq=[];prev=-1;n--;continueOnce();}else for(const i of seq)click('[data-symbol="'+i+'"]');
  function continueOnce(){let count=0;while($('.code-symbol').disabled&&count++<500){frame();const active=[...doc.querySelectorAll('.code-symbol')].findIndex(b=>b.dataset.state==='active');if(active>=0&&active!==prev)seq.push(active);prev=active;}for(const i of seq)click('[data-symbol="'+i+'"]');n=1;}
  seq=[];prev=-1;for(let i=0;i<21;i++)frame();
 }
