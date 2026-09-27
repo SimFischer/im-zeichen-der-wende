@@ -1,0 +1,5 @@
+const fs=require('fs'),assert=require('node:assert/strict'),vm=require('vm');const files=['index.html','bonusgames.js','bonusgames.css','bonus-modern.css','bonus-art.css','bonus-art.js',...fs.readdirSync('bonus').filter(f=>f.endsWith('.js')).map(f=>'bonus/'+f)];
+for(const f of files){const text=fs.readFileSync(f,'utf8');assert(!/rombrennt|schildwall|Amphoren-Chaos|secret-signs|rome-burns|bonus\/tiber\//i.test(text),f+' has an obsolete game reference');for(const m of text.matchAll(/(?:src|href)="([^"$]+\.(?:js|css|png|webp))"|url\(['"]?([^)'"$]+\.(?:png|webp|woff))['"]?\)/g)){const target=m[1]||m[2];if(!target.includes('://'))assert(fs.existsSync(target),f+' missing '+target);}}
+const games={};for(const f of files.filter(f=>f.startsWith('bonus/')))vm.runInNewContext(fs.readFileSync(f,'utf8'),{window:{BonusGames:{register:g=>games[g.id]=g,games}}});assert.equal(Object.keys(games).length,5);
+for(const game of Object.values(games))if(game.art)for(const f of Object.values(game.art.files))assert(fs.existsSync(game.art.dir+f),game.art.dir+f);
+console.log('PASS bonus integrity: five games, no obsolete runtime references, all referenced assets exist');

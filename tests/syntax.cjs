@@ -1,0 +1,1 @@
+const fs=require('fs'),cp=require('child_process');const files=[...fs.readdirSync('.').filter(f=>f.endsWith('.js')),...['bonus','api'].flatMap(d=>fs.readdirSync(d).filter(f=>f.endsWith('.js')).map(f=>d+'/'+f))];for(const f of files)cp.execFileSync(process.execPath,['--check',f],{stdio:'inherit'});console.log('PASS syntax:',files.length,'JavaScript files');

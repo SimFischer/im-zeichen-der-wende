@@ -5,7 +5,7 @@
    Sieben Runden – gezählt mit den sieben Delfinen auf der spina (wie im antiken Circus). */
 (()=>{
  if(!window.BonusGames)return;
- const ART={"dir":"assets/bonus/circus/","files":{"crowd":"circus-crowd.png","bg":"circus-bg.png","chariots":"circus-chariots.png","track":"circus-track.png","dust":"circus-dust.png","ui-icons":"circus-ui-icons.png"},"available":["crowd","bg","chariots","track","dust","ui-icons"]};
+ const ART={"dir":"assets/bonus/circus/","files":{"bg":"circus-bg.png","dust":"circus-dust.png","ui-icons":"circus-ui-icons.png"},"available":["bg","dust","ui-icons"]};
  const paint=(...a)=>window.BonusArt?.draw(...a);
  const LW=100,R=560,LS=1800,LAPS=7,LANES=[-1.5,-.5,.5,1.5];
  const LAP=2*LS+2*Math.PI*R;
@@ -38,7 +38,7 @@
    let P,ais,things,dust,gates,laurel,finished,countdown,cam,camH,msgT,crowdT,results;
    function newRacer(color,lane,speed,ai){return {color,lane,d:LANES[lane],p:-40*lane,lap:0,mult:1,boost:0,slow:0,speed,ai,swayT:Math.random()*5,next:1+Math.random()*2,done:false,time:0};}
    function reset(){P=newRacer('gruen',2,1,false);ais=[newRacer('rot',0,.945,true),newRacer('weiss',1,.965,true),newRacer('blau',3,.985,true)];ais.forEach((a,i)=>a.p=-40*a.lane);
-    things=[];dust=[];laurel=0;finished=false;countdown=3.2;cam=null;camH=null;msgT=0;results=null;
+    things=[];dust=[];laurel=0;nextSpawn=600;shake=0;finished=false;countdown=3.2;cam=null;camH=null;msgT=0;results=null;
     const qs=[...QUESTIONS].sort(()=>Math.random()-.5).slice(0,3);gates=qs.map((qq,i)=>({lap:1+i*2,p:LS*.62,q:qq.q,correctInner:Math.random()<.5,a:qq.a,done:false,shown:false}));
     q.hidden=true;ctx.setTask('Runde 1 von 7');}
    const total=r=>r.lap*LAP+r.p;
@@ -54,7 +54,7 @@
    ctx.on(view.canvas,'pointermove',e=>{if(!sw||sw.moved||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x;if(Math.abs(dx)>26&&Math.abs(dx)>Math.abs(e.clientY-sw.y)){sw.moved=true;if(ctx.running&&!ctx.paused)laneChange(P,dx<0?-1:1);}});
    ctx.on(view.canvas,'pointerup',e=>{if(sw&&!sw.moved&&ctx.running&&!ctx.paused){const r=view.canvas.getBoundingClientRect();laneChange(P,e.clientX-r.left<r.width/2?-1:1);}sw=null;});
    ctx.on(view.canvas,'pointercancel',()=>{sw=null;});
-   ctx.on(window,'keydown',e=>{if(!ctx.running||e.repeat)return;if(['ArrowLeft','a','A'].includes(e.key)){laneChange(P,-1);e.preventDefault();}if(['ArrowRight','d','D'].includes(e.key)){laneChange(P,1);e.preventDefault();}});
+   ctx.on(window,'keydown',e=>{if(!ctx.running||ctx.paused||e.repeat)return;if(['ArrowLeft','a','A'].includes(e.key)){laneChange(P,-1);e.preventDefault();}if(['ArrowRight','d','D'].includes(e.key)){laneChange(P,1);e.preventDefault();}});
 
    /* Bewegung */
    function move(r,dt,base){r.d+=(LANES[r.lane]-r.d)*Math.min(1,dt*7);
@@ -97,7 +97,6 @@
     crowd:pattern(g,(o,s)=>{o.fillStyle='#8a7658';o.fillRect(0,0,s,s);for(let r=0;r<8;r++){o.fillStyle='#6f5e44';o.fillRect(0,r*16+12,s,4);for(let k=0;k<11;k++){const x=k*11.6+(r%2)*5+Math.random()*3,y=r*16+6;o.fillStyle=['#a8432a','#efe2c4','#3a5f8a','#3f7a4a','#c98a3e','#6b4a2a','#d9c49a'][Math.floor(Math.random()*7)];o.beginPath();o.arc(x,y+2,4,0,7);o.fill();o.fillStyle=['#c89a6e','#a8784e','#8a5a3a','#d9b08a'][Math.floor(Math.random()*4)];o.beginPath();o.arc(x,y-3,2.6,0,7);o.fill();}}},128)};}
    function ovalPath(r){g.beginPath();g.moveTo(-LS/2,r);g.lineTo(LS/2,r);g.arc(LS/2,0,r,Math.PI/2,-Math.PI/2,true);g.lineTo(-LS/2,-r);g.arc(-LS/2,0,r,-Math.PI/2,Math.PI/2,true);g.closePath();}
    function chariot(r,t){const w=pos(r.p,r.d);const col=COLORS[r.color][0];g.save();g.translate(w.x,w.y);g.rotate(w.h);g.scale(1.3,1.3);
-    if(imgs.chariots){const f={rot:0,blau:1,gruen:2,weiss:3}[r.color];g.save();if(r.color==='weiss')g.filter='saturate(.12) brightness(1.15)';paint(g,imgs.chariots,-65,-48,190,96,f,4);g.restore();if(r===P){g.strokeStyle='#f7dc93';g.lineWidth=3;g.beginPath();g.ellipse(20,0,98,48,0,0,7);g.stroke();}g.restore();return;}
     const gallop=Math.sin(t*14+r.swayT)*4;
     g.fillStyle='#00000030';g.beginPath();g.ellipse(18,6,90,34,0,0,7);g.fill();
     // zwei Pferde
@@ -111,7 +110,7 @@
     if(r===P){g.strokeStyle='rgba(247,220,147,.8)';g.lineWidth=3;g.beginPath();g.ellipse(18,0,98,40,0,0,7);g.stroke();}
     g.restore();}
    function thing(tn){const w=pos(tn.p,LANES[tn.lane]);g.save();g.translate(w.x,w.y);g.rotate(w.h);
-    if(imgs.track&&imgs['ui-icons']){const im=tn.kind==='lorbeer'?imgs['ui-icons']:imgs.track;paint(g,im,-40,-30,80,60,tn.kind==='sand'?1:tn.kind==='amphore'?2:0,tn.kind==='lorbeer'?1:3);g.restore();return;}
+    if(tn.kind==='lorbeer'&&imgs['ui-icons']){paint(g,imgs['ui-icons'],-30,-30,60,60);g.restore();return;}
     if(tn.kind==='lorbeer'){g.strokeStyle='#4a6a2a';g.lineWidth=3;g.beginPath();g.moveTo(-26,0);g.quadraticCurveTo(0,-8,26,0);g.stroke();for(let k=0;k<6;k++){const x=-20+k*8;g.fillStyle=k%2?'#5f8a3a':'#6f9a44';g.beginPath();g.ellipse(x,-7+(k%2)*14,8,4,(k%2?.6:-.6),0,7);g.fill();}const gl=(Math.sin(performance.now()/200)+1)/2;g.fillStyle=`rgba(255,240,180,${.25+.3*gl})`;g.beginPath();g.arc(0,0,30,0,7);g.fill();}
     else if(tn.kind==='sand'){g.fillStyle='#c9a86b';g.beginPath();g.ellipse(0,0,40,30,0,0,7);g.fill();g.fillStyle='#e0c690';g.beginPath();g.ellipse(-6,-6,24,16,0,0,7);g.fill();}
     else if(tn.kind==='rille'){g.strokeStyle='#8a6a3e';g.lineWidth=5;g.beginPath();g.moveTo(-45,-18);g.quadraticCurveTo(0,-4,45,-20);g.moveTo(-45,16);g.quadraticCurveTo(0,4,45,18);g.stroke();}
@@ -130,7 +129,7 @@
     g.save();g.fillStyle='#6f5e44';g.fillRect(0,0,W,H);
     g.translate(W/2+(shake?(Math.random()-.5)*6:0),H*.64);g.scale(zoom,zoom);g.rotate(-Math.PI/2-camH);g.translate(-cam.x,-cam.y);
     // Tribünen mit Publikum
-    g.fillStyle=imgs.crowd?g.createPattern(imgs.crowd,'repeat'):pats.crowd;ovalPath(R+2*LW+420);g.fill();if(imgs.crowd){for(let k=0;k<32;k++){const bp=pos(k*LAP/32,3.4);g.save();g.translate(bp.x,bp.y);g.rotate(bp.h);paint(g,imgs.crowd,-150,-70,300,140,0,1,'cover');g.restore();}}
+    g.fillStyle=pats.crowd;ovalPath(R+2*LW+420);g.fill();
     g.fillStyle='#b8a888';ovalPath(R+2*LW+44);g.fill();
     g.fillStyle=pats.sand;ovalPath(R+2*LW+20);g.fill();
     // Banner an der Außenmauer (wehen leicht)

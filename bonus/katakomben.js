@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
  if(!window.BonusGames)return;
- const files={};for(const f of ['floor-straight','wall','symbol-fish','symbol-anchor','inscription','grave-niche','player-up','player-down','player-left','player-right'])files[f]=f+'.png';
+ const files={};for(const f of ['floor-straight','wall','symbol-fish','symbol-anchor','inscription','grave-niche','player-up','player-down'])files[f]=f+'.png';
  const ART={dir:'assets/bonus/catacombs/',files,available:Object.keys(files)};
  const MAP=['###############','#S....#......E#','#.###.#.#####.#','#...#...#.....#','###.#####.###.#','#...#.....#...#','#.###.###.#.#.#','#.....#...#.#.#','#.#####.###.#.#','#.............#','###############'];
  const CLUES=[
@@ -28,7 +28,7 @@
    const board=root.querySelector('.cat-board'),canvas=document.createElement('canvas');board.append(canvas);const g=canvas.getContext('2d');
    const panel=ctx.layer('cat-question');panel.hidden=true;
    function size(){const r=board.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);g.setTransform(canvas.width/W,0,0,canvas.height/H,0,0);}ctx.observe(board,size);
-   function renderPanel(){const s=m.s;if(s.active===null){panel.hidden=true;shown=null;return;}panel.hidden=false;const c=m.clues[s.active];if(shown!==s.active){shown=s.active;panel.innerHTML=`<div class="cat-question-inner"><img src="${ART.dir+files[c.art]}" alt="${ctx.esc(c.title)}"><h3>${ctx.esc(c.title)}</h3><p>${ctx.esc(c.q)}</p><div class="cat-options">${c.answers.map((a,i)=>`<button type="button" data-answer="${i}">${ctx.esc(a)}</button>`).join('')}</div><p class="cat-feedback" role="status"></p><button type="button" class="cat-continue" hidden>Weiter erkunden</button></div>`;panel.querySelectorAll('[data-answer]').forEach(b=>ctx.on(b,'click',()=>{if(ctx.paused)return;m.answer(+b.dataset.answer);renderPanel();hud();}));ctx.on(panel.querySelector('.cat-continue'),'click',()=>{if(!ctx.paused){m.resume();renderPanel();}});panel.querySelector('button').focus({preventScroll:true});}
+   function renderPanel(){const s=m.s;if(s.active===null){panel.hidden=true;shown=null;return;}panel.hidden=false;const c=m.clues[s.active];if(shown!==s.active){shown=s.active;panel.innerHTML=`<div class="cat-question-inner"><img src="${ART.dir+files[c.art]}" alt="${ctx.esc(c.title)}"><h3>${ctx.esc(c.title)}</h3><p>${ctx.esc(c.q)}</p><div class="cat-options">${c.answers.map((a,i)=>`<button type="button" data-answer="${i}">${ctx.esc(a)}</button>`).join('')}</div><p class="cat-feedback" role="status"></p><p class="cat-source-note">Spielillustration, keine Abbildung einer originalen Fundquelle.</p><button type="button" class="cat-continue" hidden>Weiter erkunden</button></div>`;panel.querySelectorAll('[data-answer]').forEach(b=>ctx.on(b,'click',()=>{if(ctx.paused)return;m.answer(+b.dataset.answer);renderPanel();hud();}));ctx.on(panel.querySelector('.cat-continue'),'click',()=>{if(!ctx.paused){m.resume();renderPanel();}});panel.querySelector('button').focus({preventScroll:true});}
     panel.querySelector('.cat-feedback').textContent=s.feedback;const solved=s.solved.includes(s.active);panel.querySelectorAll('[data-answer]').forEach(b=>b.disabled=solved);panel.querySelector('.cat-continue').hidden=!solved;
    }
    function hud(){root.querySelector('.cat-progress').textContent=`${m.s.found.length} von 4 Spuren gefunden · ${m.s.solved.length} gedeutet`;root.querySelector('.cat-oil').textContent=`Lampenöl: ${Math.round(m.s.oil*100)} %`;root.querySelector('.cat-message').textContent=m.s.active===null?m.s.feedback:'';ctx.setTask(`Spuren: ${m.s.solved.length}/4 gedeutet · ${m.s.solved.length>=3?'Ausgang offen':'3 zum Öffnen nötig'}`);}
@@ -36,8 +36,8 @@
    root.querySelectorAll('[data-dir]').forEach(b=>ctx.on(b,'click',()=>input(b.dataset.dir)));ctx.on(document,'keydown',e=>{const d={ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right'}[e.key];if(d){e.preventDefault();if(!e.repeat)input(d);}});
    function draw(){g.fillStyle='#392b20';g.fillRect(0,0,W,H);for(let y=0;y<11;y++)for(let x=0;x<15;x++){window.BonusArt.draw(g,imgs[MAP[y][x]==='#'?'wall':'floor-straight'],x*T,y*T,T,T);if(MAP[y][x]==='E'){g.fillStyle=m.s.solved.length>=3?'#f7d789':'#a5854b';g.fillRect(x*T+7,y*T+5,26,30);g.fillStyle='#3c2b1d';g.font='bold 23px Georgia';g.textAlign='center';g.fillText('↑',x*T+20,y*T+29);}}
     m.clues.forEach((c,i)=>{window.BonusArt.draw(g,imgs[c.art],c.x*T+4,c.y*T+3,32,34);if(m.s.solved.includes(i)){g.fillStyle='#dbe998';g.font='bold 18px Georgia';g.fillText('✓',c.x*T+30,c.y*T+14);}});
-    for(let y=0;y<11;y++)for(let x=0;x<15;x++){const d=Math.hypot(x-m.s.x,y-m.s.y),alpha=Math.min(m.s.mapped?.62:.9,Math.max(0,(d-1.2)/m.radius()));g.fillStyle=`rgba(13,9,6,${alpha})`;g.fillRect(x*T,y*T,T,T);}
-    window.BonusArt.draw(g,imgs['player-'+m.s.dir],m.s.x*T+6,m.s.y*T+1,28,38);g.strokeStyle='#f7d88a';g.lineWidth=2;g.strokeRect(m.s.x*T+3,m.s.y*T+2,34,36);
+    const light=g.createRadialGradient(m.s.x*T+20,m.s.y*T+20,40,m.s.x*T+20,m.s.y*T+20,(m.radius()+1.2)*T);light.addColorStop(0,'rgba(13,9,6,0)');light.addColorStop(.35,'rgba(13,9,6,.18)');light.addColorStop(1,m.s.mapped?'rgba(13,9,6,.62)':'rgba(13,9,6,.9)');g.fillStyle=light;g.fillRect(0,0,W,H);
+    g.save();g.translate(m.s.x*T+20,m.s.y*T+20);g.rotate(({left:-Math.PI/2,right:Math.PI/2})[m.s.dir]||0);window.BonusArt.draw(g,imgs['player-'+(m.s.dir==='down'?'down':'up')],-14,-19,28,38);g.restore();g.strokeStyle='#f7d88a';g.lineWidth=2;g.strokeRect(m.s.x*T+3,m.s.y*T+2,34,36);
    }
    let elapsed=0;ctx.loop({update(dt){m.tick(dt);elapsed+=dt;if(elapsed>1){hud();elapsed=0;}},draw});return {start(){size();hud();}};
   }

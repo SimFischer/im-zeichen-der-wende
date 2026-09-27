@@ -9,8 +9,8 @@
     "@vercel/blob": "^2.3.0"
   },
   "scripts": {
-    "build": "node --check script.js && node --check continuation.js && node --check bonusgames.js && node --check scenegames.js && node --check minigames.js && node --check seals.js && node --check argbridge.js && node --check finale.js && for f in bonus/*.js; do node --check $f || exit 1; done && node --check api/continuation.js && node tests/continuation.cjs",
-    "test": "node tests/continuation.cjs && node tests/playthrough.cjs && node tests/bonus-unlocks.cjs && node tests/scenegames.cjs && node tests/sources-and-reasons.cjs && node tests/seals.cjs && node tests/argbridge.cjs && node tests/zeichen.cjs && node tests/archive-flow.cjs && node tests/ipad-layout.cjs && node tests/closeups.cjs && node tests/bonus-assets.cjs && node tests/tiber.cjs && node tests/katakomben.cjs"
+    "build": "node tests/syntax.cjs && node tests/continuation.cjs",
+    "test": "node tests/continuation.cjs && node tests/playthrough.cjs && node tests/bonus-unlocks.cjs && node tests/scenegames.cjs && node tests/sources-and-reasons.cjs && node tests/seals.cjs && node tests/argbridge.cjs && node tests/zeichen.cjs && node tests/archive-flow.cjs && node tests/ipad-layout.cjs && node tests/closeups.cjs && node tests/bonus-assets.cjs && node tests/tiber.cjs && node tests/katakomben.cjs && node tests/bonus-lifecycle.cjs && node tests/bonus-integrity.cjs"
   },
   "devDependencies": {
     "linkedom": "^0.18.12"

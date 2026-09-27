@@ -17,3 +17,18 @@
 .cat-question{position:absolute;inset:0;z-index:12;display:grid;place-items:center;padding:16px;background:#100b08d9;overflow:auto;touch-action:pan-y}.cat-question[hidden]{display:none}.cat-question-inner{width:min(660px,100%);padding:20px;background:#faebcb;color:#352718;border:3px double #946d35;border-radius:8px;box-sizing:border-box}.cat-question-inner>img{float:right;width:auto;height:91px;margin-left:16px}.cat-question h3{margin:0 0 12px;font-size:25px;color:#633c1d}.cat-question p{font-size:18px;line-height:1.4}.cat-options{display:grid;gap:8px;clear:both}.cat-options button{min-height:52px;text-align:left;font-size:17px;line-height:1.3;padding:10px 14px}.cat-feedback{min-height:1.4em}.cat-continue{min-height:48px}
 @media(max-width:940px){.cat-game{gap:12px}.cat-board{width:min(600px,calc(100vw - 285px))}.cat-aside{width:180px}.cat-aside p{font-size:15px}}
 @media(max-width:700px){.cat-game{flex-direction:column;justify-content:flex-start}.cat-board{width:min(600px,calc(100vw - 75px))}.cat-aside{width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-around;gap:8px}.cat-aside h3,.cat-aside>p:not(.cat-progress):not(.cat-oil){display:none}.cat-aside .crossing-pad{grid-template-columns:repeat(4,52px);grid-template-rows:52px}.cat-aside .crossing-pad button{grid-area:auto;min-width:52px!important}}
+
+.code-effect{display:grid;place-items:center;font-size:62px;font-weight:bold;color:#ffe4a0;text-shadow:0 2px 4px #29180b;background:radial-gradient(ellipse,#684623e6,transparent 70%)}.code-effect[hidden]{display:none}.code-effect[data-kind=error]{color:#efab8d}
+
+.cat-question .cat-source-note{font-size:13px;color:#756044}
+/* Override broad legacy modal button and readability rules only inside the new games. */
+#modal .bonus-stage .code-symbol{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:50%!important;padding:0!important;opacity:1!important}
+#modal .bonus-stage .code-symbol[data-state=active]{box-shadow:0 0 18px 5px #ffd076!important}
+#modal .bonus-stage .code-symbol[data-state=error]{box-shadow:0 0 15px 4px #d76b4b!important}
+#modal .code-instructions p,#modal .crossing-aside p,#modal .cat-aside p{font-size:18px!important;line-height:1.4!important}
+#modal .code-instructions .code-history,#modal .cat-question .cat-source-note{font-size:14px!important}
+#modal .code-instructions .code-kicker{font-size:12px!important}
+#modal .code-instructions h3{font-size:30px!important}
+#modal .crossing-aside h3,#modal .cat-aside h3{font-size:25px!important}
+#modal .cat-question p{font-size:18px!important}
+#modal .cat-options button{font-size:17px!important;line-height:1.3!important}

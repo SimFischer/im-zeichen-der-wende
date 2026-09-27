@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
  if(!window.BonusGames)return;
- const files={};for(const f of ['tiber-background','bank-start','bank-goal','log-large','log-small','plank','raft','boat-large','rock-large','island-small','player-up','player-down','player-left','player-right','splash-large','goal-banner'])files[f]=f+'.png';
+ const files={};for(const f of ['tiber-background','bank-start','bank-goal','log-large','log-small','plank','raft','boat-large','rock-large','island-small','player-up','player-down','splash-small','goal-banner'])files[f]=f+'.png';
  const ART={dir:'assets/bonus/tiber-topdown/',files,available:Object.keys(files)},WIDTH=512,HEIGHT=432,CELL=48;
  function createModel(){
   const s={x:256,row:8,dir:'up',falls:0,won:false,cooldown:0,splash:null,checkpoint:{x:256,row:8},platforms:[]};
@@ -30,8 +30,8 @@
     for(const p of m.s.platforms)paint(p.type,p.x,p.row*CELL+24,p.w,42);
     for(const p of m.islands)paint(p.type,p.x,216,p.w,48);
     paint('goal-banner',256,22,25,40);
-    if(m.s.splash)paint('splash-large',m.s.splash.x,m.s.splash.row*CELL+24,64,58);
-    paint('player-'+m.s.dir,m.s.x,m.s.row*CELL+24,30,38);
+    if(m.s.splash)paint('splash-small',m.s.splash.x,m.s.splash.row*CELL+24,64,58);
+    g.save();g.translate(m.s.x,m.s.row*CELL+24);g.rotate(({left:-Math.PI/2,right:Math.PI/2})[m.s.dir]||0);paint('player-'+(m.s.dir==='down'?'down':'up'),0,0,30,38);g.restore();
    }
    function input(d){if(ctx.running&&!ctx.paused)m.input(d);}
    root.querySelectorAll('[data-dir]').forEach(b=>ctx.on(b,'click',()=>input(b.dataset.dir)));
