@@ -90,7 +90,7 @@
     dust.forEach(d=>d.t+=dt);dust=dust.filter(d=>d.t<1.2);shake=Math.max(0,shake-dt);
    }
    function win(place){const lines=[`Lorbeer gesammelt: ${laurel}`];if(place>1)lines.unshift(`Ziel erreicht – Platz ${place} von 4`);
-    ctx.win({title:'',lines,html:`<div class="schild-banner circus-banner"><span>${place===1?'VICTOR!':'BENE CUCURRISTI!'}</span></div>${place===1?'<p class="schild-sub">Du hast das Rennen gewonnen!</p>':'<p class="schild-sub">„Gut gelaufen!“ – Beim nächsten Mal vielleicht der Sieg.</p>'}<p class="muted" style="text-align:center">Im antiken Circus fuhren die Gespanne sieben Runden. Die Zuschauer hielten zu den Farben Grün, Blau, Rot oder Weiß.</p>`,backLabel:'Zurück zur Stadt'});}
+    ctx.win({title:'',lines,html:`<div class="circus-banner"><span>${place===1?'VICTOR!':'BENE CUCURRISTI!'}</span></div>${place===1?'<p class="circus-sub">Du hast das Rennen gewonnen!</p>':'<p class="circus-sub">„Gut gelaufen!“ – Beim nächsten Mal vielleicht der Sieg.</p>'}<p class="muted" style="text-align:center">Im antiken Circus fuhren die Gespanne sieben Runden. Die Zuschauer hielten zu den Farben Grün, Blau, Rot oder Weiß.</p>`,backLabel:'Zurück zur Stadt'});}
 
    /* Zeichnen */
    function makePatterns(){pats={sand:pattern(g,(o,s)=>{o.fillStyle='#d8bd87';o.fillRect(0,0,s,s);for(let k=0;k<700;k++){o.fillStyle=['#c9a86b','#e6d0a0','#bfa070','#f0dcb0'][k%4];o.globalAlpha=.35;o.fillRect(Math.random()*s,Math.random()*s,1+Math.random()*2.5,1+Math.random()*2);}o.globalAlpha=1;},256),

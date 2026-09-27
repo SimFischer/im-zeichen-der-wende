@@ -4,13 +4,13 @@
    „Tauschen“ ist die leichte, „Schieben“ die knifflige Variante; 3×3 oder 4×4. Kein Zeitdruck. */
 (()=>{
  if(!window.BonusGames)return;
- const DIR='assets/bonus/bilder-',KEY='im-zeichen-der-wende:bonus-bilder';
+ const DIR='assets/bonus/bilder-',KEY='im-zeichen-der-wende:bonus-bilder-v2';
  const PICS=[
   {id:'schild',name:'Das Zeichen auf dem Schild',era:'312',need:'vision',info:'Christliche Autoren berichten Jahre später: Vor der Schlacht an der Milvischen Brücke ließ Konstantin ein Christuszeichen auf die Schilde malen.'},
   {id:'stadt',name:'Die geöffnete Stadt',era:'ab 313',need:'change',info:'Nach 313 dürfen Christen ihren Glauben offen leben. Beschlagnahmter Besitz wird zurückgegeben, neue Kirchen entstehen.'},
   {id:'mosaik',name:'Konstantin im Mosaik',era:'Glaube und Herrschaft',need:'motives',info:'Warum förderte Konstantin die Christen? Persönlicher Glaube und politische Ziele lassen sich bei ihm kaum trennen.'},
   {id:'konzil',name:'Das Konzil von Nicäa',era:'325',need:'council',info:'325 lässt Konstantin die Bischöfe in Nicäa zusammenkommen. Ein Streit in der Kirche soll die Einheit des Reiches nicht gefährden.'}];
- const done=()=>{try{const v=JSON.parse(localStorage.getItem(KEY));return Array.isArray(v)?v.filter(x=>typeof x==='string'):[];}catch(e){return [];}};
+ const done=()=>{try{const v=JSON.parse(localStorage.getItem(KEY));return Array.isArray(v)?[...new Set(v.filter(x=>PICS.some(p=>p.id===x)))]:[];}catch(e){return [];}};
  const markDone=id=>{try{const d=done();if(!d.includes(id)){d.push(id);localStorage.setItem(KEY,JSON.stringify(d));}}catch(e){}};
 
  window.BonusGames.register({
@@ -34,7 +34,7 @@
     </div>
     <div class="bilder-done" hidden></div>`);
    const picsEl=ui.querySelector('.bilder-pics'),board=ui.querySelector('.bilder-board'),ref=ui.querySelector('.bilder-ref'),movesEl=ui.querySelector('.bilder-moves b'),doneEl=ui.querySelector('.bilder-done'),peekBtn=ui.querySelector('.bilder-peek');
-   let pic=PICS[0],N=3,mode='swap',tiles=[],sel=null,moves=0,finished=false;
+   let pic=PICS.find(open)||PICS[0],N=3,mode='swap',tiles=[],sel=null,moves=0,finished=false;
    const src=p=>DIR+p.id+'.webp';
    const neighbors=i=>{const r=Math.floor(i/N),c=i%N,o=[];if(r)o.push(i-N);if(r<N-1)o.push(i+N);if(c)o.push(i-1);if(c<N-1)o.push(i+1);return o;};
    function renderPics(){const d=done();picsEl.innerHTML=PICS.map(p=>open(p)

@@ -8,7 +8,7 @@
    setup(ctx) baut das Spiel in ctx.stage auf. Alle Timer, Listener und Animation-Frames
    laufen über ctx und werden beim Schließen des Fensters automatisch beendet. */
 window.BonusGames=(()=>{
- const KEY='im-zeichen-der-wende:bonus-v1';
+ const KEY='im-zeichen-der-wende:bonus-v2';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const ORDER=['zeichen','katakomben','tiber','bilder','circus'];
  const games={};
@@ -19,14 +19,14 @@ window.BonusGames=(()=>{
   available=new Set(ORDER.filter(id=>(state.solved||[]).includes(MILESTONES[id])));
   const p=load();p.found=[...available];p.won=p.won.filter(id=>available.has(id));store(p);
  }
- function reset(){stop();available.clear();store({found:[],won:[]});try{localStorage.setItem('im-zeichen-der-wende:bonus-bilder','[]');}catch(e){}}
+ function reset(){stop();available.clear();store({found:[],won:[]});try{localStorage.setItem('im-zeichen-der-wende:bonus-bilder-v2','[]');}catch(e){}}
 
  /* ---------- Fortschritt (nur entdeckt / geschafft) ---------- */
- function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&Array.isArray(v.found)&&Array.isArray(v.won))return {found:v.found.filter(x=>typeof x==='string'),won:v.won.filter(x=>typeof x==='string')};}catch(e){}return {found:[],won:[]};}
+ function load(){try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&Array.isArray(v.found)&&Array.isArray(v.won))return {found:[...new Set(v.found.filter(x=>ORDER.includes(x)))],won:[...new Set(v.won.filter(x=>ORDER.includes(x)))]};}catch(e){}return {found:[],won:[]};}
  function store(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}}
  function mark(id,key){const p=load();if(!p[key].includes(id)){p[key].push(id);store(p);}}
 
- function register(def){games[def.id]=def;}
+ function register(def){if(ORDER.includes(def.id))games[def.id]=def;}
 
  /* ---------- Fortschrittsabhängige Bonusspiele im Notizbuch ---------- */
  function journalHtml(){
@@ -80,7 +80,7 @@ window.BonusGames=(()=>{
     ctx.observe(stage,()=>{const r=stage.getBoundingClientRect();view.dpr=Math.min(opts.maxDpr||2,window.devicePixelRatio||1);view.W=Math.max(1,r.width);view.H=Math.max(1,r.height);c.width=Math.round(view.W*view.dpr);c.height=Math.round(view.H*view.dpr);c.style.width=view.W+'px';c.style.height=view.H+'px';g.setTransform(view.dpr,0,0,view.dpr,0,0);view.resize?.(view);});
     return view;},
    layer(cls,html=''){const d=document.createElement('div');d.className=cls;d.innerHTML=html;stage.append(d);return d;},
-   say(text,ms=2600,kind=''){let b=stage.querySelector('.bonus-say');if(!b){b=ctx.layer('bonus-say');b.setAttribute('role','status');}b.textContent=text;b.className='bonus-say show '+kind;clearTimeout(b._t);b._t=setTimeout(()=>{if(b.isConnected)b.className='bonus-say';},ms);},
+   say(text,ms=2600,kind=''){let b=stage.querySelector('.bonus-say');if(!b){b=ctx.layer('bonus-say');b.setAttribute('role','status');}b.textContent=text;b.className='bonus-say show '+kind;clearTimeout(b._t);b._t=ctx.after(ms,()=>{if(b.isConnected)b.className='bonus-say';});},
    setTask(t){task.textContent=t||'';},
    btn,
    /* Sieg: kurze Abschlussmeldung, Noch einmal, Zurück. */
@@ -101,8 +101,8 @@ window.BonusGames=(()=>{
   ic.querySelector('.primary').focus({preventScroll:true});
   s.raf=requestAnimationFrame(frame);
  }
- // Für den Fortsetzungscode: exportieren und beim Übernehmen zusammenführen (nichts geht verloren)
+ // Fortsetzungscodes übernehmen ausschließlich aktuell registrierte Bonusspiel-IDs.
  function exportProgress(){return load();}
- function mergeProgress(p){if(!p)return;const cur=load();for(const k of ['found','won'])(p[k]||[]).forEach(id=>{if(typeof id==='string'&&/^[a-z]{2,20}$/.test(id)&&!cur[k].includes(id))cur[k].push(id);});store(cur);}
+ function mergeProgress(p){if(!p)return;const cur=load();for(const k of ['found','won'])(Array.isArray(p[k])?p[k]:[]).forEach(id=>{if(ORDER.includes(id)&&!cur[k].includes(id))cur[k].push(id);});store(cur);}
  return {register,update,reset,journalHtml,bindJournal,start,stop,progress:load,exportProgress,mergeProgress,games};
 })();

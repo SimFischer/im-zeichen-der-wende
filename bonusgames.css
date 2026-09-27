@@ -1,17 +1,5 @@
 /* Bonusspiele: große, immersive Spielansicht im Stil der Stadtchronik */
 
-/* ---------- Fundstellen in den Szenen: bewusst unscheinbarer als Pflicht-Hotspots ---------- */
-.bonus-spot{position:absolute;transform:translate(-50%,-50%);z-index:1;min-width:52px;min-height:52px;padding:6px;border:0;background:transparent;box-shadow:none;color:#fff7de;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;backdrop-filter:none}
-.bonus-spot .bonus-pin{display:block;width:calc(var(--u)*.95);height:calc(var(--u)*.95);min-width:14px;min-height:14px;margin:0 auto;border-radius:50%;border:2px solid #f3dca6aa;background:radial-gradient(circle at 35% 30%,#f2d9a0,#9c6f33);box-shadow:0 0 0 3px #21190b55,0 1px 6px #000c;font:700 10px/1 Georgia,serif;color:#3a2610;opacity:.85;animation:bonus-glint 4.8s ease-in-out infinite}
-.bonus-spot .bonus-label{position:absolute;left:50%;top:calc(50% + calc(var(--u)*.7));transform:translateX(-50%);width:max-content;max-width:min(calc(var(--u)*12),28vw);padding:.15em .6em;border:1px solid #dcc49966;border-radius:20px;background:#20352eb8;font-size:var(--fs-xs);line-height:1.25;opacity:.78;text-shadow:0 1px 3px #000;pointer-events:none}
-.bonus-spot .bonus-label small{display:block;font-size:.78em;letter-spacing:.14em;text-transform:uppercase;color:#f0d59a}
-.bonus-spot:focus-visible .bonus-label{opacity:1;background:#20352ef2}
-@media (hover:hover) and (pointer:fine){.bonus-spot:hover .bonus-label{opacity:1;background:#20352ef2}}
-.bonus-spot.found .bonus-pin{background:radial-gradient(circle at 35% 30%,#f7dc93,#c08a36);border-color:#fff0c8;opacity:1}
-@keyframes bonus-glint{0%,80%,100%{box-shadow:0 0 0 3px #21190b55,0 1px 6px #000c}88%{box-shadow:0 0 0 3px #21190b55,0 0 14px 4px #f7dc93aa}}
-#scene.talking .bonus-spot{opacity:.35}
-@media (prefers-reduced-motion:reduce){.bonus-spot .bonus-pin{animation:none}}
-
 /* ---------- Spielfenster ---------- */
 #modal[data-mode=bonus]{width:calc(100vw - 16px);max-width:none;height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);padding:calc(var(--u)*.55) calc(var(--u)*.9) calc(var(--u)*.8);overflow:hidden}
 #modal[data-mode=bonus][open]{display:flex;flex-direction:column}
@@ -77,13 +65,6 @@
 .circus-banner span{font-size:calc(var(--u)*2.4)!important}
 
 .bonus-unknown small{display:block;font-size:14px;font-weight:400;letter-spacing:normal;margin-top:6px}
-
-/* Kurierfahrt von 313 (früheres Rennen der geöffneten Stadt) */
-.bonus-shell[data-game=kurier] .bonus-pause{display:none}
-.kurier-wrap{position:absolute;inset:0;display:flex;flex-direction:column;padding:.5em .6em;background:#f3e4c5;overflow:hidden}
-.kurier-wrap .racer{flex:1;min-height:0;display:flex;flex-direction:column}
-.kurier-wrap .racer-stage{flex:1;min-height:0;height:auto!important}
-
 
 .circus-count{position:absolute;left:50%;top:42%;z-index:8;transform:translate(-50%,-50%);padding:.2em 1em;border-radius:10px;font-size:clamp(28px,6vh,56px);font-weight:700;color:#fff3d6;text-shadow:0 3px 0 #5a220e,0 0 18px #ff8a3a;opacity:0;pointer-events:none;transition:opacity .2s}
 .circus-count.show{opacity:1}
