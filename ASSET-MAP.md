@@ -21,16 +21,6 @@ Dieses Paket ist für das Repository `SimFischer/im-zeichen-der-wende` vorbereit
 - `assets/minigames/timeline/timeline-assets.png`
   - Jahresmedaillons, Ereignisbilder und Chronik-UI-Elemente.
 
-### Amphoren-Chaos
-- `assets/minigames/amphora/amphora-dock.png`
-  - Neuer Hafen-/Lagerhaus-Hintergrund.
-- `assets/minigames/amphora/amphora-assets.png`
-  - Amphoren, Körbe, Kisten und Figuren im Stil des Gesamtspiels.
-- `assets/minigames/amphora/amphora-merchant.png`
-  - Separat ausgeschnittener Händler für die Spielfigur.
-  - Transparenter Hintergrund.
-  - Der Fangkorb kann weiterhin separat durch Canvas/CSS dargestellt werden.
-
 ## Einbau
 
 Den Inhalt dieses ZIPs im Stammverzeichnis des GitHub-Repositories entpacken.
@@ -43,4 +33,3 @@ Danach sollte der Codex-Umbau genau diese Pfade verwenden.
 - Die Figuren- und Objekt-Sheets haben transparenten Hintergrund.
 - Die Hintergrundbilder sind 1672 × 941 px und für eine breite iPad-Spielansicht ausgelegt.
 - Für Touch-Interaktionen sollten Hotspots unabhängig von der sichtbaren Objektgröße großzügig angelegt werden.
-- `assets/minigames/leute.webp` und `assets/minigames/forum-blur.jpg` sollten im Amphorenspiel nicht mehr als primäre Darstellung verwendet werden.

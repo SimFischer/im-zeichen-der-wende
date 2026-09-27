@@ -10,9 +10,9 @@
 window.BonusGames=(()=>{
  const KEY='im-zeichen-der-wende:bonus-v1';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const ORDER=['zeichen','rombrennt','amphoren','katakomben','schildwall','tiber','bilder','circus'];
+ const ORDER=['zeichen','katakomben','tiber','bilder','circus'];
  const games={};
- const MILESTONES={zeichen:'conflict',rombrennt:'sources',amphoren:'cases',katakomben:'archive',schildwall:'map312',tiber:'vision',bilder:'change',circus:'bridge'};
+ const MILESTONES={zeichen:'conflict',katakomben:'archive',tiber:'vision',bilder:'change',circus:'bridge'};
  let available=new Set(),session=null,solvedNow=[];
  function update(state){
   solvedNow=[...(state.solved||[])];

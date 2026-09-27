@@ -97,8 +97,8 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
 }
 /* ---------- Grafiken und Ersatz ---------- */
 {
- const files=['council/council-scene.png','council/council-officials.png','timeline/chronicle-room.png','timeline/timeline-assets.png','open-city/open-city.png','amphora/amphora-dock.png','amphora/amphora-assets.png','amphora/amphora-merchant.png'];
- const code=fs.readFileSync(path.join(root,'data/game-data.js'),'utf8')+fs.readFileSync(path.join(root,'scenegames.js'),'utf8')+fs.readFileSync(path.join(root,'bonus/amphoren.js'),'utf8');
+ const files=['council/council-scene.png','council/council-officials.png','timeline/chronicle-room.png','timeline/timeline-assets.png','open-city/open-city.png'];
+ const code=fs.readFileSync(path.join(root,'data/game-data.js'),'utf8')+fs.readFileSync(path.join(root,'scenegames.js'),'utf8');
  for(const f of files){ok(code.includes('assets/minigames/'+f),'Pfad im Code: '+f);ok(fs.existsSync(path.join(root,'assets/minigames',f)),'Datei vorhanden: '+f);}
  const css=fs.readFileSync(path.join(root,'scenegames.css'),'utf8');ok(css.includes('.sg-no-art'),'Ersatzdarstellung für fehlende Grafiken');
 }

@@ -32,7 +32,7 @@
    controls:['<b>Wischen</b> oder links/rechts ins Bild <b>tippen</b>: eine Spur nach links oder rechts<span class="mg-keys"> (am PC Pfeiltasten)</span>.','In den Kurven ist die <b>innere Spur</b> kürzer.','Sand, Radspuren und Amphoren bremsen nur. Sammle <b>Lorbeerzweige</b>.','An drei Toren entscheidet dein Wissen über den kürzeren Weg.'],start:'Zum Start'},
   setup(ctx){
    const view=ctx.canvas({maxDpr:2}),g=view.g;const imgs=ctx.assets?.(ART,()=>{pats=null;})||{};let pats=null;
-   const counter=ctx.layer('rom-count show','');counter.setAttribute('aria-live','polite');
+   const counter=ctx.layer('circus-count show','');counter.setAttribute('aria-live','polite');
    const q=ctx.layer('circus-q');q.hidden=true;
    const pad=ctx.layer('circus-pad','<button type="button" data-d="-1" aria-label="Spur nach links">◀</button><button type="button" data-d="1" aria-label="Spur nach rechts">▶</button>');
    let P,ais,things,dust,gates,laurel,finished,countdown,cam,camH,msgT,crowdT,results;
