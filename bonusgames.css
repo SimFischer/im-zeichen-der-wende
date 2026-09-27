@@ -85,12 +85,6 @@
 .circus-pad button{pointer-events:auto;width:calc(var(--u)*4.6);height:calc(var(--u)*3.4);min-width:72px;min-height:60px;font-size:calc(var(--u)*1.6);border-radius:16px;border:2px solid #7a5a2c;background:linear-gradient(#f0cf8ce6,#d9a95ce6);color:#3a2610;opacity:.85;touch-action:none}
 .circus-banner span{font-size:calc(var(--u)*2.4)!important}
 
-/* Über den Tiber */
-.tiber-quip{position:absolute;left:10px;top:10px;z-index:9;display:flex;align-items:center;gap:.6em;max-width:min(26em,70%);padding:.4em .8em;border:2px solid #c9a86b;border-radius:12px;background:#fbf1dbf2;box-shadow:0 6px 16px #0006;pointer-events:none}
-.tiber-quip[hidden]{display:none}
-.tiber-quip p{margin:0;font-size:var(--fs-s);color:#3a2610}
-.tiber-quip .schild-face{width:52px;height:52px;background-size:cover;background-position:center}
-
 .bonus-unknown small{display:block;font-size:14px;font-weight:400;letter-spacing:normal;margin-top:6px}
 
 /* Kurierfahrt von 313 (früheres Rennen der geöffneten Stadt) */
