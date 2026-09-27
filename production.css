@@ -143,3 +143,10 @@
 .scene-game .w-speed button{min-height:44px!important}
 #finale .seal-medallion svg{overflow:hidden}
 #finale[data-phase=end] .fn-text p{transition:none!important}
+
+/* Archivar: Objektfl?chen und Beschriftungen getrennt im neuen Szenenbild. */
+#app #scene[data-place="vestibule"] #hotspots [data-hotspot="archivist"] .pin{left:110%!important;top:45%!important}
+#app #scene[data-place="vestibule"] #hotspots [data-hotspot="archivist"] .label{left:110%!important;top:calc(45% + var(--pin)/2 + 5px)!important}
+#app #scene[data-place="vestibule"] #hotspots [data-hotspot="scrolls"] .pin{top:115%!important}
+#app #scene[data-place="vestibule"] #hotspots [data-hotspot="scrolls"] .label{top:calc(115% + var(--pin)/2 + 5px)!important}
+#app #scene[data-place="vestibule"]{aspect-ratio:1672/941;width:min(100cqw,177.68cqh)}

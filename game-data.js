@@ -17,7 +17,7 @@ window.GAME = {
  {id:'forum',name:'Stimmen auf dem Forum',era:'1. Jahrhundert · Erinnerung an Rom',tile:2,intro:'Auf dem Forum streiten zwei Stimmen über den Brand von Rom. Die Stadtchronik braucht belastbare Aussagen, keine lautesten Gerüchte.',hotspots:[['Erzähler',72,86,'talk','rumor'],['Chronistin',22,86,'talk','chronicler'],['Quellenpult',48,57,'puzzle','sources']]},
  {id:'office',name:'Die Amtsstube',era:'2. Jahrhundert · Plinius',tile:3,intro:'Der Schreiber hat vier Fallakten durcheinandergebracht. Ordne sie nach dem geschilderten Vorgehen der Behörden. Du rekonstruierst eine historische Praxis – du entscheidest nicht darüber, was gerecht wäre.',hotspots:[['Schreiber',62,59,'talk','clerk'],['Fallakten',40,55,'puzzle','cases'],['Aktenschrank',15,48,'talk','cabinet']]},
  {id:'temple',name:'Die Kontrollstelle',era:'3. Jahrhundert · Opferpflicht',tile:4,intro:'Ein Seilzug verbindet die Kontrollstelle mit dem Archiv. Erst wenn beide Wege der Opferkontrolle richtig gelegt sind, gibt er den Schlüssel frei.',hotspots:[['Kontrolleur',83,89,'talk','control'],['Seilzug',26,54,'puzzle','sacrifice'],['Alte Chronik',12,75,'talk','old']]},
- {id:'vestibule',name:'Beim Archivar',era:'Vor dem Archiv · ab 303',art:'office',intro:'Vor der dunklen Archivtür wartet ein Archivar. Er hat Schriftrollen, die im Archiv abgelegt werden sollen. Sprich mit ihm, bevor du hineingehst.',hotspots:[['Archivar',62,59,'talk','archivist'],['Schriftrollen lesen',39,57,'reading','scrolls']]},
+ {id:'vestibule',name:'Beim Archivar',era:'Vor dem Archiv · ab 303',intro:'Vor der dunklen Archivtür wartet ein Archivar. Er hat Schriftrollen, die im Archiv abgelegt werden sollen. Sprich mit ihm, bevor du hineingehst.',hotspots:[['Archivar',69.5,42,'talk','archivist'],['Schriftrollen lesen',67,59,'reading','scrolls']]},
  {id:'archive',name:'Diokletians Archiv',era:'Ab 303 · staatliche Verfolgung',tile:5,intro:'Stockdunkel. Du siehst nicht einmal deine eigene Hand. Irgendwo in diesem Archiv liegen Spuren der großen Verfolgung – aber ohne Licht findest du nichts. Öffne deinen Botenbeutel und entzünde die Öllampe mit dem Feuerstein.',hotspots:[['Verbrannte Schriftrolle',13,76,'evidence','scroll'],['Versiegelte Tür',18,36,'evidence','door'],['Kirchenmodell',49,67,'evidence','church'],['Kette',81,52,'evidence','chain'],['Amtssiegel',81,70,'talk','seal'],['Archivmechanismus',46,42,'puzzle','archive'],['Schriftrollen ablegen',62,78,'deposit','shelf']]},
  {id:'camp',name:'Am Tiber',era:'312 · Konstantins Militärlager',tile:6,intro:'Nach der Nachricht von Galerius führt dein Weg in eine neue Erinnerung: das Jahr 312. Eine Karte versperrt den Zugang zu Konstantins Zelt.',hotspots:[['Kartenbrett',41,55,'puzzle','map312'],['Konstantins Zelt',64,46,'puzzle','vision'],['Bote',79,83,'talk','messenger']]},
  {id:'city',name:'Die geöffnete Stadt',era:'313 und danach',bg:'city-313',image:'assets/minigames/open-city/open-city.png',discover:true,intro:'Du kennst diesen Ort. Aber etwas hat sich verändert. Schau genau hin: Was ist heute anders?',hotspots:[['Geöffnete Tür',19,57,'talk','openchurch'],['Christliches Zeichen',16,24,'talk','sign'],['Zurückgegebene Truhe',11,88,'talk','returned'],['Baustelle',56,18,'talk','building'],['Tempel und Altar',90,44,'talk','cults'],['Anschlagtafel',49,63,'puzzle','change']]},
@@ -91,7 +91,7 @@ window.GAME.exits={
  forum:[['house',5,42,'Zum Wohnviertel'],['office',89,52,'Zur Amtsstube']],
  office:[['forum',33,36,'Zurück zum Forum'],['temple',93,30,'Zur Kontrollstelle']],
  temple:[['office',40,93,'Zur Amtsstube'],['vestibule',60,52,'Die Stufen hinauf zum Archivar']],
- vestibule:[['temple',25,92,'Zur Kontrollstelle'],['archive',84,42,'Ins dunkle Archiv']],
+ vestibule:[['temple',25,92,'Zur Kontrollstelle'],['archive',84,84,'Ins dunkle Archiv']],
  archive:[['vestibule',30,93,'Zurück zum Archivar'],['camp',66,16,'Weiter zum Tiber']],
  camp:[['archive',12,92,'Zurück ins Archiv'],['city',94,92,'Zur geöffneten Stadt']],
  city:[['camp',6,36,'Zum Tiber'],['motives',73,51,'Die Treppe hinauf']],
@@ -102,7 +102,7 @@ window.GAME.exits={
 /* Hotspot-Flächen (world.css): Personen stehen mit den Füßen auf x/y, Fläche [Breite, Höhe] in % der Szene.
    Einzelne Hotspots können mit hotspotBoxes['szene:id']=[x,y,Breite,Höhe] genau über das gemalte Objekt gelegt werden. */
 window.GAME.personBoxes={gate:[19,61],office:[18,28],vestibule:[18,28]};
-window.GAME.hotspotBoxes={'camp:messenger':[79.5,56,13,62],'motives:advisor':[23.5,52,14,68]};
+window.GAME.hotspotBoxes={'vestibule:archivist':[69.5,42,20,28],'vestibule:scrolls':[67,59,29,9],'camp:messenger':[79.5,56,13,62],'motives:advisor':[23.5,52,14,68]};
 window.GAME.exitHints={
  office:'Die Amtsstube öffnet sich, wenn du die Türmechanik im Wohnviertel und das Quellenpult auf dem Forum gelöst hast.',
  temple:'Ordne zuerst die Fallakten in der Amtsstube.',
