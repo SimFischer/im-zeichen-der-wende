@@ -87,28 +87,6 @@
 .time-machine.turned .tm-book{filter:drop-shadow(0 0 20px #e6c16a88)}
 
 /* Die komplette Chronik und die Bonusbelohnung erhalten getrennte Flächen. */
-#finale .fn-book{aspect-ratio:1672/941;width:min(86vw,64vh*1.777)}
-#finale .fn-open>img{object-fit:contain}
-#finale .fn-slot{top:64%;width:8.5%}
-#finale[data-phase=zoom] .fn-camera,#finale[data-phase=memories] .fn-camera{transform:scale(1.06)}
-#finale .fn-memory{transition:opacity .7s}
-#finale .fn-memory.on .fn-pic{animation-duration:2.8s}
-#finale .fn-end[hidden]{display:none}
-#finale[data-phase=end]{display:grid;grid-template-columns:1.35fr 1fr;gap:12px;align-items:center;padding:24px;overflow:auto}
-#finale[data-phase=end] .fn-camera{position:relative;inset:auto;min-width:0}
-#finale[data-phase=end] .fn-book{width:100%}
-#finale[data-phase=end] .fn-text{position:relative;inset:auto;padding:0;min-width:0;z-index:1}
-#finale[data-phase=end] .fn-memories{display:none}
-#finale .fn-line1{font-size:clamp(25px,3vw,40px)}
-#finale .fn-line2{font-size:clamp(17px,1.8vw,24px)}
-#finale .fn-end{width:100%;gap:10px}
-#finale .fn-end>strong{font-size:clamp(16px,1.6vw,23px);letter-spacing:.08em;padding:.4em .6em}
-#finale .fn-reward{position:relative;width:min(100%,380px);aspect-ratio:1448/1086;flex:none;margin:-10px 0 -24px}
-#finale .fn-reward img{width:100%;height:100%;object-fit:contain;pointer-events:none}
-#finale .fn-reward p{position:absolute;inset:37% 16% 27% 27%;display:flex;flex-direction:column;justify-content:center;gap:5px;color:#37220e;font-size:clamp(16px,1.6vw,21px);line-height:1.15;text-shadow:none;transition:none!important}
-#finale .fn-reward b{font-size:1.1em}
-#finale .fn-actions{width:100%;gap:10px}
-#finale .fn-actions button{min-height:48px;font-size:18px;padding:6px 16px}
 @media (max-width:700px){
  .time-machine .tm-tray{grid-template-columns:repeat(3,minmax(0,1fr))}
  #finale[data-phase=end]{grid-template-columns:1fr;align-content:start}
@@ -141,8 +119,6 @@
 .city-card.long .sg-icon{height:32%}
 .mo-piece small{font-size:13px;line-height:1.1}
 .scene-game .w-speed button{min-height:44px!important}
-#finale .seal-medallion svg{overflow:hidden}
-#finale[data-phase=end] .fn-text p{transition:none!important}
 
 /* Archivar: Objektfl?chen und Beschriftungen getrennt im neuen Szenenbild. */
 #app #scene[data-place="vestibule"] #hotspots [data-hotspot="archivist"] .pin{left:110%!important;top:45%!important}

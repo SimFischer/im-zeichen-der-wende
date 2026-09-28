@@ -5,7 +5,7 @@ const fs=require('fs'),vm=require('vm'),path=require('path'),assert=require('nod
 const {parseHTML}=require('linkedom'),root=path.resolve(__dirname,'..');
 let checks=0;const ok=(v,m)=>{assert.ok(v,m);checks++;};
 const g2d=new Proxy({},{get:(t,k)=>k==='createRadialGradient'?(()=>({addColorStop(){}})):(()=>{})});
-function boot(){
+function boot(reduced=false){
  const {window}=parseHTML('<!doctype html><html lang="de"><body><dialog id="modal"></dialog><div id="work"></div></body></html>');
  const timers=[],wins=[];
  window.HTMLElement.prototype.focus=function(){};
@@ -14,7 +14,7 @@ function boot(){
  window.HTMLCanvasElement&&(window.HTMLCanvasElement.prototype.getContext=()=>g2d);
  window.document.addEventListener('minigame-win',e=>wins.push(e.detail));
  const ctx={window,document:window.document,console,CustomEvent:window.CustomEvent,devicePixelRatio:1,performance:{now:()=>0},
-  requestAnimationFrame:()=>1,addEventListener(){},removeEventListener(){},matchMedia:()=>({matches:false}),
+  requestAnimationFrame:()=>1,addEventListener(){},removeEventListener(){},matchMedia:()=>({matches:reduced}),
   setTimeout:(f)=>{timers.push(f);return timers.length;},clearTimeout(){}};
  vm.createContext(ctx);
  for(const f of ['data/game-data.js','seals.js','minigames.js','finale.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx,{filename:f});
@@ -98,15 +98,22 @@ const exists=f=>fs.existsSync(path.join(root,f));
 {const {G,M,work,$}=boot();M.classify('sources',G.minigames.sources,work);work.id='modal';ok($('.scene-game'),'Bühne vorhanden');}
 {const {window,G,M}=boot();const modal=window.document.querySelector('#modal');const w=window.document.createElement('div');modal.append(w);M.stamp('cases',G.minigames.cases,w);M.stop();ok(!modal.querySelector('.scene-game'),'MiniGames.stop entfernt die Bühne (Timer und Schleifen enden)');}
 
-/* Endsequenz */
-{const {window,G,flush}=boot();const events=[];
- const el=window.Finale.play({names:G.seals,onExplore:()=>events.push('explore'),onNewGame:()=>events.push('new')});
- ok(el.querySelectorAll('.fn-seal').length===6&&el.querySelectorAll('.fn-slot').length===6,'Sechs Siegel reagieren und liegen in der Chronik');
- ok(el.querySelectorAll('.fn-memory').length===6,'Rückblick auf sechs Orte');
- flush();ok(el.dataset.phase==='end','Sequenz endet im Abschluss');
- ok(/Die Chronik spricht wieder\./.test(el.textContent)&&/Du hast die Erinnerungen der Stadt zusammengefügt\./.test(el.textContent)&&/Abenteuer abgeschlossen/.test(el.textContent),'Abschlusstexte');
- const b=[...el.querySelectorAll('.fn-actions button')].map(x=>x.textContent);ok(b[0]==='Stadt weiter erkunden'&&b[1]==='Neues Spiel'&&!b.some(t=>/Stadttor/.test(t)),'Zwei Aktionen, nicht „Weiter zum Stadttor“');
- const again=window.Finale.play({names:G.seals});ok(window.document.querySelectorAll('#finale').length===1,'Wiederholter Start: nur eine Sequenz');window.Finale.stop();ok(!window.document.querySelector('#finale')&&!window.document.body.classList.contains('finale-on'),'Stop räumt vollständig auf');
- const el2=window.Finale.play({names:G.seals,onExplore:()=>events.push('explore'),onNewGame:()=>events.push('new')});flush();el2.querySelectorAll('.fn-actions button')[1].click();ok(events.join()==='new'&&!window.document.querySelector('#finale'),'Neues Spiel führt zur Sicherheitsabfrage (Spiel-Menü)');}
 
-console.log(`PASS: Rätsel-Nahansichten und Endsequenz – ${checks} Prüfungen`);
+/* Finale: Auswahl bleibt Pflicht, danach filmischer Abschluss. */
+for(const reduced of [false,true]){const {window,flush}=boot(reduced),events=[];
+ const el=window.Finale.play({onExplore:()=>events.push('explore'),onNewGame:()=>events.push('new'),onEnd:()=>events.push('end')});
+ const cards=[...el.querySelectorAll('.cf-statement')];ok(cards.length===6,'Exactly six statements');ok(el.querySelectorAll('.cf-seal').length===3,'Three insights');
+ for(const img of el.querySelectorAll('img'))ok(exists(img.getAttribute('src')),'Finale asset exists');
+ flush();ok(el.dataset.phase==='choice'&&events.length===0,'No automatic completion');el.querySelector('.cf-skip').click();ok(el.dataset.phase==='choice','Cannot skip the task');
+ for(const i of [3,4,5]){el.querySelector('[data-statement="'+i+'"]').click();ok(el.querySelector('[data-statement="'+i+'"]').dataset.state==='wrong','Incorrect statement rejected');}
+ ok(el.querySelectorAll('.cf-seal.lit').length===0,'Wrong answers do not unlock seals');
+ el.querySelector('[data-statement="1"]').click();el.querySelector('[data-statement="1"]').click();ok(el.querySelectorAll('.cf-seal.lit').length===1,'Repeated tap cannot count twice');
+ el.querySelector('[data-statement="0"]').click();ok(el.dataset.phase==='choice','Two choices insufficient');el.querySelector('[data-statement="2"]').click();ok(el.dataset.phase==='awakening','Third correct choice awakens book');
+ ok(el.querySelectorAll('[aria-pressed="true"]').length===3,'Three correct statements clearly selected');ok(cards.every(b=>b.disabled),'Input locked during film');
+ ok(el.querySelectorAll('.cf-memory').length===6,'Six historical memories');flush();ok(el.dataset.phase==='end'&&events.join()==='end','Completion callback only at end');
+ ok(!el.querySelector('.cf-end').hidden&&el.querySelector('.cf-title').getAttribute('src').endsWith('final-title-banner.png'),'New end title shown');
+ el.querySelector('.fn-actions button').click();ok(events.join()==='end,explore'&&!window.document.querySelector('#finale'),'Explore returns and cleans up');
+ const old=window.Finale.play();[0,1,2].forEach(i=>old.querySelector('[data-statement="'+i+'"]').click());const fresh=window.Finale.play();flush();ok(fresh.dataset.phase==='choice'&&window.document.querySelectorAll('#finale').length===1,'Old timers cannot advance restarted finale');window.Finale.stop();
+ const done=window.Finale.play({completed:true,onNewGame:()=>events.push('new')});ok(done.dataset.phase==='end','Completed save resumes at end');done.querySelectorAll('.fn-actions button')[1].click();ok(events.at(-1)==='new'&&!window.document.querySelector('#finale'),'New game delegates to existing confirmation');
+}
+console.log('PASS: closeups and interactive finale - '+checks+' checks');
