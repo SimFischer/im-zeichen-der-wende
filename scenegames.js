@@ -67,6 +67,7 @@
  function citychange(id,cfg,work){
   const A=cfg.art||{};backdrop(A.bg);
   const icon=c=>{
+   if(c.image)return `<img class="sg-icon" src="${A[c.image]}" alt="" style="object-fit:contain">`;
    if(c.sheet)return sprite(A[c.sheet],c.rect,'sg-icon',c.text);
    return `<span class="sg-icon sg-svg" aria-hidden="true">${ICONS[c.icon]||''}</span>`;
   };
@@ -76,12 +77,12 @@
     <div class="sg-bg" aria-hidden="true"></div>
     <section class="city-board before" data-target="vorher" aria-label="Tafel: Vor dem Wandel"><header><span>Vor dem Wandel</span><small>bis 311</small></header><div class="city-slots"></div></section>
     <section class="city-board after" data-target="danach" aria-label="Tafel: Nach dem Wandel"><header><span>Nach dem Wandel</span><small>ab 311 / 313</small></header><div class="city-slots"></div></section>
-    <button type="button" class="city-altar" data-target="falsch" aria-label="Am Altar ablegen: Stimmt so nicht"><span class="altar-fire" aria-hidden="true"></span><span class="altar-plaque">Stimmt so nicht</span></button>
+    <button type="button" class="city-altar" data-target="falsch" aria-label="Am Altar ablegen: Stimmt so nicht"><img class="altar-art" src="${A.altar}" alt="" aria-hidden="true"><span class="altar-plaque">Stimmt so nicht</span></button>
     <div class="city-rope" role="group" aria-label="Wachstafeln zum Zuordnen">${cards.map(c=>`<button type="button" class="city-card${c.text.length>40?' long':''}" data-card="${c.i}" aria-pressed="false">${icon(c)}<span class="sg-text">${esc(c.text)}</span></button>`).join('')}</div>
     <p class="sg-voice" role="status" aria-live="polite">${esc(cfg.start)}</p>
    </div></div>`;
   const root=work.querySelector('.scene-game'),voice=root.querySelector('.sg-voice');
-  probe(root,[A.bg,...new Set(cfg.cards.filter(c=>c.sheet).map(c=>A[c.sheet]))]);
+  probe(root,Object.values(A));
   let done=0;const total=cfg.cards.length;
   const say=(t,k='')=>{voice.textContent=t;voice.className='sg-voice '+k;voice.classList.remove('pop');void voice.offsetWidth;voice.classList.add('pop');};
   placement(root,{cardSel:'.city-card',targetSel:'[data-target]',onDrop(card,t){

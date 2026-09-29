@@ -154,3 +154,8 @@
 .scene-game .council-answer::before{left:-6px}.scene-game .council-answer::after{right:-6px}
 .scene-game .council-answer.right{background:linear-gradient(#eef0d4,#d8dcae)!important;box-shadow:0 0 0 3px #d9c46a,0 0 16px 4px #f6dc8a88!important}
 .scene-game .council-answer.tried{opacity:.5}
+
+#modal .city-game .city-altar{background:none;border:0;box-shadow:none;overflow:visible}
+#modal .city-game .city-altar:before{content:none}
+.city-altar .altar-art{position:absolute;inset:-20% 0 0;width:100%;height:120%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 5px 4px #24160e80)}
+.city-altar .altar-plaque{position:relative;z-index:1}
