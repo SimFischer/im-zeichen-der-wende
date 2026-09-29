@@ -19,6 +19,7 @@ const txt=el=>el.textContent.replace(/\s+/g,' ').trim();
 /* ---------- Die geöffnete Stadt ---------- */
 {
  const {G,M,work,wins,flush}=boot();const cfg=G.minigames.change;
+ for(const asset of Object.values(cfg.art))ok(fs.existsSync(path.join(__dirname,'..',asset)),'Stadt-Asset vorhanden: '+asset);
  ok(cfg.type==='citychange','Stadt nutzt das neue Vorher/Nachher-Rätsel');
  ok(cfg.art.bg==='assets/minigames/open-city/open-city.png','Stadt-Hintergrund aus open-city');
  const city=G.scenes.find(s=>s.id==='city');

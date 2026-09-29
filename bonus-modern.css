@@ -57,3 +57,5 @@
 .code-game[data-phase=ended] .code-stats{order:3}
 .code-game[data-phase=ended] .code-record-notice{order:4}
 .code-game[data-phase=ended] .bonus-actions{order:5}
+
+@media(min-width:941px){.crossing-game,.cat-game{container-type:size}.crossing-board{width:min(800px,calc(100cqw - 310px),calc((100cqh - 40px) * 512 / 432))}.cat-board{width:min(900px,calc(100cqw - 280px),calc((100cqh - 40px) * 15 / 11))}}

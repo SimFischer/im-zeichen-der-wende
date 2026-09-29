@@ -79,7 +79,7 @@ P.motives=base('Glaube, Politik – oder beides?','balance','Lege alle sieben Ta
 P.council=base('Ein Band zwischen Kirche und Reich','council','Verbinde die beiden Gedanken. Besprich danach mit deinem Partner, warum sie zusammenhängen.',[
 row('Eine Einigung innerhalb der Kirche …',['kann zur Stabilität des Reiches beitragen.','beweist, dass nur politische Motive existierten.','bedeutet, dass Konstantin 325 getauft wurde.'],0,'Ursache/Folge: Einheit kann Stabilität fördern. Daraus folgt weder ein Beweis allein politischer Motive noch eine Taufe 325.')],['Denke an das Mosaik der Motive: Glaube und Politik.','Welche Wirkung kann weniger Streit in der Kirche für das Reich haben?','Passende Antworten verbinden Einheit der Kirche mit Stabilität – und machen es sich nicht zu einfach.']);
 const events=['Konzil von Nicäa','Sieg über Maxentius','Taufe Konstantins kurz vor seinem Tod','Diokletianische Verfolgung','Mailänder Vereinbarung','Galerius beendet die staatliche Verfolgung weitgehend'];
-P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Sachfehler: '+year+' gehört zu „'+events[[3,5,1,4,0,2][i]]+'“.')),['Das Ende der Verfolgung beginnt schon vor Konstantins Sieg.','Erst die große Verfolgung, dann Galerius, dann Schlacht und Vereinbarung. Konzil und Taufe kommen zuletzt.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe. Der Wandel liegt zwischen 303 und 311.']);
+P.timeline=base('Die Zeitmechanik','timeline','Setze die Ereignistafeln in die sechs Jahresringe. Die gesammelten Zeitspuren in deinem Notizbuch helfen dir dabei.',[303,311,312,313,325,337].map((year,i)=>row(String(year),events,[3,5,1,4,0,2][i],'Sachfehler: '+year+' gehört zu „'+events[[3,5,1,4,0,2][i]]+'“.')),['Das Ende der Verfolgung beginnt schon vor Konstantins Sieg.','Erst die große Verfolgung, dann Galerius, dann Schlacht und Vereinbarung. Konzil und Taufe kommen zuletzt.','303 Verfolgung; 311 Galerius; 312 Sieg; 313 Vereinbarung; 325 Konzil; 337 Taufe. Der Wandel beginnt mit den Schritten von 311/313 und setzt sich in der Förderung fort.']);
 P.bridge=base('Die Argumentationsbrücke','bridge','Vervollständige die Brücke der Erkenntnis. Danach prüfe, welche Aussagen zu einfach sind.',[
 row('Vor Konstantin …',['waren Christen immer und überall verfolgt.','waren Christen zeitweise staatlicher Verfolgung ausgesetzt.','waren alle Menschen Christen.'],1,'Historische Vereinfachung: Nicht dauerhaft und überall, sondern zeitweise und unterschiedlich.'),row('Ab 311/313 …',['verbesserte sich die Lage grundlegend.','begann erst jede Verfolgung.','wurden alle anderen Religionen sofort verboten.'],0,'Sachfehler: Galerius und die Mailänder Vereinbarung markieren Schritte des Wandels.'),row('Unter Konstantin …',['war das Christentum sofort die einzige erlaubte Religion.','spielte die Kirche keine Rolle.','wurde das Christentum rechtlich abgesichert und gezielt gefördert.'],2,'Historische Vereinfachung: Förderung bedeutet nicht sofortige Ausschließlichkeit.'),row('Deshalb spricht man von einer Wende, weil …',['nur ein Kaiser seinen Namen wechselte.','sich die Stellung des Christentums von zeitweiliger Verfolgung zu Absicherung und Förderung grundlegend veränderte.','wir alle inneren Motive Konstantins sicher kennen.'],1,'Ursache/Folge: Entscheidend ist die grundlegende Veränderung der Stellung des Christentums.')],['Jeder Bogen braucht eine Platte, die nicht zu stark vereinfacht.','Achte auf Wörter wie „immer“, „alle“, „sofort“ und „sicher“ – sie machen Aussagen oft zu einfach.','Zeitweilige Verfolgung → Verbesserung ab 311/313 → Absicherung und Förderung: ein grundlegender Wandel.'],{reasons:{q:'Welche Inschrift gehört über die Brücke?',options:[]}});
 
@@ -273,14 +273,14 @@ window.GAME.minigames.map312={type:'battlemap',title:'Das Kartenbrett',
 // Die geöffnete Stadt: Veränderungen im Bild entdecken, dann „Vorher und Nachher“ ordnen.
 window.GAME.minigames.change={type:'citychange',title:'Vorher und Nachher',
  prompt:'Häng jede Wachstafel an die passende Seite. Eine Tafel stimmt so nicht – bring sie zum römischen Altar.',
- art:{bg:'assets/minigames/open-city/open-city.png',timeline:'assets/minigames/timeline/timeline-assets.png',amphora:'assets/minigames/amphora/amphora-assets.png'},
+ art:{bg:'assets/minigames/open-city/open-city.png',timeline:'assets/minigames/timeline/timeline-assets.png'},
  start:'Tippe eine Wachstafel an und dann die passende Tafel – oder zieh sie hinüber.',
  cards:[
   {text:'Gottesdienste verboten',side:'vorher',icon:'door-shut',why:'Ja: Unter Diokletian wurden christliche Gottesdienste verboten.'},
-  {text:'Besitz beschlagnahmt',side:'vorher',sheet:'amphora',rect:[990,376,205,151],why:'Ja: Kirchen und Gemeinden verloren ihren Besitz.'},
+  {text:'Besitz beschlagnahmt',side:'vorher',icon:'chest',why:'Ja: Kirchen und Gemeinden verloren ihren Besitz.'},
   {text:'Schriften zerstört',side:'vorher',sheet:'timeline',rect:[25,334,252,260],why:'Ja: Heilige Schriften mussten ausgeliefert und verbrannt werden.'},
   {text:'Religionsausübung erlaubt',side:'danach',sheet:'timeline',rect:[286,326,263,275],why:'Ja: 313 wurde vereinbart, dass alle ihre Religion ausüben dürfen.'},
-  {text:'Besitz zurückgegeben',side:'danach',sheet:'amphora',rect:[777,374,191,152],why:'Ja: Beschlagnahmter Besitz wurde zurückgegeben.'},
+  {text:'Besitz zurückgegeben',side:'danach',icon:'chest',why:'Ja: Beschlagnahmter Besitz wurde zurückgegeben.'},
   {text:'Kirchenbau gefördert',side:'danach',sheet:'timeline',rect:[838,327,268,271],why:'Ja: Konstantin förderte danach Kirchenbauten und Gemeinden.'},
   {text:'313 wurde das Christentum zur einzigen erlaubten Religion.',side:'falsch',icon:'decree'}],
  falseWrong:'Nein. Andere Religionen und traditionelle römische Kulte bestanden zunächst weiter.',
@@ -343,10 +343,10 @@ window.GAME.minigames.timeline={type:'chronik',title:'Die Zeitmechanik',
   {year:337,title:'Taufe Konstantins kurz vor seinem Tod',line:'Konstantin wird kurz vor seinem Tod getauft.',medal:[1361,28,250,291],mini:[1383,328,272,276],hint:'Ganz am Ende seines Lebens.'}],
  bandRect:[696,735,824,199],
  wrong:'„{title}“ passt nicht zu {year}.',
- question:'Die Chronik ist vollständig. Zwischen welchen Jahren liegt der entscheidende Wandel? Wähle den passenden Jahresabstand.',
+ question:'Zwischen welchen Jahresmarken liegt der Übergang vom Beginn der großen Verfolgung zum Duldungsedikt des Galerius?',
  gapAnswer:0,
- gapRight:'Ja. Auf die große Verfolgung um 303 folgen 311 und 313 die entscheidenden Veränderungen. Das Band der Wende schließt sich.',
- gapWrong:{1:'Fast: 311 hat der Wandel schon begonnen. Suche die Stelle davor – zwischen Verfolgung und Ende der Verfolgung.',2:'Da ist der Wandel schon im Gang. 311 endet die Verfolgung weitgehend. Schau weiter nach links.',3:'313 und 325 liegen beide schon nach dem Wandel.',4:'Die Taufe 337 kommt ganz am Ende. Der Wandel liegt viel früher.'},
+ gapRight:'Ja: 303 beginnt die große Verfolgung, 311 erlaubt Galerius christliche Versammlungen wieder. 313 und die spätere Förderung führen den Wandel weiter.',
+ gapWrong:{1:'Fast: 311 hat der Wandel schon begonnen. Suche die Stelle davor – zwischen Verfolgung und Ende der Verfolgung.',2:'Da ist der Wandel schon im Gang. 311 endet die Verfolgung weitgehend. Schau weiter nach links.',3:'313 und 325 gehören zum weiteren Wandel. Gesucht ist hier der frühere Schritt bis zum Edikt des Galerius.',4:'Die Taufe 337 kommt ganz am Ende. Der Wandel liegt viel früher.'},
  gapWrongDefault:'Schau noch einmal: Wo endet die Verfolgung?',
  winTitle:'Die Chronik ist wiederhergestellt',win:'Die Wende geschah nicht an einem Tag, sondern in mehreren Schritten – der entscheidende Umschwung liegt zwischen 303 und 311/313.'};
 

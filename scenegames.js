@@ -102,6 +102,7 @@
   return true;
  }
  const ICONS={
+  'chest':'<svg viewBox="0 0 64 64"><path d="M8 28V18q24-16 48 0v10z" fill="#ac7940" stroke="#51361f" stroke-width="3"/><rect x="8" y="28" width="48" height="27" rx="3" fill="#80532e" stroke="#51361f" stroke-width="3"/><path d="M18 12v43M46 12v43M8 31h48" stroke="#d2ad65" stroke-width="4"/><rect x="28" y="26" width="8" height="12" rx="2" fill="#e3bf74" stroke="#51361f" stroke-width="2"/></svg>',
   'decree':'<svg viewBox="0 0 64 64"><rect x="12" y="12" width="40" height="40" rx="3" fill="#efe0bd" stroke="#6b4a22" stroke-width="3"/><path d="M8 12h48M8 52h48" stroke="#6b4a22" stroke-width="5" stroke-linecap="round"/><path d="M20 22h24M20 29h24M20 36h14" stroke="#6b4a22" stroke-width="2.5"/><circle cx="42" cy="43" r="6" fill="#a8322a" stroke="#5a1a10" stroke-width="2"/></svg>',
   'door-shut':'<svg viewBox="0 0 64 64"><path d="M14 58V22a18 18 0 0 1 36 0v36z" fill="#6b4424" stroke="#3b2412" stroke-width="3"/><path d="M32 6v52M14 30h36" stroke="#3b2412" stroke-width="2.5"/><path d="M8 38h48" stroke="#2a1a0c" stroke-width="7" stroke-linecap="round"/><circle cx="40" cy="46" r="2.5" fill="#d9a441"/></svg>',
   'scroll-cross':'<svg viewBox="0 0 64 64"><rect x="12" y="14" width="40" height="36" rx="3" fill="#efe0bd" stroke="#6b4a22" stroke-width="3"/><path d="M20 24h24M20 32h24M20 40h16" stroke="#8c422a" stroke-width="2.5"/><path d="M8 8l48 48M56 8L8 56" stroke="#8c2a1a" stroke-width="5" stroke-linecap="round" opacity=".85"/></svg>'
