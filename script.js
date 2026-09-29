@@ -11,11 +11,10 @@
  const infoSpots=sc=>sc.id==='archive'?[]:sc.hotspots.map((h,i)=>({h,i})).filter(({h})=>h[3]==='talk');
  const missingInfo=sc=>infoSpots(sc).filter(({i})=>!state.seen.includes(sc.id+':'+i));
  const puzzleLocked=(sc,id)=>!has(id)&&missingInfo(sc).length>0;
- /* Aufgabe: erscheint bei neuem Ziel kurz groß und klappt dann zu einem kleinen Schild „Ziel“ zusammen.
-    Antippen zeigt sie wieder – so bleibt die Szene frei. */
+ /* Aufgabe nur auf Antippen anzeigen; die Szene bleibt frei. */
  let objTimer=null,objLast='';
  function setObjective(text){const el=$('#objective');if(!el.querySelector('.obj-text')){el.innerHTML='<span class="obj-tag" aria-hidden="true">✦ Ziel</span><span class="obj-text"></span>';el.setAttribute('role','button');el.tabIndex=0;el.onclick=()=>showObjective(!el.classList.contains('open'));el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click();}};}
-  el.querySelector('.obj-text').textContent=text;el.setAttribute('aria-label','Ziel: '+text);if(text!==objLast){objLast=text;showObjective(true);}}
+  el.querySelector('.obj-text').textContent=text;el.setAttribute('aria-label','Ziel: '+text);if(text!==objLast){objLast=text;showObjective(false);}}
  function showObjective(open){const el=$('#objective');el.classList.toggle('open',open);el.setAttribute('aria-expanded',String(open));clearTimeout(objTimer);if(open)objTimer=setTimeout(()=>showObjective(false),6500);}
  function refreshSpots(){const sc=scene(),miss=missingInfo(sc),total=infoSpots(sc).length,opened=[];
   document.querySelectorAll('#hotspots .hotspot').forEach(b=>{const i=+b.dataset.index,h=sc.hotspots[i];if(!h)return;b.classList.toggle('seen',state.seen.includes(sc.id+':'+i));
