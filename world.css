@@ -26,7 +26,7 @@
 #modal button.danger{background:linear-gradient(#f6e0cc,#e2bfa2);color:#6a1f14}
 
 @media (hover:hover) and (pointer:fine){#modal button:not(:disabled):hover{filter:brightness(1.06)}}
-#modal button:not(:disabled):active{transform:translateY(2px)}
+#modal button:not(:disabled):not(.pm-place):active{transform:translateY(2px)}
 #modal button:disabled{opacity:.55}
 
 /* Allgemeine Fenster: Pergament im Holzrahmen */
