@@ -126,3 +126,9 @@
 #app #scene[data-place="vestibule"] #hotspots [data-hotspot="scrolls"] .pin{top:115%!important}
 #app #scene[data-place="vestibule"] #hotspots [data-hotspot="scrolls"] .label{top:calc(115% + var(--pin)/2 + 5px)!important}
 #app #scene[data-place="vestibule"]{aspect-ratio:1672/941;width:min(100cqw,177.68cqh)}
+
+/* Align dates to the three printed rules, independent of title length. */
+.tm-book .tm-pages{bottom:19.5%;row-gap:0}
+#modal .time-machine .tm-year{display:block}
+.tm-year .tm-y{position:absolute;left:22%;top:19%;transform:translateY(-100%);font-size:clamp(24px,2.7vw,34px);line-height:1;color:#3b2513!important;text-shadow:0 1px 0 #fff2ce}
+.tm-year .tm-t{position:absolute;left:9px;right:9px;top:43%}
