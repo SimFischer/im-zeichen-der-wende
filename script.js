@@ -53,7 +53,7 @@
  }
  function objective(){
   const id=state.scene;
-  if(id==='vestibule')return !state.flags.archiveScrollsReceived?'Sprich mit dem Archivar. Er hat einen Auftrag für dich.':!state.flags.archiveScrollsRead?'Lies die Schriftrollen, bevor du sie ins Archiv bringst.':!own('light')?'Entzünde die Öllampe: Kombiniere sie im Botenbeutel mit dem Feuerstein.':'Wähle den Archivschlüssel im Botenbeutel und gehe ins Archiv.';
+  if(id==='vestibule')return !state.flags.archiveScrollsReceived?'Sprich mit dem Archivar. Er hat einen Auftrag für dich.':!state.flags.archiveScrollsRead?'Lies die Schriftrollen, bevor du sie ins Archiv bringst.':!own('light')?'Entzünde die Öllampe: Kombiniere sie im Botenbeutel mit dem Feuerstein.':'Mit dem Archivschlüssel im Botenbeutel kannst du ins Archiv gehen.';
   if(id==='archive'&&has('archive')&&!state.flags.archiveScrollsDeposited)return 'Das Licht ist wieder an. Lege die Schriftrollen auf dem freien Regalplatz ab.';
   if(id==='gate')return state.seals.length===6?'Alle Siegel gefunden. Die Chronik wartet in der Basilika.':'Erkunde die Erinnerungen. Finde sechs Erkenntnis-Siegel für die Chronik.';
   if(id==='archive'&&!own('light'))return 'Kombiniere Öllampe und Feuerstein im Botenbeutel.';if(id==='archive'&&!has('archive')&&G.minigames?.archive)return 'Tippe in die Dunkelheit, um mit der Lampe zu suchen.';
@@ -86,7 +86,7 @@
  function travel(id,via){
   if(!state.unlocked.includes(id)){toast(G.exitHints?.[id]||'Dieser Weg ist noch versperrt. Finde zuerst weitere Spuren.');return;}
   if(id==='archive'&&!has('archive')){if(!state.flags.archiveScrollsRead){enter('vestibule');toast('Lies zuerst die Schriftrollen des Archivars.');return;}if(!own('light')){toast('Vor dem Eintritt brauchst du eine brennende Öllampe. Kombiniere Öllampe und Feuerstein im Botenbeutel.');return;}}
-  if(id==='archive'&&!state.flags.archiveUnlocked){if(!own('key')){toast('Der Archivschlüssel fehlt. Untersuche den Seilzug im Tempelbezirk.');return;}if(selected!=='key'){toast(via==='map'?'Wähle zuerst den Archivschlüssel im Botenbeutel und tippe dann das Archiv auf der Karte an.':'Die Archivtür ist verschlossen. Wähle den Archivschlüssel im Botenbeutel und tippe dann erneut auf den Weg.');close();$('#inventory').hidden=false;$('#inventory-toggle').setAttribute('aria-expanded','true');return;}state.flags.archiveUnlocked=true;selected=null;}
+  if(id==='archive'&&!state.flags.archiveUnlocked){if(!own('key')){toast('Der Archivschlüssel fehlt. Untersuche den Seilzug im Tempelbezirk.');return;}state.flags.archiveUnlocked=true;selected=null;}
   if(id==='office'&&!state.flags.passShown){if(!own('pass')){toast('Der Botenpass fehlt.');return;}state.flags.passShown=true;toast('Du zeigst den Botenpass. Der Schreiber lässt dich ein.');}
   enter(id);
  }

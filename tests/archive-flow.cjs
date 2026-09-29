@@ -26,7 +26,9 @@ boot(state());click('[data-hotspot="scrolls"]');button('Nächste Schriftrolle');
 ok(state().flags.archiveScrollsRead,'All scrolls read');ok(state().unlocked.includes('archive'),'Reading unlocks archive');
 click('[data-exit="archive"]');ok(state().scene==='vestibule','Unlit lamp blocks entry');
 button('Öllampe','#inventory');button('Feuerstein','#inventory');ok(state().inventory.includes('light'),'Combine lamp and flint');
-click('[data-exit="archive"]');ok(state().scene==='vestibule','Selected key required');button('Archivschlüssel','#inventory');click('[data-exit="archive"]');
+const ready=state();const noKey=JSON.parse(JSON.stringify(ready));noKey.inventory=noKey.inventory.filter(i=>i!=='key');boot(noKey);click('[data-exit="archive"]');ok(state().scene==='vestibule','Missing key still blocks entry');
+boot(ready);map('archive');ok(state().scene==='archive'&&state().flags.archiveUnlocked,'Inventory key opens archive via map without selection');
+boot(ready);click('[data-exit="archive"]');ok(state().flags.archiveUnlocked,'Inventory key opens archive via exit without selection');
 ok(state().scene==='archive','Archive entry with knowledge, lamp and key');ok($('#scene').classList.contains('archive-dark'),'Archive starts dark');ok($('[data-hotspot="shelf"]').hidden,'Cannot deposit in darkness');
 // Exercise the same completion event dispatched by the actual darkroom minigame.
 env.document.dispatchEvent(new env.window.CustomEvent('minigame-win',{detail:'archive'}));
