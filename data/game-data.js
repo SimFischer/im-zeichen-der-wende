@@ -266,7 +266,7 @@ window.GAME.mapLayout={gate:[10,70],house:[22,44],forum:[33,15],office:[51,13],t
 
 window.GAME.minigames.map312={type:'battlemap',title:'Das Kartenbrett',
  prompt:'Stecke die sechs Beschriftungen an die richtigen Stellen der Karte. Dann prüfe die Karte.',
- pins:[['Stadt',86,47,22,32],['Fluss',63,23,18,20],['Übergang',55,44,27,16],['Späterer Sieger',26,24,34,22],['Gegner',66,74,32,24],['Jahr',22,76,24,22]],
+ pins:[['Stadt',86,47,22,32],['Fluss',78,25,12,18],['Übergang',55,44,27,16],['Späterer Sieger',26,24,34,22],['Gegner',66,74,32,24],['Jahr',44,13,18,16]],
  winTitle:'Die Karte ist vollständig',win:'Im Jahr 312 besiegte Konstantin seinen Gegner Maxentius an der Milvischen Brücke über den Tiber, kurz vor Rom.'};
 
 /* ---------- Überarbeitete Szenen-Rätsel (scenegames.js) ---------- */
