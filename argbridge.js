@@ -2,8 +2,7 @@
 /* Die Argumentationsbrücke – Abschlussrätsel in der Basilika.
    Eine steinerne Brücke mit vier offenen Bögen. Jeder Bogen trägt einen Satzanfang.
    Phase A: Bogen für Bogen die passende Inschriftplatte antippen – der Bogen rastet ein.
-   Phase B: Irrtums-Plaketten prüfen – zu einfache Aussagen antippen und mit „zu einfach“ markieren.
-   Phase C: die Inschrift wählen, die über der fertigen Brücke steht.
+   Phase B: die Inschrift wählen, die über der fertigen Brücke steht.
    Kein Freitext. Ein Sieg meldet sich wie alle Minispiele mit „minigame-win“; die gewählte Inschrift
    wird zusätzlich als „minigame-choice“ gemeldet (Notizbuch).
    Grafiken: assets/minigames/argument-bridge/ – nur Dateien aus cfg.art.available werden geladen,
@@ -91,7 +90,7 @@
   window.Seals?.ensureDefs?.();
   const root=work.querySelector('.scene-game'),stage=root.querySelector('.ab-stage'),voice=root.querySelector('.ab-voice'),tray=root.querySelector('.ab-tray');
   const pips=[...root.querySelectorAll('.ab-progress i')];
-  let phase='arches',cur=0,found=0,busy=false;
+  let phase='arches',cur=0,busy=false;
   const say=(t,k='')=>{voice.textContent=t;voice.className='sg-voice ab-voice '+k;voice.classList.remove('pop');void voice.offsetWidth;voice.classList.add('pop');};
   const arch=i=>root.querySelector(`.ab-arch[data-arch="${i}"]`),opening=i=>root.querySelector(`[data-opening="${i}"]`),head=i=>root.querySelector(`[data-head="${i}"]`);
   const plate=(o,cls,extra='')=>`<button type="button" class="ab-plate ${cls}"${extra}>${icon(o.icon,art)}<span class="ab-plate-text">${esc(o.text)}</span></button>`;
@@ -113,30 +112,16 @@
     opening(i).innerHTML=`<div class="ab-set" title="${esc(a.head+' '+a.right.text)}">${icon(a.right.icon,art)}<span>${esc(a.short)}</span></div>`;
     opening(i).setAttribute('aria-label',a.head+' '+a.right.text);
     say(a.right.why,'good');
-    later(root,1500,()=>{cur++;if(cur<N)showArch();else toSimplify();});
+    later(root,1500,()=>{cur++;if(cur<N)showArch();else toFinal();});
    }else{
     const w=a.wrong.find(x=>x.text===text);b.classList.add('cracked');b.disabled=true;b.insertAdjacentHTML('beforeend','<span class="ab-crack" aria-hidden="true"></span>');
     say(w?.why||'Diese Platte trägt den Bogen nicht.','hint');
    }
   }
 
-  /* ---------- Phase B: zu einfache Aussagen ---------- */
-  function toSimplify(){
-   phase='simplify';busy=false;root.classList.add('bridge-built');const S=cfg.simplify;const need=S.items.filter(x=>x.simple).length;
-   tray.className='ab-tray phase-simplify';tray.setAttribute('aria-label','Irrtums-Plaketten');
-   tray.innerHTML=`<p class="ab-ask"><span class="ab-step">Zu einfach?</span><span class="ab-count" aria-live="polite">${'<i></i>'.repeat(need)}</span></p><div class="ab-plaques">${S.items.map((x,k)=>`<button type="button" class="ab-plaque" data-k="${k}" aria-pressed="false"><span class="ab-plaque-text">${esc(x.text)}</span><span class="ab-mark" aria-hidden="true"></span></button>`).join('')}</div>`;
-   say(S.q,'ask');
-   tray.querySelectorAll('.ab-plaque').forEach(b=>b.onclick=()=>{
-    if(b.disabled)return;const x=S.items[+b.dataset.k];b.disabled=true;
-    if(x.simple){b.classList.add('simple');b.setAttribute('aria-pressed','true');b.querySelector('.ab-mark').textContent='zu einfach';found++;tray.querySelectorAll('.ab-count i')[found-1]?.classList.add('on');say(S.found+' '+x.why,'good');
-     if(found===need){tray.querySelectorAll('.ab-plaque').forEach(p=>p.disabled=true);later(root,2200,toFinal);}}
-    else{b.classList.add('sound');b.querySelector('.ab-mark').textContent='trägt';say(x.why,'hint');}
-   });
-  }
-
-  /* ---------- Phase C: Inschrift ---------- */
+  /* ---------- Phase B: Inschrift ---------- */
   function toFinal(){
-   phase='final';busy=false;const F=cfg.final;
+   phase='final';busy=false;root.classList.add('bridge-built');const F=cfg.final;
    tray.className='ab-tray phase-final';tray.setAttribute('aria-label','Inschriften');
    tray.innerHTML=`<p class="ab-ask"><span class="ab-step">Die Inschrift</span></p><div class="ab-tablets">${shuffle(F.options.map((o,k)=>({o,k}))).map(({o,k})=>`<button type="button" class="ab-tablet" data-k="${k}">${esc(o.text)}</button>`).join('')}</div>`;
    say(F.q,'ask');
@@ -153,7 +138,7 @@
    o.innerHTML=`<div class="sg-scroll ab-scroll"><h3>${esc(cfg.winTitle)}</h3><ol class="ab-chain">${cfg.arches.map(a=>`<li>${icon(a.right.icon,art)}<span><b>${esc(a.head)}</b> ${esc(a.right.text)}</span></li>`).join('')}</ol><p>${esc(cfg.win)}</p><button type="button" class="primary sg-next">Weiter</button></div>`;
    stage.append(o);o.querySelector('.sg-next').onclick=()=>document.dispatchEvent(new CustomEvent('minigame-win',{detail:id}));o.querySelector('.sg-next').focus?.({preventScroll:true});}
 
-  root.__debug={phase:()=>phase,arch:()=>cur,found:()=>found};
+  root.__debug={phase:()=>phase,arch:()=>cur};
   showArch();return true;
  }
  window.MiniGames.argbridge=argbridge;

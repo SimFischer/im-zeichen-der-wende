@@ -74,7 +74,6 @@ try{for(const [width,height,touch] of [[1024,768,true],[1180,820,true],[1366,102
  if((!process.env.WENDE_ONLY||process.env.WENDE_ONLY==='bridge')&&(width===1024||!touch)){
   const s=base('basilica');s.solved=Object.keys(G.puzzles).filter(x=>x!=='bridge');await load(s);await hit('[data-hotspot="bridge"]');const c=G.minigames.bridge;
   for(let i=0;i<c.arches.length;i++){await hit(page.locator('.ab-plate[data-ok="false"]:not(:disabled)').first());await hit('.ab-plate[data-ok="true"]');await page.waitForTimeout(1600);}
-  for(let i=0;i<c.simplify.items.length;i++)if(c.simplify.items[i].simple)await hit('.ab-plaque[data-k="'+i+'"]');
   await page.locator('.ab-tablet').first().waitFor();await hit('.ab-tablet[data-k="'+c.final.options.findIndex(x=>!x.ok)+'"]');await hit('.ab-tablet[data-k="'+c.final.options.findIndex(x=>x.ok)+'"]');await hit('.sg-next');
   await page.locator('#finale').waitFor();ok(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)).flags.finished,KEY),'Bridge completion triggers gated finale');
   if(width===1024){await page.waitForTimeout(7500);await snap('memory');await page.locator('#finale[data-phase=end]').waitFor();}else await hit('.fn-skip');

@@ -376,15 +376,6 @@ window.GAME.minigames.bridge={type:'argbridge',title:'Die Argumentationsbrücke'
    wrong:[{text:'nur ein Kaiser seinen Namen wechselte.',icon:'name',why:'Um einen Namen geht es nicht. Entscheidend ist die veränderte Stellung des Christentums.'},
           {text:'wir alle inneren Motive Konstantins sicher kennen.',icon:'heart',why:'Konstantins innere Motive kennen wir nicht sicher. Die Wende zeigt sich an Gesetzen und Förderung.'}]}
  ],
- simplify:{q:'Welche Aussagen vereinfachen zu stark? Tippe sie an.',
-  found:'Richtig erkannt: Diese Aussage klingt plausibel, greift die Entwicklung aber zu simpel auf.',
-  items:[
-   {text:'Christen waren immer und überall verfolgt.',simple:true,why:'Verfolgung gab es zeitweise – je nach Ort und Kaiser verschieden.'},
-   {text:'313 war das Christentum sofort die einzige Religion.',simple:true,why:'313 wurde die Religionsausübung für alle erlaubt.'},
-   {text:'Die Verfolgung war zeitweise und regional unterschiedlich.',simple:false,why:'Diese Aussage trägt – sie beschreibt die Lage differenziert.'},
-   {text:'Alle anderen Religionen wurden sofort verboten.',simple:true,why:'Traditionelle römische Kulte bestanden zunächst weiter.'},
-   {text:'Nach 313 bestanden andere Kulte zunächst weiter.',simple:false,why:'Diese Aussage trägt – sie ist historisch zutreffend.'},
-   {text:'Wir kennen Konstantins innere Motive ganz sicher.',simple:true,why:'Seine Motive können wir nur begründet deuten.'}]},
  final:{q:'Welche Inschrift gehört über die Brücke?',
   options:[
    {text:'Die Stellung des Christentums veränderte sich im frühen 4. Jahrhundert grundlegend: von zeitweiliger Verfolgung hin zu rechtlicher Absicherung und gezielter Förderung.',ok:true,why:'Diese Inschrift fasst die Wende zusammen – ohne falsche Vereinfachung.'},
