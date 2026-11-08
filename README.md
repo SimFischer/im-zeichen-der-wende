@@ -4,6 +4,8 @@ Historisches Point-and-Click-Lernspiel zur Christenverfolgung und Konstantinisch
 
 ## Lehrkräftekompendium
 
+Das Handbuch richtet sich an Lehrkräfte im Religionsunterricht der **Klasse 7 am Gymnasium** und spricht sie durchgehend mit **du** an.
+
 Ausschließlich im vorhandenen lokalen Lehrkraftmodus führt der Link **Lehrkräftekompendium ↗** zur separaten Seite `lehrkraefte.html`. Sie öffnet sich in einem neuen Tab; das Spiel bleibt geöffnet. Der bestehende Lehrkraftmodus ist weiterhin durch fünf Sekunden Halten des Spieltitels oder Umschalt + Enter erreichbar. Weder Modus noch Handbuch sind ein passwortgeschützter Adminbereich.
 
 Das Kompendium enthält einen interaktiven Schnellstart, einen Leitfaden zu allen zwölf Orten, 31 durchsuchbare FAQ sowie bewusst zu öffnende Lösungen für alle zwölf Haupträtsel, die Abschlusssequenz und die fünf freiwilligen Bonusspiele. **Anleitung drucken / Als PDF speichern** druckt Vorbereitung, Leitfaden und alle FAQ, unabhängig vom Suchfilter. Nach dem Öffnen des Lösungsteils können dessen Inhalte optional mitgedruckt werden. Geöffnete und geschlossene Hilfetexte werden nach dem Druck wiederhergestellt.
