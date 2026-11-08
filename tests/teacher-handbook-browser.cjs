@@ -17,6 +17,14 @@ const server=http.createServer((req,res)=>{
   const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[],bad=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)bad.push(r.url());});
   await page.goto(`http://127.0.0.1:${server.address().port}/`);
+  assert.equal(await page.getByRole('link',{name:'Lehrkräftekompendium'}).count(),0,'No handbook in student start menu');
+  await page.getByRole('button',{name:'Die Stadt betreten',exact:true}).click();
+  await page.getByRole('button',{name:'Szene erkunden',exact:true}).click();
+  const title=await page.locator('#title').boundingBox();
+  await page.mouse.move(title.x+title.width/2,title.y+title.height/2);
+  await page.mouse.down();await page.waitForTimeout(5100);await page.mouse.up();
+  await page.getByRole('heading',{name:'Lehrkraftmodus',exact:true}).waitFor();
+  assert.equal(await page.getByRole('link',{name:'Lehrkräftekompendium'}).count(),1);
   const saved=await page.evaluate(()=>localStorage.getItem('im-zeichen-der-wende:v1'));
   const [book]=await Promise.all([context.waitForEvent('page'),page.getByRole('link',{name:'Lehrkräftekompendium'}).click()]);
   book.on('pageerror',e=>errors.push(e.message));book.on('response',r=>{if(r.status()>=400)bad.push(r.url());});

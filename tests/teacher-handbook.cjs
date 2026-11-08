@@ -41,5 +41,7 @@ $('#print-solutions').checked=true;window.dispatchEvent(new window.Event('before
 $('#hide-solutions').click();assert.equal($('#solution-content').children.length,0);assert.ok($('#print-solutions').disabled);assert.equal($('#print-solutions').checked,false);
 assert.ok(!fs.readFileSync('index.html','utf8').includes('lehrkraefte-data.js'));
 assert.ok(!/localStorage|sessionStorage|fetch\(/.test(fs.readFileSync('lehrkraefte.js','utf8')),'Handbook must not access game state or remote data');
-assert.ok(fs.readFileSync('script.js','utf8').includes('handbookLink(a)'));
+const gameScript=fs.readFileSync('script.js','utf8');
+assert.equal(gameScript.slice(gameScript.indexOf(' function menu(){'),gameScript.indexOf(' const title=')).includes('handbookLink'),false,'No handbook link in student menu');
+assert.equal((gameScript.match(/handbookLink\(a\)/g)||[]).length,1,'Only the teacher mode links to the handbook');
 console.log('PASS handbook: all 12 locations and puzzles, active answer pools, alternatives, FAQ search, navigation, deliberate solution reveal, optional print and restored disclosures, no game-storage access');

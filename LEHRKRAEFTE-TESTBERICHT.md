@@ -10,7 +10,7 @@ Stand: 8. November 2026. Analysierte Ausgangsversion: `34b19ac`.
 | `lehrkraefte-data.js` | Schnellhilfe, Stationen, Voraussetzungen, Fachziele und 31 FAQ |
 | `lehrkraefte.js` | Navigation, Suche, Checklistenansicht, Lösungen aus aktiven Spieldaten, Druckvorbereitung und Wiederherstellung |
 | `lehrkraefte.css` | Pergamentgestaltung, bestehende Garamond-Schrift und Assets, responsive Darstellung, Drucklayout |
-| `script.js` | Ausschließlich zwei Handbuchlinks samt gemeinsamem Link-Helfer; vorhandene Spiel-, Freigabe- und Speicherlogik unverändert |
+| `script.js` | Ausschließlich ein Handbuchlink im lokalen Lehrkraftmodus samt Link-Helfer; vorhandene Spiel-, Freigabe- und Speicherlogik unverändert |
 | `tests/teacher-handbook.cjs` | Inhaltliche Abdeckung, Antworten, Alternativen, FAQ, Druckzustand und Trennung vom Spielstand |
 | `tests/teacher-handbook-browser.cjs` | Reale Chromium-Bedienung und Layout, emulierte Touchbedienung, beide Druckvarianten |
 | `package.json` | Handbuchprüfung in bestehende Test- und Build-Befehle aufgenommen |
@@ -39,7 +39,7 @@ Maßgeblich sind `index.html`, `data/game-data.js`, `script.js`, `adventure.js`,
 - `git diff --check`: keine Formatierungsfehler.
 - Neuer Handbuch-Browsertest mit installiertem Chrome/Playwright: 1440×1000, 1024×768, 768×1024 und 390×844 ohne horizontalen Überlauf. Zusätzliche Tippbedienung in emuliertem Tablet-Quer- und Hochformat.
 - Vier Bereiche, aktuelle Navigation, alle zwölf Ortskarten, FAQ-Suche einschließlich erfolgloser Suche und Zurücksetzen, aufklappbare Antworten, bewusstes Öffnen und Schließen der Lösungen, alle Antworttabellen und Rückkehr zur App geprüft.
-- Spielmenü-Link öffnet einen eigenen Tab; der lokale Hauptspielstand bleibt beim Öffnen und bei Rückkehr unverändert. Die Handbuchinhalte werden nicht als Spielskripte in `index.html` geladen.
+- Im normalen Start-/Spielmenü erscheint kein Handbuchlink. Fünf Sekunden Halten des Titels öffnet den Lehrkraftmodus; dessen Handbuchlink öffnet einen eigenen Tab; der lokale Hauptspielstand bleibt beim Öffnen und bei Rückkehr unverändert. Die Handbuchinhalte werden nicht als Spielskripte in `index.html` geladen.
 - Druckbutton und Browser-Druckereignisse geprüft: gesamte Anleitung und alle FAQ einschließlich ausgefilterter bzw. geschlossener Fragen werden gedruckt. Lösungen erscheinen nur nach bewusstem Öffnen und zusätzlichem Druck-Opt-in. Bedienelemente und Navigation sind ausgeblendet; Aufklappzustände werden anschließend wiederhergestellt.
 - Beide A4-Druckvarianten wurden als Browser-PDF erzeugt, gerendert und visuell auf Seitenaufteilung, abgeschnittene Inhalte und Tabellen geprüft. Prüfausgaben und Screenshots liegen außerhalb des Repositorys im Arbeitsordner; sie werden nicht mit der App ausgeliefert.
 - Keine Browser-JavaScriptfehler oder fehlenden Handbuch-Assets im neuen Browsertest.
