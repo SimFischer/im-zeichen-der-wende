@@ -1,4 +1,20 @@
-# Im Zeichen der Wende – neue Bonusspiel-Assets
+# Im Zeichen der Wende
+
+Historisches Point-and-Click-Lernspiel zur Christenverfolgung und Konstantinischen Wende.
+
+## Lehrkräftekompendium
+
+Im Spielmenü sowie im vorhandenen lokalen Lehrkraftmodus führt der dezente Link **Lehrkräftekompendium ↗** zur separaten Seite `lehrkraefte.html`. Sie öffnet sich in einem neuen Tab; das Spiel bleibt geöffnet. Der bestehende Lehrkraftmodus ist weiterhin durch fünf Sekunden Halten des Spieltitels oder Umschalt + Enter erreichbar. Weder Modus noch Handbuch sind ein passwortgeschützter Adminbereich.
+
+Das Kompendium enthält einen interaktiven Schnellstart, einen Leitfaden zu allen zwölf Orten, 31 durchsuchbare FAQ sowie bewusst zu öffnende Lösungen für alle zwölf Haupträtsel, die Abschlusssequenz und die fünf freiwilligen Bonusspiele. **Anleitung drucken / Als PDF speichern** druckt Vorbereitung, Leitfaden und alle FAQ, unabhängig vom Suchfilter. Nach dem Öffnen des Lösungsteils können dessen Inhalte optional mitgedruckt werden. Geöffnete und geschlossene Hilfetexte werden nach dem Druck wiederhergestellt.
+
+Redaktionelle Inhalte stehen in `lehrkraefte-data.js`, Darstellung und Bedienung in `lehrkraefte.html`, `lehrkraefte.css` und `lehrkraefte.js`. Lösungen werden aus der von `index.html` tatsächlich verwendeten Datei `data/game-data.js` abgeleitet. Die ältere Datei `game-data.js` im Repository-Hauptverzeichnis wird dafür nicht verwendet. Bei Spieländerungen auch Voraussetzungen, Hilfen und Fachhinweise im Kompendium prüfen.
+
+`npm test` und `npm run build` enthalten die neuen Handbuchprüfungen. Für die zusätzliche Browserprüfung: Playwright über die Umgebung bereitstellen, gegebenenfalls `PLAYWRIGHT_BROWSER` auf ein installiertes Chromium setzen und `node tests/teacher-handbook-browser.cjs` ausführen. Mit `HANDBOOK_OUTPUT` lassen sich Prüf-PDFs und Bildschirmbilder speichern; keine neue Playwright-Projektabhängigkeit ist erforderlich.
+
+Ergebnisse, Grenzen der Prüfung und bekannte bestehende Spielprobleme: siehe [LEHRKRAEFTE-TESTBERICHT.md](LEHRKRAEFTE-TESTBERICHT.md).
+
+## Neue Bonusspiel-Assets
 
 Dieses Paket enthält separat ausgeschnittene Produktionsgrafiken für drei Bonusspiele:
 
